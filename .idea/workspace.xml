@@ -141,8 +141,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find />
-      <find>firefox</find>
       <find>extern</find>
       <find>.o</find>
       <find>gfx_cavebg</find>
@@ -171,6 +169,8 @@
       <find>1.7</find>
       <find>camera</find>
       <find>camera-&gt;</find>
+      <find>exit</find>
+      <find>firefox</find>
     </findStrings>
     <replaceStrings>
       <replace>link</replace>
