@@ -111,6 +111,9 @@
 		<Unit filename="/home/dbeef/spelunky-psp/timer/Timer.h">
 			<Option target="spelunkypsp"/>
 		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/utils/Consts.h">
+			<Option target="spelunkypsp"/>
+		</Unit>
 		<Unit filename="/home/dbeef/spelunky-psp/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

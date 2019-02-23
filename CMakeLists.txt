@@ -17,4 +17,4 @@ include_directories(${PSPDEV}/psp/sdk/include)
 # clion won't scan files without it.
 add_executable(spelunkypsp
         input/InputHandler.h input/InputHandler.cpp main.cpp camera/Camera.cpp camera/Camera.h
-        timer/Timer.cpp timer/Timer.h)
+        timer/Timer.cpp timer/Timer.h utils/Consts.h)

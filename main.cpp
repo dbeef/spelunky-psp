@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 
+
+
 // FIXME Probably shoudln't do this manually
 #define SYS 1
 #define LOGME 0
@@ -8,6 +10,7 @@
 #include "glchk.h"
 #include "input/InputHandler.h"
 #include "timer/Timer.h"
+#include "utils/Consts.h"
 
 #include <pspkernel.h>
 #include <pspdisplay.h>
@@ -22,23 +25,13 @@
 
 PSP_MODULE_INFO("Orthographic Projection", 0x1000, 1, 1);
 
+static Timer timer;
 static Camera *camera = new Camera();
 static InputHandler inputHandler(camera);
 
 static void dumpmat(GLenum mat, const char *s) {
     float m[16];
-
     glGetFloatv(mat, m);
-//psp_log("%s = \n"
-//            "  [ %f %f %f %f\n"
-//            "    %f %f %f %f\n"
-//            "    %f %f %f %f\n"
-//            "    %f %f %f %f ]\n",
-//            s,
-//            m[0], m[4], m[8], m[12],
-//            m[1], m[5], m[9], m[13],
-//            m[2], m[6], m[10], m[14],
-//            m[3], m[7], m[11], m[15]);
 }
 
 static
@@ -50,12 +43,10 @@ void reshape(int w, int h) {
     dumpmat(GL_PROJECTION_MATRIX, "ident proj");
     GLCHK(glOrtho(-2 * 1.7, 2 * 1.7, 2, -2, -2, 2));
     dumpmat(GL_PROJECTION_MATRIX, "ortho proj");
-
     GLCHK(glMatrixMode(GL_MODELVIEW));
     GLCHK(glLoadIdentity());
     dumpmat(GL_MODELVIEW_MATRIX, "ident modelview");
     dumpmat(GL_PROJECTION_MATRIX, "non-current proj");
-
     gluLookAt(camera->x, camera->y, 2.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
     dumpmat(GL_MODELVIEW_MATRIX, "lookat modelview");
     glLoadIdentity();
@@ -70,31 +61,11 @@ static GLuint texid[NTEX];
 extern unsigned char firefox_start[];
 extern unsigned char logo_start[];
 
-u64 *tick_before = new u64(0);
-float last_delta{};
 
 static
 void display() {
 
-    u32 tick_freq = sceRtcGetTickResolution();
-
-    if (*tick_before == 0) {
-        int result = sceRtcGetCurrentTick(tick_before);
-    } else {
-        u64 temp_tick;
-        int result = sceRtcGetCurrentTick(&temp_tick);
-        u64 diff = temp_tick - *tick_before;
-        printf("Result:  %i \n", result);
-        printf("Current tick :  %lu \n", temp_tick);
-        printf("Diff:  %lu \n", diff);
-        float delta = ((float) diff / tick_freq);
-
-        printf("Delta:  %f \n", delta - last_delta);
-
-        last_delta = delta;
-    }
-//    time_t t = (unsigned)time(NULL);
-//    psp_log("%li \n", t);
+    timer.update();
 
     int i;
     static GLfloat angle;
@@ -149,50 +120,6 @@ void display() {
 //#endif
 }
 
-
-static
-void keydown(unsigned char key, int x, int y) {
-    //psp_log("keys\n");
-
-//    switch (key) {
-//        case 'd':
-//            cam_x += 1.0f;            /* delta, triangle */
-//            break;
-//        case 'o':
-//            cam_y += 1.0f;        /* round */
-//            delta = 0.0f;
-//            break;
-//        case 'q':
-//            cam_x -= 1.0f;            /* square*/
-//            break;
-//        case 'x':
-//            cam_y -= 1.0f;        /* cross button */
-//            exit(0);
-//            break;
-//        default:;
-//    }
-
-
-}
-
-
-static
-void keyup(unsigned char key, int x, int y) {
-
-    switch (key) {
-        case 'o':
-            delta = 1.0f;
-            break;
-        default:;
-    }
-}
-
-
-static
-void joystick(unsigned int buttonMask, int x, int y, int z) {
-    GLCHK(glClearColor(x * 1.0f / 2000.0f + 0.5f, y * 1.0f / 2000.0f + 0.5f, 1.0f, 1.0f));
-}
-
 /*
    F E D C B A 9 8|7 6 5 4 3 2 1 0
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -221,11 +148,8 @@ int main(int argc, char *argv[]) {
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-    glutInitWindowSize(480, 272);
+    glutInitWindowSize(SCREEN_W, SCREEN_H);
     glutCreateWindow(__FILE__);
-    glutKeyboardFunc(&keydown);
-    glutKeyboardUpFunc(&keyup);
-    glutJoystickFunc(joystick, 0);
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
 

@@ -1,3 +1,15 @@
+# Utilizing exisiting resource compiler
+
+
+#%.raw: %.png
+#		convert $< rgba:$@
+#%-mono.raw: %.png
+		#convert $< gray:$@
+#%.o: %.raw
+#	    (sym=`echo $(notdir $*) | tr '-' '_'`; \
+#		 echo -e ".data\n.global $${sym}_start\n$${sym}_start:\n\t.incbin \"$<\"" | $(AS) -o $@)
+
+
 TARGET = sprite
 OBJS = main.o firefox.o
 
@@ -15,4 +27,3 @@ PSP_EBOOT_TITLE = Sprite Sample
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
-
