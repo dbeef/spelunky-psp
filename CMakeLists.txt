@@ -21,4 +21,15 @@ add_executable(spelunkypsp
         rooms/AltarRoom.hpp rooms/ClosedRooms.hpp rooms/EntranceRooms.hpp rooms/ExitRooms.hpp
         rooms/LeftRightDownRooms.hpp rooms/LeftRightRooms.hpp rooms/LeftRightUpRooms.hpp rooms/RoomType.hpp
         rooms/ShopRooms.hpp rooms/SnakeWellRoom.hpp rooms/SplashScreenRooms.hpp
+        tiles/Level.cpp
+        tiles/Level.hpp
+        tiles/Direction.hpp
+        tiles/SplashScreenType.hpp
+        tiles/TileOrientation.hpp
+        tiles/MapTile.cpp
+        tiles/MapTile.hpp
+        tiles/LevelRenderingUtils.cpp
+        tiles/LevelRenderingUtils.hpp
+        tiles/LevelGenerator.cpp
+        tiles/LevelGenerator.hpp
         )

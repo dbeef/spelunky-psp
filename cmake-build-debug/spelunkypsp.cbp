@@ -138,7 +138,40 @@
 		<Unit filename="/home/dbeef/spelunky-psp/rooms/SplashScreenRooms.hpp">
 			<Option target="spelunkypsp"/>
 		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/tiles/Direction.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/tiles/Level.cpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/tiles/Level.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/tiles/LevelGenerator.cpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/tiles/LevelGenerator.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/tiles/LevelRenderingUtils.cpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/tiles/LevelRenderingUtils.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/tiles/MapTile.cpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/tiles/MapTile.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
 		<Unit filename="/home/dbeef/spelunky-psp/tiles/MapTileType.h">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/tiles/SplashScreenType.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/tiles/TileOrientation.hpp">
 			<Option target="spelunkypsp"/>
 		</Unit>
 		<Unit filename="/home/dbeef/spelunky-psp/timer/Timer.cpp">

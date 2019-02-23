@@ -204,6 +204,114 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/spelunkypsp.dir/build.make CMakeFiles/spelunkypsp.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+tiles/Level.o: tiles/Level.cpp.o
+
+.PHONY : tiles/Level.o
+
+# target to build an object file
+tiles/Level.cpp.o:
+	$(MAKE) -f CMakeFiles/spelunkypsp.dir/build.make CMakeFiles/spelunkypsp.dir/tiles/Level.cpp.o
+.PHONY : tiles/Level.cpp.o
+
+tiles/Level.i: tiles/Level.cpp.i
+
+.PHONY : tiles/Level.i
+
+# target to preprocess a source file
+tiles/Level.cpp.i:
+	$(MAKE) -f CMakeFiles/spelunkypsp.dir/build.make CMakeFiles/spelunkypsp.dir/tiles/Level.cpp.i
+.PHONY : tiles/Level.cpp.i
+
+tiles/Level.s: tiles/Level.cpp.s
+
+.PHONY : tiles/Level.s
+
+# target to generate assembly for a file
+tiles/Level.cpp.s:
+	$(MAKE) -f CMakeFiles/spelunkypsp.dir/build.make CMakeFiles/spelunkypsp.dir/tiles/Level.cpp.s
+.PHONY : tiles/Level.cpp.s
+
+tiles/LevelGenerator.o: tiles/LevelGenerator.cpp.o
+
+.PHONY : tiles/LevelGenerator.o
+
+# target to build an object file
+tiles/LevelGenerator.cpp.o:
+	$(MAKE) -f CMakeFiles/spelunkypsp.dir/build.make CMakeFiles/spelunkypsp.dir/tiles/LevelGenerator.cpp.o
+.PHONY : tiles/LevelGenerator.cpp.o
+
+tiles/LevelGenerator.i: tiles/LevelGenerator.cpp.i
+
+.PHONY : tiles/LevelGenerator.i
+
+# target to preprocess a source file
+tiles/LevelGenerator.cpp.i:
+	$(MAKE) -f CMakeFiles/spelunkypsp.dir/build.make CMakeFiles/spelunkypsp.dir/tiles/LevelGenerator.cpp.i
+.PHONY : tiles/LevelGenerator.cpp.i
+
+tiles/LevelGenerator.s: tiles/LevelGenerator.cpp.s
+
+.PHONY : tiles/LevelGenerator.s
+
+# target to generate assembly for a file
+tiles/LevelGenerator.cpp.s:
+	$(MAKE) -f CMakeFiles/spelunkypsp.dir/build.make CMakeFiles/spelunkypsp.dir/tiles/LevelGenerator.cpp.s
+.PHONY : tiles/LevelGenerator.cpp.s
+
+tiles/LevelRenderingUtils.o: tiles/LevelRenderingUtils.cpp.o
+
+.PHONY : tiles/LevelRenderingUtils.o
+
+# target to build an object file
+tiles/LevelRenderingUtils.cpp.o:
+	$(MAKE) -f CMakeFiles/spelunkypsp.dir/build.make CMakeFiles/spelunkypsp.dir/tiles/LevelRenderingUtils.cpp.o
+.PHONY : tiles/LevelRenderingUtils.cpp.o
+
+tiles/LevelRenderingUtils.i: tiles/LevelRenderingUtils.cpp.i
+
+.PHONY : tiles/LevelRenderingUtils.i
+
+# target to preprocess a source file
+tiles/LevelRenderingUtils.cpp.i:
+	$(MAKE) -f CMakeFiles/spelunkypsp.dir/build.make CMakeFiles/spelunkypsp.dir/tiles/LevelRenderingUtils.cpp.i
+.PHONY : tiles/LevelRenderingUtils.cpp.i
+
+tiles/LevelRenderingUtils.s: tiles/LevelRenderingUtils.cpp.s
+
+.PHONY : tiles/LevelRenderingUtils.s
+
+# target to generate assembly for a file
+tiles/LevelRenderingUtils.cpp.s:
+	$(MAKE) -f CMakeFiles/spelunkypsp.dir/build.make CMakeFiles/spelunkypsp.dir/tiles/LevelRenderingUtils.cpp.s
+.PHONY : tiles/LevelRenderingUtils.cpp.s
+
+tiles/MapTile.o: tiles/MapTile.cpp.o
+
+.PHONY : tiles/MapTile.o
+
+# target to build an object file
+tiles/MapTile.cpp.o:
+	$(MAKE) -f CMakeFiles/spelunkypsp.dir/build.make CMakeFiles/spelunkypsp.dir/tiles/MapTile.cpp.o
+.PHONY : tiles/MapTile.cpp.o
+
+tiles/MapTile.i: tiles/MapTile.cpp.i
+
+.PHONY : tiles/MapTile.i
+
+# target to preprocess a source file
+tiles/MapTile.cpp.i:
+	$(MAKE) -f CMakeFiles/spelunkypsp.dir/build.make CMakeFiles/spelunkypsp.dir/tiles/MapTile.cpp.i
+.PHONY : tiles/MapTile.cpp.i
+
+tiles/MapTile.s: tiles/MapTile.cpp.s
+
+.PHONY : tiles/MapTile.s
+
+# target to generate assembly for a file
+tiles/MapTile.cpp.s:
+	$(MAKE) -f CMakeFiles/spelunkypsp.dir/build.make CMakeFiles/spelunkypsp.dir/tiles/MapTile.cpp.s
+.PHONY : tiles/MapTile.cpp.s
+
 timer/Timer.o: timer/Timer.cpp.o
 
 .PHONY : timer/Timer.o
@@ -249,6 +357,18 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... tiles/Level.o"
+	@echo "... tiles/Level.i"
+	@echo "... tiles/Level.s"
+	@echo "... tiles/LevelGenerator.o"
+	@echo "... tiles/LevelGenerator.i"
+	@echo "... tiles/LevelGenerator.s"
+	@echo "... tiles/LevelRenderingUtils.o"
+	@echo "... tiles/LevelRenderingUtils.i"
+	@echo "... tiles/LevelRenderingUtils.s"
+	@echo "... tiles/MapTile.o"
+	@echo "... tiles/MapTile.i"
+	@echo "... tiles/MapTile.s"
 	@echo "... timer/Timer.o"
 	@echo "... timer/Timer.i"
 	@echo "... timer/Timer.s"

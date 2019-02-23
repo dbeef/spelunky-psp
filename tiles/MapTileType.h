@@ -56,6 +56,31 @@ enum MapTileType {
     SHOP_MUGSHOT_4,                 //40
     ALTAR_LEFT,                     //41
     ALTAR_RIGHT,                    //42
+
+    // Then, there's 8 * 2 tiles of cave background placed in such manner, that background made from it would look like:
+    // (BG_)
+    //  1   2  5  6
+    //  3   4  7  8
+    //  9  10 13 14
+    // 11  12 15 16
+
+    BG_1, // 43, add it to the piece from the matrix
+    BG_2,
+    BG_3,
+    BG_4,
+    BG_5,
+    BG_6,
+    BG_7,
+    BG_8,
+    BG_9,
+    BG_10,
+    BG_12,
+    BG_13,
+    BG_14,
+    BG_15,
+    BG_16,
+
+
 };
 
 #endif //SPELUNKYDS_MAPTILETYPES_H

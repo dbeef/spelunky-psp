@@ -1,17 +1,14 @@
-# Utilizing exisiting resource compiler
-
-
-#%.raw: %.png
-#		convert $< rgba:$@
-#%-mono.raw: %.png
-		#convert $< gray:$@
-#%.o: %.raw
-#	    (sym=`echo $(notdir $*) | tr '-' '_'`; \
-#		 echo -e ".data\n.global $${sym}_start\n$${sym}_start:\n\t.incbin \"$<\"" | $(AS) -o $@)
-
-
 TARGET = sprite
-OBJS := main.o gfxcavebg.o
+
+SOURCES		:=	. camera common input rooms tiles timer utils
+CFILES		:=	$(foreach dir,$(SOURCES), $(wildcard $(dir)/*.c))
+CPPFILES	:=	$(foreach dir,$(SOURCES), $(wildcard $(dir)/*.cpp))
+PRECOMPILED	:=	$(foreach dir,$(SOURCES), $(wildcard $(dir)/*.o))
+
+#OBJS := main.o gfxcavebg.o tiles/Level.o
+
+OBJS := $(addsuffix .o,$(BINFILES)) \
+					$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(PRECOMPILED:.c=.o)
 
 INCDIR =
 CFLAGS = -G0 -Wall -O2
