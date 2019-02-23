@@ -98,9 +98,9 @@ void Level::write_tiles_to_map() {
     for (int x = 0; x < MAP_GAME_WIDTH_TILES; x++) {
         for (int y = 0; y < MAP_GAME_HEIGHT_TILES; y++) {
             MapTile *t = map_tiles[x][y];
-            if (t->exists) {
+//            if (t->exists) {
                 int tile_type = t->mapTileType;
-                if (tile_type != 0) {
+                if (tile_type > 0) {
                     upload_tile(tile_type);
                 } else {
                     // place a piece of background
@@ -146,7 +146,7 @@ void Level::write_tiles_to_map() {
                 glTexCoord2f(1, 0);
                 glVertex3f(1, 0, 0);
                 GLCHK(glEnd());
-            }
+//            }
         }
     }
 }
@@ -171,7 +171,7 @@ void Level::upload_tile(int type) {
     int current_tile;
 
     if (type <= 0)
-        current_tile = static_cast<unsigned int>(CONSOLE_BLACK_BACKGROUND) - 1;
+        current_tile = static_cast<unsigned int>(ALTAR_LEFT) - 1;
     else
         current_tile = type - 1;
 
