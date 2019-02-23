@@ -2,7 +2,9 @@
 #include <GL/glut.h>
 #include <cmath>
 
+#include "rooms/ExitRooms.hpp"
 #include "tiles/MapTileType.h"
+
 // FIXME Probably shoudln't do this manually
 #define SYS 1
 #define LOGME 0
@@ -57,17 +59,16 @@ void reshape(int w, int h) {
 static float delta = 1.0;
 
 #define NTEX    1
-static GLuint texid[NTEX];
+static GLuint texture_indexes[NTEX];
 
 extern unsigned char gfxcavebg_start[];
-extern unsigned char logo_start[];
 
-static
-void display() {
+static void upload_tile(int type);
+
+static void display() {
 
     timer.update();
 
-    int i;
     static GLfloat angle;
     static Timer timer;
     angle += delta;
@@ -82,41 +83,55 @@ void display() {
 
     inputHandler.handle();
 
-    for(int a =0;a<5;a++) {
-        GLCHK(glMatrixMode(GL_MODELVIEW));
-        GLCHK(glLoadIdentity());
-        GLCHK(glTranslatef(camera->x + a, camera->y, 0));
-        dumpmat(GL_MODELVIEW_MATRIX, "trans modelview");
-        //GLCHK(glRotatef(angle * 1.32f, 0.0f, 0.0f, 1.0f));
-        //dumpmat(GL_MODELVIEW_MATRIX, "rot modelview");
+    // In opengl:
+    // The top-left corner will be at (-1, 1).
+    // In spelunkyds:
+    // top-left corner is 0,0 and right-lower is 1, 1
 
-        GLCHK(glBindTexture(GL_TEXTURE_2D, texid[0]));
+    // iterating from left-lower corner of the room to the right-upper (spelunky-ds convention)
+    for (int y = 0; y < 10; y++) {
+        for (int x = 0; x < 10; x++) {
 
-        glBegin(GL_TRIANGLE_FAN);
-        glColor3f(1, 0, 0);
-        glTexCoord2f(0, 0);
-        glVertex3f(0, 0, 0);
+            int tile_type = exit_room[0][y][x];
+            upload_tile(tile_type);
 
-        glColor3f(0, 1, 0);
-        glTexCoord2f(0, 1);
-        glVertex3f(0, 1, 0);
+            GLCHK(glMatrixMode(GL_MODELVIEW));
+            GLCHK(glLoadIdentity());
+            GLCHK(glTranslatef(camera->x + x, camera->y + y, 0));
+            dumpmat(GL_MODELVIEW_MATRIX, "trans modelview");
+            //GLCHK(glRotatef(angle * 1.32f, 0.0f, 0.0f, 1.0f));
+            //dumpmat(GL_MODELVIEW_MATRIX, "rot modelview");
+            GLCHK(glBindTexture(GL_TEXTURE_2D, texture_indexes[0]));
 
-        glColor3f(0, 0, 1);
-        glTexCoord2f(1, 1);
-        glVertex3f(1, 1, 0);
+            glBegin(GL_TRIANGLE_FAN);
+            glColor3f(1, 0, 0);
+            glTexCoord2f(0, 0);
+            glVertex3f(0, 0, 0);
 
-        glColor3f(1, 1, 1);
-        glTexCoord2f(1, 0);
-        glVertex3f(1, 0, 0);
-        GLCHK(glEnd());
+            glColor3f(0, 1, 0);
+            glTexCoord2f(0, 1);
+            glVertex3f(0, 1, 0);
+
+            glColor3f(0, 0, 1);
+            glTexCoord2f(1, 1);
+            glVertex3f(1, 1, 0);
+
+            glColor3f(1, 1, 1);
+            glTexCoord2f(1, 0);
+            glVertex3f(1, 0, 0);
+            GLCHK(glEnd());
+        }
     }
 
     glutSwapBuffers();
+
     glutPostRedisplay();
+
 //#if SYS
 //    usleep(1000000/30);
 //#endif
 }
+
 
 /*
    F E D C B A 9 8|7 6 5 4 3 2 1 0
@@ -128,31 +143,17 @@ void display() {
   |R R R R|G G G G|B B B B|A A A A| 4444
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  */
-#define RGB565(r, g, b)        ((((r) << 8) & 0xf800) | (((g) << 3) & 0x07E0) | (((b) >> 3) & 0x001f))
-#define RGBA5551(r, g, b, a)    ((((r) << 8) & 0xf800) | (((g) << 3) & 0x07C0) | (((b) >> 2) & 0x003e) | (((a) >> 7) & 0x0001))
 #define RGBA4444(r, g, b, a)    ((((r) << 8) & 0xf000) | (((g) << 4) & 0x0f00) | (((b)     ) & 0x00f0) | (((a) >> 4) & 0x000f))
 
-int main(int argc, char *argv[]) {
+static void upload_tile(int type) {
 
+    int current_tile;
 
-    sceCtrlSetSamplingCycle(0);
-    sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
+    if(type <= 0)
+        current_tile = static_cast<unsigned int>(CONSOLE_BLACK_BACKGROUND) - 1;
+    else
+        current_tile = type - 1;
 
-    int i;
-    unsigned short tex16[16 * 16];
-
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-    glutInitWindowSize(SCREEN_W, SCREEN_H);
-    glutReshapeFunc(reshape);
-    glutCreateWindow(__FILE__);
-    glutDisplayFunc(display);
-
-    GLCHK(glGenTextures(NTEX, texid));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-
-    unsigned int current_tile = static_cast<unsigned int>(STONE_BLOCK) - 1;
     unsigned int row = static_cast<unsigned int>(ceil((current_tile / 2) + 1));
     int offset = (row - 1) * 2 * 16 * 16;
 
@@ -166,7 +167,10 @@ int main(int argc, char *argv[]) {
 
     bool first = false;
 
-    for (i = 0; i < 16 * 16; i++) {
+    unsigned short tex16[16 * 16];
+
+    for (int i = 0; i < 16 * 16; i++) {
+
         if (i % 16 == 0 && first) {
             index += 16;
         }
@@ -179,10 +183,29 @@ int main(int argc, char *argv[]) {
         index++;
         first = true;
     }
-    GLCHK(glBindTexture(GL_TEXTURE_2D, texid[0]));
+    GLCHK(glBindTexture(GL_TEXTURE_2D, texture_indexes[0]));
     GLCHK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 16, 16, 0, GL_RGB, GL_UNSIGNED_SHORT_4_4_4_4, tex16));
-
     GLCHK(glEnable(GL_TEXTURE_2D));
+
+}
+
+int main(int argc, char *argv[]) {
+
+
+    sceCtrlSetSamplingCycle(0);
+    sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
+
+
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+    glutInitWindowSize(SCREEN_W, SCREEN_H);
+    glutReshapeFunc(reshape);
+    glutCreateWindow(__FILE__);
+    glutDisplayFunc(display);
+
+    GLCHK(glGenTextures(NTEX, texture_indexes));
+    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 
     glutMainLoop();
     return 0;

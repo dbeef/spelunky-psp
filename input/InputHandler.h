@@ -44,19 +44,19 @@ public:
         if (pad.Buttons != 0) {
             if (pad.Buttons & PSP_CTRL_SQUARE) {
                 //printf("Square pressed \n");
-                _camera->x -= 0.01f;
+                _camera->x -= 0.1f;
             }
             if (pad.Buttons & PSP_CTRL_TRIANGLE) {
                 //printf("Triangle pressed \n");
-                _camera->y += 0.01f;
+                _camera->y += 0.1f;
             }
             if (pad.Buttons & PSP_CTRL_CIRCLE) {
                 //printf("Cicle pressed \n");
-                _camera->x += 0.01f;
+                _camera->x += 0.1f;
             }
             if (pad.Buttons & PSP_CTRL_CROSS) {
                 //printf("Cross pressed \n");
-                _camera->y -= 0.01f;
+                _camera->y -= 0.1f;
             }
 
             if (pad.Buttons & PSP_CTRL_UP) {

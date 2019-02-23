@@ -1,4 +1,4 @@
-.idea/
+.idea
 *.o
 *.raw
 *.save
