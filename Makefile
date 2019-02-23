@@ -11,7 +11,7 @@
 
 
 TARGET = sprite
-OBJS = main.o firefox.o
+OBJS := main.o gfxcavebg.o
 
 INCDIR =
 CFLAGS = -G0 -Wall -O2

@@ -12,10 +12,6 @@
 stdio.h
 -
 
-/home/dbeef/spelunky-psp/input/InputHandler.cpp
-InputHandler.h
-/home/dbeef/spelunky-psp/input/InputHandler.h
-
 /home/dbeef/spelunky-psp/input/InputHandler.h
 ../camera/Camera.h
 /home/dbeef/spelunky-psp/camera/Camera.h
@@ -47,12 +43,18 @@ stdlib.h
 -
 GL/glut.h
 -
+cmath
+-
+tiles/MapTileType.h
+/home/dbeef/spelunky-psp/tiles/MapTileType.h
 glchk.h
 /home/dbeef/spelunky-psp/glchk.h
 input/InputHandler.h
 /home/dbeef/spelunky-psp/input/InputHandler.h
 timer/Timer.h
 /home/dbeef/spelunky-psp/timer/Timer.h
+utils/Consts.h
+/home/dbeef/spelunky-psp/utils/Consts.h
 pspkernel.h
 -
 pspdisplay.h
@@ -73,6 +75,10 @@ pspsystimer.h
 -
 time.h
 -
+angelscript.h
+-
+
+/home/dbeef/spelunky-psp/tiles/MapTileType.h
 
 /home/dbeef/spelunky-psp/timer/Timer.cpp
 Timer.h
@@ -89,6 +95,12 @@ pspuser.h
 -
 cstdlib
 -
+psprtc.h
+-
+stdio.h
+-
+
+/home/dbeef/spelunky-psp/utils/Consts.h
 
 /usr/local/pspdev/psp/include/GL/gl.h
 gl_mangle.h
@@ -130,6 +142,12 @@ sys/config.h
 _ansi.h
 /usr/local/pspdev/psp/include/_ansi.h
 sys/reent.h
+-
+
+/usr/local/pspdev/psp/include/angelscript.h
+stddef.h
+-
+stdint.h
 -
 
 /usr/local/pspdev/psp/include/assert.h
@@ -411,6 +429,8 @@ pspkerneltypes.h
 -
 pspmodulemgr.h
 -
+
+/usr/local/pspdev/psp/sdk/include/psprtc.h
 
 /usr/local/pspdev/psp/sdk/include/pspstdio.h
 pspkerneltypes.h

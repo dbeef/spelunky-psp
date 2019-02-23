@@ -69,13 +69,16 @@ CMakeFiles/spelunkypsp.dir/main.cpp.o: ../camera/Camera.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: ../glchk.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: ../input/InputHandler.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: ../main.cpp
+CMakeFiles/spelunkypsp.dir/main.cpp.o: ../tiles/MapTileType.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: ../timer/Timer.h
+CMakeFiles/spelunkypsp.dir/main.cpp.o: ../utils/Consts.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/include/GL/gl.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/include/GL/glext.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/include/GL/glu.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/include/GL/glut.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/include/_ansi.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/include/alloca.h
+CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/include/angelscript.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/include/assert.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/include/limits.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/include/machine/_default_types.h
@@ -123,6 +126,7 @@ CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/sdk/include/pspload
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/sdk/include/pspmoduleinfo.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/sdk/include/pspmodulemgr.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/sdk/include/pspmodulemgr_kernel.h
+CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/sdk/include/psprtc.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/sdk/include/pspstdio.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/sdk/include/pspstdio_kernel.h
 CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/sdk/include/pspsysmem.h
@@ -136,6 +140,7 @@ CMakeFiles/spelunkypsp.dir/main.cpp.o: /usr/local/pspdev/psp/sdk/include/psputil
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: ../timer/Timer.cpp
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: ../timer/Timer.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/_ansi.h
+CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/assert.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/limits.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/machine/_default_types.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/machine/_types.h
@@ -143,11 +148,15 @@ CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/mach
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/machine/types.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/newlib.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/stdint.h
+CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/stdio.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/sys/_types.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/sys/config.h
+CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/sys/custom_file.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/sys/features.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/sys/lock.h
+CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/sys/reent.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/sys/sched.h
+CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/sys/stdio.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/sys/time.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/include/sys/types.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/sdk/include/pspdebug.h
@@ -161,6 +170,7 @@ CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/sdk/include/
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/sdk/include/psploadexec.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/sdk/include/pspmoduleinfo.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/sdk/include/pspmodulemgr.h
+CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/sdk/include/psprtc.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/sdk/include/pspstdio.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/sdk/include/pspsysmem.h
 CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o: /usr/local/pspdev/psp/sdk/include/pspsystimer.h

@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <GL/glut.h>
+#include <cmath>
 
-
-
+#include "tiles/MapTileType.h"
 // FIXME Probably shoudln't do this manually
 #define SYS 1
 #define LOGME 0
@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <pspsystimer.h>
 #include <time.h>
+#include <angelscript.h>
 
 PSP_MODULE_INFO("Orthographic Projection", 0x1000, 1, 1);
 
@@ -41,7 +42,7 @@ void reshape(int w, int h) {
     dumpmat(GL_PROJECTION_MATRIX, "fresh proj");
     GLCHK(glLoadIdentity());
     dumpmat(GL_PROJECTION_MATRIX, "ident proj");
-    GLCHK(glOrtho(-2 * 1.7, 2 * 1.7, 2, -2, -2, 2));
+    GLCHK(glOrtho(-8 * 1.7, 8 * 1.7, 8, -8, -8, 8));
     dumpmat(GL_PROJECTION_MATRIX, "ortho proj");
     GLCHK(glMatrixMode(GL_MODELVIEW));
     GLCHK(glLoadIdentity());
@@ -55,12 +56,11 @@ void reshape(int w, int h) {
 
 static float delta = 1.0;
 
-#define NTEX    7
+#define NTEX    1
 static GLuint texid[NTEX];
 
-extern unsigned char firefox_start[];
+extern unsigned char gfxcavebg_start[];
 extern unsigned char logo_start[];
-
 
 static
 void display() {
@@ -82,18 +82,15 @@ void display() {
 
     inputHandler.handle();
 
-    for (i = 0; i < NTEX; i++) {
-        int x = i % 4;
-        int y = i / 4;
-
+    for(int a =0;a<5;a++) {
         GLCHK(glMatrixMode(GL_MODELVIEW));
         GLCHK(glLoadIdentity());
-        GLCHK(glTranslatef(camera->x + (1. * (x - 2)), camera->y + (1. * (y - .5)), 0));
+        GLCHK(glTranslatef(camera->x + a, camera->y, 0));
         dumpmat(GL_MODELVIEW_MATRIX, "trans modelview");
         //GLCHK(glRotatef(angle * 1.32f, 0.0f, 0.0f, 1.0f));
         //dumpmat(GL_MODELVIEW_MATRIX, "rot modelview");
 
-        GLCHK(glBindTexture(GL_TEXTURE_2D, texid[i]));
+        GLCHK(glBindTexture(GL_TEXTURE_2D, texid[0]));
 
         glBegin(GL_TRIANGLE_FAN);
         glColor3f(1, 0, 0);
@@ -113,6 +110,7 @@ void display() {
         glVertex3f(1, 0, 0);
         GLCHK(glEnd());
     }
+
     glutSwapBuffers();
     glutPostRedisplay();
 //#if SYS
@@ -141,81 +139,48 @@ int main(int argc, char *argv[]) {
     sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
 
     int i;
-    unsigned short tex16[64 * 64];
-    unsigned char tex24[64 * 64 * 3];
-
-    //psp_log("main starting\n");
+    unsigned short tex16[16 * 16];
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
     glutInitWindowSize(SCREEN_W, SCREEN_H);
-    glutCreateWindow(__FILE__);
     glutReshapeFunc(reshape);
+    glutCreateWindow(__FILE__);
     glutDisplayFunc(display);
 
-    //psp_log("generating %d textures\n", NTEX);
-
     GLCHK(glGenTextures(NTEX, texid));
-
-    //psp_log("binding to %d\n", texid[4]);
-
-    GLCHK(glBindTexture(GL_TEXTURE_2D, texid[4]));
-
-    //psp_log("uploading texture data for %d\n", texid[4]);
-    GLCHK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, firefox_start));
-
-    //psp_log("setting linear filtering for %d\n", texid[4]);
     GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
     GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 
-    for (i = 0; i < 64 * 64; i++)
-        tex16[i] = RGB565(firefox_start[i * 4 + 0],
-                          firefox_start[i * 4 + 1],
-                          firefox_start[i * 4 + 2]);
-    GLCHK(glBindTexture(GL_TEXTURE_2D, texid[2]));
-    GLCHK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 64, 64, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, tex16));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    unsigned int current_tile = static_cast<unsigned int>(STONE_BLOCK) - 1;
+    unsigned int row = static_cast<unsigned int>(ceil((current_tile / 2) + 1));
+    int offset = (row - 1) * 2 * 16 * 16;
 
-    for (i = 0; i < 64 * 64; i++)
-        tex16[i] = RGBA5551(firefox_start[i * 4 + 0],
-                            firefox_start[i * 4 + 1],
-                            firefox_start[i * 4 + 2],
-                            firefox_start[i * 4 + 3]);
-    GLCHK(glBindTexture(GL_TEXTURE_2D, texid[5]));
-    GLCHK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1, tex16));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    if (offset < 0)
+        exit(0);
 
-    GLCHK(glBindTexture(GL_TEXTURE_2D, texid[1]));
-    GLCHK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 64, 64, 0, GL_RGB, GL_UNSIGNED_SHORT_5_5_5_1, tex16));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    bool row_offset = (current_tile % 2 == 1);
 
-    for (i = 0; i < 64 * 64; i++)
-        tex16[i] = RGBA4444(firefox_start[i * 4 + 0],
-                            firefox_start[i * 4 + 1],
-                            firefox_start[i * 4 + 2],
-                            firefox_start[i * 4 + 3]);
-    GLCHK(glBindTexture(GL_TEXTURE_2D, texid[6]));
-    GLCHK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, tex16));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    unsigned int index = 0;
+    if (row_offset) index += 16;
 
-    GLCHK(glBindTexture(GL_TEXTURE_2D, texid[3]));
-    GLCHK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 64, 64, 0, GL_RGB, GL_UNSIGNED_SHORT_4_4_4_4, tex16));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    bool first = false;
 
-    for (i = 0; i < 64 * 64; i++) {
-        tex24[i * 3 + 0] = firefox_start[i * 4 + 0];
-        tex24[i * 3 + 1] = firefox_start[i * 4 + 1];
-        tex24[i * 3 + 2] = firefox_start[i * 4 + 2];
+    for (i = 0; i < 16 * 16; i++) {
+        if (i % 16 == 0 && first) {
+            index += 16;
+        }
+
+        tex16[i] = RGBA4444(gfxcavebg_start[((offset + index) * 4) + 0],
+                            gfxcavebg_start[((offset + index) * 4) + 1],
+                            gfxcavebg_start[((offset + index) * 4) + 2],
+                            gfxcavebg_start[((offset + index) * 4) + 3]);
+
+        index++;
+        first = true;
     }
     GLCHK(glBindTexture(GL_TEXTURE_2D, texid[0]));
-    GLCHK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 64, 64, 0, GL_RGB, GL_UNSIGNED_BYTE, tex24));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    GLCHK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 16, 16, 0, GL_RGB, GL_UNSIGNED_SHORT_4_4_4_4, tex16));
 
     GLCHK(glEnable(GL_TEXTURE_2D));
 

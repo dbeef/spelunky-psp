@@ -105,6 +105,42 @@
 		<Unit filename="/home/dbeef/spelunky-psp/main.cpp">
 			<Option target="spelunkypsp"/>
 		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/rooms/AltarRoom.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/rooms/ClosedRooms.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/rooms/EntranceRooms.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/rooms/ExitRooms.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/rooms/LeftRightDownRooms.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/rooms/LeftRightRooms.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/rooms/LeftRightUpRooms.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/rooms/RoomType.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/rooms/ShopRooms.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/rooms/SnakeWellRoom.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/rooms/SplashScreenRooms.hpp">
+			<Option target="spelunkypsp"/>
+		</Unit>
+		<Unit filename="/home/dbeef/spelunky-psp/tiles/MapTileType.h">
+			<Option target="spelunkypsp"/>
+		</Unit>
 		<Unit filename="/home/dbeef/spelunky-psp/timer/Timer.cpp">
 			<Option target="spelunkypsp"/>
 		</Unit>

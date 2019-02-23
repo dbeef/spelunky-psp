@@ -12,17 +12,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a6d3c44c-3e38-4721-88cd-b18aa1ff2137" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/utils/Consts.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rooms/AltarRoom.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rooms/ClosedRooms.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rooms/EntranceRooms.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rooms/ExitRooms.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rooms/LeftRightDownRooms.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rooms/LeftRightRooms.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rooms/LeftRightUpRooms.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rooms/RoomType.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rooms/ShopRooms.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rooms/SnakeWellRoom.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rooms/SplashScreenRooms.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rooms/todo.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tiles/MapTileType.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EBOOT.PBP" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PARAM.SFO" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assembly" beforeDir="false" afterPath="$PROJECT_DIR$/assembly" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/spelunkypsp.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/spelunkypsp.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/spelunkypsp.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/spelunkypsp.dir/depend.internal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/spelunkypsp.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/spelunkypsp.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/spelunkypsp.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/spelunkypsp.dir/flags.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/spelunkypsp.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/spelunkypsp.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/firefox.png" beforeDir="false" afterPath="$PROJECT_DIR$/firefox_2.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sprite.elf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/timer/Timer.h" beforeDir="false" afterPath="$PROJECT_DIR$/timer/Timer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pre_build.py" beforeDir="false" afterPath="$PROJECT_DIR$/pre_build.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -37,8 +50,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="9" column="18" lean-forward="true" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
+            <state relative-caret-position="734">
+              <caret line="157" column="78" selection-start-line="157" selection-start-column="78" selection-end-line="157" selection-end-column="78" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -47,9 +60,40 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/rooms/todo.txt">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/firefox.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tiles/MapTileType.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" column="39" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="39" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pre_build.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="21" column="54" selection-start-line="21" selection-start-column="54" selection-end-line="21" selection-end-column="54" />
+              <folding>
+                <element signature="e#40#62#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file:///usr/local/pspdev/psp/sdk/include/pspdebug.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="197">
+            <state relative-caret-position="1545">
               <caret line="103" column="5" selection-start-line="103" selection-start-column="5" selection-end-line="103" selection-end-column="5" />
               <folding>
                 <element signature="e#536#557#0" expanded="true" />
@@ -61,10 +105,9 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/glchk.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="47" column="6" selection-start-line="47" selection-start-column="1" selection-end-line="47" selection-end-column="6" />
+            <state relative-caret-position="690">
+              <caret line="46" column="9" selection-start-line="46" selection-start-column="9" selection-end-line="46" selection-end-column="9" />
               <folding>
-                <element signature="e#80#1023#0" expanded="true" />
                 <element signature="e#1339#1378#0" expanded="true" />
               </folding>
             </state>
@@ -72,90 +115,62 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/firefox_2.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/firefox.png">
-          <provider selected="true" editor-type-id="images" />
+        <entry file="file://$PROJECT_DIR$/Makefile">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="39" selection-start-column="39" selection-end-column="39" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Makefile">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="19" lean-forward="true" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/textab.h">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/Consts.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="8" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file:///usr/local/pspdev/psp/include/GL/gl.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="197">
-              <caret line="836" column="22" selection-start-line="836" selection-start-column="22" selection-end-line="836" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="26" lean-forward="true" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
+            <state relative-caret-position="330">
+              <caret line="22" column="79" selection-end-line="23" selection-end-column="9" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gfxcavebg.png">
+          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
     </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>static</find>
-      <find>sceKern</find>
-      <find>sceKernelSleepThreadCB</find>
-      <find>uslep</find>
-      <find>unist</find>
-      <find>psp_lo</find>
-      <find>uslee</find>
-      <find>make</find>
-      <find>idle</find>
-      <find>glutet</find>
-      <find>timer</find>
-      <find>psp_log</find>
-      <find>printf</find>
-      <find>time(nu</find>
-      <find>time</find>
-      <find>milli</find>
-      <find>tick_freq</find>
-      <find>tick</find>
-      <find>tim</find>
-      <find>endif</find>
-      <find>cstdio</find>
-      <find>delta</find>
-      <find>glut</find>
-      <find>joyi</find>
-      <find>#DEFIN</find>
-      <find>static constexpr int</find>
-      <find>480</find>
       <find />
       <find>firefox</find>
-      <find />
+      <find>extern</find>
+      <find>.o</find>
+      <find>gfx_cavebg</find>
+      <find>main</find>
+      <find>gfxcavebg</find>
+      <find>firefox_start</find>
+      <find>filename_no</find>
+      <find>64</find>
+      <find>texid</find>
+      <find>glTexImage2D</find>
+      <find>input</find>
+      <find>32</find>
+      <find>i * 4</find>
+      <find>offset +</find>
+      <find>index</find>
+      <find>(index + offset)</find>
+      <find>index * 4</find>
+      <find>print</find>
+      <find>flip</find>
+      <find>offset + (index</find>
+      <find>(offset + (index</find>
+      <find>))</find>
+      <find>offset + index</find>
+      <find>4))</find>
+      <find>glteximage2d</find>
+      <find>1.7</find>
+      <find>camera</find>
+      <find>camera-&gt;</find>
     </findStrings>
     <replaceStrings>
       <replace>link</replace>
@@ -165,6 +180,22 @@
       <replace>#DEFINE</replace>
       <replace>\r</replace>
       <replace>\t</replace>
+      <replace>cavebg_start</replace>
+      <replace>gfx_cavebg_start</replace>
+      <replace>gfxcavebg</replace>
+      <replace>32</replace>
+      <replace>offset + (i * 4)</replace>
+      <replace>16</replace>
+      <replace>index * 4</replace>
+      <replace>(index + offset)</replace>
+      <replace>(index * 4)</replace>
+      <replace>(offset + index)</replace>
+      <replace>(offset + index</replace>
+      <replace>offset + index</replace>
+      <replace>((offset + index</replace>
+      <replace>offset + index)</replace>
+      <replace>4)</replace>
+      <replace>1</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -179,10 +210,12 @@
         <option value="$PROJECT_DIR$/input/InputHandler.h" />
         <option value="$PROJECT_DIR$/timer/Timer.h" />
         <option value="$PROJECT_DIR$/utils/Consts.cpp" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/utils/Consts.h" />
-        <option value="$PROJECT_DIR$/main.cpp" />
         <option value="$PROJECT_DIR$/Makefile" />
+        <option value="$PROJECT_DIR$/pre_build.py" />
+        <option value="$PROJECT_DIR$/tiles/MapTileType.h" />
+        <option value="$PROJECT_DIR$/main.cpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
       </list>
     </option>
   </component>
@@ -214,54 +247,11 @@
             <path>
               <item name="spelunkypsp" type="b2602c69:ProjectViewProjectNode" />
               <item name="spelunky-psp" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
+              <item name="rooms" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="spelunkypsp" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
-            <path>
-              <item name="spelunkypsp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Header Search Paths" type="70bed36:NamedLibraryElementNode" />
-            </path>
-            <path>
-              <item name="spelunkypsp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Header Search Paths" type="70bed36:NamedLibraryElementNode" />
-              <item name="include" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="spelunkypsp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Header Search Paths" type="70bed36:NamedLibraryElementNode" />
-              <item name="include" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="spelunkypsp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Header Search Paths" type="70bed36:NamedLibraryElementNode" />
-              <item name="include" type="462c0819:PsiDirectoryNode" />
-              <item name="GL" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="spelunkypsp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Header Search Paths" type="70bed36:NamedLibraryElementNode" />
-              <item name="include" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="spelunkypsp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Header Search Paths" type="70bed36:NamedLibraryElementNode" />
-              <item name="include" type="462c0819:PsiDirectoryNode" />
-              <item name="GL" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="spelunkypsp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Header Search Paths" type="70bed36:NamedLibraryElementNode" />
-              <item name="include" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -273,6 +263,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -312,17 +303,20 @@
       <workItem from="1550912779458" duration="3654000" />
       <workItem from="1550917650204" duration="929000" />
       <workItem from="1550918593499" duration="4971000" />
-      <workItem from="1550923582489" duration="6739000" />
+      <workItem from="1550923582489" duration="10628000" />
+      <workItem from="1550935708953" duration="529000" />
+      <workItem from="1550936252888" duration="7887000" />
+      <workItem from="1550948616464" duration="292000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16703000" />
+    <option name="totallyTimeSpent" value="29300000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1366" height="744" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25075758" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2621212" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -333,7 +327,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.5112903" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.5112903" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="10" />
       <window_info anchor="bottom" id="CMake" order="11" weight="0.32903227" />
@@ -443,13 +437,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/Consts.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/Consts.cpp" />
     <entry file="file://$PROJECT_DIR$/input/InputHandler.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -484,20 +472,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="26" lean-forward="true" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/local/pspdev/psp/include/GL/gl.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="836" column="22" selection-start-line="836" selection-start-column="22" selection-end-line="836" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils/Consts.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -505,9 +479,52 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/firefox_2.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/textab.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="734">
+          <caret line="157" column="78" selection-start-line="157" selection-start-column="78" selection-end-line="157" selection-end-column="78" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/pspdev/psp/include/GL/gl.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="13380">
+          <caret line="892" column="22" selection-start-line="892" selection-start-column="22" selection-end-line="892" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/firefox.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tiles/MapTileType.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="39" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pre_build.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="21" column="54" selection-start-line="21" selection-start-column="54" selection-end-line="21" selection-end-column="54" />
+          <folding>
+            <element signature="e#40#62#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file:///usr/local/pspdev/psp/sdk/include/pspdebug.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
+        <state relative-caret-position="1545">
           <caret line="103" column="5" selection-start-line="103" selection-start-column="5" selection-end-line="103" selection-end-column="5" />
           <folding>
             <element signature="e#536#557#0" expanded="true" />
@@ -515,40 +532,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/textab.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="9" column="18" lean-forward="true" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/glchk.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="47" column="6" selection-start-line="47" selection-start-column="1" selection-end-line="47" selection-end-column="6" />
+        <state relative-caret-position="690">
+          <caret line="46" column="9" selection-start-line="46" selection-start-column="9" selection-end-line="46" selection-end-column="9" />
           <folding>
-            <element signature="e#80#1023#0" expanded="true" />
             <element signature="e#1339#1378#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/firefox_2.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/firefox.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/Makefile">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="19" lean-forward="true" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
+        <state>
+          <caret column="39" selection-start-column="39" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gfxcavebg.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rooms/todo.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="79" selection-end-line="23" selection-end-column="9" />
         </state>
       </provider>
     </entry>

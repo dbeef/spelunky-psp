@@ -70,13 +70,16 @@ CMakeFiles/spelunkypsp.dir/main.cpp.o
  /home/dbeef/spelunky-psp/glchk.h
  /home/dbeef/spelunky-psp/input/InputHandler.h
  /home/dbeef/spelunky-psp/main.cpp
+ /home/dbeef/spelunky-psp/tiles/MapTileType.h
  /home/dbeef/spelunky-psp/timer/Timer.h
+ /home/dbeef/spelunky-psp/utils/Consts.h
  /usr/local/pspdev/psp/include/GL/gl.h
  /usr/local/pspdev/psp/include/GL/glext.h
  /usr/local/pspdev/psp/include/GL/glu.h
  /usr/local/pspdev/psp/include/GL/glut.h
  /usr/local/pspdev/psp/include/_ansi.h
  /usr/local/pspdev/psp/include/alloca.h
+ /usr/local/pspdev/psp/include/angelscript.h
  /usr/local/pspdev/psp/include/assert.h
  /usr/local/pspdev/psp/include/limits.h
  /usr/local/pspdev/psp/include/machine/_default_types.h
@@ -124,6 +127,7 @@ CMakeFiles/spelunkypsp.dir/main.cpp.o
  /usr/local/pspdev/psp/sdk/include/pspmoduleinfo.h
  /usr/local/pspdev/psp/sdk/include/pspmodulemgr.h
  /usr/local/pspdev/psp/sdk/include/pspmodulemgr_kernel.h
+ /usr/local/pspdev/psp/sdk/include/psprtc.h
  /usr/local/pspdev/psp/sdk/include/pspstdio.h
  /usr/local/pspdev/psp/sdk/include/pspstdio_kernel.h
  /usr/local/pspdev/psp/sdk/include/pspsysmem.h
@@ -137,6 +141,7 @@ CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o
  /home/dbeef/spelunky-psp/timer/Timer.cpp
  /home/dbeef/spelunky-psp/timer/Timer.h
  /usr/local/pspdev/psp/include/_ansi.h
+ /usr/local/pspdev/psp/include/assert.h
  /usr/local/pspdev/psp/include/limits.h
  /usr/local/pspdev/psp/include/machine/_default_types.h
  /usr/local/pspdev/psp/include/machine/_types.h
@@ -144,11 +149,15 @@ CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o
  /usr/local/pspdev/psp/include/machine/types.h
  /usr/local/pspdev/psp/include/newlib.h
  /usr/local/pspdev/psp/include/stdint.h
+ /usr/local/pspdev/psp/include/stdio.h
  /usr/local/pspdev/psp/include/sys/_types.h
  /usr/local/pspdev/psp/include/sys/config.h
+ /usr/local/pspdev/psp/include/sys/custom_file.h
  /usr/local/pspdev/psp/include/sys/features.h
  /usr/local/pspdev/psp/include/sys/lock.h
+ /usr/local/pspdev/psp/include/sys/reent.h
  /usr/local/pspdev/psp/include/sys/sched.h
+ /usr/local/pspdev/psp/include/sys/stdio.h
  /usr/local/pspdev/psp/include/sys/time.h
  /usr/local/pspdev/psp/include/sys/types.h
  /usr/local/pspdev/psp/sdk/include/pspdebug.h
@@ -162,6 +171,7 @@ CMakeFiles/spelunkypsp.dir/timer/Timer.cpp.o
  /usr/local/pspdev/psp/sdk/include/psploadexec.h
  /usr/local/pspdev/psp/sdk/include/pspmoduleinfo.h
  /usr/local/pspdev/psp/sdk/include/pspmodulemgr.h
+ /usr/local/pspdev/psp/sdk/include/psprtc.h
  /usr/local/pspdev/psp/sdk/include/pspstdio.h
  /usr/local/pspdev/psp/sdk/include/pspsysmem.h
  /usr/local/pspdev/psp/sdk/include/pspsystimer.h
