@@ -1,4 +1,0 @@
-.data
-.global firefox_start
-firefox_start:
-	.incbin "firefox_2.raw"
