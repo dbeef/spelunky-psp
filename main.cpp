@@ -30,7 +30,11 @@
 #include <time.h>
 #include <angelscript.h>
 
-PSP_MODULE_INFO("Orthographic Projection", 0x1000, 1, 1);
+#include "common/callbacks.h"
+#include "common/vram.h"
+PSP_MODULE_INFO("Spelunky", 0, 1, 1);
+PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
+
 
 static Timer timer;
 static Camera *camera = new Camera();
@@ -45,30 +49,34 @@ void reshape(int w, int h) {
     dumpmat(GL_PROJECTION_MATRIX, "fresh proj");
     GLCHK(glLoadIdentity());
     dumpmat(GL_PROJECTION_MATRIX, "ident proj");
+    // 480 / 272 = ~1.7
     GLCHK(glOrtho(-8 * 1.7, 8 * 1.7, 8, -8, -8, 8));
     dumpmat(GL_PROJECTION_MATRIX, "ortho proj");
     GLCHK(glMatrixMode(GL_MODELVIEW));
     GLCHK(glLoadIdentity());
     dumpmat(GL_MODELVIEW_MATRIX, "ident modelview");
     dumpmat(GL_PROJECTION_MATRIX, "non-current proj");
-    gluLookAt(camera->x, camera->y, 2.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    gluLookAt(camera->x, camera->y, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
     dumpmat(GL_MODELVIEW_MATRIX, "lookat modelview");
     glLoadIdentity();
 }
 
 
-static float delta = 1.0;
 
 #define NTEX    1
 static GLuint texture_indexes[NTEX];
 
 static void display() {
 
-    timer.update();
-
-    static GLfloat angle;
     static Timer timer;
-    angle += delta;
+    timer.update();
+    static float delta = 0;
+    delta += timer.last_delta;
+    //25fps
+//    if(delta > 0.05f)
+//    {
+//        delta =0;
+//    } else return;
 
     GLCHK(glShadeModel(GL_SMOOTH));
 
@@ -113,6 +121,8 @@ int main(int argc, char *argv[]) {
     GLCHK(glGenTextures(NTEX, texture_indexes));
     GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
     GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    GLCHK(glEnable(GL_TEXTURE_2D));
+
 
     glutMainLoop();
     return 0;

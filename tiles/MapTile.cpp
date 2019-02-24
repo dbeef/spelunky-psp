@@ -144,3 +144,14 @@ void MapTile::match_tile(MapTileType type) {
             break;
     }
 }
+
+bool MapTile::in_viewport(Camera *camera) {
+
+    // screen center is camera.x and camera.y
+    // screen width is 30 tiles times 17 tiles
+
+    bool condition_x = x > (-camera->x) - 15 && x < (-camera->x) + 15;
+    bool condition_y = y > (-camera->y) - 7.5 && y < (-camera->y) + 7.5;
+
+    return condition_x && condition_y;
+}

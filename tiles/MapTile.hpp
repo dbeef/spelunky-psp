@@ -6,6 +6,7 @@
 #define SPELUNKYDS_MAPTILE_H
 
 #include "MapTileType.h"
+#include "../camera/Camera.h"
 
 class MapTile {
 
@@ -16,14 +17,15 @@ public:
 
     }
 
-    int x;
-    int y;
+    int x; // int tiles
+    int y; // in tiles
     bool collidable;
     bool destroyable;
     bool exists;
     MapTileType mapTileType;
 
     void match_tile(MapTileType type);
+    bool in_viewport(Camera *camera);
 };
 
 

@@ -93,60 +93,64 @@ void Level::write_tiles_to_map() {
     // The top-left corner will be at (-1, 1).
     // In spelunkyds:
     // top-left corner is 0,0 and right-lower is 1, 1
+    GLCHK(glBindTexture(GL_TEXTURE_2D, 0));
+
+
+// first optimization thought -> go through all tiles of the same type, upload once & render all
+// it's 32 x 32 uploads per frame
+// second thought - cache a few most used textures? won't make much of a difference if there are 4-8 slots...
+// 4th thought -> render to framebuffer first?
+// limit rendered tiles to only those in current camera viewport
+
 
     // iterating from left-lower corner of the room to the right-upper (spelunky-ds convention)
     for (int x = 0; x < MAP_GAME_WIDTH_TILES; x++) {
         for (int y = 0; y < MAP_GAME_HEIGHT_TILES; y++) {
             MapTile *t = map_tiles[x][y];
-//            if (t->exists) {
-                int tile_type = t->mapTileType;
-                if (tile_type > 0) {
-                    upload_tile(tile_type);
-                } else {
-                    // place a piece of background
-                    // FIXME Find correct order of placing background tiles and put it into this matrix
-                    int bg_matrix[8][2] = {
-                            {15, 16},
-                            {13, 14},
-                            {11, 12},
-                            {9,  10},
-                            {7,  8},
-                            {5,  6},
-                            {3,  4},
-                            {1,  2},
-                    };
+            if (!t->in_viewport(camera)) continue;
+            int tile_type = t->mapTileType;
+            if (tile_type > 0) {
+                upload_tile(tile_type);
+            } else {
+                // place a piece of background
+                // FIXME Find correct order of placing background tiles and put it into this matrix
+                int bg_matrix[8][2] = {
+                        {15, 16},
+                        {13, 14},
+                        {11, 12},
+                        {9,  10},
+                        {7,  8},
+                        {5,  6},
+                        {3,  4},
+                        {1,  2},
+                };
 
-                    int bgr_type = bg_matrix[y % 8][x % 2] + 42;
-                    upload_tile(bgr_type);
-                }
+                int bgr_type = bg_matrix[y % 8][x % 2] + 42;
+                upload_tile(bgr_type);
+            }
 
-                GLCHK(glMatrixMode(GL_MODELVIEW));
-                GLCHK(glLoadIdentity());
-                GLCHK(glTranslatef(camera->x + x, camera->y + y, 0));
-                dumpmat(GL_MODELVIEW_MATRIX, "trans modelview");
-                //GLCHK(glRotatef(angle * 1.32f, 0.0f, 0.0f, 1.0f));
-                //dumpmat(GL_MODELVIEW_MATRIX, "rot modelview");
-                //FIXME
-                GLCHK(glBindTexture(GL_TEXTURE_2D, 0));
+            GLCHK(glMatrixMode(GL_MODELVIEW));
+            GLCHK(glLoadIdentity());
+            GLCHK(glTranslatef(camera->x + x, camera->y + y, 0));
+            dumpmat(GL_MODELVIEW_MATRIX, "trans modelview");
 
-                glBegin(GL_TRIANGLE_FAN);
-                glColor3f(1, 0, 0);
-                glTexCoord2f(0, 0);
-                glVertex3f(0, 0, 0);
+            glBegin(GL_TRIANGLE_FAN);
+            glColor3f(1, 0, 0);
+            glTexCoord2f(0, 0);
+            glVertex3f(0, 0, 0);
 
-                glColor3f(0, 1, 0);
-                glTexCoord2f(0, 1);
-                glVertex3f(0, 1, 0);
+            glColor3f(0, 1, 0);
+            glTexCoord2f(0, 1);
+            glVertex3f(0, 1, 0);
 
-                glColor3f(0, 0, 1);
-                glTexCoord2f(1, 1);
-                glVertex3f(1, 1, 0);
+            glColor3f(0, 0, 1);
+            glTexCoord2f(1, 1);
+            glVertex3f(1, 1, 0);
 
-                glColor3f(1, 1, 1);
-                glTexCoord2f(1, 0);
-                glVertex3f(1, 0, 0);
-                GLCHK(glEnd());
-//            }
+            glColor3f(1, 1, 1);
+            glTexCoord2f(1, 0);
+            glVertex3f(1, 0, 0);
+            GLCHK(glEnd());
         }
     }
 }
@@ -206,10 +210,8 @@ void Level::upload_tile(int type) {
     }
 //FIXME
 //    GLCHK(glBindTexture(GL_TEXTURE_2D, texture_indexes[0]));
-
-    GLCHK(glBindTexture(GL_TEXTURE_2D, 0));
+//    GLCHK(glBindTexture(GL_TEXTURE_2D, 0));
     GLCHK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 16, 16, 0, GL_RGB, GL_UNSIGNED_SHORT_4_4_4_4, tex16));
-    GLCHK(glEnable(GL_TEXTURE_2D));
 
 }
 
@@ -250,27 +252,29 @@ void Level::initialise_tiles_from_splash_screen(SplashScreenType splash_type) {
     for (int tab_y = 0; tab_y < SPLASH_SCREEN_HEIGHT; tab_y++) {
         for (int tab_x = 0; tab_x < SPLASH_SCREEN_WIDTH; tab_x++) {
 
-            if (tab[tab_y][tab_x] != 0) {
+//            if (tab[tab_y][tab_x] != 0) {
 
-                //offset to the position in current room
-                int room_offset =
-                        static_cast<int>(
-                                2 * ROOM_TILE_HEIGHT_SPLASH_SCREEN *
-                                LINE_WIDTH * ((ROOMS_Y - offset_on_upper_screen) - 1) - 4 * OFFSET_Y);
-                //pos x and y in pixels of the tile in the current room
-                int pos_x = static_cast<int>((tab_x * 2) / 2);
-                //NDS engine has different coordinate system than our room layout map,
-                //so we invert the Y axis by ((ROOMS_Y - offset_on_upper_screen) - 1)
-                int pos_y = static_cast<int>(
-                        tab_y + ROOM_TILE_HEIGHT_SPLASH_SCREEN * ((ROOMS_Y - offset_on_upper_screen) - 1) - 4);
+            //offset to the position in current room
+            int room_offset =
+                    static_cast<int>(
+                            2 * ROOM_TILE_HEIGHT_SPLASH_SCREEN *
+                            LINE_WIDTH * ((ROOMS_Y - offset_on_upper_screen) - 1) - 4 * OFFSET_Y);
+            //pos x and y in pixels of the tile in the current room
+            int pos_x = static_cast<int>((tab_x * 2) / 2);
+            //NDS engine has different coordinate system than our room layout map,
+            //so we invert the Y axis by ((ROOMS_Y - offset_on_upper_screen) - 1)
+            int pos_y = static_cast<int>(
+                    tab_y + ROOM_TILE_HEIGHT_SPLASH_SCREEN * ((ROOMS_Y - offset_on_upper_screen) - 1) - 4);
 
-                map_tiles[pos_x][pos_y]->match_tile(static_cast<MapTileType>(tab[tab_y][tab_x]));
-                room_offset + (tab_x * 2) + (LINE_WIDTH + (tab_y * LINE_WIDTH * 2)) + 1;
-                map_tiles[pos_x][pos_y]->x = pos_x;
-                map_tiles[pos_x][pos_y]->y = pos_y;
+            map_tiles[pos_x][pos_y]->match_tile(static_cast<MapTileType>(tab[tab_y][tab_x]));
+            room_offset + (tab_x * 2) + (LINE_WIDTH + (tab_y * LINE_WIDTH * 2)) + 1;
+            map_tiles[pos_x][pos_y]->x = pos_x;
+            map_tiles[pos_x][pos_y]->y = pos_y;
+
+            if (tab[tab_y][tab_x] != 0)
                 map_tiles[pos_x][pos_y]->exists = true;
 
-            }
+//            }
         }
     }
 }
@@ -340,22 +344,21 @@ void Level::initialise_tiles_from_room_layout() {
             for (int tab_y = 0; tab_y < ROOM_TILE_HEIGHT_GAME; tab_y++) {
                 for (int tab_x = 0; tab_x < ROOM_TILE_WIDTH_GAME; tab_x++) {
 
-                    if (tab[tab_y][tab_x] != 0) {
 
-                        //pos x and y in pixels of the tile in the current room
-                        int pos_x = static_cast<int>((OFFSET_X + tab_x * 2 + 2 * ROOM_TILE_WIDTH_GAME * room_x) / 2);
-                        //NDS engine has different coordinate system than our room layout map,
-                        //so we invert the Y axis by ((ROOMS_Y - room_y) - 1))
-                        int pos_y = static_cast<int>(
-                                (OFFSET_X + tab_y * 2 + 2 * ROOM_TILE_HEIGHT_GAME * ((ROOMS_Y - room_y) - 1)) / 2);
+                    //pos x and y in pixels of the tile in the current room
+                    int pos_x = static_cast<int>((OFFSET_X + tab_x * 2 + 2 * ROOM_TILE_WIDTH_GAME * room_x) / 2);
+                    //NDS engine has different coordinate system than our room layout map,
+                    //so we invert the Y axis by ((ROOMS_Y - room_y) - 1))
+                    int pos_y = static_cast<int>(
+                            (OFFSET_X + tab_y * 2 + 2 * ROOM_TILE_HEIGHT_GAME * ((ROOMS_Y - room_y) - 1)) / 2);
 
-                        map_tiles[pos_x][pos_y]->match_tile(static_cast<MapTileType>(tab[tab_y][tab_x]));
+                    map_tiles[pos_x][pos_y]->match_tile(static_cast<MapTileType>(tab[tab_y][tab_x]));
 
-                        map_tiles[pos_x][pos_y]->x = pos_x;
-                        map_tiles[pos_x][pos_y]->y = pos_y;
+                    map_tiles[pos_x][pos_y]->x = pos_x;
+                    map_tiles[pos_x][pos_y]->y = pos_y;
+                    if (tab[tab_y][tab_x] != 0)
                         map_tiles[pos_x][pos_y]->exists = true;
 
-                    }
                 }
             }
         }
@@ -382,8 +385,9 @@ void Level::get_first_tile_of_given_type(MapTileType mapTileType, MapTile *&m) {
 
 void Level::init_map_tiles() {
     for (int a = 0; a < 32; a++)
-        for (int b = 0; b < 32; b++)
+        for (int b = 0; b < 32; b++) {
             map_tiles[a][b] = new MapTile();
+        }
 }
 
 void Level::clean_map_layout() {

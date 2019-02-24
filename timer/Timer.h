@@ -5,6 +5,7 @@
 #ifndef SPELUNKYPSP_TIMER_H
 #define SPELUNKYPSP_TIMER_H
 
+
 #include <pspthreadman.h>
 #include <pspsystimer.h>
 #include <pspdebug.h>
@@ -45,7 +46,7 @@ public:
     }
 
     u64 *tick_before;
-    float last_delta{};
+    float last_delta = 0;
 };
 
 
