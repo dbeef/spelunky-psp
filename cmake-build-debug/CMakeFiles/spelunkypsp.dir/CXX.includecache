@@ -198,16 +198,6 @@ LevelGenerator.hpp
 Level.hpp
 /home/dbeef/spelunky-psp/tiles/Level.hpp
 
-/home/dbeef/spelunky-psp/tiles/LevelRenderingUtils.cpp
-cstring
--
-cstdlib
--
-stdlib.h
--
-GL/gl.h
--
-
 /home/dbeef/spelunky-psp/tiles/LevelRenderingUtils.hpp
 
 /home/dbeef/spelunky-psp/tiles/MapTile.cpp
@@ -223,10 +213,6 @@ MapTileType.h
 /home/dbeef/spelunky-psp/tiles/MapTileType.h
 
 /home/dbeef/spelunky-psp/tiles/SplashScreenType.hpp
-
-/home/dbeef/spelunky-psp/timer/Timer.cpp
-Timer.h
-/home/dbeef/spelunky-psp/timer/Timer.h
 
 /home/dbeef/spelunky-psp/timer/Timer.h
 pspthreadman.h

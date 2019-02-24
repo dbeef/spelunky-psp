@@ -106,6 +106,8 @@ int main(int argc, char *argv[]) {
     level->generate_frame();
     generate_new_level_layout(level);
     level->initialise_tiles_from_room_layout();
+//    level->initialise_tiles_from_splash_screen(MAIN_MENU_UPPER);
+//    level->initialise_tiles_from_splash_screen(MAIN_MENU_LOWER);
 
     sceCtrlSetSamplingCycle(0);
     sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
@@ -122,6 +124,7 @@ int main(int argc, char *argv[]) {
     GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
     GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
     GLCHK(glEnable(GL_TEXTURE_2D));
+    level->upload_tilesheet();
 
 
     glutMainLoop();

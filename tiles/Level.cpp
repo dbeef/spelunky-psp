@@ -110,7 +110,7 @@ void Level::write_tiles_to_map() {
             if (!t->in_viewport(camera)) continue;
             int tile_type = t->mapTileType;
             if (tile_type > 0) {
-                upload_tile(tile_type);
+                set_texture_pointer_to_tile(tile_type);
             } else {
                 // place a piece of background
                 // FIXME Find correct order of placing background tiles and put it into this matrix
@@ -126,7 +126,7 @@ void Level::write_tiles_to_map() {
                 };
 
                 int bgr_type = bg_matrix[y % 8][x % 2] + 42;
-                upload_tile(bgr_type);
+                set_texture_pointer_to_tile(bgr_type);
             }
 
             GLCHK(glMatrixMode(GL_MODELVIEW));
@@ -136,19 +136,16 @@ void Level::write_tiles_to_map() {
 
             glBegin(GL_TRIANGLE_FAN);
             glColor3f(1, 0, 0);
-            glTexCoord2f(0, 0);
+            glTexCoord2f(coordinates[0][0], coordinates[0][1]);
             glVertex3f(0, 0, 0);
-
             glColor3f(0, 1, 0);
-            glTexCoord2f(0, 1);
+            glTexCoord2f(coordinates[1][0], coordinates[1][1]);
             glVertex3f(0, 1, 0);
-
             glColor3f(0, 0, 1);
-            glTexCoord2f(1, 1);
+            glTexCoord2f(coordinates[2][0], coordinates[2][1]);
             glVertex3f(1, 1, 0);
-
             glColor3f(1, 1, 1);
-            glTexCoord2f(1, 0);
+            glTexCoord2f(coordinates[3][0], coordinates[3][1]);
             glVertex3f(1, 0, 0);
             GLCHK(glEnd());
         }
@@ -170,49 +167,60 @@ void Level::write_tiles_to_map() {
 extern unsigned char gfxcavebg_start[];
 #define RGBA4444(r, g, b, a)    ((((r) << 8) & 0xf000) | (((g) << 4) & 0x0f00) | (((b)     ) & 0x00f0) | (((a) >> 4) & 0x000f))
 
-void Level::upload_tile(int type) {
 
-    int current_tile;
+void Level::set_texture_pointer_to_tile(int type) {
 
-    if (type <= 0)
-        current_tile = static_cast<unsigned int>(ALTAR_LEFT) - 1;
-    else
-        current_tile = type - 1;
+    type--;
 
-    unsigned int row = static_cast<unsigned int>(ceil((current_tile / 2) + 1));
-    int offset = (row - 1) * 2 * 16 * 16;
+    int rows = 512 / 16;
+    int columns = 32 / 16;
 
-    if (offset < 0)
-        exit(0);
+    // since coordinates must be normalized (between 0 and 1)
+    float x_unit = 1.0f / columns;
+    float y_unit = 1.0f / rows;
 
-    bool row_offset = (current_tile % 2 == 1);
+    float x_offset = 0;
+    if(type % 2 == 1) x_offset++;
+    float y_offset = floor((float) type / 2);
 
-    unsigned int index = 0;
-    if (row_offset) index += 16;
+    // now it stores left-upper corner
+    x_offset *= x_unit;
+    y_offset *= y_unit;
 
-    bool first = false;
+    // left lower 0 0
+    // left upper 0 1
+    // right upper 1 1
+    // right lower 1 0
 
-    unsigned short tex16[16 * 16];
 
-    for (int i = 0; i < 16 * 16; i++) {
+//    coordinates[0][0] = 0;
+//    coordinates[0][1] = 0;
+//
+//    coordinates[1][0] = 0;
+//    coordinates[1][1] = 1 * y_unit;
+//
+//    coordinates[2][0] = 1 * x_unit;
+//    coordinates[2][1] = 1 * y_unit;
+//
+//    coordinates[3][0] = 1 * x_unit;
+//    coordinates[3][1] = 0;
 
-        if (i % 16 == 0 && first) {
-            index += 16;
-        }
+    // left lower  0
+    // left upper  1
+    // right upper 2
+    // right lower 3
 
-        tex16[i] = RGBA4444(gfxcavebg_start[((offset + index) * 4) + 0],
-                            gfxcavebg_start[((offset + index) * 4) + 1],
-                            gfxcavebg_start[((offset + index) * 4) + 2],
-                            gfxcavebg_start[((offset + index) * 4) + 3]);
+    coordinates[1][0] = x_offset;
+    coordinates[1][1] = y_offset + y_unit;
 
-        index++;
-        first = true;
-    }
-//FIXME
-//    GLCHK(glBindTexture(GL_TEXTURE_2D, texture_indexes[0]));
-//    GLCHK(glBindTexture(GL_TEXTURE_2D, 0));
-    GLCHK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 16, 16, 0, GL_RGB, GL_UNSIGNED_SHORT_4_4_4_4, tex16));
+    coordinates[0][0] = x_offset;
+    coordinates[0][1] = y_offset;
 
+    coordinates[3][0] = x_offset + x_unit;
+    coordinates[3][1] = y_offset;
+
+    coordinates[2][0] = x_offset + x_unit;
+    coordinates[2][1] = y_offset + y_unit;
 }
 
 
@@ -285,6 +293,7 @@ void Level::initialise_tiles_from_splash_screen(SplashScreenType splash_type) {
  * It utilizes current room layout, to know if any tile should be planted on the place it iterates,
  * and what MapTileType it should have.
  */
+
 void Level::initialise_tiles_from_room_layout() {
 
     //a room, 10x10 tiles
@@ -397,4 +406,25 @@ void Level::clean_map_layout() {
             map_tiles[x][y]->exists = false;
             map_tiles[x][y]->destroyable = true; //tiles are destroyable by default
         }
+}
+
+void Level::upload_tilesheet() {
+// 32 x 512 cavebg spritesheet size
+    int offset = 0;
+    unsigned int index = 0;
+
+    unsigned short *tex16 = new unsigned short[32 * 512];
+//    unsigned short tex16[32 * 512];
+
+    for (int i = 0; i < 32 * 512; i++) {
+
+        tex16[i] = RGBA4444(gfxcavebg_start[((offset + index) * 4) + 0],
+                            gfxcavebg_start[((offset + index) * 4) + 1],
+                            gfxcavebg_start[((offset + index) * 4) + 2],
+                            gfxcavebg_start[((offset + index) * 4) + 3]);
+        index++;
+    }
+    GLCHK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 32, 512, 0, GL_RGB, GL_UNSIGNED_SHORT_4_4_4_4, tex16));
+
+    delete[] tex16;
 }

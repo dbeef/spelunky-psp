@@ -54,12 +54,14 @@ public:
     //so this array lets us know, that we have a 'closed' room number 3 (for example) at some place.
     int layout_room_ids[ROOMS_X][ROOMS_Y];
 
+    float coordinates[4][2];
+
     //sets all tiles to !existing
     void clean_map_layout();
 
     void init_map_tiles();
 
-    void upload_tile(int type);
+    void set_texture_pointer_to_tile(int type);
 
     void update_level();
 
@@ -72,6 +74,8 @@ public:
     void initialise_tiles_from_splash_screen(SplashScreenType splashScreenType);
 
     void get_first_tile_of_given_type(MapTileType mapTileType, MapTile *&m);
+
+    void upload_tilesheet();
 
 };
 
