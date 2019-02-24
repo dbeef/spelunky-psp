@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <GL/gl.h>
+#include <GL/glu.h>
 #include "Level.hpp"
 #include "SplashScreenType.hpp"
 #include "../rooms/EntranceRooms.hpp"
@@ -131,23 +132,38 @@ void Level::write_tiles_to_map() {
 
             GLCHK(glMatrixMode(GL_MODELVIEW));
             GLCHK(glLoadIdentity());
-            GLCHK(glTranslatef(camera->x + x, camera->y + y, 0));
-            dumpmat(GL_MODELVIEW_MATRIX, "trans modelview");
+            GLCHK(glTranslatef(x, y, 0));
+            dumpmat(GL_PROJECTION_MATRIX, "trans modelview");
+            gluLookAt(-camera->x, camera->y, -1.0f, -camera->x, camera->y, 0.0f, 0.0f, 1.0f, 0.0f);
+            dumpmat(GL_MODELVIEW_MATRIX, "lookat modelview");
 
-            glBegin(GL_TRIANGLE_FAN);
-            glColor3f(1, 0, 0);
-            glTexCoord2f(coordinates[0][0], coordinates[0][1]);
-            glVertex3f(0, 0, 0);
-            glColor3f(0, 1, 0);
-            glTexCoord2f(coordinates[1][0], coordinates[1][1]);
-            glVertex3f(0, 1, 0);
-            glColor3f(0, 0, 1);
-            glTexCoord2f(coordinates[2][0], coordinates[2][1]);
-            glVertex3f(1, 1, 0);
-            glColor3f(1, 1, 1);
-            glTexCoord2f(coordinates[3][0], coordinates[3][1]);
-            glVertex3f(1, 0, 0);
-            GLCHK(glEnd());
+            // left lower  0
+            // left upper  1
+            // right upper 2
+            // right lower 3
+            GLfloat temp[4][5] = {
+                    {coordinates[0][0], coordinates[0][1], 0, 0, 0},
+                    {coordinates[1][0], coordinates[1][1], 0, 1, 0},
+                    {coordinates[2][0], coordinates[2][1], 1, 1, 0},
+                    {coordinates[3][0], coordinates[3][1], 1, 0, 0},
+            };
+
+            GLCHK(glInterleavedArrays(GL_T2F_V3F, 0, (void *) temp));
+            GLCHK(glDrawArrays(GL_TRIANGLE_FAN, 0, 3 * 2));
+
+//            glTexCoord2f(coordinates[0][0], coordinates[0][1]);
+//            glVertex3f(0, 0, 0);
+//
+//            glTexCoord2f(coordinates[1][0], coordinates[1][1]);
+//            glVertex3f(0, 1, 0);
+//
+//            glTexCoord2f(coordinates[2][0], coordinates[2][1]);
+//            glVertex3f(1, 1, 0);
+//
+//            glTexCoord2f(coordinates[3][0], coordinates[3][1]);
+//            glVertex3f(1, 0, 0);
+
+//            GLCHK(glEnd());
         }
     }
 }
@@ -180,7 +196,7 @@ void Level::set_texture_pointer_to_tile(int type) {
     float y_unit = 1.0f / rows;
 
     float x_offset = 0;
-    if(type % 2 == 1) x_offset++;
+    if (type % 2 == 1) x_offset++;
     float y_offset = floor((float) type / 2);
 
     // now it stores left-upper corner
@@ -281,7 +297,6 @@ void Level::initialise_tiles_from_splash_screen(SplashScreenType splash_type) {
 
             if (tab[tab_y][tab_x] != 0)
                 map_tiles[pos_x][pos_y]->exists = true;
-
 //            }
         }
     }

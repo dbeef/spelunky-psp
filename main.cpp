@@ -32,6 +32,8 @@
 
 #include "common/callbacks.h"
 #include "common/vram.h"
+#include "shaders/ShaderProgram.h"
+
 PSP_MODULE_INFO("Spelunky", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 
@@ -78,6 +80,7 @@ static void display() {
 //        delta =0;
 //    } else return;
 
+//    GLCHK(glShadeModel(GL_CLAMP));
     GLCHK(glShadeModel(GL_SMOOTH));
 
     GLCHK(glClear(GL_COLOR_BUFFER_BIT));
@@ -121,12 +124,22 @@ int main(int argc, char *argv[]) {
     glutDisplayFunc(display);
 
     GLCHK(glGenTextures(NTEX, texture_indexes));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP));
+    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+    GLCHK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
     GLCHK(glEnable(GL_TEXTURE_2D));
     level->upload_tilesheet();
 
 
+//    std::string textureFragmentShaderSource(mvp_texture_fragment_shader)
+//    std::string textureVertexShaderSource(mvp_texture_vertex_shader);
+//
+//    Shader textureVertexShader(textureVertexShaderSource, GL_VERTEX_SHADER);
+//    Shader textureFragmentShader(textureFragmentShaderSource, GL_FRAGMENT_SHADER);
+//
+//    ShaderProgram textureShader;
+//    textureShader.init(textureFragmentShader, textureVertexShader);
+//
     glutMainLoop();
     return 0;
 }
