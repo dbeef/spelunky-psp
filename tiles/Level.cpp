@@ -137,10 +137,14 @@ void Level::write_tiles_to_map() {
             gluLookAt(-camera->x, camera->y, -1.0f, -camera->x, camera->y, 0.0f, 0.0f, 1.0f, 0.0f);
             dumpmat(GL_MODELVIEW_MATRIX, "lookat modelview");
 
+//            glGenLists()
+//            glNewList()
+
             // left lower  0
             // left upper  1
             // right upper 2
             // right lower 3
+
             GLfloat temp[4][5] = {
                     {coordinates[0][0], coordinates[0][1], 0, 0, 0},
                     {coordinates[1][0], coordinates[1][1], 0, 1, 0},
@@ -226,17 +230,20 @@ void Level::set_texture_pointer_to_tile(int type) {
     // right upper 2
     // right lower 3
 
-    coordinates[1][0] = x_offset;
-    coordinates[1][1] = y_offset + y_unit;
+    float onePixelX = 1.0f/32;
+    float onePixelY = 1.0f/512;
 
-    coordinates[0][0] = x_offset;
-    coordinates[0][1] = y_offset;
+    coordinates[1][0] = x_offset + onePixelX;
+    coordinates[1][1] = y_offset + y_unit - onePixelY;
 
-    coordinates[3][0] = x_offset + x_unit;
-    coordinates[3][1] = y_offset;
+    coordinates[0][0] = x_offset + onePixelX;
+    coordinates[0][1] = y_offset + onePixelY;
 
-    coordinates[2][0] = x_offset + x_unit;
-    coordinates[2][1] = y_offset + y_unit;
+    coordinates[3][0] = x_offset + x_unit - onePixelX;
+    coordinates[3][1] = y_offset + onePixelY;
+
+    coordinates[2][0] = x_offset + x_unit - onePixelX;
+    coordinates[2][1] = y_offset + y_unit - onePixelY;
 }
 
 

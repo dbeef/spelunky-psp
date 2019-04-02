@@ -32,7 +32,7 @@
 
 #include "common/callbacks.h"
 #include "common/vram.h"
-#include "shaders/ShaderProgram.h"
+
 
 PSP_MODULE_INFO("Spelunky", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
@@ -67,18 +67,26 @@ void reshape(int w, int h) {
 
 #define NTEX    1
 static GLuint texture_indexes[NTEX];
+bool passed = true;
 
 static void display() {
 
     static Timer timer;
     timer.update();
     static float delta = 0;
-    delta += timer.last_delta;
-    //25fps
-//    if(delta > 0.05f)
-//    {
-//        delta =0;
-//    } else return;
+    delta = timer.last_delta;
+
+    // limiting to 30 fps?
+    if(!passed) {
+        if (delta < 0.017f) {
+            glutSwapBuffers();
+            glutPostRedisplay();
+            passed = true;
+            return;
+        }
+    }
+
+    passed = false;
 
 //    GLCHK(glShadeModel(GL_CLAMP));
     GLCHK(glShadeModel(GL_SMOOTH));
@@ -94,7 +102,6 @@ static void display() {
     level->write_tiles_to_map();
 
     glutSwapBuffers();
-
     glutPostRedisplay();
 
 //#if SYS
