@@ -105,6 +105,7 @@ void Level::write_tiles_to_map() {
 
 
     batch.clear();
+    std::size_t tiles =0;
     // iterating from left-lower corner of the room to the right-upper (spelunky-ds convention)
     for (int x = 0; x < MAP_GAME_WIDTH_TILES; x++) {
         for (int y = 0; y < MAP_GAME_HEIGHT_TILES; y++) {
@@ -173,6 +174,7 @@ void Level::write_tiles_to_map() {
             batch.push_back(0 + y);
             batch.push_back(0);
 
+            tiles++;
         }
     }
 
@@ -184,7 +186,8 @@ void Level::write_tiles_to_map() {
     gluLookAt(-camera->x, camera->y, -1.0f, -camera->x, camera->y, 0.0f, 0.0f, 1.0f, 0.0f);
     dumpmat(GL_MODELVIEW_MATRIX, "lookat modelview");
     GLCHK(glInterleavedArrays(GL_T2F_V3F, 0, (void *) batch.data()));
-    GLCHK(glDrawArrays(GL_TRIANGLES, 0, 6 * batch.size() / 5));
+    GLCHK(glDrawArrays(GL_TRIANGLES, 0, 6 * tiles));
+    printf("Tiles in viewport: %i\n", tiles);
 }
 
 
