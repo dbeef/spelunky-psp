@@ -95,6 +95,12 @@ SplashScreenType.hpp
 /home/xdbeef/spelunky-psp/rooms/RoomType.hpp
 ../camera/Camera.h
 /home/xdbeef/spelunky-psp/camera/Camera.h
+vector
+-
+GL/gl.h
+-
+GL/glu.h
+-
 
 /home/xdbeef/spelunky-psp/tiles/LevelRenderingUtils.hpp
 

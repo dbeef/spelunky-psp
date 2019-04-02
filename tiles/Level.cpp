@@ -104,6 +104,7 @@ void Level::write_tiles_to_map() {
 // limit rendered tiles to only those in current camera viewport
 
 
+    batch.clear();
     // iterating from left-lower corner of the room to the right-upper (spelunky-ds convention)
     for (int x = 0; x < MAP_GAME_WIDTH_TILES; x++) {
         for (int y = 0; y < MAP_GAME_HEIGHT_TILES; y++) {
@@ -130,46 +131,60 @@ void Level::write_tiles_to_map() {
                 set_texture_pointer_to_tile(bgr_type);
             }
 
-            GLCHK(glMatrixMode(GL_MODELVIEW));
-            GLCHK(glLoadIdentity());
-            GLCHK(glTranslatef(x, y, 0));
-            dumpmat(GL_PROJECTION_MATRIX, "trans modelview");
-            gluLookAt(-camera->x, camera->y, -1.0f, -camera->x, camera->y, 0.0f, 0.0f, 1.0f, 0.0f);
-            dumpmat(GL_MODELVIEW_MATRIX, "lookat modelview");
-
-//            glGenLists()
-//            glNewList()
 
             // left lower  0
             // left upper  1
             // right upper 2
             // right lower 3
 
-            GLfloat temp[4][5] = {
-                    {coordinates[0][0], coordinates[0][1], 0, 0, 0},
-                    {coordinates[1][0], coordinates[1][1], 0, 1, 0},
-                    {coordinates[2][0], coordinates[2][1], 1, 1, 0},
-                    {coordinates[3][0], coordinates[3][1], 1, 0, 0},
-            };
+            batch.push_back(coordinates[0][0]);
+            batch.push_back(coordinates[0][1]);
+            batch.push_back(0 + x);
+            batch.push_back(0 + y);
+            batch.push_back(0);
 
-            GLCHK(glInterleavedArrays(GL_T2F_V3F, 0, (void *) temp));
-            GLCHK(glDrawArrays(GL_TRIANGLE_FAN, 0, 3 * 2));
+            batch.push_back(coordinates[1][0]);
+            batch.push_back(coordinates[1][1]);
+            batch.push_back(0 + x);
+            batch.push_back(1 + y);
+            batch.push_back(0);
 
-//            glTexCoord2f(coordinates[0][0], coordinates[0][1]);
-//            glVertex3f(0, 0, 0);
-//
-//            glTexCoord2f(coordinates[1][0], coordinates[1][1]);
-//            glVertex3f(0, 1, 0);
-//
-//            glTexCoord2f(coordinates[2][0], coordinates[2][1]);
-//            glVertex3f(1, 1, 0);
-//
-//            glTexCoord2f(coordinates[3][0], coordinates[3][1]);
-//            glVertex3f(1, 0, 0);
+            batch.push_back(coordinates[2][0]);
+            batch.push_back(coordinates[2][1]);
+            batch.push_back(1 + x);
+            batch.push_back(1 + y);
+            batch.push_back(0);
 
-//            GLCHK(glEnd());
+            batch.push_back(coordinates[2][0]);
+            batch.push_back(coordinates[2][1]);
+            batch.push_back(1 + x);
+            batch.push_back(1 + y);
+            batch.push_back(0);
+
+            batch.push_back(coordinates[3][0]);
+            batch.push_back(coordinates[3][1]);
+            batch.push_back(1 + x);
+            batch.push_back(0 + y);
+            batch.push_back(0);
+
+            batch.push_back(coordinates[0][0]);
+            batch.push_back(coordinates[0][1]);
+            batch.push_back(0 + x);
+            batch.push_back(0 + y);
+            batch.push_back(0);
+
         }
     }
+
+
+    GLCHK(glMatrixMode(GL_MODELVIEW));
+    GLCHK(glLoadIdentity());
+    GLCHK(glTranslatef(0, 0, 0));
+    dumpmat(GL_PROJECTION_MATRIX, "trans modelview");
+    gluLookAt(-camera->x, camera->y, -1.0f, -camera->x, camera->y, 0.0f, 0.0f, 1.0f, 0.0f);
+    dumpmat(GL_MODELVIEW_MATRIX, "lookat modelview");
+    GLCHK(glInterleavedArrays(GL_T2F_V3F, 0, (void *) batch.data()));
+    GLCHK(glDrawArrays(GL_TRIANGLES, 0, 6 * batch.size() / 5));
 }
 
 
@@ -230,8 +245,8 @@ void Level::set_texture_pointer_to_tile(int type) {
     // right upper 2
     // right lower 3
 
-    float onePixelX = 1.0f/32;
-    float onePixelY = 1.0f/512;
+    float onePixelX = 1.0f / 32;
+    float onePixelY = 1.0f / 512;
 
     coordinates[1][0] = x_offset + onePixelX;
     coordinates[1][1] = y_offset + y_unit - onePixelY;
