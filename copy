@@ -1,0 +1,167 @@
+
+static std::vector<GLfloat> batch(15 * 9 * (4 * 5));
+static std::vector<MapTile *> viewported(15 * 9);
+
+/**
+ * Writes bytes that make a graphical representation of every MapTile in map_tiles array to the current map.
+ */
+void Level::write_tiles_to_map() {
+
+    // iterating from left-lower corner of the room to the right-upper (spelunky-ds convention)
+    for (int x = 0; x < MAP_GAME_WIDTH_TILES; x++) {
+        for (int y = 0; y < MAP_GAME_HEIGHT_TILES; y++) {
+            MapTile *t = map_tiles[x][y];
+            if (t->in_viewport(camera)) {
+                viewported.push_back(t);
+            }
+        }
+    }
+
+    std::sort(viewported.begin(), viewported.end(), compare_map_tiles);
+
+    MapTileType current_type = viewported[0]->mapTileType;
+
+    for (int a = 0; a < viewported.size(); a++) {
+
+        if (current_type != viewported[a]->mapTileType) {
+            // draw current batch & create new
+        }
+
+        GLfloat temp[20] = {
+                coordinates[0][0], coordinates[0][1], 0, 0, 0,
+                coordinates[1][0], coordinates[1][1], 0, 1, 0,
+                coordinates[2][0], coordinates[2][1], 1, 1, 0,
+                coordinates[3][0], coordinates[3][1], 1, 0, 0,
+        };
+        for (int b = 0; b < 20; b++) batch.push_back(temp[b]);
+    }
+
+    if (!batch.empty()) {
+        // draw last batch
+    }
+
+
+    for (int a = 0; a < viewported.size(); a++) {
+        int tile_type = viewported.at(a)->mapTileType;
+        if (tile_type > 0) {
+            set_texture_pointer_to_tile(tile_type);
+        } else {
+            // place a piece of background
+            // FIXME Find correct order of placing background tiles and put it into this matrix
+            int bg_matrix[8][2] = {
+                    {15, 16},
+                    {13, 14},
+                    {11, 12},
+                    {9,  10},
+                    {7,  8},
+                    {5,  6},
+                    {3,  4},
+                    {1,  2},
+            };
+
+            int bgr_type = bg_matrix[y % 8][x % 2] + 42;
+            set_texture_pointer_to_tile(bgr_type);
+        }
+
+        GLCHK(glMatrixMode(GL_MODELVIEW));
+        GLCHK(glLoadIdentity());
+        GLCHK(glTranslatef(x, y, 0));
+        dumpmat(GL_PROJECTION_MATRIX, "trans modelview");
+        gluLookAt(-camera->x, camera->y, -1.0f, -camera->x, camera->y, 0.0f, 0.0f, 1.0f, 0.0f);
+        dumpmat(GL_MODELVIEW_MATRIX, "lookat modelview");
+
+        // left lower  0
+        // left upper  1
+        // right upper 2
+        // right lower 3
+        // just float, on 32 bit arch its 4 bytes
+        GLfloat temp[4][5] = {
+                {coordinates[0][0], coordinates[0][1], 0, 0, 0},
+                {coordinates[1][0], coordinates[1][1], 0, 1, 0},
+                {coordinates[2][0], coordinates[2][1], 1, 1, 0},
+                {coordinates[3][0], coordinates[3][1], 1, 0, 0},
+        };
+
+        GLCHK(glInterleavedArrays(GL_T2F_V3F, 0, (void *) temp));
+        GLCHK(glDrawArrays(GL_TRIANGLE_FAN, 0, 3 * 2));
+    }
+}
+
+//
+
+static std::vector<GLfloat> batch(15 * 9 * (4 * 5));
+
+/**
+ * Writes bytes that make a graphical representation of every MapTile in map_tiles array to the current map.
+ */
+void Level::write_tiles_to_map() {
+
+//    GLCHK(glMatrixMode(GL_MODELVIEW));
+//    GLCHK(glLoadIdentity());
+//    dumpmat(GL_PROJECTION_MATRIX, "trans modelview");
+
+    batch.clear();
+
+    float viewport_width = 15;
+    float viewport_height = 7.5f;
+
+    float viewport_begin_x = camera->x;
+    float viewport_begin_y = camera->y;
+
+//    printf("%f %f \n", viewport_begin_x, viewport_begin_y);
+
+    float viewport_end_x = camera->x + viewport_width;
+    float viewport_end_y = camera->y + viewport_height;
+
+    // iterating from left-lower corner of the room to the right-upper (spelunky-ds convention)
+    for (int x = 0; x < MAP_GAME_WIDTH_TILES; x++) {
+        for (int y = 0; y < MAP_GAME_HEIGHT_TILES; y++) {
+            MapTile *t = map_tiles[x][y];
+            if (!t->in_viewport(camera)) continue;
+
+            int tile_type = t->mapTileType;
+            if (tile_type > 0) {
+                set_texture_pointer_to_tile(tile_type);
+            } else {
+                // place a piece of background
+                // FIXME Find correct order of placing background tiles and put it into this matrix
+                int bg_matrix[8][2] = {
+                        {15, 16},
+                        {13, 14},
+                        {11, 12},
+                        {9,  10},
+                        {7,  8},
+                        {5,  6},
+                        {3,  4},
+                        {1,  2},
+                };
+
+                int bgr_type = bg_matrix[y % 8][x % 2] + 42;
+                set_texture_pointer_to_tile(bgr_type);
+            }
+
+            float tile_viewport_pos_x = (x - viewport_begin_x);
+            float tile_viewport_pos_y = (y - viewport_begin_y);
+
+            // left lower  0
+            // left upper  1
+            // right upper 2
+            // right lower 3
+            GLfloat temp[20] = {
+                    coordinates[1][0], coordinates[1][1],
+                    (tile_viewport_pos_x + 0) / viewport_width, (1.76f * (tile_viewport_pos_y + 1) / viewport_height), 0,
+                    coordinates[0][0], coordinates[0][1],
+                    (tile_viewport_pos_x + 0) / viewport_width, (1.76f * (tile_viewport_pos_y + 0) / viewport_height), 0,
+                    coordinates[3][0], coordinates[3][1],
+                    (tile_viewport_pos_x + 1) / viewport_width, (1.76f * (tile_viewport_pos_y + 0) / viewport_height), 0,
+                    coordinates[2][0], coordinates[2][1],
+                    (tile_viewport_pos_x + 1) / viewport_width, (1.76f * (tile_viewport_pos_y + 1) / viewport_height), 0,
+            };
+
+            for (int a = 0; a < 20; a++) batch.push_back(temp[a]);
+        }
+    }
+
+    GLCHK(glInterleavedArrays(GL_T2F_V3F, 0, (void *) batch.data()));
+    GLCHK(glDrawArrays(GL_TRIANGLE_FAN, 0, (3 * 2) * batch.size()));
+}
