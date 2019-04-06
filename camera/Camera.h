@@ -20,8 +20,8 @@ public:
         float tiles_w = SCREEN_W / 16; //30
         float tiles_h = SCREEN_H / 16; //17
 
-        x -= (tiles_w / 2) - 1;
-        y -= ceil(tiles_h / 2) - 1;
+//        x -= (tiles_w / 2) - 1;
+//        y -= ceil(tiles_h / 2) - 1;
 //
         //init pos is:
         // -14, -8

@@ -12,7 +12,7 @@ OBJS := $(addsuffix .o,$(BINFILES)) \
 
 INCDIR =
 CFLAGS = -G0 -Wall -O2
-CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
+CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -std=c++14
 ASFLAGS = $(CFLAGS)
 
 LIBDIR =

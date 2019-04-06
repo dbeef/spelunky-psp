@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <GL/gl.h>
+#include <GL/glu.h>
 #include "Level.hpp"
 #include "SplashScreenType.hpp"
 #include "../rooms/EntranceRooms.hpp"
@@ -103,6 +104,8 @@ void Level::write_tiles_to_map() {
 // limit rendered tiles to only those in current camera viewport
 
 
+    batch.clear();
+    std::size_t tiles =0;
     // iterating from left-lower corner of the room to the right-upper (spelunky-ds convention)
     for (int x = 0; x < MAP_GAME_WIDTH_TILES; x++) {
         for (int y = 0; y < MAP_GAME_HEIGHT_TILES; y++) {
@@ -129,27 +132,62 @@ void Level::write_tiles_to_map() {
                 set_texture_pointer_to_tile(bgr_type);
             }
 
-            GLCHK(glMatrixMode(GL_MODELVIEW));
-            GLCHK(glLoadIdentity());
-            GLCHK(glTranslatef(camera->x + x, camera->y + y, 0));
-            dumpmat(GL_MODELVIEW_MATRIX, "trans modelview");
 
-            glBegin(GL_TRIANGLE_FAN);
-            glColor3f(1, 0, 0);
-            glTexCoord2f(coordinates[0][0], coordinates[0][1]);
-            glVertex3f(0, 0, 0);
-            glColor3f(0, 1, 0);
-            glTexCoord2f(coordinates[1][0], coordinates[1][1]);
-            glVertex3f(0, 1, 0);
-            glColor3f(0, 0, 1);
-            glTexCoord2f(coordinates[2][0], coordinates[2][1]);
-            glVertex3f(1, 1, 0);
-            glColor3f(1, 1, 1);
-            glTexCoord2f(coordinates[3][0], coordinates[3][1]);
-            glVertex3f(1, 0, 0);
-            GLCHK(glEnd());
+            // left lower  0
+            // left upper  1
+            // right upper 2
+            // right lower 3
+
+            batch.push_back(coordinates[0][0]);
+            batch.push_back(coordinates[0][1]);
+            batch.push_back(0 + x);
+            batch.push_back(0 + y);
+            batch.push_back(0);
+
+            batch.push_back(coordinates[1][0]);
+            batch.push_back(coordinates[1][1]);
+            batch.push_back(0 + x);
+            batch.push_back(1 + y);
+            batch.push_back(0);
+
+            batch.push_back(coordinates[2][0]);
+            batch.push_back(coordinates[2][1]);
+            batch.push_back(1 + x);
+            batch.push_back(1 + y);
+            batch.push_back(0);
+
+            batch.push_back(coordinates[2][0]);
+            batch.push_back(coordinates[2][1]);
+            batch.push_back(1 + x);
+            batch.push_back(1 + y);
+            batch.push_back(0);
+
+            batch.push_back(coordinates[3][0]);
+            batch.push_back(coordinates[3][1]);
+            batch.push_back(1 + x);
+            batch.push_back(0 + y);
+            batch.push_back(0);
+
+            batch.push_back(coordinates[0][0]);
+            batch.push_back(coordinates[0][1]);
+            batch.push_back(0 + x);
+            batch.push_back(0 + y);
+            batch.push_back(0);
+
+            tiles++;
         }
     }
+
+
+    GLCHK(glMatrixMode(GL_MODELVIEW));
+    GLCHK(glLoadIdentity());
+    GLCHK(glTranslatef(0, 0, 0));
+    dumpmat(GL_PROJECTION_MATRIX, "trans modelview");
+    gluLookAt(-camera->x, camera->y, -1.0f, -camera->x, camera->y, 0.0f, 0.0f, 1.0f, 0.0f);
+    dumpmat(GL_MODELVIEW_MATRIX, "lookat modelview");
+    GLCHK(glInterleavedArrays(GL_T2F_V3F, 0, (void *) batch.data()));
+    GLCHK(glDrawArrays(GL_TRIANGLES, 0, 6 * tiles));
+    printf("Tiles in viewport: %i\n", tiles);
 }
 
 
@@ -180,7 +218,7 @@ void Level::set_texture_pointer_to_tile(int type) {
     float y_unit = 1.0f / rows;
 
     float x_offset = 0;
-    if(type % 2 == 1) x_offset++;
+    if (type % 2 == 1) x_offset++;
     float y_offset = floor((float) type / 2);
 
     // now it stores left-upper corner
@@ -210,17 +248,20 @@ void Level::set_texture_pointer_to_tile(int type) {
     // right upper 2
     // right lower 3
 
-    coordinates[1][0] = x_offset;
-    coordinates[1][1] = y_offset + y_unit;
+    float onePixelX = 1.0f / 32;
+    float onePixelY = 1.0f / 512;
 
-    coordinates[0][0] = x_offset;
-    coordinates[0][1] = y_offset;
+    coordinates[1][0] = x_offset + onePixelX;
+    coordinates[1][1] = y_offset + y_unit - onePixelY;
 
-    coordinates[3][0] = x_offset + x_unit;
-    coordinates[3][1] = y_offset;
+    coordinates[0][0] = x_offset + onePixelX;
+    coordinates[0][1] = y_offset + onePixelY;
 
-    coordinates[2][0] = x_offset + x_unit;
-    coordinates[2][1] = y_offset + y_unit;
+    coordinates[3][0] = x_offset + x_unit - onePixelX;
+    coordinates[3][1] = y_offset + onePixelY;
+
+    coordinates[2][0] = x_offset + x_unit - onePixelX;
+    coordinates[2][1] = y_offset + y_unit - onePixelY;
 }
 
 
@@ -281,7 +322,6 @@ void Level::initialise_tiles_from_splash_screen(SplashScreenType splash_type) {
 
             if (tab[tab_y][tab_x] != 0)
                 map_tiles[pos_x][pos_y]->exists = true;
-
 //            }
         }
     }

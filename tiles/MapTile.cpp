@@ -151,7 +151,9 @@ bool MapTile::in_viewport(Camera *camera) {
     // screen width is 30 tiles times 17 tiles
 
     bool condition_x = x > (-camera->x) - 15 && x < (-camera->x) + 15;
-    bool condition_y = y > (-camera->y) - 7.5 && y < (-camera->y) + 7.5;
+    bool condition_y = y > camera->y - (ceil(7.5f)) - 1&& y < camera->y + ceil(7.5f);
 
     return condition_x && condition_y;
 }
+
+

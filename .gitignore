@@ -1,3 +1,7 @@
+sprite.elf
+tex.elf
+cmake-build-debug/
+PARAM.SFO
 .idea
 *.o
 *.raw

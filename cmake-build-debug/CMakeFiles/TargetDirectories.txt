@@ -1,3 +1,0 @@
-/home/dbeef/spelunky-psp/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/dbeef/spelunky-psp/cmake-build-debug/CMakeFiles/spelunkypsp.dir
-/home/dbeef/spelunky-psp/cmake-build-debug/CMakeFiles/edit_cache.dir

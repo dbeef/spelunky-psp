@@ -10,6 +10,10 @@
 #include "SplashScreenType.hpp"
 #include "../rooms/RoomType.hpp"
 #include "../camera/Camera.h"
+#include <vector>
+
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 //TODO Move from macros to constexpr in other classes too.
 
@@ -54,6 +58,7 @@ public:
     //so this array lets us know, that we have a 'closed' room number 3 (for example) at some place.
     int layout_room_ids[ROOMS_X][ROOMS_Y];
 
+    std::vector<GLfloat> batch;
     float coordinates[4][2];
 
     //sets all tiles to !existing
