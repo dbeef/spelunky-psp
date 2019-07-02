@@ -22,7 +22,7 @@ EXTRA_TARGETS     = EBOOT.PBP
 VERSION           = 1.00
 #PSP_LARGE_MEMORY = 1 #to use all 64MB on a PSP-2000 or later
 PSP_EBOOT_PIC1    = pic1.png
-PSP_EBOOT_ICON    = icon.png
+PSP_EBOOT_ICON    = icon0.png
 PSP_EBOOT_TITLE   = Spelunky PSP
 
 PSPSDK=$(shell psp-config --pspsdk-path)
