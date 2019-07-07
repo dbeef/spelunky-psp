@@ -1,5 +1,0 @@
-/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/PSP.cmake -DPSPDEV=/usr/local/pspdev -G "CodeBlocks - Unix Makefiles" /home/dbeef/CLionProjects/Spelunky-PSP
--- Target platform is: PSP
--- Configuring done
--- Generating done
--- Build files have been written to: /home/dbeef/CLionProjects/Spelunky-PSP/cmake-build-debug
