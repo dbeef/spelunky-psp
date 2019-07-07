@@ -5,7 +5,7 @@
 
 int start() {
     Video::init();
-    Video::instance().setupGL();
+    if(!Video::instance().setupGL()) return 1;
 
     std::function<void()> callback = []() {
         static float r = 0;

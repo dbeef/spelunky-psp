@@ -11,6 +11,8 @@ target_include_directories(Video
         interface/video
         )
 
+target_link_libraries(Video PUBLIC glad)
+
 set_target_properties(Video
         PROPERTIES
         CXX_STANDARD

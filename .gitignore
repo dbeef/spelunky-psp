@@ -1,5 +1,7 @@
-_build/
-_install/
+_build-psp/
+_install-psp/
+_build-linux/
+_install-linux/
 cmake-build-debug/
 cmake-build-release/
 .idea

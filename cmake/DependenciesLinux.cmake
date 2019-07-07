@@ -5,6 +5,7 @@ macro(add_linux_dependencies)
             -lGLEW
             -lGL
             -lX11
+            -ldl
             )
 
     target_compile_definitions(Dependencies INTERFACE

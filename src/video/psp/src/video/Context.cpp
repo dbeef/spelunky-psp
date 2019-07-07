@@ -7,6 +7,7 @@
 #include <pspdebug.h>
 
 #include "Context.hpp"
+#include "video/GL.hpp"
 
 #define printf pspDebugScreenPrintf
 
@@ -31,7 +32,6 @@ Video &Video::instance() {
 bool Video::setupGL() {
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        // FIXME: "No available video device" on PSP!
         printf("SDL_Init Error: %s\n", SDL_GetError());
         SDL_ClearError();
         return false;
@@ -46,6 +46,11 @@ bool Video::setupGL() {
     if (!surface) {
         printf("SDL_SetVideoMode Error: %s\n", SDL_GetError());
         SDL_ClearError();
+        return false;
+    }
+
+    if(!gladLoadGLES1Loader((GLADloadproc) SDL_GL_GetProcAddress)) {
+        printf("Error while loading ptrs to OpenGL functions\n");
         return false;
     }
 

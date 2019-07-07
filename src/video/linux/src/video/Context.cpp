@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "Context.hpp"
+#include "glad/glad.h"
 
 Video *Video::_instance = nullptr;
 
@@ -45,6 +46,8 @@ bool Video::setupGL() {
         SDL_ClearError();
         return false;
     }
+
+    gladLoadGL();
 
     return true;
 }
