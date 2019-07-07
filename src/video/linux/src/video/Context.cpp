@@ -47,7 +47,10 @@ bool Video::setupGL() {
         return false;
     }
 
-    gladLoadGL();
+    if(!gladLoadGLLoader((GLADloadproc) SDL_GL_GetProcAddress)) {
+        printf("Error while loading ptrs to OpenGL functions\n");
+        return false;
+    }
 
     return true;
 }
