@@ -1,0 +1,7 @@
+if (${SPELUNKY_PSP_PLATFORM} STREQUAL Linux)
+    add_subdirectory(linux)
+elseif(${SPELUNKY_PSP_PLATFORM} STREQUAL PSP)
+    add_subdirectory(psp)
+else()
+    message(FATAL_ERROR "Could not match platform")
+endif ()

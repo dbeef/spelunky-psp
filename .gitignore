@@ -1,7 +1,5 @@
-.idea
-*.o
-*.raw
-*.save
-assembly
-*.swp
-*.d
+_build/
+_install/
+cmake-build-debug/
+cmake-build-release/
+

@@ -1,4 +1,4 @@
-# Install script for directory: /home/xdbeef/spelunky-psp
+# Install script for directory: /home/dbeef/CLionProjects/Spelunky-PSP
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -27,14 +27,39 @@ if(NOT CMAKE_INSTALL_COMPONENT)
   endif()
 endif()
 
-# Install shared libraries without execute permission?
-if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
-  set(CMAKE_INSTALL_SO_NO_EXE "1")
-endif()
-
 # Is this installation the result of a crosscompile?
 if(NOT DEFINED CMAKE_CROSSCOMPILING)
-  set(CMAKE_CROSSCOMPILING "FALSE")
+  set(CMAKE_CROSSCOMPILING "TRUE")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  if("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/Debug/bin" TYPE EXECUTABLE FILES "/home/dbeef/CLionProjects/Spelunky-PSP/cmake-build-debug/Spelunky_PSP")
+    if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/Debug/bin/Spelunky_PSP" AND
+       NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/Debug/bin/Spelunky_PSP")
+      if(CMAKE_INSTALL_DO_STRIP)
+        execute_process(COMMAND "/usr/local/pspdev/bin/psp-strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/Debug/bin/Spelunky_PSP")
+      endif()
+    endif()
+  endif("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  if("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/Release/bin" TYPE EXECUTABLE FILES "/home/dbeef/CLionProjects/Spelunky-PSP/cmake-build-debug/Spelunky_PSP")
+    if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/Release/bin/Spelunky_PSP" AND
+       NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/Release/bin/Spelunky_PSP")
+      if(CMAKE_INSTALL_DO_STRIP)
+        execute_process(COMMAND "/usr/local/pspdev/bin/psp-strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/Release/bin/Spelunky_PSP")
+      endif()
+    endif()
+  endif("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for each subdirectory.
+  include("/home/dbeef/CLionProjects/Spelunky-PSP/cmake-build-debug/src/video/cmake_install.cmake")
+
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -45,5 +70,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/xdbeef/spelunky-psp/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/dbeef/CLionProjects/Spelunky-PSP/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
