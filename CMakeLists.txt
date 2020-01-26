@@ -1,35 +1,47 @@
-# That file is here only to make IDE's happy so they could index all source files.
-# Real building happens through Makefile.
+cmake_minimum_required(VERSION 3.10)
+project(Spelunky_PSP)
 
-cmake_minimum_required(VERSION 3.9)
-project(spelunkypsp)
+include(cmake/CurrentPlatform.cmake)
 
-set(CMAKE_CXX_STANDARD 98)
+spelunky_psp_detect_platform()
+spelunky_psp_add_platform_dependencies()
 
-# Set to your psptoolchain installation dir if environment variable does not exist.
-set(PSPDEV $ENV{PSPDEV})
+set(ASSETS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/assets)
 
-include_directories(${PSPDEV}/include)
-include_directories(${PSPDEV}/psp/include)
-include_directories(${PSPDEV}/psp/sdk/include)
+add_executable(Spelunky_PSP
+        src/Main.cpp
+        )
 
-# Using makefile for building but adding target here in CMakeLists since apparently
-# clion won't scan files without it.
-add_executable(spelunkypsp
-        input/InputHandler.h input/InputHandler.cpp main.cpp camera/Camera.cpp camera/Camera.h
-        timer/Timer.cpp timer/Timer.h utils/Consts.h tiles/MapTileType.h
-        rooms/AltarRoom.hpp rooms/ClosedRooms.hpp rooms/EntranceRooms.hpp rooms/ExitRooms.hpp
-        rooms/LeftRightDownRooms.hpp rooms/LeftRightRooms.hpp rooms/LeftRightUpRooms.hpp rooms/RoomType.hpp
-        rooms/ShopRooms.hpp rooms/SnakeWellRoom.hpp rooms/SplashScreenRooms.hpp
-        tiles/Level.cpp
-        tiles/Level.hpp
-        tiles/Direction.hpp
-        tiles/SplashScreenType.hpp
-        tiles/TileOrientation.hpp
-        tiles/MapTile.cpp
-        tiles/MapTile.hpp
-        tiles/LevelRenderingUtils.cpp
-        tiles/LevelRenderingUtils.hpp
-        tiles/LevelGenerator.cpp
-        tiles/LevelGenerator.hpp
-)
+add_subdirectory(src/video)
+
+target_include_directories(Spelunky_PSP PRIVATE src)
+
+target_link_libraries(Spelunky_PSP PRIVATE Video Dependencies)
+
+set_target_properties(Spelunky_PSP
+        PROPERTIES
+        CXX_STANDARD
+        14
+        COMPILE_FLAGS
+        # Treat every warning as an error
+        -Werror
+        # Disables exceptions support and uses the variant of C++ libraries without exceptions
+        -fno-exceptions
+        # Disable generation of information about every class with virtual functions for use by
+        # the C++ runtime type identification features (dynamic_cast and typeid).
+        -fno-rtti
+        # Debugging information level. 0 is lowest.
+        -G0
+        # Optimize
+        -O2
+        )
+
+install(TARGETS Spelunky_PSP
+        CONFIGURATIONS Debug
+        RUNTIME DESTINATION Debug/bin)
+
+install(TARGETS Spelunky_PSP
+        CONFIGURATIONS Release
+        RUNTIME DESTINATION Release/bin)
+
+spelunky_psp_post_build()

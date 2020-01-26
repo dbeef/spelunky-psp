@@ -1,7 +1,0 @@
-Vanilla NintendoDS has only 4 MB of RAM - declaring all of these variables is probably a few hundred bytes and will
-be even more when we will have more maps.
-
-What is to be done is moving all these maps to filesystem, so the program would read them only when they're needed
-(level generation) and then release resources.
-
-It's probably not a huge problem, just an idea for future patches.
