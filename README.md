@@ -81,6 +81,7 @@ root directory), you are ready to cross compile to PSP via `/scripts/config-psp.
     * license scanning
     * archiving artifacts from master branch
 * Provide issue template on Github
+* Create resource-compiler subproject, outputting executable that would convert given asset (i.e image) to header file. Add automatic invoking resource-compiler to CMake every time assets were touched.
 * Extract level-generating code from Spelunky DS, making it as renderer-agnostic as possible, for potential reuse between Spelunky DS / Spelunky PSP.
 * Write tile renderer in OpenGL 1.0 / OpenGL ES 1.3
 
