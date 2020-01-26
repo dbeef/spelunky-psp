@@ -6,7 +6,7 @@ Original Spelunky classic was written using GameMaker, properietary tool for cre
 Derek Yu, its autor, released sources says clearly than one can use them, combined with assets freely as long
 as it is not for one's profit.
 
-This is fantastic, but in the same time limiting, as eager programmer can't build its favorite game untill 
+This is fantastic, but in the same time limiting, as an eager programmer can't build its favorite game untill 
 GameMaker says it will now support some retro console (which is very unlikely to happen).
   
 But, as there are good people providing and maintaining free, homebrew toolchains 
