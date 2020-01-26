@@ -32,7 +32,10 @@ As it introduces a problem, rewriting it for PSP creates new, fascinating possib
 very early, primitive subset of a commonly adopted rendering API - OpenGL.
 
 Once renderer is rewritten to utilize OpenGL-ES 1.0, Spelunky can be ran pretty much everywhere.
-Not only PSP, but PS Vita, Nintendo Switch and ordinary PC or Mac. Mobiles - Android and iOS. 
+Not only PSP, but PS Vita, Nintendo Switch and ordinary PC or Mac. Also mobiles - Android and iOS.
+
+Just like Doom is ported to all those weird devices - calculators, printers, digital cameras, ATM's,
+smart watches and so on, Spelunky classic would be playable everywhere, where rudimentary subset of OpenGL settled.
 
 I split creating rendering context into platform-specific directories (under `/src/video`). 
 There, depending on platform, I use glad for obtaining OpenGL 1.3 context on desktops or OpenGL-ES 1.0 on PSP. 
