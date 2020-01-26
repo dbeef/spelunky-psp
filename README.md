@@ -82,7 +82,7 @@ root directory), you are ready to cross compile to PSP via `/scripts/config-psp.
     * archiving artifacts from master branch
 * Provide issue template on Github
 * Extract level-generating code from Spelunky DS, making it as renderer-agnostic as possible, for potential reuse between Spelunky DS / Spelunky PSP.
-* Write tile renderer in OpenGL ES 1.3
+* Write tile renderer in OpenGL 1.0 / OpenGL ES 1.3
 
 ##### Before you contribute
 
