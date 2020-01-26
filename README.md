@@ -7,7 +7,7 @@ Derek Yu, its autor, released sources says clearly than one can use them, combin
 as it is not for one's profit.
 
 This is fantastic, but in the same time limiting, as an eager programmer can't build its favorite game untill 
-GameMaker says it will now support some retro console (which is very unlikely to happen).
+GameMaker declares it will now support some retro console (which is very unlikely to happen).
   
 But, as there are good people providing and maintaining free, homebrew toolchains 
 (i.e [devkitPro](https://github.com/devkitPro) organization or [pspdev group](https://github.com/pspdev)) it is still
