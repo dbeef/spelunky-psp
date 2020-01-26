@@ -21,6 +21,9 @@ macro(add_psp_dependencies)
             -lpspgu
             -lpspctrl
             -lpspge
+            -lpspirkeyb
+            -lpsppower
+            -lpsppower_driver
             -lpspdisplay
             -lpsphprm
             -lpspsdk
