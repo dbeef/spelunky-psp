@@ -70,7 +70,7 @@ After toolchain's build scripts set up environment variables (make sure `echo $P
 root directory), you are ready to cross compile to PSP via `/scripts/config-psp.sh` and `/scripts/build-psp.sh`.
 
 [^1] I am asserting that [my PR](https://github.com/pspdev/psplibraries/pull/39) will be merged when you are reading this. If not, please edit your `psptoolchain/scripts/011-psplibraries.sh`, line 12, with
-`clone_git_repo github.com dbeef psplibraries` instead of original ` clone_git_repo github.com pspdev psplibraries`
+`clone_git_repo github.com dbeef psplibraries` instead of original `clone_git_repo github.com pspdev psplibraries`
 
 ### Contributing
 
