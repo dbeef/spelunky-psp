@@ -5,6 +5,7 @@
 
 #include <SDL/SDL.h>
 #include <pspdebug.h>
+#include <cassert>
 
 #include "Context.hpp"
 #include "video/GL.hpp"
@@ -31,6 +32,10 @@ Video &Video::instance() {
 
 bool Video::setupGL() {
 
+
+
+    printf("Entered Video::setupGL\n");
+
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL_Init Error: %s\n", SDL_GetError());
         SDL_ClearError();
@@ -54,6 +59,10 @@ bool Video::setupGL() {
         return false;
     }
 
+    SDL_GL_LoadLibrary(nullptr);
+    SDL_ClearError();
+
+    printf("Exiting Video::setupGL, success.\n");
     return true;
 }
 

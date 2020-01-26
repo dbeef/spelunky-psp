@@ -1,15 +1,39 @@
 #include "video/Context.hpp"
 #include "video/GL.hpp"
-
+#include <pspdebug.h>
 #include <cmath>
+#include <SDL/SDL_video.h>
+#include "GL/glut.h"
+#include "GLES/egl.h"
+
+#define printf pspDebugScreenPrintf
 
 int start() {
     Video::init();
     if(!Video::instance().setupGL()) return 1;
 
+    static bool been_there = false;
+
     std::function<void()> callback = []() {
         static float r = 0;
         r += 0.01f;
+
+        if(!eglGetProcAddress("glClearColor") || !eglGetProcAddress("glClear"))
+        {
+            if(!been_there)
+            {
+                auto err = SDL_GetError();
+
+                printf("\nError: %s\n", err);
+                printf("\nError: %s\n", err);
+                printf("\nError: %s\n", err);
+                printf("\nError: %s\n", err);
+                printf("\nError: %s\n", err);
+                been_there = true;
+            }
+            return;
+        }
+
         glClearColor(std::sin(r), 0.4f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
     };
