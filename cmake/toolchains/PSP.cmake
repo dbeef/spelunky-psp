@@ -47,6 +47,7 @@ set(ENC ${PSPBIN}PrxEncrypter)
 # SpelunkyPSP specific
 
 set(SPELUNKY_PSP_PLATFORM PSP)
+set(SPELUNKY_PSP_PLATFORM_PSP TRUE)
 
 # Assert that PSP SDK path has been actually passed:
 if(NOT DEFINED PSPDEV)

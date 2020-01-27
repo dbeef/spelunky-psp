@@ -7,6 +7,7 @@ macro(spelunky_psp_detect_platform)
         # Nothing to do - SPELUNKY_PSP_PLATFORM was already defined in the toolchain file.
     elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
         set(SPELUNKY_PSP_PLATFORM "Linux")
+        set(SPELUNKY_PSP_PLATFORM_LINUX TRUE)
     else ()
         message(FATAL_ERROR "Your platform (${CMAKE_SYSTEM_NAME}) is not supported")
     endif ()
