@@ -5,6 +5,9 @@
 #include "LevelGenerator.hpp"
 #include "LevelRenderer.hpp"
 
+#include "LevelGenerator.hpp"
+#include "LevelRenderer.hpp"
+
 #include <cmath>
 #include <cstdlib>
 
@@ -28,6 +31,9 @@ int start() {
     }
 
     LevelRenderer::instance().load_textures();
+
+    LevelGenerator::init();
+    LevelRenderer::init();
 
     std::function<void()> callback = []() {
         static float r = 0;
