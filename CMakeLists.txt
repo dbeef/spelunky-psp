@@ -28,6 +28,8 @@ set_target_properties(Spelunky_PSP
         PROPERTIES
         CXX_STANDARD
         14
+        CXX_EXTENSIONS
+        OFF
         COMPILE_FLAGS
         # Treat every warning as an error
         -Werror

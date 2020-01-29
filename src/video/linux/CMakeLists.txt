@@ -17,6 +17,8 @@ set_target_properties(Video
         PROPERTIES
         CXX_STANDARD
         14
+        CXX_EXTENSIONS
+        OFF
         COMPILE_FLAGS
         # Treat every warning as an error
         -Werror
