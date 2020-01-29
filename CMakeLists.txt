@@ -18,6 +18,7 @@ add_executable(Spelunky_PSP
         )
 
 add_subdirectory(src/video)
+add_subdirectory(vendor)
 
 target_include_directories(Spelunky_PSP PRIVATE src)
 
