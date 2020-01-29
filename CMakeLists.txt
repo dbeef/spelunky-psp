@@ -18,15 +18,18 @@ add_executable(Spelunky_PSP
         )
 
 add_subdirectory(src/video)
+add_subdirectory(vendor)
 
 target_include_directories(Spelunky_PSP PRIVATE src)
 
-target_link_libraries(Spelunky_PSP PRIVATE Video Dependencies)
+target_link_libraries(Spelunky_PSP PRIVATE Logger Video Dependencies )
 
 set_target_properties(Spelunky_PSP
         PROPERTIES
         CXX_STANDARD
         14
+        CXX_EXTENSIONS
+        OFF
         COMPILE_FLAGS
         # Treat every warning as an error
         -Werror
