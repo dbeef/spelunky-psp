@@ -12,7 +12,6 @@
 extern "C" {
 #endif // __cplusplus
 
-#include <stdio.h>
 #include <stdarg.h>
 
 #define LOG_VERSION "0.1.0"
@@ -33,7 +32,6 @@ enum
 
 void log_set_udata(void *udata);
 void log_set_lock(log_LockFn fn);
-void log_set_fp(FILE *fp);
 void log_set_level(int level);
 void log_set_quiet(int enable);
 

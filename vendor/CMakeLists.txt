@@ -1,1 +1,1 @@
-add_subdirectory(log.c)
+add_subdirectory(logger)

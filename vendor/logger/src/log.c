@@ -32,7 +32,6 @@
 static struct {
   void *udata;
   log_LockFn lock;
-  FILE *fp;
   int level;
   int quiet;
 } L;
@@ -70,11 +69,6 @@ void log_set_udata(void *udata) {
 
 void log_set_lock(log_LockFn fn) {
   L.lock = fn;
-}
-
-
-void log_set_fp(FILE *fp) {
-  L.fp = fp;
 }
 
 
@@ -141,19 +135,6 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
     fprintf(stderr, "%s", combined_buffers);
     fflush(stderr);
 #endif
-  }
-
-  /* Log to file */
-  if (L.fp) {
-    va_list args;
-    char buf[32];
-    buf[strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", lt)] = '\0';
-    fprintf(L.fp, "%s %-5s %s:%d: ", buf, level_names[level], file, line);
-    va_start(args, fmt);
-    vfprintf(L.fp, fmt, args);
-    va_end(args);
-    fprintf(L.fp, "\n");
-    fflush(L.fp);
   }
 
   /* Release lock */
