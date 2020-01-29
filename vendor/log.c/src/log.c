@@ -25,6 +25,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <time.h>
+#include <assert.h>
 
 #include "log.h"
 
@@ -104,18 +105,42 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
     va_list args;
     char buf[16];
     buf[strftime(buf, sizeof(buf), "%H:%M:%S", lt)] = '\0';
-#ifdef LOG_USE_COLOR
-    fprintf(
-      stderr, "%s %s%-5s\x1b[0m \x1b[90m%s:%d:\x1b[0m ",
-      buf, level_colors[level], level_names[level], file, line);
-#else
-    fprintf(stderr, "%s %-5s %s:%d: ", buf, level_names[level], file, line);
-#endif
+#ifdef SPELUNKY_PSP_PLATFORM_LINUX
+
+    #ifdef LOG_USE_COLOR
+      fprintf(
+              stderr, "%s %s%-5s\x1b[0m \x1b[90m%s:%d:\x1b[0m ",
+              buf, level_colors[level], level_names[level], file, line);
+    #else
+      fprintf(stderr, "%s %-5s %s:%d: ", buf, level_names[level], file, line);
+    #endif
+
     va_start(args, fmt);
     vfprintf(stderr, fmt, args);
     va_end(args);
     fprintf(stderr, "\n");
     fflush(stderr);
+
+#else
+    char metadata_buffer[256];
+    int status = snprintf(metadata_buffer,
+                          sizeof(metadata_buffer),
+                          "SPELUNKY %s %-5s %s:%d: ", buf, level_names[level], file, line);
+    assert(status >= 0 && status <= 256);
+
+    char message_buffer[256];
+    va_start(args, fmt);
+    status = vsprintf(&message_buffer[0], fmt, args);
+    assert(status >= 0 && status <= 256);
+    va_end(args);
+
+    char combined_buffers[512];
+    status = snprintf(combined_buffers, sizeof(combined_buffers), "%s %s", metadata_buffer, message_buffer);
+    assert(status >= 0 && status <= 256);
+
+    fprintf(stderr, "%s", combined_buffers);
+    fflush(stderr);
+#endif
   }
 
   /* Log to file */

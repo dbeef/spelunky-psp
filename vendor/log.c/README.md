@@ -5,7 +5,7 @@ A simple logging library implemented in C99
 
 
 ## Usage
-**[log.c](src/log.c?raw=1)** and **[log.h](interface/log.h?raw=1)** should be dropped
+**[log.c](src/log.c?raw=1)** and **[log.h](interface/logger/log.h?raw=1)** should be dropped
 into an existing project and compiled along with it. The library provides 6
 function-like macros for logging:
 

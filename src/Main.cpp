@@ -1,10 +1,20 @@
 #include "video/Context.hpp"
 #include "video/GL.hpp"
+#include "logger/log.h"
+
 #include <cmath>
+#include <cstdlib>
 
 int start() {
+    log_info("Started.");
+
     Video::init();
-    if(!Video::instance().setupGL()) return 1;
+
+    if(!Video::instance().setupGL())
+    {
+        log_error("Failed to setup OpenGL.");
+        return EXIT_FAILURE;
+    }
 
     std::function<void()> callback = []() {
         static float r = 0;
@@ -17,7 +27,8 @@ int start() {
     Video::instance().tearDownGL();
     Video::dispose();
 
-    return 0;
+    log_info("Exiting peacefully.");
+    return EXIT_SUCCESS;
 }
 
 #if defined(SPELUNKY_PSP_PLATFORM_PSP)

@@ -22,7 +22,7 @@ add_subdirectory(vendor)
 
 target_include_directories(Spelunky_PSP PRIVATE src)
 
-target_link_libraries(Spelunky_PSP PRIVATE Video Dependencies)
+target_link_libraries(Spelunky_PSP PRIVATE log.c Video Dependencies )
 
 set_target_properties(Spelunky_PSP
         PROPERTIES
