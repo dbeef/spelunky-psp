@@ -20,6 +20,7 @@ void Camera::dispose()
 {
     assert(_camera);
     delete _camera;
+    _camera = nullptr;
 }
 
 Camera::Camera() : _x(0), _y(0) {}

@@ -1,5 +1,4 @@
 #include "video/Context.hpp"
-#include "video/GL.hpp"
 #include "logger/log.h"
 #include "Camera.hpp"
 #include "LevelGenerator.hpp"
@@ -12,6 +11,7 @@
 #include <cstdlib>
 #include <input/interface/Input.hpp>
 #include "graphics_utils/DebugGlCall.hpp"
+#include "glad/glad.h"
 
 namespace
 {

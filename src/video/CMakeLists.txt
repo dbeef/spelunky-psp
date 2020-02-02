@@ -1,9 +1,20 @@
-if (${SPELUNKY_PSP_PLATFORM} STREQUAL Linux)
-    add_subdirectory(glad_opengl_1.3)
-    add_subdirectory(linux)
-elseif(${SPELUNKY_PSP_PLATFORM} STREQUAL PSP)
-    add_subdirectory(glad_opengl_es_1.0)
-    add_subdirectory(psp)
-else()
-    message(FATAL_ERROR "Could not match platform")
-endif ()
+project(Video)
+
+add_library(Video STATIC
+        interface/video/Context.hpp
+        src/Context.cpp
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,src/Context_PSP.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Context_Linux.cpp,>
+        src/Context.cpp)
+
+target_include_directories(Video
+        PRIVATE include interface
+        INTERFACE interface
+)
+
+set_target_properties(Video PROPERTIES
+        CXX_STANDARD
+        14
+)
+
+target_link_libraries(Video PRIVATE Logger Camera Time glad Input)

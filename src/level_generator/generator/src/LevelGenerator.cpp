@@ -20,4 +20,5 @@ void LevelGenerator::dispose()
 {
     assert(_level_generator);
     delete _level_generator;
+    _level_generator = nullptr;
 }

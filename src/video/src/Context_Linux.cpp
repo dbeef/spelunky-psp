@@ -6,27 +6,10 @@
 #include <SDL/SDL.h>
 #include <iostream>
 #include <Input.hpp>
-#include <time/Timestep.hpp>
-#include "Context.hpp"
+#include "video/Context.hpp"
+
+#include "time/Timestep.hpp"
 #include "glad/glad.h"
-
-Video *Video::_instance = nullptr;
-
-void Video::init() {
-    // TODO: Assertions
-    _instance = new Video();
-}
-
-void Video::dispose() {
-    // TODO: Assertions
-    delete _instance;
-    _instance = nullptr;
-}
-
-Video &Video::instance() {
-    // TODO: Assertions
-    return *_instance;
-}
 
 bool Video::setupGL() {
 
@@ -61,41 +44,4 @@ bool Video::setupGL() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     return true;
-}
-
-void Video::tearDownGL() {
-    SDL_Quit();
-}
-
-// FIXME: Duplicating camera's consts
-uint16_t Video::getWindowWidth() {
-    return 480;
-}
-
-uint16_t Video::getWindowHeight() {
-    return 272;
-}
-
-void Video::swapBuffers() {
-    SDL_GL_SwapBuffers();
-}
-
-void Video::runLoop(std::function<void()> &loopCallback) {
-
-    auto& input = Input::instance();
-
-    Timestep t(60);
-
-    while (!input.isExit()) {
-
-
-        t.mark_start();
-
-        input.poll();
-        loopCallback();
-        swapBuffers();
-
-        t.mark_end();
-        t.delay();
-    }
 }

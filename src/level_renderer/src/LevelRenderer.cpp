@@ -35,6 +35,7 @@ void LevelRenderer::dispose()
 {
     assert(_level_renderer);
     delete _level_renderer;
+    _level_renderer = nullptr;
 }
 
 void LevelRenderer::load_textures()

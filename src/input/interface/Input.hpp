@@ -29,5 +29,5 @@ private:
     bool _up;
     bool _down;
 
-    static Input* _Input;
+    static Input* _input;
 };
