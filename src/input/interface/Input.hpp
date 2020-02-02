@@ -13,10 +13,17 @@ public:
     static void init();
     static void dispose();
 
-    void process(SDL_Event&);
+    void poll();
+
+    inline bool isExit() const { return _exit; }
+    inline bool left() const { return _left; }
+    inline bool right() const { return _right; }
+    inline bool up() const { return _up; }
+    inline bool down() const { return _down; }
 
 private:
 
+    bool _exit;
     bool _left;
     bool _right;
     bool _up;

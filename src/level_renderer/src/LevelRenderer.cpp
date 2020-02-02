@@ -47,7 +47,7 @@ void LevelRenderer::load_textures()
     log_info("Done loading tilesheet.");
 }
 
-void LevelRenderer::render()
+void LevelRenderer::set_projection_matrix()
 {
     auto& level = LevelGenerator::instance();
     auto& camera = Camera::instance();
@@ -55,16 +55,12 @@ void LevelRenderer::render()
     DebugGlCall(glViewport(0, 0, Video::getWindowWidth(), Video::getWindowHeight()));
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
-    // 480 / 272 = ~1.7
-    DebugGlCall(glOrtho(-8 * 1.7, 8 * 1.7, 8, -8, -8, 8));
-    DebugGlCall(glMatrixMode(GL_MODELVIEW));
-    DebugGlCall(glLoadIdentity());
+    float aspect_ratio = static_cast<float>(Video::getWindowWidth()) / Video::getWindowHeight();
 
-    graphics_utils::look_at(camera);
-    DebugGlCall(glLoadIdentity());
+    glOrtho(-8 * aspect_ratio, 8 * aspect_ratio, 8, -8, -8, 8);
 }
 
-void LevelRenderer::write_tiles_to_map()
+void LevelRenderer::render()
 {
     auto& level = LevelGenerator::instance();
     auto& camera = Camera::instance();
@@ -81,7 +77,9 @@ void LevelRenderer::write_tiles_to_map()
 // 4th thought -> render to framebuffer first?
 // limit rendered tiles to only those in current camera viewport
 
-    _batch.clear();
+    _batch_xyz.clear();
+    _batch_uv.clear();
+
     std::size_t tiles =0;
     // iterating from left-lower corner of the room to the right-upper (spelunky-ds convention)
     for (int x = 0; x < Consts::MAP_GAME_WIDTH_TILES; x++) {
@@ -115,53 +113,57 @@ void LevelRenderer::write_tiles_to_map()
             // right upper 2
             // right lower 3
 
-            _batch.push_back(coordinates[0][0]);
-            _batch.push_back(coordinates[0][1]);
-            _batch.push_back(0 + x);
-            _batch.push_back(0 + y);
-            _batch.push_back(0);
+            _batch_uv.push_back(coordinates[0][0]);
+            _batch_uv.push_back(coordinates[0][1]);
+            _batch_xyz.push_back(0 + x);
+            _batch_xyz.push_back(0 + y);
+            _batch_xyz.push_back(0);
 
-            _batch.push_back(coordinates[1][0]);
-            _batch.push_back(coordinates[1][1]);
-            _batch.push_back(0 + x);
-            _batch.push_back(1 + y);
-            _batch.push_back(0);
+            _batch_uv.push_back(coordinates[1][0]);
+            _batch_uv.push_back(coordinates[1][1]);
+            _batch_xyz.push_back(0 + x);
+            _batch_xyz.push_back(1 + y);
+            _batch_xyz.push_back(0);
 
-            _batch.push_back(coordinates[2][0]);
-            _batch.push_back(coordinates[2][1]);
-            _batch.push_back(1 + x);
-            _batch.push_back(1 + y);
-            _batch.push_back(0);
+            _batch_uv.push_back(coordinates[2][0]);
+            _batch_uv.push_back(coordinates[2][1]);
+            _batch_xyz.push_back(1 + x);
+            _batch_xyz.push_back(1 + y);
+            _batch_xyz.push_back(0);
 
-            _batch.push_back(coordinates[2][0]);
-            _batch.push_back(coordinates[2][1]);
-            _batch.push_back(1 + x);
-            _batch.push_back(1 + y);
-            _batch.push_back(0);
+            _batch_uv.push_back(coordinates[2][0]);
+            _batch_uv.push_back(coordinates[2][1]);
+            _batch_xyz.push_back(1 + x);
+            _batch_xyz.push_back(1 + y);
+            _batch_xyz.push_back(0);
 
-            _batch.push_back(coordinates[3][0]);
-            _batch.push_back(coordinates[3][1]);
-            _batch.push_back(1 + x);
-            _batch.push_back(0 + y);
-            _batch.push_back(0);
+            _batch_uv.push_back(coordinates[3][0]);
+            _batch_uv.push_back(coordinates[3][1]);
+            _batch_xyz.push_back(1 + x);
+            _batch_xyz.push_back(0 + y);
+            _batch_xyz.push_back(0);
 
-            _batch.push_back(coordinates[0][0]);
-            _batch.push_back(coordinates[0][1]);
-            _batch.push_back(0 + x);
-            _batch.push_back(0 + y);
-            _batch.push_back(0);
+            _batch_uv.push_back(coordinates[0][0]);
+            _batch_uv.push_back(coordinates[0][1]);
+            _batch_xyz.push_back(0 + x);
+            _batch_xyz.push_back(0 + y);
+            _batch_xyz.push_back(0);
 
             tiles++;
         }
     }
 
+    DebugGlCall(glEnableClientState(GL_VERTEX_ARRAY));
+    DebugGlCall(glEnableClientState(GL_TEXTURE_COORD_ARRAY));
 
     DebugGlCall(glMatrixMode(GL_MODELVIEW));
     DebugGlCall(glLoadIdentity());
     DebugGlCall(glTranslatef(0, 0, 0));
-    graphics_utils::look_at(camera);
-//    DebugGlCall(glInterleavedArrays(GL_C4F_N3F_V3F, 0, (void *) _batch.data()));
-    DebugGlCall(glInterleavedArrays(GL_T2F_V3F, 0, (void *) _batch.data()));
+    DebugGlCall(graphics_utils::look_at(camera));
+
+    DebugGlCall(glVertexPointer(3, GL_FLOAT, 0, _batch_xyz.data()));
+    DebugGlCall(glTexCoordPointer(2, GL_FLOAT, 0, _batch_uv.data()));
+
     DebugGlCall(glDrawArrays(GL_TRIANGLES, 0, 6 * tiles));
 //    log_info("Tiles in viewport: %i", tiles);
 }

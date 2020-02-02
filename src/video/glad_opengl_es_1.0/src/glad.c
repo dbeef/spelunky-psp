@@ -226,6 +226,7 @@ PFNGLNORMAL3XPROC glad_glNormal3x = NULL;
 PFNGLNORMALPOINTERPROC glad_glNormalPointer = NULL;
 PFNGLORTHOFPROC glad_glOrthof = NULL;
 PFNGLORTHOXPROC glad_glOrthox = NULL;
+PFNGLORTHOPROC glad_glOrtho = NULL;
 PFNGLPIXELSTOREIPROC glad_glPixelStorei = NULL;
 PFNGLPOINTPARAMETERFPROC glad_glPointParameterf = NULL;
 PFNGLPOINTPARAMETERFVPROC glad_glPointParameterfv = NULL;
@@ -297,6 +298,10 @@ static void load_GL_VERSION_ES_CM_1_0(GLADloadproc load) {
 	glad_glMultiTexCoord4f = (PFNGLMULTITEXCOORD4FPROC)load("glMultiTexCoord4f");
 	glad_glNormal3f = (PFNGLNORMAL3FPROC)load("glNormal3f");
 	glad_glOrthof = (PFNGLORTHOFPROC)load("glOrthof");
+
+	// Added manually!
+	glad_glOrtho = (PFNGLORTHOPROC)load("glOrtho");
+
 	glad_glPointParameterf = (PFNGLPOINTPARAMETERFPROC)load("glPointParameterf");
 	glad_glPointParameterfv = (PFNGLPOINTPARAMETERFVPROC)load("glPointParameterfv");
 	glad_glPointSize = (PFNGLPOINTSIZEPROC)load("glPointSize");

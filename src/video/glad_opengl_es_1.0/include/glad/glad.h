@@ -547,6 +547,12 @@ GLAPI PFNGLNORMAL3FPROC glad_glNormal3f;
 typedef void (APIENTRYP PFNGLORTHOFPROC)(GLfloat l, GLfloat r, GLfloat b, GLfloat t, GLfloat n, GLfloat f);
 GLAPI PFNGLORTHOFPROC glad_glOrthof;
 #define glOrthof glad_glOrthof
+typedef void (APIENTRYP PFNGLORTHOPROC)(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
+
+// Added manually!
+GLAPI PFNGLORTHOPROC glad_glOrtho;
+#define glOrtho glad_glOrtho
+
 typedef void (APIENTRYP PFNGLPOINTPARAMETERFPROC)(GLenum pname, GLfloat param);
 GLAPI PFNGLPOINTPARAMETERFPROC glad_glPointParameterf;
 #define glPointParameterf glad_glPointParameterf

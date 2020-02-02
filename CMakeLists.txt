@@ -25,7 +25,7 @@ add_subdirectory(src/input)
 
 target_include_directories(Spelunky_PSP PRIVATE src)
 
-target_link_libraries(Spelunky_PSP PRIVATE Logger Video Dependencies Camera LevelGenerator LevelRenderer Input)
+target_link_libraries(Spelunky_PSP PRIVATE Logger Video Dependencies Camera LevelGenerator LevelRenderer Input GraphicsUtils)
 
 set_target_properties(Spelunky_PSP
         PROPERTIES

@@ -11,8 +11,46 @@
 #include <cmath>
 #include <cstdlib>
 #include <input/interface/Input.hpp>
+#include "graphics_utils/DebugGlCall.hpp"
 
-int start() {
+namespace
+{
+    void handle_input()
+    {
+        Input& input = Input::instance();
+        Camera& camera = Camera::instance();
+
+        if (input.left())
+        {
+            camera.setX(camera.getX() - 1);
+        }
+        if (input.right())
+        {
+            camera.setX(camera.getX() + 1);
+        }
+        if (input.up())
+        {
+            camera.setY(camera.getY() - 1);
+        }
+        if (input.down())
+        {
+            camera.setY(camera.getY() + 1);
+        }
+    }
+
+    std::function<void()> create_game_loop()
+    {
+        return []()
+        {
+            DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
+            LevelRenderer::instance().render();
+            handle_input();
+        };
+    }
+}
+
+int start()
+{
     log_info("Started.");
 
     Camera::init();
@@ -26,25 +64,17 @@ int start() {
 
     Video::init();
 
-    if(!Video::instance().setupGL())
+    if (!Video::instance().setupGL())
     {
         log_error("Failed to setup OpenGL.");
         return EXIT_FAILURE;
     }
 
     LevelRenderer::instance().load_textures();
+    LevelRenderer::instance().set_projection_matrix();
 
-    std::function<void()> callback = []() {
-        static float r = 0;
-        r += 0.01f;
-        glClearColor(std::sin(r), 0.4f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        LevelRenderer::instance().render();
-        LevelRenderer::instance().write_tiles_to_map();
-    };
-
-    Video::instance().runLoop(callback);
+    auto loop = create_game_loop();
+    Video::instance().runLoop(loop);
     Video::instance().tearDownGL();
     Video::dispose();
 
@@ -57,6 +87,7 @@ int start() {
 }
 
 #if defined(SPELUNKY_PSP_PLATFORM_PSP)
+
 // Not mangling symbols so SDL could find SDL_main.
 extern "C"
 {
@@ -67,7 +98,10 @@ int SDL_main(int argc, char *argv[]) {
 #endif
 
 #if defined(SPELUNKY_PSP_PLATFORM_LINUX)
-int main() {
+
+int main()
+{
     return start();
 }
+
 #endif

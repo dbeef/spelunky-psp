@@ -12,15 +12,16 @@ public:
     static void dispose();
 
     void set_texture_pointer_to_tile(int type);
-    void write_tiles_to_map();
     void render();
+    void set_projection_matrix();
 
     void load_textures();
 
 private:
 
     float coordinates[4][2];
-    std::vector<GLfloat> _batch;
+    std::vector<GLfloat> _batch_xyz;
+    std::vector<GLfloat> _batch_uv;
     GLuint _tilesheet = 0;
     static LevelRenderer* _level_renderer;
 };

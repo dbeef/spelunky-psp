@@ -3,7 +3,8 @@ project(GraphicsUtils)
 add_library(GraphicsUtils STATIC
         src/CreateTexture.cpp
         interface/graphics_utils/CreateTexture.hpp
-        interface/graphics_utils/LookAt.hpp)
+        interface/graphics_utils/LookAt.hpp
+        )
 
 target_include_directories(GraphicsUtils
         PRIVATE include interface

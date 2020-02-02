@@ -71,7 +71,7 @@ GLuint graphics_utils::createTexture(const char *data, std::size_t size)
     DebugGlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
     DebugGlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 
-    // Upload to GPU rounded to the next power of 2, because of multiplicity constraints of early OpenGL):
+    // Upload to GPU rounded to the next power of 2, because of multiplicity constraints of early OpenGL:
 
     int roundedWidth = round_to_multiple_of_2(tex.width);
     int roundedHeight = round_to_multiple_of_2(tex.height);

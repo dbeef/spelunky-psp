@@ -7,6 +7,7 @@
 #include <pspdebug.h>
 #include <cassert>
 
+#include <Input.hpp>
 #include "Context.hpp"
 #include "video/GL.hpp"
 
@@ -90,17 +91,12 @@ void Video::swapBuffers() {
 }
 
 void Video::runLoop(std::function<void()> &loopCallback) {
-    SDL_Event event;
-    bool running = true;
 
-    while (running) {
+    auto& input = Input::instance();
 
-        while (SDL_PollEvent(&event)) {
-            running = event.type != SDL_QUIT;
-        }
-
+    while (!input.isExit()) {
+        input.poll();
         loopCallback();
-
         swapBuffers();
     }
 }

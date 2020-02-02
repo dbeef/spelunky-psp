@@ -19,4 +19,8 @@ target_link_libraries(LevelRenderer PRIVATE Logger glad stb Camera LevelGenerato
 
 if (SPELUNKY_PSP_PLATFORM_LINUX)
     target_link_libraries(LevelRenderer PRIVATE dl)
+    target_compile_definitions(LevelRenderer PRIVATE SPELUNKY_PSP_PLATFORM_LINUX)
+elseif(SPELUNKY_PSP_PLATFORM_PSP)
+    target_compile_definitions(LevelRenderer PRIVATE SPELUNKY_PSP_PLATFORM_PSP)
 endif()
+
