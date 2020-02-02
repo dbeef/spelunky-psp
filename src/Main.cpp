@@ -1,12 +1,19 @@
 #include "video/Context.hpp"
 #include "video/GL.hpp"
 #include "logger/log.h"
+#include "Camera.hpp"
+#include "LevelGenerator.hpp"
+#include "LevelRenderer.hpp"
 
 #include <cmath>
 #include <cstdlib>
 
 int start() {
     log_info("Started.");
+
+    Camera::init();
+    LevelGenerator::init();
+    LevelRenderer::init();
 
     Video::init();
 
@@ -26,6 +33,10 @@ int start() {
     Video::instance().runLoop(callback);
     Video::instance().tearDownGL();
     Video::dispose();
+
+    Camera::dispose();
+    LevelGenerator::dispose();
+    LevelRenderer::dispose();
 
     log_info("Exiting peacefully.");
     return EXIT_SUCCESS;
