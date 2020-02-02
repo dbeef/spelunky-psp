@@ -20,6 +20,7 @@ add_subdirectory(src/video/graphics_utils)
 add_subdirectory(vendor)
 add_subdirectory(src/level_generator)
 add_subdirectory(src/level_renderer)
+add_subdirectory(src/time)
 add_subdirectory(src/camera)
 add_subdirectory(src/input)
 

@@ -6,6 +6,7 @@
 #include <SDL/SDL.h>
 #include <iostream>
 #include <Input.hpp>
+#include <time/Timestep.hpp>
 #include "Context.hpp"
 #include "glad/glad.h"
 
@@ -83,10 +84,18 @@ void Video::runLoop(std::function<void()> &loopCallback) {
 
     auto& input = Input::instance();
 
+    Timestep t(60);
+
     while (!input.isExit()) {
+
+
+        t.mark_start();
+
         input.poll();
         loopCallback();
         swapBuffers();
+
+        t.mark_end();
+        t.delay();
     }
 }
-

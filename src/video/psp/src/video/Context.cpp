@@ -10,6 +10,7 @@
 #include <Input.hpp>
 #include "Context.hpp"
 #include "video/GL.hpp"
+#include <time/Timestep.hpp>
 
 #define printf pspDebugScreenPrintf
 
@@ -92,12 +93,21 @@ void Video::swapBuffers() {
 
 void Video::runLoop(std::function<void()> &loopCallback) {
 
+
     auto& input = Input::instance();
 
+    Timestep t(60);
+
     while (!input.isExit()) {
+
+
+        t.mark_start();
+
         input.poll();
         loopCallback();
         swapBuffers();
+
+        t.mark_end();
+        t.delay();
     }
 }
-

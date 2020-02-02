@@ -11,7 +11,7 @@ target_include_directories(Video
         interface/video
         )
 
-target_link_libraries(Video PUBLIC glad Input )
+target_link_libraries(Video PUBLIC glad Input Time)
 
 set_target_properties(Video
         PROPERTIES
