@@ -4,8 +4,5 @@
 # Cross compiles SpelunkyPSP for PSP, using following dependencies:
 # * SDL 1.2 as a vendor of creating window, retrieving OpenGL context, controls and sounds.
 
-INSTALL_PATH=`pwd`/_install-psp
-
-cd _build-psp
+cd tmp/build-psp
 cmake --build . --target install --config Release
-

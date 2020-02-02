@@ -8,73 +8,17 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#include "stb/image.h"
 #include "logger/log.h"
 #include "LevelRenderer.hpp"
 
-//#if defined BLUE_WINDOWS
-//#	define ASSERT(x) if(!(x)) __debugbreak();
-//#else
-//#	define ASSERT(x) if(!(x)) std::cin.ignore();
-//#endif
-
-#define ASSERT assert
-
-static void GlClearError() {
-    while (glGetError() != GL_NO_ERROR);
-}
-
-static bool GlLogCall(const char* function, const char* file, int line) {
-    while (GLenum error = glGetError())
-    {
-        log_error("OpenGL error: %i in function: %s, in file: %s, line: %i", error, function, file, line);
-        return false;
-    }
-    return true;
-}
-
-#define DebugGlCall(x) \
-	GlClearError(); \
-	x;\
-	ASSERT(GlLogCall(#x, __FILE__, __LINE__))
+#include "graphics_utils/CreateTexture.hpp"
+#include "graphics_utils/DebugGlCall.hpp"
 
 namespace
 {
     namespace tilesheet
     {
         #include "gfx_cavebg.png.h"
-    }
-
-    stbi_uc* buffer_tilesheet()
-    {
-        stbi_uc *buffer = nullptr;
-        int width{};
-        int height{};
-        int bytes_per_pixel{};
-        int desiredChannels = 3;
-
-        buffer = stbi_load_from_memory(
-                reinterpret_cast<const stbi_uc *>(&tilesheet::data),
-                sizeof(tilesheet::data),
-                &width,
-                &height,
-                &bytes_per_pixel,
-                desiredChannels
-        );
-
-        if (buffer == nullptr)
-        {
-            log_error("Failed to create texture from passed data. Reason: %s", stbi_failure_reason());
-            return nullptr;
-        }
-
-        log_info("Created texture: %i/%i, %i bpp.", width, height, bytes_per_pixel);
-        return buffer;
-    }
-
-    void dispose_tilesheet(stbi_uc* buffer)
-    {
-        stbi_image_free(buffer);
     }
 
     void dumpmat(GLenum mat, const char *s) {
@@ -92,7 +36,7 @@ namespace
         auto M = glm::lookAt(eye, center, up);
 
         DebugGlCall(glMultMatrixf(glm::value_ptr(M)));
-        DebugGlCall(glTranslated(-eye[0], -eye[1], -eye[2]));
+        DebugGlCall(glTranslatef(-eye[0], -eye[1], -eye[2]));
     }
 }
 
@@ -120,22 +64,8 @@ void LevelRenderer::load_textures()
 {
     log_info("Loading tilesheet.");
 
-    DebugGlCall(glEnable(GL_TEXTURE_2D));
-    DebugGlCall(glGenTextures(1, &_tilesheet));
-    DebugGlCall(glBindTexture(GL_TEXTURE_2D, _tilesheet));
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); // Won't compile on PSP
-    DebugGlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    DebugGlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-
-    // Load image via STB with data from resource compiler:
-    auto* buffer = buffer_tilesheet();
-
-    // Upload to GPU (32/512 instead of original 32/464 because of multiplicity of 2 constraints of early OpenGL):
-    DebugGlCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 32, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, buffer));
-
-    // Don't need the buffer anymore
-    dispose_tilesheet(buffer);
+    _tilesheet = graphics_utils::createTexture(tilesheet::data, sizeof(tilesheet::data));
+    assert(_tilesheet);
 
     log_info("Done loading tilesheet.");
 }

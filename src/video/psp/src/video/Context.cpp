@@ -63,6 +63,7 @@ bool Video::setupGL() {
     SDL_ClearError();
 
     // TODO: OpenGL asserts.
+    glEnable(GL_TEXTURE_2D);
     glShadeModel(GL_SMOOTH);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     glEnable(GL_BLEND);
