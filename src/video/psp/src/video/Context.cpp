@@ -62,6 +62,12 @@ bool Video::setupGL() {
     SDL_GL_LoadLibrary(nullptr);
     SDL_ClearError();
 
+    // TODO: OpenGL asserts.
+    glShadeModel(GL_SMOOTH);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     printf("Exiting Video::setupGL, success.\n");
     return true;
 }

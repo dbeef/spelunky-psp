@@ -10,6 +10,7 @@
 
 #include <cmath>
 #include <cstdlib>
+#include <input/interface/Input.hpp>
 
 int start() {
     log_info("Started.");
@@ -17,6 +18,7 @@ int start() {
     Camera::init();
     LevelGenerator::init();
     LevelRenderer::init();
+    Input::init();
 
     LevelGenerator::instance().getLevel().clean_map_layout();
     LevelGenerator::instance().getLevel().generate_frame();

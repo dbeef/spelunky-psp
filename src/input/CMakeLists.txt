@@ -16,3 +16,5 @@ set_target_properties(Input PROPERTIES
         CXX_STANDARD
         14
 )
+
+target_link_libraries(Input PRIVATE Logger Camera)

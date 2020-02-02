@@ -15,3 +15,4 @@ add_subdirectory(test)
 endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_compile_definitions(glm INTERFACE GLM_ENABLE_EXPERIMENTAL)
+

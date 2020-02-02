@@ -5,6 +5,7 @@
 
 #include <SDL/SDL.h>
 #include <iostream>
+#include <Input.hpp>
 
 #include "Context.hpp"
 #include "glad/glad.h"
@@ -79,6 +80,8 @@ void Video::swapBuffers() {
 }
 
 void Video::runLoop(std::function<void()> &loopCallback) {
+
+    auto& input = Input::instance();
     SDL_Event event;
     bool running = true;
 
@@ -87,6 +90,7 @@ void Video::runLoop(std::function<void()> &loopCallback) {
         while (SDL_PollEvent(&event)) {
             running = event.type != SDL_QUIT;
         }
+        input.process(event);
 
         loopCallback();
 

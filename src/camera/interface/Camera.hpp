@@ -15,6 +15,9 @@ public:
     inline float getX() { return _x; }
     inline float getY() { return _y; }
 
+    inline void setX(float x) { _x = x; }
+    inline void setY(float y) { _y = y; }
+
 private:
 
     float _x;

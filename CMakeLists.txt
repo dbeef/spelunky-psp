@@ -13,7 +13,7 @@ endif()
 
 set(ASSETS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/assets)
 
-add_executable(Spelunky_PSP src/Main.cpp src/input/src/Input.cpp)
+add_executable(Spelunky_PSP src/Main.cpp)
 
 add_subdirectory(src/video)
 add_subdirectory(vendor)

@@ -4,6 +4,7 @@
 #include <cstring>
 #include <cmath>
 
+#include "glad/glad.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
@@ -47,17 +48,17 @@ namespace
     stbi_uc* buffer_tilesheet()
     {
         stbi_uc *buffer = nullptr;
-        int width;
-        int height;
-        int bits_per_pixel;
-        int desiredChannels = 4;
+        int width{};
+        int height{};
+        int bytes_per_pixel{};
+        int desiredChannels = 3;
 
         buffer = stbi_load_from_memory(
                 reinterpret_cast<const stbi_uc *>(&tilesheet::data),
                 sizeof(tilesheet::data),
                 &width,
                 &height,
-                &bits_per_pixel,
+                &bytes_per_pixel,
                 desiredChannels
         );
 
@@ -67,7 +68,7 @@ namespace
             return nullptr;
         }
 
-        log_info("Created texture: %i/%i, %i bpp.", width, height, bits_per_pixel);
+        log_info("Created texture: %i/%i, %i bpp.", width, height, bytes_per_pixel);
         return buffer;
     }
 
@@ -85,8 +86,8 @@ namespace
     {
         auto& camera = Camera::instance();
 
-        glm::vec3 eye = {camera.getX(), camera.getY(), 0.0f};
-        glm::vec3 center = {0.0f, 0.0f, 0.0f};
+        glm::vec3 eye = {-camera.getX(), camera.getY(), -1.0f};
+        glm::vec3 center = {-camera.getX(), camera.getY(), 0.0f};
         glm::vec3 up = {0.0f, 1.0f, 0.0f};
         auto M = glm::lookAt(eye, center, up);
 
@@ -119,17 +120,19 @@ void LevelRenderer::load_textures()
 {
     log_info("Loading tilesheet.");
 
+    DebugGlCall(glEnable(GL_TEXTURE_2D));
     DebugGlCall(glGenTextures(1, &_tilesheet));
-    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); // Won't compile on PSP
+    DebugGlCall(glBindTexture(GL_TEXTURE_2D, _tilesheet));
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); // Won't compile on PSP
     DebugGlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
     DebugGlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-    DebugGlCall(glEnable(GL_TEXTURE_2D));
 
     // Load image via STB with data from resource compiler:
     auto* buffer = buffer_tilesheet();
 
-    // Upload to GPU:
-    DebugGlCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 32, 512, 0, GL_RGB, GL_UNSIGNED_SHORT, buffer));
+    // Upload to GPU (32/512 instead of original 32/464 because of multiplicity of 2 constraints of early OpenGL):
+    DebugGlCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 32, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, buffer));
 
     // Don't need the buffer anymore
     dispose_tilesheet(buffer);
@@ -148,6 +151,7 @@ void LevelRenderer::render()
     dumpmat(GL_PROJECTION_MATRIX, "ident proj");
     // 480 / 272 = ~1.7
     DebugGlCall(glOrtho(-8 * 1.7, 8 * 1.7, 8, -8, -8, 8));
+
     dumpmat(GL_PROJECTION_MATRIX, "ortho proj");
 
     DebugGlCall(glMatrixMode(GL_MODELVIEW));
@@ -182,7 +186,7 @@ void LevelRenderer::write_tiles_to_map()
     for (int x = 0; x < Consts::MAP_GAME_WIDTH_TILES; x++) {
         for (int y = 0; y < Consts::MAP_GAME_HEIGHT_TILES; y++) {
             MapTile *t = level.getLevel().map_tiles[x][y];
-            if (!t->in_viewport(&camera)) continue;
+//            if (!t->in_viewport(&camera)) continue;
             int tile_type = t->mapTileType;
             if (tile_type > 0) {
                 set_texture_pointer_to_tile(tile_type);
@@ -257,9 +261,10 @@ void LevelRenderer::write_tiles_to_map()
     dumpmat(GL_PROJECTION_MATRIX, "trans modelview");
     lookat();
     dumpmat(GL_MODELVIEW_MATRIX, "lookat modelview");
+//    DebugGlCall(glInterleavedArrays(GL_C4F_N3F_V3F, 0, (void *) _batch.data()));
     DebugGlCall(glInterleavedArrays(GL_T2F_V3F, 0, (void *) _batch.data()));
     DebugGlCall(glDrawArrays(GL_TRIANGLES, 0, 6 * tiles));
-//    printf("Tiles in viewport: %i\n", tiles);
+//    log_info("Tiles in viewport: %i", tiles);
 }
 
 
@@ -276,7 +281,7 @@ void LevelRenderer::set_texture_pointer_to_tile(int type) {
 
     float x_offset = 0;
     if (type % 2 == 1) x_offset++;
-    float y_offset = floor((float) type / 2);
+    float y_offset = std::floor((float) type / 2);
 
     // now it stores left-upper corner
     x_offset *= x_unit;
