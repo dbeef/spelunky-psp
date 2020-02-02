@@ -75,8 +75,8 @@ macro(spelunky_psp_post_build_psp)
     add_custom_command(
             TARGET Spelunky_PSP
             POST_BUILD COMMAND
-            "pack-pbp" "SpelunkyPSP.PBP" "PARAM.SFO" "${ASSETS_PATH}/ebp/icon.png" "NULL" "NULL"
-            "${ASSETS_PATH}/ebp/background.png" "NULL" "$<TARGET_FILE_DIR:Spelunky_PSP>/psp_artifact/Spelunky_PSP" "NULL"
+            "pack-pbp" "SpelunkyPSP.PBP" "PARAM.SFO" "${ASSETS_PATH}/metadata/icon.png" "NULL" "NULL"
+            "${ASSETS_PATH}/metadata/background.png" "NULL" "$<TARGET_FILE_DIR:Spelunky_PSP>/psp_artifact/Spelunky_PSP" "NULL"
             COMMENT "Calling pack-pbp"
     )
 
