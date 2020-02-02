@@ -13,17 +13,18 @@ endif()
 
 set(ASSETS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/assets)
 
-add_executable(Spelunky_PSP src/Main.cpp)
+add_executable(Spelunky_PSP src/Main.cpp src/input/src/Input.cpp)
 
 add_subdirectory(src/video)
 add_subdirectory(vendor)
 add_subdirectory(src/level_generator)
 add_subdirectory(src/level_renderer)
 add_subdirectory(src/camera)
+add_subdirectory(src/input)
 
 target_include_directories(Spelunky_PSP PRIVATE src)
 
-target_link_libraries(Spelunky_PSP PRIVATE Logger Video Dependencies Camera LevelGenerator LevelRenderer)
+target_link_libraries(Spelunky_PSP PRIVATE Logger Video Dependencies Camera LevelGenerator LevelRenderer Input)
 
 set_target_properties(Spelunky_PSP
         PROPERTIES
