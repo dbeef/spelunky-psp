@@ -32,14 +32,14 @@ int start() {
 
     LevelRenderer::instance().load_textures();
 
-    LevelGenerator::init();
-    LevelRenderer::init();
-
     std::function<void()> callback = []() {
         static float r = 0;
         r += 0.01f;
         glClearColor(std::sin(r), 0.4f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        LevelRenderer::instance().render();
+        LevelRenderer::instance().write_tiles_to_map();
     };
 
     Video::instance().runLoop(callback);

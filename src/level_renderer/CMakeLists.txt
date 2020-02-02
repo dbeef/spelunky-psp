@@ -15,7 +15,7 @@ set_target_properties(LevelRenderer PROPERTIES
         14
 )
 
-target_link_libraries(LevelRenderer PRIVATE Logger glad stb)
+target_link_libraries(LevelRenderer PRIVATE Logger glad stb Camera LevelGenerator Video glm::glm)
 
 if (SPELUNKY_PSP_PLATFORM_LINUX)
     target_link_libraries(LevelRenderer PRIVATE dl)
