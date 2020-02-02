@@ -1,4 +1,14 @@
-### Notes:
+### Notes for 3rd party projects shipped with Spelunky-PSP.
+
+#### GLM
+
+Though I am compiling Spelunky-PSP with `-std=C++14`, STL on PSP is not fully implemented
+and building vanilla GLM fails.
+
+Because of that, I am forcily undefining `GLM_HAS_CXX11_STL` in `glm/glm/setup.hpp`, to use
+math helpers shipped with glm instead of those from STL.
+
+#### Glad
 
 Though contents of these files are auto generated output from:
 
