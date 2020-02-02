@@ -10,23 +10,27 @@
 #include "logger/log.h"
 #include "glad/glad.h"
 
-static void GlClearError() {
-    while (glGetError() != GL_NO_ERROR);
-}
-
-static bool GlLogCall(const char* function, const char* file, int line) {
-    while (GLenum error = glGetError())
+namespace graphics_utils
+{
+    static void GlClearError()
     {
-        log_error("OpenGL error: %i in function: %s, in file: %s, line: %i", error, function, file, line);
-        return false;
+        while (glGetError() != GL_NO_ERROR);
     }
-    return true;
+
+    static bool GlLogCall(const char *function, const char *file, int line)
+    {
+        while (GLenum error = glGetError())
+        {
+            log_error("OpenGL error: %i in function: %s, in file: %s, line: %i", error, function, file, line);
+            return false;
+        }
+        return true;
+    }
 }
 
 #define DebugGlCall(x) \
-	GlClearError(); \
+	graphics_utils::GlClearError(); \
 	x;\
-	assert(GlLogCall(#x, __FILE__, __LINE__))
-
+	assert(graphics_utils::GlLogCall(#x, __FILE__, __LINE__))
 
 #endif //RESOURCE_COMPILER_DEBUGGLCALL_HPP

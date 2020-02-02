@@ -1,16 +1,11 @@
-#include <cassert>
-#include <LevelGenerator.hpp>
-#include <video/Context.hpp>
-#include <cstring>
-#include <cmath>
+#include "LevelRenderer.hpp"
+#include "LevelGenerator.hpp"
+#include "video/Context.hpp"
 
 #include "glad/glad.h"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
-
 #include "logger/log.h"
-#include "LevelRenderer.hpp"
 
+#include "graphics_utils/LookAt.hpp"
 #include "graphics_utils/CreateTexture.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
 
@@ -19,24 +14,6 @@ namespace
     namespace tilesheet
     {
         #include "gfx_cavebg.png.h"
-    }
-
-    void dumpmat(GLenum mat, const char *s) {
-        float m[16];
-        DebugGlCall(glGetFloatv(mat, m));
-    }
-
-    void lookat()
-    {
-        auto& camera = Camera::instance();
-
-        glm::vec3 eye = {-camera.getX(), camera.getY(), -1.0f};
-        glm::vec3 center = {-camera.getX(), camera.getY(), 0.0f};
-        glm::vec3 up = {0.0f, 1.0f, 0.0f};
-        auto M = glm::lookAt(eye, center, up);
-
-        DebugGlCall(glMultMatrixf(glm::value_ptr(M)));
-        DebugGlCall(glTranslatef(-eye[0], -eye[1], -eye[2]));
     }
 }
 
@@ -73,23 +50,17 @@ void LevelRenderer::load_textures()
 void LevelRenderer::render()
 {
     auto& level = LevelGenerator::instance();
+    auto& camera = Camera::instance();
 
     DebugGlCall(glViewport(0, 0, Video::getWindowWidth(), Video::getWindowHeight()));
     DebugGlCall(glMatrixMode(GL_PROJECTION));
-    dumpmat(GL_PROJECTION_MATRIX, "fresh proj");
     DebugGlCall(glLoadIdentity());
-    dumpmat(GL_PROJECTION_MATRIX, "ident proj");
     // 480 / 272 = ~1.7
     DebugGlCall(glOrtho(-8 * 1.7, 8 * 1.7, 8, -8, -8, 8));
-
-    dumpmat(GL_PROJECTION_MATRIX, "ortho proj");
-
     DebugGlCall(glMatrixMode(GL_MODELVIEW));
     DebugGlCall(glLoadIdentity());
-    dumpmat(GL_MODELVIEW_MATRIX, "ident modelview");
-    dumpmat(GL_PROJECTION_MATRIX, "non-current proj");
-    lookat();
-    dumpmat(GL_MODELVIEW_MATRIX, "lookat modelview");
+
+    graphics_utils::look_at(camera);
     DebugGlCall(glLoadIdentity());
 }
 
@@ -188,9 +159,7 @@ void LevelRenderer::write_tiles_to_map()
     DebugGlCall(glMatrixMode(GL_MODELVIEW));
     DebugGlCall(glLoadIdentity());
     DebugGlCall(glTranslatef(0, 0, 0));
-    dumpmat(GL_PROJECTION_MATRIX, "trans modelview");
-    lookat();
-    dumpmat(GL_MODELVIEW_MATRIX, "lookat modelview");
+    graphics_utils::look_at(camera);
 //    DebugGlCall(glInterleavedArrays(GL_C4F_N3F_V3F, 0, (void *) _batch.data()));
     DebugGlCall(glInterleavedArrays(GL_T2F_V3F, 0, (void *) _batch.data()));
     DebugGlCall(glDrawArrays(GL_TRIANGLES, 0, 6 * tiles));
