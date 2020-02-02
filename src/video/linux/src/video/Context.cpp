@@ -52,6 +52,12 @@ bool Video::setupGL() {
         return false;
     }
 
+    // TODO: OpenGL asserts.
+    glShadeModel(GL_SMOOTH);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     return true;
 }
 
@@ -59,6 +65,7 @@ void Video::tearDownGL() {
     SDL_Quit();
 }
 
+// FIXME: Duplicating camera's consts
 uint16_t Video::getWindowWidth() {
     return 480;
 }

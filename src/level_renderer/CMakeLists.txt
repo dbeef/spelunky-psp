@@ -14,3 +14,9 @@ set_target_properties(LevelRenderer PROPERTIES
         CXX_STANDARD
         14
 )
+
+target_link_libraries(LevelRenderer PRIVATE Logger glad stb)
+
+if (SPELUNKY_PSP_PLATFORM_LINUX)
+    target_link_libraries(LevelRenderer PRIVATE dl)
+endif()

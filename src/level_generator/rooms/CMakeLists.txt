@@ -9,7 +9,7 @@ add_library(Rooms STATIC
         interface/LeftRightDownRooms.hpp
         interface/LeftRightRooms.hpp
         interface/LeftRightUpRooms.hpp
-        interface/RoomType.hpp
+        ../generator/interface/RoomType.hpp
         interface/ShopRooms.hpp
         interface/SnakeWellRoom.hpp
         interface/SplashScreenRooms.hpp

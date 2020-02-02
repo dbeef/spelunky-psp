@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Level.hpp"
+
 class LevelGenerator
 {
 public:
@@ -8,7 +10,11 @@ public:
     static void init();
     static void dispose();
 
+    inline Level& getLevel() { return _level; };
+
 private:
+
+    Level _level;
 
     static LevelGenerator* _level_generator;
 };

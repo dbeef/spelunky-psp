@@ -69,80 +69,6 @@ void Level::generate_frame() {
     }
 }
 
-/*
-   F E D C B A 9 8|7 6 5 4 3 2 1 0
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  |R R R R R|G G G G G G|B B B B B| 565
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  |R R R R R|G G G G G|B B B B B|A| 5551
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  |R R R R|G G G G|B B B B|A A A A| 4444
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- */
-
-extern unsigned char gfxcavebg_start[];
-#define RGBA4444(r, g, b, a)    ((((r) << 8) & 0xf000) | (((g) << 4) & 0x0f00) | (((b)     ) & 0x00f0) | (((a) >> 4) & 0x000f))
-
-
-void Level::set_texture_pointer_to_tile(int type) {
-
-    type--;
-
-    int rows = 512 / 16;
-    int columns = 32 / 16;
-
-    // since coordinates must be normalized (between 0 and 1)
-    float x_unit = 1.0f / columns;
-    float y_unit = 1.0f / rows;
-
-    float x_offset = 0;
-    if (type % 2 == 1) x_offset++;
-    float y_offset = floor((float) type / 2);
-
-    // now it stores left-upper corner
-    x_offset *= x_unit;
-    y_offset *= y_unit;
-
-    // left lower 0 0
-    // left upper 0 1
-    // right upper 1 1
-    // right lower 1 0
-
-
-//    coordinates[0][0] = 0;
-//    coordinates[0][1] = 0;
-//
-//    coordinates[1][0] = 0;
-//    coordinates[1][1] = 1 * y_unit;
-//
-//    coordinates[2][0] = 1 * x_unit;
-//    coordinates[2][1] = 1 * y_unit;
-//
-//    coordinates[3][0] = 1 * x_unit;
-//    coordinates[3][1] = 0;
-
-    // left lower  0
-    // left upper  1
-    // right upper 2
-    // right lower 3
-
-    float onePixelX = 1.0f / 32;
-    float onePixelY = 1.0f / 512;
-
-    coordinates[1][0] = x_offset + onePixelX;
-    coordinates[1][1] = y_offset + y_unit - onePixelY;
-
-    coordinates[0][0] = x_offset + onePixelX;
-    coordinates[0][1] = y_offset + onePixelY;
-
-    coordinates[3][0] = x_offset + x_unit - onePixelX;
-    coordinates[3][1] = y_offset + onePixelY;
-
-    coordinates[2][0] = x_offset + x_unit - onePixelX;
-    coordinates[2][1] = y_offset + y_unit - onePixelY;
-}
-
-
 /**
  * Initialises every MapTile in the map_tiles[][] array with its position on the map,
  * so it could be allowed to call LevelGenerator::tiles_to_map.
@@ -310,13 +236,6 @@ void Level::get_first_tile_of_given_type(MapTileType mapTileType, MapTile *&m) {
     }
 }
 
-void Level::init_map_tiles() {
-    for (int a = 0; a < 32; a++)
-        for (int b = 0; b < 32; b++) {
-            map_tiles[a][b] = new MapTile();
-        }
-}
-
 void Level::clean_map_layout() {
     //clean current layout
     for (int x = 0; x < 32; x++)
@@ -326,3 +245,18 @@ void Level::clean_map_layout() {
         }
 }
 
+Level::Level()
+{
+    for (int a = 0; a < 32; a++)
+        for (int b = 0; b < 32; b++) {
+            map_tiles[a][b] = new MapTile();
+        }
+}
+
+Level::~Level()
+{
+    for (int a = 0; a < 32; a++)
+        for (int b = 0; b < 32; b++) {
+            delete map_tiles[a][b];
+        }
+}

@@ -10,7 +10,6 @@
 #include "SplashScreenType.hpp"
 #include "RoomType.hpp"
 #include "Camera.hpp"
-
 #include <vector>
 
 namespace Consts
@@ -39,26 +38,23 @@ class Level {
 
 public:
 
+    Level();
+    ~Level();
+
     //I allocate these tiles on heap on game start, never delete them later. That helps memory fragmentation a lot.
     //Before, I allocated/deallocated them on every level and It caused crashes on malloc after some time (~40 levels).
-    MapTile *map_tiles[32][32];
+    MapTile *map_tiles[32][32]{};
 
     //holds information on what room type is at specific array index
-    RoomType layout[Consts::ROOMS_X][Consts::ROOMS_Y];
+    RoomType layout[Consts::ROOMS_X][Consts::ROOMS_Y]{};
 
     //holds information on specific variation of room type, that is given from 'layout' array
     //i.e, we have 6 possible 'closed' rooms declared in the closed_rooms.hpp,
     //so this array lets us know, that we have a 'closed' room number 3 (for example) at some place.
-    int layout_room_ids[Consts::ROOMS_X][Consts::ROOMS_Y];
-
-    float coordinates[4][2];
+    int layout_room_ids[Consts::ROOMS_X][Consts::ROOMS_Y]{};
 
     //sets all tiles to !existing
     void clean_map_layout();
-
-    void init_map_tiles();
-
-    void set_texture_pointer_to_tile(int type);
 
     void generate_frame();
 

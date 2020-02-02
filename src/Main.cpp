@@ -15,6 +15,10 @@ int start() {
     LevelGenerator::init();
     LevelRenderer::init();
 
+    LevelGenerator::instance().getLevel().clean_map_layout();
+    LevelGenerator::instance().getLevel().generate_frame();
+    LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU_UPPER);
+
     Video::init();
 
     if(!Video::instance().setupGL())
@@ -22,6 +26,8 @@ int start() {
         log_error("Failed to setup OpenGL.");
         return EXIT_FAILURE;
     }
+
+    LevelRenderer::instance().load_textures();
 
     std::function<void()> callback = []() {
         static float r = 0;
