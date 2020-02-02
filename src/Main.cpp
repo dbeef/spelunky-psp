@@ -3,15 +3,11 @@
 #include "Camera.hpp"
 #include "LevelGenerator.hpp"
 #include "LevelRenderer.hpp"
-
-#include "LevelGenerator.hpp"
-#include "LevelRenderer.hpp"
-
-#include <cmath>
-#include <cstdlib>
-#include <input/interface/Input.hpp>
+#include "Input.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
 #include "glad/glad.h"
+
+#include <cstdlib>
 
 namespace
 {

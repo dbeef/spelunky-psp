@@ -4,17 +4,16 @@
 //
 
 #include <SDL/SDL.h>
-#include <iostream>
-#include <Input.hpp>
-#include "video/Context.hpp"
 
-#include "time/Timestep.hpp"
+#include "graphics_utils/DebugGlCall.hpp"
+#include "video/Context.hpp"
 #include "glad/glad.h"
+#include "logger/log.h"
 
 bool Video::setupGL() {
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
+        log_error("SDL_Init Error: %s");
         SDL_ClearError();
         return false;
     }
@@ -26,22 +25,22 @@ bool Video::setupGL() {
                                     SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE);
 
     if (!surface) {
-        std::cout << "SDL_SetVideoMode Error: " << SDL_GetError() << std::endl;
+        log_error("SDL_SetVideoMode Error: %s", SDL_GetError());
         SDL_ClearError();
         return false;
     }
 
     if(!gladLoadGLLoader((GLADloadproc) SDL_GL_GetProcAddress)) {
-        printf("Error while loading ptrs to OpenGL functions\n");
+        log_error("Error while loading ptrs to OpenGL functions");
         return false;
     }
 
-    // TODO: OpenGL asserts.
-    glEnable(GL_TEXTURE_2D);
-    glShadeModel(GL_SMOOTH);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    DebugGlCall(glEnable(GL_TEXTURE_2D));
+    DebugGlCall(glShadeModel(GL_SMOOTH));
+    DebugGlCall(glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE));
+    DebugGlCall(glEnable(GL_BLEND));
+    DebugGlCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
+    log_info("Exiting Video::setupGL, success.");
     return true;
 }

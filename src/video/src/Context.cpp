@@ -31,7 +31,6 @@ void Video::tearDownGL() {
     SDL_Quit();
 }
 
-// FIXME: Duplicating camera's consts
 uint16_t Video::getWindowWidth() {
     return 480;
 }

@@ -23,4 +23,3 @@ if (SPELUNKY_PSP_PLATFORM_LINUX)
 elseif(SPELUNKY_PSP_PLATFORM_PSP)
     target_compile_definitions(LevelRenderer PRIVATE SPELUNKY_PSP_PLATFORM_PSP)
 endif()
-
