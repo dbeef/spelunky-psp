@@ -17,15 +17,13 @@ namespace
 {
     namespace level_tiles_json
     {
-        #include "level_tiles.json.hpp"
+        #include "generated/level_tiles.json.hpp"
     }
 
     namespace level_tiles_image
     {
-        #include "level_tiles.png.hpp"
+        #include "generated/level_tiles.png.hpp"
     }
-
-    void set_texture_pointer_to_tile(int type, float coordinates[4][2]);
 }
 
 LevelRenderer* LevelRenderer::_level_renderer = nullptr;
@@ -72,6 +70,7 @@ void LevelRenderer::load_textures()
         for (std::size_t index = 0; index < static_cast<std::uint32_t>(MapTileType::_SIZE); index++)
         {
             _tiles[index] = RenderTile::fromJson(static_cast<MapTileType>(index), document_root);
+            _tiles[index].normalize(image_width, image_height);
         }
     }
     catch (const std::exception& e)
@@ -116,136 +115,37 @@ void LevelRenderer::render()
 
     _batch_xyz.clear();
     _batch_uv.clear();
+    _batch_indices.clear();
+    _tile_counter = 0;
 
-    std::size_t tiles =0;
+    std::size_t tiles = 0;
     // iterating from left-lower corner of the room to the right-upper (spelunky-ds convention)
     for (int x = 0; x < Consts::MAP_GAME_WIDTH_TILES; x++) {
         for (int y = 0; y < Consts::MAP_GAME_HEIGHT_TILES; y++) {
+
             MapTile *t = level.getLevel().map_tiles[x][y];
-//            if (!t->in_viewport(&camera)) continue;
             auto tile_type = static_cast<int>(t->mapTileType);
-            float coordinates[4][2];
+            auto& tile = _tiles[tile_type];
 
-            if (tile_type > 0) {
-                set_texture_pointer_to_tile(tile_type, coordinates);
-            } else {
-                // place a piece of background
-                // FIXME Find correct order of placing background tiles and put it into this matrix
-                int bg_matrix[8][2] = {
-                        {15, 16},
-                        {13, 14},
-                        {11, 12},
-                        {9,  10},
-                        {7,  8},
-                        {5,  6},
-                        {3,  4},
-                        {1,  2},
-                };
-
-                int bgr_type = bg_matrix[y % 8][x % 2] + 42;
-                set_texture_pointer_to_tile(bgr_type, coordinates);
-            }
-
-
-            // left lower  0
-            // left upper  1
-            // right upper 2
-            // right lower 3
-
-            _batch_uv.push_back(coordinates[0][0]);
-            _batch_uv.push_back(coordinates[0][1]);
-            _batch_xyz.push_back(0 + x);
-            _batch_xyz.push_back(0 + y);
-            _batch_xyz.push_back(0);
-
-            _batch_uv.push_back(coordinates[1][0]);
-            _batch_uv.push_back(coordinates[1][1]);
-            _batch_xyz.push_back(0 + x);
-            _batch_xyz.push_back(1 + y);
-            _batch_xyz.push_back(0);
-
-            _batch_uv.push_back(coordinates[2][0]);
-            _batch_uv.push_back(coordinates[2][1]);
-            _batch_xyz.push_back(1 + x);
-            _batch_xyz.push_back(1 + y);
-            _batch_xyz.push_back(0);
-
-            _batch_uv.push_back(coordinates[2][0]);
-            _batch_uv.push_back(coordinates[2][1]);
-            _batch_xyz.push_back(1 + x);
-            _batch_xyz.push_back(1 + y);
-            _batch_xyz.push_back(0);
-
-            _batch_uv.push_back(coordinates[3][0]);
-            _batch_uv.push_back(coordinates[3][1]);
-            _batch_xyz.push_back(1 + x);
-            _batch_xyz.push_back(0 + y);
-            _batch_xyz.push_back(0);
-
-            _batch_uv.push_back(coordinates[0][0]);
-            _batch_uv.push_back(coordinates[0][1]);
-            _batch_xyz.push_back(0 + x);
-            _batch_xyz.push_back(0 + y);
-            _batch_xyz.push_back(0);
+            tile.push_positions(_batch_xyz, x, y);
+            tile.push_indices(_batch_indices, _tile_counter);
+            tile.push_uvs(_batch_uv);
+            _tile_counter++;
 
             tiles++;
         }
     }
-
-    DebugGlCall(glEnableClientState(GL_VERTEX_ARRAY));
-    DebugGlCall(glEnableClientState(GL_TEXTURE_COORD_ARRAY));
 
     DebugGlCall(glMatrixMode(GL_MODELVIEW));
     DebugGlCall(glLoadIdentity());
     DebugGlCall(glTranslatef(0, 0, 0));
     DebugGlCall(graphics_utils::look_at(camera));
 
-    DebugGlCall(glVertexPointer(3, GL_FLOAT, 0, _batch_xyz.data()));
+    DebugGlCall(glEnableClientState(GL_VERTEX_ARRAY));
+    DebugGlCall(glEnableClientState(GL_TEXTURE_COORD_ARRAY));
+
+    DebugGlCall(glVertexPointer(2, GL_FLOAT, 0, _batch_xyz.data()));
     DebugGlCall(glTexCoordPointer(2, GL_FLOAT, 0, _batch_uv.data()));
 
-    DebugGlCall(glDrawArrays(GL_TRIANGLES, 0, 6 * tiles));
-}
-
-namespace
-{
-    void set_texture_pointer_to_tile(int type, float coordinates[4][2])
-    {
-
-        type--;
-
-        int rows = 512 / 16;
-        int columns = 32 / 16;
-
-        // since coordinates must be normalized (between 0 and 1)
-        float x_unit = 1.0f / columns;
-        float y_unit = 1.0f / rows;
-
-        float x_offset = 0;
-        if (type % 2 == 1) x_offset++;
-        float y_offset = std::floor((float) type / 2);
-
-        // now it stores left-upper corner
-        x_offset *= x_unit;
-        y_offset *= y_unit;
-
-        // left lower  0
-        // left upper  1
-        // right upper 2
-        // right lower 3
-
-        float onePixelX = 1.0f / 32;
-        float onePixelY = 1.0f / 512;
-
-        coordinates[1][0] = x_offset + onePixelX;
-        coordinates[1][1] = y_offset + y_unit - onePixelY;
-
-        coordinates[0][0] = x_offset + onePixelX;
-        coordinates[0][1] = y_offset + onePixelY;
-
-        coordinates[3][0] = x_offset + x_unit - onePixelX;
-        coordinates[3][1] = y_offset + onePixelY;
-
-        coordinates[2][0] = x_offset + x_unit - onePixelX;
-        coordinates[2][1] = y_offset + y_unit - onePixelY;
-    }
+    DebugGlCall(glDrawElements(GL_TRIANGLES, _batch_indices.size(), GL_UNSIGNED_INT, _batch_indices.data()));
 }

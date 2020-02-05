@@ -4,11 +4,15 @@
 
 #include <RenderTile.hpp>
 #include <logger/log.h>
+#include <glad/glad.h>
 
 namespace
 {
-    const char* toString(MapTileType);
-
+    const char* to_string(MapTileType);
+    void parse_dimensions(RenderTile& tile, tao::json::value &sprite);
+    void parse_indices(RenderTile& tile, tao::json::value &sprite);
+    void parse_positions(RenderTile& tile, tao::json::value &sprite);
+    void parse_uvs(RenderTile& tile, tao::json::value &sprite);
 }
 
 RenderTile RenderTile::fromJson(MapTileType type, tao::json::value &document_root)
@@ -28,24 +32,68 @@ RenderTile RenderTile::fromJson(MapTileType type, tao::json::value &document_roo
         if (filename == image_filename)
         {
             auto sprite = sprites_array[index];
-            tile.width = sprite["size"].get_array()[0].get_unsigned();
-            tile.height = sprite["size"].get_array()[1].get_unsigned();
 
-            log_info("Parsed tile: %s (%s)", filename.c_str(), toString(tile.type));
+            parse_dimensions(tile, sprite);
+            parse_indices(tile, sprite);
+            parse_positions(tile, sprite);
+            parse_uvs(tile, sprite);
+
+            log_info("Parsed tile: %s (%s)", filename.c_str(), to_string(tile.type));
             return tile;
         }
     }
 
-    log_error("Failed to parse tile: %i (%s)", tile_index, toString(tile.type));
+    log_error("Failed to parse tile: %i (%s)", tile_index, to_string(tile.type));
     assert(false);
     return tile;
+}
+
+void RenderTile::normalize(std::uint16_t spritesheet_width, std::uint16_t spritesheet_height)
+{
+    for (std::size_t index = 0; index < 4; index++)
+    {
+        positions_normalized[index][0] = static_cast<float>(positions[index][0]) / width;
+        positions_normalized[index][1] = static_cast<float>(positions[index][1]) / height;
+    }
+
+    for (std::size_t index = 0; index < 4; index++)
+    {
+        uv_normalized[index][0] = static_cast<float>(uv[index][0]) / spritesheet_width;
+        uv_normalized[index][1] = static_cast<float>(uv[index][1]) / spritesheet_height;
+    }
+}
+
+void RenderTile::push_uvs(std::vector<GLfloat> &out_uvs)
+{
+    for(std::size_t x = 0; x < 4; x++)
+    {
+        out_uvs.push_back(uv_normalized[x][0]);
+        out_uvs.push_back(uv_normalized[x][1]);
+    }
+}
+
+void RenderTile::push_positions(std::vector<GLfloat> &out_positions, int x_offset, int y_offset)
+{
+    for(std::size_t x = 0; x < 4; x++)
+    {
+        out_positions.push_back(positions_normalized[x][0] + x_offset);
+        out_positions.push_back(positions_normalized[x][1] + y_offset);
+    }
+}
+
+void RenderTile::push_indices(std::vector<GLuint> &out_indices, std::size_t offset)
+{
+    for(std::size_t x = 0; x < 6; x++)
+    {
+        out_indices.push_back(indices[x] + (offset * 4));
+    }
 }
 
 namespace
 {
 #define caseToString(X) case X: return #X;
 
-    const char *toString(MapTileType type)
+    const char *to_string(MapTileType type)
     {
         switch (type)
         {
@@ -96,6 +144,56 @@ namespace
             default:
                 assert(false);
                 return "Undefined MapTileType value";
+        }
+    }
+
+    void parse_dimensions(RenderTile &tile, tao::json::value &sprite)
+    {
+        auto dimensions = sprite["size"].get_array();
+        assert(dimensions.size() == 2);
+
+        tile.width = dimensions[0].get_unsigned();
+        tile.height = dimensions[1].get_unsigned();
+    }
+
+    void parse_indices(RenderTile &tile, tao::json::value &sprite)
+    {
+        auto indices = sprite["mesh"]["indices"].get_array();
+        assert(indices.size() == 6);
+
+        for (std::size_t index = 0; index < 6; index++)
+        {
+            tile.indices[index] = indices[index].get_unsigned();
+        }
+    }
+
+    void parse_positions(RenderTile &tile, tao::json::value &sprite)
+    {
+        auto positions = sprite["mesh"]["positions"].get_array();
+        assert(positions.size() == 4);
+
+        for (std::size_t index = 0; index < 4; index++)
+        {
+            auto xy = positions[index].get_array();
+            assert(xy.size() == 2);
+
+            tile.positions[index][0] = xy[0].get_unsigned();
+            tile.positions[index][1] = xy[1].get_unsigned();
+        }
+    }
+
+    void parse_uvs(RenderTile &tile, tao::json::value &sprite)
+    {
+        auto uvs = sprite["mesh"]["uvs"].get_array();
+        assert(uvs.size() == 4);
+
+        for (std::size_t index = 0; index < 4; index++)
+        {
+            auto xy = uvs[index].get_array();
+            assert(xy.size() == 2);
+
+            tile.uv[index][0] = xy[0].get_unsigned();
+            tile.uv[index][1] = xy[1].get_unsigned();
         }
     }
 

@@ -22,8 +22,12 @@ private:
 
     RenderTile _tiles[static_cast<uint32_t>(MapTileType::_SIZE)];
     GLuint _tilesheet = 0;
+
     std::vector<GLfloat> _batch_xyz;
     std::vector<GLfloat> _batch_uv;
+    std::vector<GLuint> _batch_indices;
+
+    std::size_t _tile_counter = 0;
 
     static LevelRenderer* _level_renderer;
 };
