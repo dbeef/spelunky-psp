@@ -28,7 +28,7 @@ void Level::generate_frame() {
     for (int a = 0; a < MAP_GAME_HEIGHT_TILES; a++) {
 //        delete (map_tiles[a][0]);
 //        auto *t = new MapTile();
-        map_tiles[a][0]->match_tile(CAVE_REGULAR);
+        map_tiles[a][0]->match_tile(MapTileType::CAVE_REGULAR);
         map_tiles[a][0]->destroyable = false; //make it non-destroyable explicitly
         map_tiles[a][0]->x = a;
         map_tiles[a][0]->y = 0;
@@ -39,7 +39,7 @@ void Level::generate_frame() {
     for (int a = 0; a < MAP_GAME_WIDTH_TILES; a++) {
 //        delete (map_tiles[31][a]);
 //        auto *t = new MapTile();
-        map_tiles[31][a]->match_tile(CAVE_REGULAR);
+        map_tiles[31][a]->match_tile(MapTileType::CAVE_REGULAR);
         map_tiles[31][a]->destroyable = false; //make it non-destroyable explicitly
         map_tiles[31][a]->x = 31;
         map_tiles[31][a]->y = a;
@@ -50,7 +50,7 @@ void Level::generate_frame() {
     for (int a = 0; a < MAP_GAME_HEIGHT_TILES; a++) {
 //        delete (map_tiles[31][a]);
 //        auto *t = new MapTile();
-        map_tiles[a][31]->match_tile(CAVE_REGULAR);
+        map_tiles[a][31]->match_tile(MapTileType::CAVE_REGULAR);
         map_tiles[a][31]->destroyable = false; //make it non-destroyable explicitly
         map_tiles[a][31]->x = a;
         map_tiles[a][31]->y = 31;
@@ -61,7 +61,7 @@ void Level::generate_frame() {
     for (int a = 0; a < MAP_GAME_WIDTH_TILES; a++) {
 //        delete (map_tiles[0][a]);
 //        auto *t = new MapTile();
-        map_tiles[0][a]->match_tile(CAVE_REGULAR);
+        map_tiles[0][a]->match_tile(MapTileType::CAVE_REGULAR);
         map_tiles[0][a]->destroyable = false; //make it non-destroyable explicitly
         map_tiles[0][a]->x = 0;
         map_tiles[0][a]->y = a;

@@ -13,7 +13,7 @@ class MapTile {
 
 public:
 
-    MapTile() : x(0), y(0), collidable(false), destroyable(false), exists(false), mapTileType(NOTHING)
+    MapTile() : x(0), y(0), collidable(false), destroyable(false), exists(false), mapTileType(MapTileType::NOTHING)
     {
 
     }

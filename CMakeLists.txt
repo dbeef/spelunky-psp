@@ -23,10 +23,21 @@ add_subdirectory(src/time)
 add_subdirectory(src/camera)
 add_subdirectory(src/input)
 add_subdirectory(src/graphics_utils)
+add_subdirectory(src/game_loop)
 
 target_include_directories(Spelunky_PSP PRIVATE src)
 
-target_link_libraries(Spelunky_PSP PRIVATE Logger Video Dependencies Camera LevelGenerator LevelRenderer Input GraphicsUtils glad)
+target_link_libraries(Spelunky_PSP PRIVATE
+        Logger
+        Video
+        Camera
+        LevelGenerator
+        LevelRenderer
+        Input
+        GraphicsUtils
+        GameLoop
+        Dependencies
+)
 
 set_target_properties(Spelunky_PSP
         PROPERTIES

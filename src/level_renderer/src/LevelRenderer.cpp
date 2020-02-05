@@ -9,11 +9,20 @@
 #include "graphics_utils/CreateTexture.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
 
+#include "tao/json.hpp"
+
+#include <string>
+
 namespace
 {
-    namespace tilesheet
+    namespace level_tiles_json
     {
-        #include "gfx_cavebg.png.h"
+        #include "level_tiles.json.hpp"
+    }
+
+    namespace level_tiles_image
+    {
+        #include "level_tiles.png.hpp"
     }
 
     void set_texture_pointer_to_tile(int type, float coordinates[4][2]);
@@ -40,12 +49,36 @@ void LevelRenderer::dispose()
     _level_renderer = nullptr;
 }
 
+
 void LevelRenderer::load_textures()
 {
     log_info("Loading tilesheet.");
 
-    _tilesheet = graphics_utils::createTexture(tilesheet::data, sizeof(tilesheet::data));
+    _tilesheet = graphics_utils::createTexture(level_tiles_image::data, sizeof(level_tiles_image::data));
     assert(_tilesheet);
+
+    char* json_ptr = &level_tiles_json::data[0];
+    auto document_root = tao::json::from_string(json_ptr);
+
+    try
+    {
+        std::string filename = document_root["image"].get_string();
+        uint16_t image_width = document_root["image_width"].get_unsigned();
+        uint16_t image_height = document_root["image_height"].get_unsigned();
+
+        log_info("Parsing metadata out of texture atlas: %s, width: %i, height: %i",
+                filename.c_str(), image_width, image_height);
+
+        for (std::size_t index = 0; index < static_cast<std::uint32_t>(MapTileType::_SIZE); index++)
+        {
+            _tiles[index] = RenderTile::fromJson(static_cast<MapTileType>(index), document_root);
+        }
+    }
+    catch (const std::exception& e)
+    {
+        log_error("Exception while parsing spritesheet metadata JSON: %s", e.what());
+        assert(false);
+    }
 
     log_info("Done loading tilesheet.");
 }
@@ -90,7 +123,7 @@ void LevelRenderer::render()
         for (int y = 0; y < Consts::MAP_GAME_HEIGHT_TILES; y++) {
             MapTile *t = level.getLevel().map_tiles[x][y];
 //            if (!t->in_viewport(&camera)) continue;
-            int tile_type = t->mapTileType;
+            auto tile_type = static_cast<int>(t->mapTileType);
             float coordinates[4][2];
 
             if (tile_type > 0) {
