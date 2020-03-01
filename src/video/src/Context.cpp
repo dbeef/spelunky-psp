@@ -52,7 +52,7 @@ void Video::swap_buffers() const
     SDL_GL_SwapBuffers();
 }
 
-void Video::run_loop(std::function<void()> &loopCallback)
+void Video::run_loop(std::function<void()> &loop_callback)
 {
 
     auto& input = Input::instance();
@@ -64,7 +64,7 @@ void Video::run_loop(std::function<void()> &loopCallback)
 #endif
 
         input.poll();
-        loopCallback();
+        loop_callback();
         swap_buffers();
 
         // FIXME: Needs limiting FPS. Maybe stay with synchronizing to frame buffer swap?
