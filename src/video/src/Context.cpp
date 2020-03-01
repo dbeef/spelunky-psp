@@ -53,14 +53,18 @@ void Video::runLoop(std::function<void()> &loopCallback) {
 
     while (!input.isExit()) {
 
+#ifndef NDEBUG
+        DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
+#endif
 
-        t.mark_start();
+        // FIXME: Causing problems on PSP. Maybe stay with synchronizing to frame buffer swap?
+//        t.mark_start();
 
         input.poll();
         loopCallback();
         swapBuffers();
 
-        t.mark_end();
-        t.delay();
+//        t.mark_end();
+//        t.delay();
     }
 }
