@@ -8,6 +8,8 @@
 #include <time/Timestep.hpp>
 #include <Input.hpp>
 #include <cassert>
+#include <glad/glad.h>
+#include <graphics_utils/DebugGlCall.hpp>
 
 Video *Video::_instance = nullptr;
 
@@ -39,7 +41,7 @@ uint16_t Video::getWindowHeight() {
     return 272;
 }
 
-void Video::swapBuffers() {
+void Video::swapBuffers() const {
     SDL_GL_SwapBuffers();
 }
 

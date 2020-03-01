@@ -27,7 +27,7 @@ public:
 
     void runLoop(std::function<void()> &loopCallback);
 
-    inline void swapBuffers();
+    inline void swapBuffers() const;
 
 private:
 
