@@ -15,6 +15,13 @@ namespace
         const int desiredChannels = 3;
     };
 
+    int get_max_texture_size()
+    {
+        int max_texture_size = -1;
+        DebugGlCall(glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size));
+        return max_texture_size;
+    }
+
     Texture buffer_texture(const char *data, std::size_t size)
     {
         Texture tex{};
@@ -62,6 +69,11 @@ GLuint graphics_utils::createTexture(const char *data, std::size_t size)
     log_info("Buffering texture.");
     Texture tex = buffer_texture(data, size);
     if (!tex.buffer) return 0;
+
+    int max_texture_size = get_max_texture_size();
+    log_info("Max texture size on this platform: %i", max_texture_size);
+    assert(tex.width <= max_texture_size);
+    assert(tex.height <= max_texture_size);
 
     GLuint texture_id = 0;
 
