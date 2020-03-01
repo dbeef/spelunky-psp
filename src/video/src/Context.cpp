@@ -70,3 +70,8 @@ void Video::run_loop(std::function<void()> &loop_callback)
         // FIXME: Needs limiting FPS. Maybe stay with synchronizing to frame buffer swap?
     }
 }
+
+float Video::aspect()
+{
+    return static_cast<float>(Video::get_window_width()) / Video::get_window_height();
+}

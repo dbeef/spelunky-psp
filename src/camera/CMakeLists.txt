@@ -15,4 +15,4 @@ set_target_properties(Camera PROPERTIES
         14
 )
 
-target_link_libraries(Camera PRIVATE glad GraphicsUtils Logger)
+target_link_libraries(Camera PRIVATE glad GraphicsUtils Logger Video)

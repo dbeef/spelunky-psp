@@ -47,7 +47,13 @@ GameLoop::GameLoop()
         auto& camera = Camera::instance();
         auto& level_renderer = LevelRenderer::instance();
 
-        camera.update_gl();
+        camera.update_gl_modelview_matrix();
+
+        if(level_renderer.re_batching_needed())
+        {
+            level_renderer.batch_vertices();
+        }
+
         level_renderer.render();
         handle_input();
     };

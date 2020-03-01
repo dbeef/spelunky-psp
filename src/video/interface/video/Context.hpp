@@ -17,6 +17,8 @@ public:
 
     static Video &instance();
 
+    static float aspect();
+
     static uint16_t get_window_width();
 
     static uint16_t get_window_height();

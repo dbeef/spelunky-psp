@@ -14,15 +14,15 @@ public:
     static void init();
     static void dispose();
 
+    bool re_batching_needed();
     void batch_vertices();
     void render() const;
-    void set_projection_matrix();
     void load_textures();
 
 private:
 
-    int32_t  _last_camera_x_in_tiles = 123;
-    int32_t  _last_camera_y_in_tiles = 123;
+    int32_t _last_camera_x_in_tiles = 0;
+    int32_t _last_camera_y_in_tiles = 0;
 
     RenderTile _tiles[static_cast<uint32_t>(MapTileType::_SIZE)];
     GLuint _tilesheet = 0;

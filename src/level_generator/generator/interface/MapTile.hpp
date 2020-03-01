@@ -26,7 +26,7 @@ public:
     MapTileType mapTileType;
 
     void match_tile(MapTileType type);
-    bool in_viewport(Camera *camera);
+    bool in_viewport(const Camera *camera);
 };
 
 

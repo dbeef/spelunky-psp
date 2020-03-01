@@ -25,13 +25,14 @@ int start()
         return EXIT_FAILURE;
     }
 
+    Camera::instance().update_gl_projection_matrix();
+
     // TODO: State pattern: "main menu" state should handle this, or "start game" because of also loading assets
     LevelGenerator::instance().getLevel().clean_map_layout();
     LevelGenerator::instance().getLevel().generate_frame();
     LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU_UPPER);
 
     LevelRenderer::instance().load_textures();
-    LevelRenderer::instance().set_projection_matrix();
     LevelRenderer::instance().batch_vertices();
 
     {

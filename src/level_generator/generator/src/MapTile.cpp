@@ -146,7 +146,7 @@ void MapTile::match_tile(MapTileType type) {
     }
 }
 
-bool MapTile::in_viewport(Camera *camera) {
+bool MapTile::in_viewport(const Camera *camera) {
 
     // screen center is camera.x and camera.y
     // screen width is 30 tiles times 17 tiles (with used projection matrix)

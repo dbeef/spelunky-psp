@@ -1,11 +1,12 @@
 #include <cassert>
-#include <graphics_utils/DebugGlCall.hpp>
 
+#include "graphics_utils/DebugGlCall.hpp"
+#include "video/Context.hpp"
 #include "glad/glad.h"
 #include "graphics_utils/LookAt.hpp"
 #include "Camera.hpp"
 
-Camera* Camera::_camera = nullptr;
+Camera *Camera::_camera = nullptr;
 
 Camera &Camera::instance()
 {
@@ -26,9 +27,7 @@ void Camera::dispose()
     _camera = nullptr;
 }
 
-Camera::Camera() : _x(0), _y(0) {}
-
-void Camera::update_gl()
+void Camera::update_gl_modelview_matrix()
 {
     if (_dirty)
     {
@@ -39,4 +38,20 @@ void Camera::update_gl()
 
         _dirty = false;
     }
+}
+
+void Camera::update_gl_projection_matrix() const
+{
+    DebugGlCall(glViewport(0, 0, (float) (Video::get_window_width()), (float) (Video::get_window_height())));
+    DebugGlCall(glMatrixMode(GL_PROJECTION));
+    DebugGlCall(glLoadIdentity());
+
+    const float coeff = 6.0f;
+
+    DebugGlCall(glOrtho(-1 * coeff * Video::aspect(),
+                         1 * coeff * Video::aspect(),
+                         1 * coeff,
+                        -1 * coeff,
+                        -1 * coeff,
+                         1 * coeff));
 }

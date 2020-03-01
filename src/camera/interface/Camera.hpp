@@ -6,9 +6,8 @@ class Camera
 {
 public:
 
-    Camera();
-
-    void update_gl();
+    void update_gl_modelview_matrix();
+    void update_gl_projection_matrix() const;
 
     static Camera& instance();
     static void init();
@@ -24,8 +23,8 @@ private:
 
     bool _dirty = false;
 
-    float _x;
-    float _y;
+    float _x = 0;
+    float _y = 0;
 
     static Camera* _camera;
 };

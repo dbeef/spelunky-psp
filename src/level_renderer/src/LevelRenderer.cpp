@@ -1,18 +1,16 @@
 #include "LevelRenderer.hpp"
 #include "LevelGenerator.hpp"
 #include "video/Context.hpp"
-
 #include "glad/glad.h"
 #include "logger/log.h"
+#include "cJSON.h"
 
 #include "graphics_utils/LookAt.hpp"
 #include "graphics_utils/CreateTexture.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
 
-#include "cJSON.h"
 #include <string>
 #include <cstring>
-#include <LevelRenderer.hpp>
 
 namespace
 {
@@ -63,7 +61,7 @@ void LevelRenderer::load_textures()
         if (!document_root)
         {
             const char *error_ptr = cJSON_GetErrorPtr();
-            if (error_ptr != NULL)
+            if (error_ptr != nullptr)
             {
                 throw std::runtime_error(std::string(error_ptr));
             }
@@ -108,20 +106,6 @@ void LevelRenderer::load_textures()
     log_info("Done loading tilesheet.");
 }
 
-void LevelRenderer::set_projection_matrix()
-{
-    auto& level = LevelGenerator::instance();
-    auto& camera = Camera::instance();
-
-    DebugGlCall(glViewport(0, 0, (float)(Video::get_window_width()), (float)(Video::get_window_height())));
-    DebugGlCall(glMatrixMode(GL_PROJECTION));
-    DebugGlCall(glLoadIdentity());
-    float aspect_ratio = static_cast<float>(Video::get_window_width()) / Video::get_window_height();
-
-    float coeff = 6.0f;
-    DebugGlCall(glOrtho(-coeff * aspect_ratio, coeff * aspect_ratio, 1 * coeff, -1 * coeff, -1 * coeff, 1 * coeff));
-}
-
 void LevelRenderer::render() const
 {
     // Interleaving vertex attributes instead of separate buffers for small performance boost from data locality:
@@ -138,15 +122,13 @@ void LevelRenderer::render() const
     DebugGlCall(glDrawElements(GL_TRIANGLES, _render_batch.indices.size(), GL_UNSIGNED_SHORT, _render_batch.indices.data()));
 }
 
-void LevelRenderer::batch_vertices()
+bool LevelRenderer::re_batching_needed()
 {
-    auto& level = LevelGenerator::instance();
-    auto& camera = Camera::instance();
-
-    auto camera_x_in_tiles = static_cast<int32_t >(camera.getX());
-    auto camera_y_in_tiles = static_cast<int32_t >(camera.getY());
-
     // Re-batch vertices only when camera view is out of already batched vertices:
+    const auto& camera = Camera::instance();
+
+    const auto camera_x_in_tiles = static_cast<int32_t >(camera.getX());
+    const auto camera_y_in_tiles = static_cast<int32_t >(camera.getY());
 
     bool rebatching_needed = camera_x_in_tiles != _last_camera_x_in_tiles ||
                              camera_y_in_tiles != _last_camera_y_in_tiles;
@@ -154,10 +136,13 @@ void LevelRenderer::batch_vertices()
     _last_camera_x_in_tiles = camera_x_in_tiles;
     _last_camera_y_in_tiles = camera_y_in_tiles;
 
-    if (!rebatching_needed)
-    {
-        return;
-    }
+    return rebatching_needed;
+}
+
+void LevelRenderer::batch_vertices()
+{
+    auto& level = LevelGenerator::instance();
+    const auto& camera = Camera::instance();
 
     _render_batch.xyz.clear();
     _render_batch.uv.clear();
@@ -175,8 +160,7 @@ void LevelRenderer::batch_vertices()
             assert(level.getLevel().map_tiles[x][y]->x == x);
             assert(level.getLevel().map_tiles[x][y]->y == y);
 
-            // FIXME: Uncomment hen Camera::in_viewport is fixed.
-             if (!t->in_viewport(&camera)) continue;
+            if (!t->in_viewport(&camera)) continue;
 
             auto tile_type = static_cast<int>(t->mapTileType);
             auto& tile = _tiles[tile_type];
