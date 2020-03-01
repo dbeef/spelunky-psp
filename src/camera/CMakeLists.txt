@@ -14,3 +14,5 @@ set_target_properties(Camera PROPERTIES
         CXX_STANDARD
         14
 )
+
+target_link_libraries(Camera PRIVATE glad GraphicsUtils Logger)
