@@ -32,6 +32,7 @@ int start()
 
     LevelRenderer::instance().load_textures();
     LevelRenderer::instance().set_projection_matrix();
+    LevelRenderer::instance().batch_vertices();
 
     {
         GameLoop loop;

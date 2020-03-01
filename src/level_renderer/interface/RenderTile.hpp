@@ -6,8 +6,8 @@
 #define RESOURCE_COMPILER_RENDERTILE_HPP
 
 #include "MapTileType.hpp"
-#include "tao/json/value.hpp"
 #include "glad/glad.h"
+#include "cJSON.h"
 
 #include <cstdint>
 #include <string>
@@ -15,12 +15,12 @@
 
 struct RenderTile
 {
-    static RenderTile fromJson(MapTileType type, tao::json::value &document_root);
+    static RenderTile fromJson(MapTileType type, cJSON* document_root);
     void normalize(std::uint16_t spritesheet_width, std::uint16_t spritesheet_height);
 
     void push_uvs(std::vector<GLfloat>& out_uvs);
-    void push_positions(std::vector<GLfloat>& out_positions, int x_offset, int y_offset);
-    void push_indices(std::vector<GLuint>& out_indices, std::size_t offset);
+    void push_positions(std::vector<int16_t>& out_positions, int x_offset, int y_offset);
+    void push_indices(std::vector<std::int16_t>& out_indices, std::size_t offset);
 
     MapTileType type;
     std::uint16_t width;

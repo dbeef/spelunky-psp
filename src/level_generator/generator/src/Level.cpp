@@ -250,6 +250,8 @@ Level::Level()
     for (int a = 0; a < 32; a++)
         for (int b = 0; b < 32; b++) {
             map_tiles[a][b] = new MapTile();
+            map_tiles[a][b]->x = a;
+            map_tiles[a][b]->y = b;
         }
 }
 

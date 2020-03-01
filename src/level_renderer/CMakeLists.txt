@@ -26,7 +26,7 @@ target_link_libraries(LevelRenderer
             glm::glm
             GraphicsUtils
         PUBLIC
-            taocpp::json
+            cjson
             glad
             LevelGenerator
         )

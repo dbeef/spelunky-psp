@@ -14,20 +14,36 @@ public:
     static void init();
     static void dispose();
 
-    void render();
+    void batch_vertices();
+    void render() const;
     void set_projection_matrix();
     void load_textures();
 
 private:
 
+    int32_t  _last_camera_x_in_tiles = 123;
+    int32_t  _last_camera_y_in_tiles = 123;
+
     RenderTile _tiles[static_cast<uint32_t>(MapTileType::_SIZE)];
     GLuint _tilesheet = 0;
 
-    std::vector<GLfloat> _batch_xyz;
-    std::vector<GLfloat> _batch_uv;
-    std::vector<GLuint> _batch_indices;
+    struct Vertex
+    {
+        int16_t x;
+        int16_t y;
+        float u;
+        float v;
+    };
 
-    std::size_t _tile_counter = 0;
+    struct
+    {
+        std::vector<int16_t > xyz;
+        std::vector<GLfloat> uv;
+        std::vector<std::int16_t> indices;
+
+        std::vector<Vertex> merged;
+        std::size_t tile_counter = 0;
+    } _render_batch;
 
     static LevelRenderer* _level_renderer;
 };

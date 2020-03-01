@@ -44,8 +44,11 @@ GameLoop::GameLoop()
 {
     _loop = []()
     {
-        DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
-        LevelRenderer::instance().render();
+        auto& camera = Camera::instance();
+        auto& level_renderer = LevelRenderer::instance();
+
+        camera.update_gl();
+        level_renderer.render();
         handle_input();
     };
 }

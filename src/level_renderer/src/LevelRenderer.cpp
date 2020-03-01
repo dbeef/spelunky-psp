@@ -9,9 +9,10 @@
 #include "graphics_utils/CreateTexture.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
 
-#include "tao/json.hpp"
-
+#include "cJSON.h"
 #include <string>
+#include <cstring>
+#include <LevelRenderer.hpp>
 
 namespace
 {
@@ -55,14 +56,37 @@ void LevelRenderer::load_textures()
     _tilesheet = graphics_utils::createTexture(level_tiles_image::data, sizeof(level_tiles_image::data));
     assert(_tilesheet);
 
-    char* json_ptr = &level_tiles_json::data[0];
-    auto document_root = tao::json::from_string(json_ptr);
-
     try
     {
-        std::string filename = document_root["image"].get_string();
-        uint16_t image_width = document_root["image_width"].get_unsigned();
-        uint16_t image_height = document_root["image_height"].get_unsigned();
+        char* json_ptr = &level_tiles_json::data[0];
+        cJSON* document_root = cJSON_Parse(json_ptr);
+        if (!document_root)
+        {
+            const char *error_ptr = cJSON_GetErrorPtr();
+            if (error_ptr != NULL)
+            {
+                throw std::runtime_error(std::string(error_ptr));
+            }
+            else
+            {
+                throw std::runtime_error("Failed to parse document root.");
+            }
+        }
+
+        std::string filename;
+        cJSON* filename_document = cJSON_GetObjectItemCaseSensitive(document_root, "image");
+        assert(cJSON_IsString(filename_document) && (filename_document->valuestring != nullptr));
+        filename = filename_document->valuestring;
+
+        uint16_t image_width = 0;
+        cJSON* image_width_document = cJSON_GetObjectItemCaseSensitive(document_root, "image_width");
+        assert(cJSON_IsNumber(image_width_document));
+        image_width = image_width_document->valueint;
+
+        uint16_t image_height = 0;
+        cJSON* image_height_document = cJSON_GetObjectItemCaseSensitive(document_root, "image_height");
+        assert(cJSON_IsNumber(image_height_document));
+        image_height = image_height_document->valueint;
 
         log_info("Parsing metadata out of texture atlas: %s, width: %i, height: %i",
                 filename.c_str(), image_width, image_height);
@@ -72,6 +96,8 @@ void LevelRenderer::load_textures()
             _tiles[index] = RenderTile::fromJson(static_cast<MapTileType>(index), document_root);
             _tiles[index].normalize(image_width, image_height);
         }
+
+        cJSON_Delete(document_root);
     }
     catch (const std::exception& e)
     {
@@ -87,65 +113,91 @@ void LevelRenderer::set_projection_matrix()
     auto& level = LevelGenerator::instance();
     auto& camera = Camera::instance();
 
-    DebugGlCall(glViewport(0, 0, Video::getWindowWidth(), Video::getWindowHeight()));
+    DebugGlCall(glViewport(0, 0, (float)(Video::getWindowWidth()), (float)(Video::getWindowHeight())));
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
     float aspect_ratio = static_cast<float>(Video::getWindowWidth()) / Video::getWindowHeight();
 
-    DebugGlCall(glOrtho(-8 * aspect_ratio, 8 * aspect_ratio, 8, -8, -8, 8));
+    float coeff = 6.0f;
+    DebugGlCall(glOrtho(-coeff * aspect_ratio, coeff * aspect_ratio, 1 * coeff, -1 * coeff, -1 * coeff, 1 * coeff));
 }
 
-// FIXME: This is very poorly written rendering function; refactor needed.
-void LevelRenderer::render()
+void LevelRenderer::render() const
+{
+    // Interleaving vertex attributes instead of separate buffers for small performance boost from data locality:
+    const auto* vertices = reinterpret_cast<const char*>(_render_batch.merged.data());
+    const auto* uvs = vertices + 2 * sizeof(GLshort);
+
+    const size_t stride = 2 * sizeof(GLshort) + 2 * sizeof(GLfloat);
+
+    DebugGlCall(glBindTexture(GL_TEXTURE_2D, _tilesheet));
+
+    DebugGlCall(glVertexPointer(2, GL_SHORT, stride, vertices));
+    DebugGlCall(glTexCoordPointer(2, GL_FLOAT, stride, uvs));
+
+    DebugGlCall(glDrawElements(GL_TRIANGLES, _render_batch.indices.size(), GL_UNSIGNED_SHORT, _render_batch.indices.data()));
+}
+
+void LevelRenderer::batch_vertices()
 {
     auto& level = LevelGenerator::instance();
     auto& camera = Camera::instance();
 
-    // In opengl:
-    // The top-left corner will be at (-1, 1).
-    // In spelunkyds:
-    // top-left corner is 0,0 and right-lower is 1, 1
-    DebugGlCall(glBindTexture(GL_TEXTURE_2D, _tilesheet));
+    auto camera_x_in_tiles = static_cast<int32_t >(camera.getX());
+    auto camera_y_in_tiles = static_cast<int32_t >(camera.getY());
 
-// first optimization thought -> go through all tiles of the same type, upload once & render all
-// it's 32 x 32 uploads per frame
-// second thought - cache a few most used textures? won't make much of a difference if there are 4-8 slots...
-// 4th thought -> render to framebuffer first?
-// limit rendered tiles to only those in current camera viewport
+    // Re-batch vertices only when camera view is out of already batched vertices:
 
-    _batch_xyz.clear();
-    _batch_uv.clear();
-    _batch_indices.clear();
-    _tile_counter = 0;
+    bool rebatching_needed = camera_x_in_tiles != _last_camera_x_in_tiles ||
+                             camera_y_in_tiles != _last_camera_y_in_tiles;
 
-    std::size_t tiles = 0;
+    _last_camera_x_in_tiles = camera_x_in_tiles;
+    _last_camera_y_in_tiles = camera_y_in_tiles;
+
+    if (!rebatching_needed)
+    {
+        return;
+    }
+
+    _render_batch.xyz.clear();
+    _render_batch.uv.clear();
+    _render_batch.indices.clear();
+    _render_batch.tile_counter = 0;
+
+    // FIXME: Rewrite level generator for more sane convention of storing tiles.
     // iterating from left-lower corner of the room to the right-upper (spelunky-ds convention)
     for (int x = 0; x < Consts::MAP_GAME_WIDTH_TILES; x++) {
         for (int y = 0; y < Consts::MAP_GAME_HEIGHT_TILES; y++) {
 
             MapTile *t = level.getLevel().map_tiles[x][y];
+
+            // FIXME: Remove x/y fields from MapTile, as they are redundant.
+            assert(level.getLevel().map_tiles[x][y]->x == x);
+            assert(level.getLevel().map_tiles[x][y]->y == y);
+
+            // FIXME: Uncomment hen Camera::in_viewport is fixed.
+             if (!t->in_viewport(&camera)) continue;
+
             auto tile_type = static_cast<int>(t->mapTileType);
             auto& tile = _tiles[tile_type];
 
-            tile.push_positions(_batch_xyz, x, y);
-            tile.push_indices(_batch_indices, _tile_counter);
-            tile.push_uvs(_batch_uv);
-            _tile_counter++;
-
-            tiles++;
+            tile.push_positions(_render_batch.xyz, x, y);
+            tile.push_indices(_render_batch.indices, _render_batch.tile_counter);
+            tile.push_uvs(_render_batch.uv);
+            _render_batch.tile_counter++;
         }
     }
 
-    DebugGlCall(glMatrixMode(GL_MODELVIEW));
-    DebugGlCall(glLoadIdentity());
-    DebugGlCall(glTranslatef(0, 0, 0));
-    DebugGlCall(graphics_utils::look_at(camera));
-
-    DebugGlCall(glEnableClientState(GL_VERTEX_ARRAY));
-    DebugGlCall(glEnableClientState(GL_TEXTURE_COORD_ARRAY));
-
-    DebugGlCall(glVertexPointer(2, GL_FLOAT, 0, _batch_xyz.data()));
-    DebugGlCall(glTexCoordPointer(2, GL_FLOAT, 0, _batch_uv.data()));
-
-    DebugGlCall(glDrawElements(GL_TRIANGLES, _batch_indices.size(), GL_UNSIGNED_INT, _batch_indices.data()));
+    // This could be done in the loop before, but this way is more readable, and does not affect performance much
+    // as batching vertices is not done very often.
+    assert(_render_batch.xyz.size() == _render_batch.uv.size());
+    for (std::size_t index = 0; index < _render_batch.xyz.size(); index += 2)
+    {
+        Vertex vertex{};
+        vertex.x = _render_batch.xyz[index];
+        vertex.y = _render_batch.xyz[index + 1];
+        vertex.u = _render_batch.uv[index];
+        vertex.v = _render_batch.uv[index + 1];
+        _render_batch.merged.push_back(vertex);
+    }
 }
