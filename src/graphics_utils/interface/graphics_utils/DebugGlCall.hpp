@@ -28,9 +28,13 @@ namespace graphics_utils
     }
 }
 
-#define DebugGlCall(x) \
-	graphics_utils::GlClearError(); \
-	x;\
-	assert(graphics_utils::GlLogCall(#x, __FILE__, __LINE__))
+#ifdef NDEBUG
+    #define DebugGlCall(x) x;
+#else
+    #define DebugGlCall(x) \
+        	graphics_utils::GlClearError(); \
+        	x;\
+        	assert(graphics_utils::GlLogCall(#x, __FILE__, __LINE__))
+#endif
 
 #endif //RESOURCE_COMPILER_DEBUGGLCALL_HPP

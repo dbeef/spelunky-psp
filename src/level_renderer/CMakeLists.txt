@@ -3,6 +3,8 @@ project(LevelRenderer)
 add_library(LevelRenderer STATIC
         src/LevelRenderer.cpp
         interface/LevelRenderer.hpp
+        interface/RenderTile.hpp
+        src/RenderTile.cpp
 )
 
 target_include_directories(LevelRenderer
@@ -15,7 +17,19 @@ set_target_properties(LevelRenderer PROPERTIES
         14
 )
 
-target_link_libraries(LevelRenderer PRIVATE Logger glad stb Camera LevelGenerator Video glm::glm GraphicsUtils)
+target_link_libraries(LevelRenderer
+        PRIVATE
+            Logger
+            stb
+            Camera
+            Video
+            glm::glm
+            GraphicsUtils
+        PUBLIC
+            cjson
+            glad
+            LevelGenerator
+        )
 
 if (SPELUNKY_PSP_PLATFORM_LINUX)
     target_link_libraries(LevelRenderer PRIVATE dl)

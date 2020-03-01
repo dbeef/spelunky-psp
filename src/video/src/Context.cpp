@@ -2,63 +2,76 @@
 // Created by dbeef on 2/2/20.
 //
 
-#include <video/Context.hpp>
+#include "video/Context.hpp"
+#include "Input.hpp"
+#include "glad/glad.h"
+#include "graphics_utils/DebugGlCall.hpp"
+
 #include <SDL/SDL_video.h>
 #include <SDL/SDL.h>
-#include <time/Timestep.hpp>
-#include <Input.hpp>
 #include <cassert>
 
 Video *Video::_instance = nullptr;
 
-void Video::init() {
+void Video::init()
+{
     assert(!_instance);
     _instance = new Video();
 }
 
-void Video::dispose() {
+void Video::dispose()
+{
     assert(_instance);
     delete _instance;
     _instance = nullptr;
 }
 
-Video &Video::instance() {
+Video &Video::instance()
+{
     assert(_instance);
     return *_instance;
 }
 
-void Video::tearDownGL() {
+void Video::tear_down_gl()
+{
     SDL_Quit();
 }
 
-uint16_t Video::getWindowWidth() {
+uint16_t Video::get_window_width()
+{
     return 480;
 }
 
-uint16_t Video::getWindowHeight() {
+uint16_t Video::get_window_height()
+{
     return 272;
 }
 
-void Video::swapBuffers() {
+void Video::swap_buffers() const
+{
     SDL_GL_SwapBuffers();
 }
 
-void Video::runLoop(std::function<void()> &loopCallback) {
+void Video::run_loop(std::function<void()> &loop_callback)
+{
 
     auto& input = Input::instance();
 
-    Timestep t(60);
-
     while (!input.isExit()) {
 
-
-        t.mark_start();
+#ifndef NDEBUG
+        DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
+#endif
 
         input.poll();
-        loopCallback();
-        swapBuffers();
+        loop_callback();
+        swap_buffers();
 
-        t.mark_end();
-        t.delay();
+        // FIXME: Needs limiting FPS. Maybe stay with synchronizing to frame buffer swap?
     }
+}
+
+float Video::aspect()
+{
+    return static_cast<float>(Video::get_window_width()) / Video::get_window_height();
 }

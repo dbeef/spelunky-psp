@@ -17,123 +17,123 @@ void MapTile::match_tile(MapTileType type) {
     mapTileType = type;
 
     switch (type) {
-        case LADDER:
+        case MapTileType::LADDER:
             collidable = false;
             destroyable = false;
             break;
-        case LADDER_DECK:
+        case MapTileType::LADDER_DECK:
             collidable = false;
             destroyable = false;
             break;
-        case ENTRANCE:
+        case MapTileType::ENTRANCE:
             collidable = false;
             destroyable = false;
             break;
-        case EXIT:
+        case MapTileType::EXIT:
             collidable = false;
             destroyable = false;
             break;
-        case CONSOLE_LEFT_BAR_TOP_ROUNDED:
+        case MapTileType::CONSOLE_LEFT_BAR_TOP_ROUNDED:
             collidable = false;
             destroyable = false;
             break;
-        case CONSOLE_RIGHT_BAR_TOP_ROUNDED:
+        case MapTileType::CONSOLE_RIGHT_BAR_TOP_ROUNDED:
             collidable = false;
             destroyable = false;
             break;
-        case CONSOLE_LEFT_BAR_BOT_ROUNDED:
+        case MapTileType::CONSOLE_LEFT_BAR_BOT_ROUNDED:
             collidable = false;
             destroyable = false;
             break;
-        case CONSOLE_RIGHT_BAR_BOT_ROUNDED:
+        case MapTileType::CONSOLE_RIGHT_BAR_BOT_ROUNDED:
             collidable = false;
             destroyable = false;
             break;
-        case CONSOLE_TOP_BAR:
+        case MapTileType::CONSOLE_TOP_BAR:
             collidable = false;
             destroyable = false;
             break;
-        case CONSOLE_BOTTOM_BAR:
+        case MapTileType::CONSOLE_BOTTOM_BAR:
             collidable = false;
             destroyable = false;
             break;
-        case CONSOLE_LEFT_BAR:
+        case MapTileType::CONSOLE_LEFT_BAR:
             collidable = false;
             destroyable = false;
             break;
-        case CONSOLE_RIGHT_BAR:
+        case MapTileType::CONSOLE_RIGHT_BAR:
             collidable = false;
             destroyable = false;
             break;
-        case CONSOLE_BLACK_BACKGROUND:
+        case MapTileType::CONSOLE_BLACK_BACKGROUND:
             collidable = false;
             destroyable = false;
             break;
-        case CAVE_SMOOTH:
+        case MapTileType::CAVE_SMOOTH:
             collidable = true;
             destroyable = true;
             break;
-        case SCORES_STAR_DOOR:
+        case MapTileType::SCORES_STAR_DOOR:
             collidable = false;
             destroyable = false;
             break;
-        case SCORES_SUN_DOOR:
+        case MapTileType::SCORES_SUN_DOOR:
             collidable = false;
             destroyable = false;
             break;
-        case SCORES_MOON_DOOR:
+        case MapTileType::SCORES_MOON_DOOR:
             collidable = false;
             destroyable = false;
             break;
-        case SCORES_CHANGING_DOOR:
+        case MapTileType::SCORES_CHANGING_DOOR:
             collidable = false;
             destroyable = false;
             break;
-        case SHOP_SIGN_RARE:
+        case MapTileType::SHOP_SIGN_RARE:
             collidable = true;
             destroyable = true;
             break;
-        case SHOP_SIGN_WEAPON:
+        case MapTileType::SHOP_SIGN_WEAPON:
             collidable = true;
             destroyable = true;
             break;
-        case SHOP_SIGN_BOMBS:
+        case MapTileType::SHOP_SIGN_BOMBS:
             collidable = true;
             destroyable = true;
             break;
-        case SHOP_SIGN_CLOTHING:
+        case MapTileType::SHOP_SIGN_CLOTHING:
             collidable = true;
             destroyable = true;
             break;
-        case SHOP_SIGN_CRAPS:
+        case MapTileType::SHOP_SIGN_CRAPS:
             collidable = true;
             destroyable = true;
             break;
-        case SHOP_SIGN_GENERAL:
+        case MapTileType::SHOP_SIGN_GENERAL:
             collidable = true;
             destroyable = true;
             break;
-        case SHOP_SIGN_KISSING:
+        case MapTileType::SHOP_SIGN_KISSING:
             collidable = true;
             destroyable = true;
             break;
-        case NA:
+        case MapTileType::NA:
             collidable = false;
             destroyable = false;
             break;
-        case SHOP_MUGSHOT_1:
+        case MapTileType::SHOP_MUGSHOT_1:
             collidable = false;
             destroyable = false;
             break;
-        case SHOP_MUGSHOT_2:
+        case MapTileType::SHOP_MUGSHOT_2:
             collidable = false;
             destroyable = false;
             break;
-        case SHOP_MUGSHOT_3:
+        case MapTileType::SHOP_MUGSHOT_3:
             collidable = false;
             destroyable = false;
             break;
-        case SHOP_MUGSHOT_4:
+        case MapTileType::SHOP_MUGSHOT_4:
             collidable = false;
             destroyable = false;
             break;
@@ -146,13 +146,16 @@ void MapTile::match_tile(MapTileType type) {
     }
 }
 
-bool MapTile::in_viewport(Camera *camera) {
+bool MapTile::in_viewport(const Camera *camera) {
 
     // screen center is camera.x and camera.y
-    // screen width is 30 tiles times 17 tiles
+    // screen width is 30 tiles times 17 tiles (with used projection matrix)
 
-    bool condition_x = x > (-camera->getX()) - 15 && x < (-camera->getX()) + 15;
-    bool condition_y = y > camera->getY() - (std::ceil(7.5f)) - 1&& y < camera->getY() + std::ceil(7.5f);
+    float x_pos = x;
+    float y_pos = y;
+
+    bool condition_x = camera->getX() + (25.0f) > x_pos && camera->getX() - (25.0f) < x_pos;
+    bool condition_y = camera->getY() + (13.0f + 1.0f) > y_pos && camera->getY() - (13.0f + 1.0f) < y_pos;
 
     return condition_x && condition_y;
 }

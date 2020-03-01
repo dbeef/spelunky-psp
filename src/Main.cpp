@@ -5,45 +5,9 @@
 #include "LevelRenderer.hpp"
 #include "Input.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
-#include "glad/glad.h"
+#include "game_loop/interface/GameLoop.hpp"
 
 #include <cstdlib>
-
-namespace
-{
-    void handle_input()
-    {
-        Input& input = Input::instance();
-        Camera& camera = Camera::instance();
-
-        if (input.left())
-        {
-            camera.setX(camera.getX() - 0.1f);
-        }
-        if (input.right())
-        {
-            camera.setX(camera.getX() + 0.1f);
-        }
-        if (input.up())
-        {
-            camera.setY(camera.getY() - 0.1f);
-        }
-        if (input.down())
-        {
-            camera.setY(camera.getY() + 0.1f);
-        }
-    }
-
-    std::function<void()> create_game_loop()
-    {
-        return []()
-        {
-            DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
-            LevelRenderer::instance().render();
-            handle_input();
-        };
-    }
-}
 
 int start()
 {
@@ -53,25 +17,30 @@ int start()
     LevelGenerator::init();
     LevelRenderer::init();
     Input::init();
-
-    LevelGenerator::instance().getLevel().clean_map_layout();
-    LevelGenerator::instance().getLevel().generate_frame();
-    LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU_UPPER);
-
     Video::init();
 
-    if (!Video::instance().setupGL())
+    if (!Video::instance().setup_gl())
     {
         log_error("Failed to setup OpenGL.");
         return EXIT_FAILURE;
     }
 
-    LevelRenderer::instance().load_textures();
-    LevelRenderer::instance().set_projection_matrix();
+    Camera::instance().update_gl_projection_matrix();
 
-    auto loop = create_game_loop();
-    Video::instance().runLoop(loop);
-    Video::instance().tearDownGL();
+    // TODO: State pattern: "main menu" state should handle this, or "start game" because of also loading assets
+    LevelGenerator::instance().getLevel().clean_map_layout();
+    LevelGenerator::instance().getLevel().generate_frame();
+    LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU_UPPER);
+
+    LevelRenderer::instance().load_textures();
+    LevelRenderer::instance().batch_vertices();
+
+    {
+        GameLoop loop;
+        Video::instance().run_loop(loop.get());
+    }
+
+    Video::instance().tear_down_gl();
     Video::dispose();
 
     Camera::dispose();
