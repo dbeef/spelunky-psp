@@ -2,54 +2,60 @@
 // Created by dbeef on 2/2/20.
 //
 
-#include <video/Context.hpp>
+#include "video/Context.hpp"
+#include "Input.hpp"
+#include "glad/glad.h"
+#include "graphics_utils/DebugGlCall.hpp"
+
 #include <SDL/SDL_video.h>
 #include <SDL/SDL.h>
-#include <time/Timestep.hpp>
-#include <Input.hpp>
 #include <cassert>
-#include <glad/glad.h>
-#include <graphics_utils/DebugGlCall.hpp>
 
 Video *Video::_instance = nullptr;
 
-void Video::init() {
+void Video::init()
+{
     assert(!_instance);
     _instance = new Video();
 }
 
-void Video::dispose() {
+void Video::dispose()
+{
     assert(_instance);
     delete _instance;
     _instance = nullptr;
 }
 
-Video &Video::instance() {
+Video &Video::instance()
+{
     assert(_instance);
     return *_instance;
 }
 
-void Video::tearDownGL() {
+void Video::tear_down_gl()
+{
     SDL_Quit();
 }
 
-uint16_t Video::getWindowWidth() {
+uint16_t Video::get_window_width()
+{
     return 480;
 }
 
-uint16_t Video::getWindowHeight() {
+uint16_t Video::get_window_height()
+{
     return 272;
 }
 
-void Video::swapBuffers() const {
+void Video::swap_buffers() const
+{
     SDL_GL_SwapBuffers();
 }
 
-void Video::runLoop(std::function<void()> &loopCallback) {
+void Video::run_loop(std::function<void()> &loopCallback)
+{
 
     auto& input = Input::instance();
-
-    Timestep t(60);
 
     while (!input.isExit()) {
 
@@ -57,14 +63,10 @@ void Video::runLoop(std::function<void()> &loopCallback) {
         DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
 #endif
 
-        // FIXME: Causing problems on PSP. Maybe stay with synchronizing to frame buffer swap?
-//        t.mark_start();
-
         input.poll();
         loopCallback();
-        swapBuffers();
+        swap_buffers();
 
-//        t.mark_end();
-//        t.delay();
+        // FIXME: Needs limiting FPS. Maybe stay with synchronizing to frame buffer swap?
     }
 }

@@ -19,7 +19,7 @@ int start()
     Input::init();
     Video::init();
 
-    if (!Video::instance().setupGL())
+    if (!Video::instance().setup_gl())
     {
         log_error("Failed to setup OpenGL.");
         return EXIT_FAILURE;
@@ -36,10 +36,10 @@ int start()
 
     {
         GameLoop loop;
-        Video::instance().runLoop(loop.get());
+        Video::instance().run_loop(loop.get());
     }
 
-    Video::instance().tearDownGL();
+    Video::instance().tear_down_gl();
     Video::dispose();
 
     Camera::dispose();

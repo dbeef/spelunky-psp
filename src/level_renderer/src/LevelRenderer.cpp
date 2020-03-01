@@ -113,10 +113,10 @@ void LevelRenderer::set_projection_matrix()
     auto& level = LevelGenerator::instance();
     auto& camera = Camera::instance();
 
-    DebugGlCall(glViewport(0, 0, (float)(Video::getWindowWidth()), (float)(Video::getWindowHeight())));
+    DebugGlCall(glViewport(0, 0, (float)(Video::get_window_width()), (float)(Video::get_window_height())));
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
-    float aspect_ratio = static_cast<float>(Video::getWindowWidth()) / Video::getWindowHeight();
+    float aspect_ratio = static_cast<float>(Video::get_window_width()) / Video::get_window_height();
 
     float coeff = 6.0f;
     DebugGlCall(glOrtho(-coeff * aspect_ratio, coeff * aspect_ratio, 1 * coeff, -1 * coeff, -1 * coeff, 1 * coeff));

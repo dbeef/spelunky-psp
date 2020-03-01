@@ -1,4 +1,3 @@
-// TODO: Disable adding this signature in IDE. Add a line in coding guideline concerning this.
 //
 // Created by dbeef on 7/7/19.
 //
@@ -10,7 +9,7 @@
 #include "glad/glad.h"
 #include "logger/log.h"
 
-bool Video::setupGL()
+bool Video::setup_gl()
 {
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -38,8 +37,8 @@ bool Video::setupGL()
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
     //  Create a window
-    auto surface = SDL_SetVideoMode(getWindowWidth(),
-                                    getWindowHeight(),
+    auto surface = SDL_SetVideoMode(get_window_width(),
+                                    get_window_height(),
                                     0, // current display's bpp
                                     SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE);
 

@@ -17,17 +17,17 @@ public:
 
     static Video &instance();
 
-    static uint16_t getWindowWidth();
+    static uint16_t get_window_width();
 
-    static uint16_t getWindowHeight();
+    static uint16_t get_window_height();
 
-    bool setupGL();
+    bool setup_gl();
 
-    void tearDownGL();
+    void tear_down_gl();
 
-    void runLoop(std::function<void()> &loopCallback);
+    void run_loop(std::function<void()> &loopCallback);
 
-    inline void swapBuffers() const;
+    inline void swap_buffers() const;
 
 private:
 
