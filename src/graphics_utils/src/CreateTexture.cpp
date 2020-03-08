@@ -80,8 +80,10 @@ GLuint graphics_utils::createTexture(const char *data, std::size_t size)
     DebugGlCall(glGenTextures(1, &texture_id));
     DebugGlCall(glBindTexture(GL_TEXTURE_2D, texture_id));
 
-    DebugGlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-    DebugGlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    // Set nearest-neighbour filtering, as every texture in Spelunky is pixel-art:
+
+    DebugGlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+    DebugGlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
 
     // Upload to GPU rounded to the next power of 2, because of multiplicity constraints of early OpenGL:
 
