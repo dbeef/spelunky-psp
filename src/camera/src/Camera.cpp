@@ -44,8 +44,8 @@ void Camera::update_gl_projection_matrix() const
 
     const float coeff = 6.0f;
 
-    DebugGlCall(glOrtho(-1 * coeff * Video::aspect(),
-                         1 * coeff * Video::aspect(),
+    DebugGlCall(glOrtho(-1 * coeff * Video::get_aspect(),
+                         1 * coeff * Video::get_aspect(),
                          1 * coeff,
                         -1 * coeff,
                         -1 * coeff,

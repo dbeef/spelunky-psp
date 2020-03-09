@@ -74,7 +74,7 @@ void Video::run_loop(std::function<void()> &loop_callback)
     }
 }
 
-float Video::aspect()
+float Video::get_aspect()
 {
     return static_cast<float>(Video::get_window_width()) / Video::get_window_height();
 }

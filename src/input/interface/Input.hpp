@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cstdint>
-#include <SDL/SDL_events.h>
-
 class Input
 {
 public:

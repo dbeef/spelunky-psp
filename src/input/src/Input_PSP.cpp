@@ -1,4 +1,3 @@
-#include "Camera.hpp"
 #include "Input.hpp"
 
 #include <pspctrl.h>

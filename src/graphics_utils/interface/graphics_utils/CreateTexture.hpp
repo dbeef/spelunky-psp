@@ -10,7 +10,7 @@
 
 namespace graphics_utils
 {
-    GLuint createTexture(const char* data, std::size_t size);
+    GLuint create_texture(const char *data, std::size_t size);
 }
 
 #endif //RESOURCE_COMPILER_CREATETEXTURE_HPP

@@ -51,7 +51,7 @@ void LevelRenderer::load_textures()
 {
     log_info("Loading tilesheet.");
 
-    _tilesheet = graphics_utils::createTexture(level_tiles_image::data, sizeof(level_tiles_image::data));
+    _tilesheet = graphics_utils::create_texture(level_tiles_image::data, sizeof(level_tiles_image::data));
     assert(_tilesheet);
 
     try

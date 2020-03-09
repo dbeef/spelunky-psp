@@ -1,6 +1,7 @@
 #include "graphics_utils/DebugGlCall.hpp"
 #include "graphics_utils/CreateTexture.hpp"
 
+#include "glad/glad.h"
 #include "logger/log.h"
 #include "stb/image.h"
 
@@ -64,7 +65,7 @@ namespace
     }
 }
 
-GLuint graphics_utils::createTexture(const char *data, std::size_t size)
+GLuint graphics_utils::create_texture(const char *data, std::size_t size)
 {
     log_info("Buffering texture.");
     Texture tex = buffer_texture(data, size);
@@ -92,11 +93,11 @@ GLuint graphics_utils::createTexture(const char *data, std::size_t size)
 
     // Upload to GPU rounded to the next power of 2, because of multiplicity constraints of early OpenGL:
 
-    int roundedWidth = round_to_multiple_of_2(tex.width);
-    int roundedHeight = round_to_multiple_of_2(tex.height);
+    int rounded_width = round_to_multiple_of_2(tex.width);
+    int rounded_height = round_to_multiple_of_2(tex.height);
 
     log_info("Rounding texture width: %i to %i, height: %i to %i",
-             tex.width, roundedWidth, tex.height, roundedHeight);
+             tex.width, rounded_width, tex.height, rounded_height);
     log_info("Uploading texture.");
 
     DebugGlCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, rounded_width, rounded_height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex.buffer));

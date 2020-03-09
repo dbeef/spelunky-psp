@@ -4,7 +4,6 @@
 #include "LevelGenerator.hpp"
 #include "LevelRenderer.hpp"
 #include "Input.hpp"
-#include "graphics_utils/DebugGlCall.hpp"
 #include "game_loop/interface/GameLoop.hpp"
 
 #include <cstdlib>

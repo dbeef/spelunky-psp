@@ -1,5 +1,6 @@
-#include "Camera.hpp"
 #include "Input.hpp"
+
+#include <SDL/SDL_events.h>
 
 void Input::poll()
 {
@@ -17,13 +18,16 @@ void Input::poll()
             if (key == SDLK_LEFT)
             {
                 _left = v;
-            } else if (key == SDLK_RIGHT)
+            }
+            else if (key == SDLK_RIGHT)
             {
                 _right = v;
-            } else if (key == SDLK_UP)
+            }
+            else if (key == SDLK_UP)
             {
                 _up = v;
-            } else if (key == SDLK_DOWN)
+            }
+            else if (key == SDLK_DOWN)
             {
                 _down = v;
             }
