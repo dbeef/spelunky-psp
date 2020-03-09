@@ -3,14 +3,15 @@
 
 void Timestep::delay() const
 {
-    const auto delta = std::chrono::duration_cast<std::chrono::microseconds>(_end - _start);
+    const auto delta_ms = (_end - _start);
 
-    if (delta > _frequency)
+    if (delta_ms > _frequency)
     {
         // no delay
-    } else
+    }
+    else
     {
-        const auto sleep_time = _frequency - delta;
-        SDL_Delay(sleep_time.count() / 1000);
+        auto sleep_time_ms = _frequency - delta_ms;
+        SDL_Delay(sleep_time_ms);
     }
 }
