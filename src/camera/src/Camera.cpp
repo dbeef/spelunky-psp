@@ -31,11 +31,7 @@ void Camera::update_gl_modelview_matrix()
 {
     if (_dirty)
     {
-        DebugGlCall(glMatrixMode(GL_MODELVIEW));
-        DebugGlCall(glLoadIdentity());
-        DebugGlCall(glTranslatef(0, 0, 0));
-        DebugGlCall(graphics_utils::look_at(*this));
-
+        graphics_utils::look_at(*this);
         _dirty = false;
     }
 }
