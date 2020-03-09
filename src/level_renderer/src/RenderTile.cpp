@@ -67,18 +67,6 @@ void RenderTile::normalize(std::uint16_t spritesheet_width, std::uint16_t sprite
         positions_normalized[index][1] = static_cast<float>(positions[index][1]) / height;
     }
 
-    uv[0][0]+=1;
-    uv[0][1]+=1;
-
-    if (uv[1][0] - 1 >= 0) uv[1][0]-=1;
-    uv[1][1]+=1;
-
-    if (uv[2][0] - 1 >= 0) uv[2][0]-=1;
-    if (uv[2][1] - 1 >= 0) uv[2][1]-=1;
-
-    uv[3][0]+=1;
-    if (uv[3][1] - 1 >= 0) uv[3][1]-=1;
-
     for (std::size_t index = 0; index < 4; index++)
     {
         uv_normalized[index][0] = static_cast<float>(uv[index][0]) / spritesheet_width;
