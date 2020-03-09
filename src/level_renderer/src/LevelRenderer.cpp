@@ -122,6 +122,7 @@ void LevelRenderer::render() const
     DebugGlCall(glDrawElements(GL_TRIANGLES, _render_batch.indices.size(), GL_UNSIGNED_SHORT, _render_batch.indices.data()));
 }
 
+// FIXME: Probably will never be used, as performance is satisfying enough without querying for tiles in viewport.
 bool LevelRenderer::re_batching_needed()
 {
     // Re-batch vertices only when camera view is out of already batched vertices:
@@ -159,8 +160,6 @@ void LevelRenderer::batch_vertices()
             // FIXME: Remove x/y fields from MapTile, as they are redundant.
             assert(level.getLevel().map_tiles[x][y]->x == x);
             assert(level.getLevel().map_tiles[x][y]->y == y);
-
-            if (!t->in_viewport(&camera)) continue;
 
             auto tile_type = static_cast<int>(t->mapTileType);
             auto& tile = _tiles[tile_type];
