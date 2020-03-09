@@ -18,19 +18,19 @@ namespace
 
         if (input.left())
         {
-            camera.setX(camera.getX() - 0.005f);
+            camera.setX(camera.getX() - 0.1f);
         }
         if (input.right())
         {
-            camera.setX(camera.getX() + 0.005f);
+            camera.setX(camera.getX() + 0.1f);
         }
         if (input.up())
         {
-            camera.setY(camera.getY() - 0.005f);
+            camera.setY(camera.getY() - 0.1f);
         }
         if (input.down())
         {
-            camera.setY(camera.getY() + 0.005f);
+            camera.setY(camera.getY() + 0.1f);
         }
     }
 }
