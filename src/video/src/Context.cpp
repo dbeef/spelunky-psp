@@ -52,6 +52,7 @@ void Video::swap_buffers() const
     SDL_GL_SwapBuffers();
 }
 
+// FIXME 2 callbacks? CPU callback + GPU callback?
 void Video::run_loop(std::function<void()> &loop_callback)
 {
 
@@ -62,12 +63,14 @@ void Video::run_loop(std::function<void()> &loop_callback)
 #ifndef NDEBUG
         DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
 #endif
-
-        input.poll();
         loop_callback();
-        swap_buffers();
+        // Force GPU to render commands queued in the callback:
+        DebugGlCall(glFlush());
+        // Now CPU-consuming calls for the rest of the frame:
+        input.poll();
 
         // FIXME: Needs limiting FPS. Maybe stay with synchronizing to frame buffer swap?
+        swap_buffers();
     }
 }
 
