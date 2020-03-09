@@ -6,6 +6,7 @@
 #include "Input.hpp"
 #include "glad/glad.h"
 #include "graphics_utils/DebugGlCall.hpp"
+#include "time/Timestep.hpp"
 
 #include <SDL/SDL_video.h>
 #include <SDL/SDL.h>
@@ -52,13 +53,15 @@ void Video::swap_buffers() const
     SDL_GL_SwapBuffers();
 }
 
-// FIXME 2 callbacks? CPU callback + GPU callback?
 void Video::run_loop(std::function<void()> &loop_callback)
 {
 
     auto& input = Input::instance();
+    Timestep timestep(60);
 
     while (!input.isExit()) {
+
+        timestep.mark_start();
 
 #ifndef NDEBUG
         DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
@@ -67,10 +70,13 @@ void Video::run_loop(std::function<void()> &loop_callback)
         // Force GPU to render commands queued in the callback:
         DebugGlCall(glFlush());
         // Now CPU-consuming calls for the rest of the frame:
+        // FIXME 2 callbacks? CPU callback + GPU callback?
         input.poll();
 
-        // FIXME: Needs limiting FPS. Maybe stay with synchronizing to frame buffer swap?
         swap_buffers();
+
+        timestep.mark_end();
+        timestep.delay();
     }
 }
 
