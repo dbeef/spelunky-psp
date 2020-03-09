@@ -87,8 +87,8 @@ GLuint graphics_utils::createTexture(const char *data, std::size_t size)
 
     // GL_CLAMP causes UV coordinates to be clamped to the range [0,1]
 
-    DebugGlCall(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP));
-    DebugGlCall(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP));
+    DebugGlCall(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+    DebugGlCall(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
     // Upload to GPU rounded to the next power of 2, because of multiplicity constraints of early OpenGL:
 
