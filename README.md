@@ -64,13 +64,10 @@ Building requires free PSP toolchain, that too needs to be build first:
 https://github.com/pspdev/psptoolchain 
 
 After building core toolchain, its scripts will build and install a few libraries including SDL 1.2.15, 
-hence no additional action is required. [^1]
+hence no additional action is required. 
 
 After toolchain's build scripts set up environment variables (make sure `echo $PSPDEV` returns your PSP toolchain's 
 root directory), you are ready to cross compile to PSP via `/scripts/config-psp.sh` and `/scripts/build-psp.sh`.
-
-[^1] I am asserting that [my PR](https://github.com/pspdev/psplibraries/pull/39) will be merged when you are reading this. If not, please edit your `psptoolchain/scripts/011-psplibraries.sh`, line 12, with
-`clone_git_repo github.com dbeef psplibraries` instead of original `clone_git_repo github.com pspdev psplibraries`
 
 ### Contributing
 
