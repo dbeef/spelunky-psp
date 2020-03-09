@@ -94,7 +94,7 @@ GLuint graphics_utils::createTexture(const char *data, std::size_t size)
              tex.width, roundedWidth, tex.height, roundedHeight);
     log_info("Uploading texture.");
 
-    DebugGlCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, roundedWidth, roundedHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, tex.buffer));
+    DebugGlCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, roundedWidth, roundedHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, tex.buffer));
 
     // Don't need the buffer anymore:
     dispose_buffer(tex);
