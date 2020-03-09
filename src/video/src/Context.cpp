@@ -57,11 +57,10 @@ void Video::run_loop(std::function<void()> &loop_callback)
 {
 
     auto& input = Input::instance();
-    Timestep timestep(60);
 
     while (!input.isExit()) {
 
-        timestep.mark_start();
+        _timestep.mark_start();
 
 #ifndef NDEBUG
         DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
@@ -75,8 +74,8 @@ void Video::run_loop(std::function<void()> &loop_callback)
 
         swap_buffers();
 
-        timestep.mark_end();
-        timestep.delay();
+        _timestep.mark_end();
+        _timestep.delay();
     }
 }
 

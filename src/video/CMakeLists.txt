@@ -17,4 +17,4 @@ set_target_properties(Video PROPERTIES
         14
 )
 
-target_link_libraries(Video PRIVATE Logger Camera Time glad Input GraphicsUtils)
+target_link_libraries(Video PRIVATE Logger Camera glad Input GraphicsUtils PUBLIC Time)

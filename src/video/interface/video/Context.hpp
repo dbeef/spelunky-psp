@@ -5,11 +5,14 @@
 #ifndef SPELUNKY_PSP_CONTEXT_HPP
 #define SPELUNKY_PSP_CONTEXT_HPP
 
+#include "time/Timestep.hpp"
 #include <functional>
 
 class Video {
 
 public:
+
+    Video() : _timestep(60) {};
 
     static void init();
 
@@ -25,6 +28,8 @@ public:
 
     bool setup_gl();
 
+    inline uint32_t get_delta_time() { return _timestep.get_delta(); }
+
     void tear_down_gl();
 
     void run_loop(std::function<void()> &loop_callback);
@@ -33,6 +38,7 @@ public:
 
 private:
 
+    Timestep _timestep;
     static Video *_instance;
 };
 
