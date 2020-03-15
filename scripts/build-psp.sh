@@ -5,4 +5,4 @@
 # * SDL 1.2 as a vendor of creating window, retrieving OpenGL context, controls and sounds.
 
 cd tmp/build-psp
-cmake --build . --target install --config Release -- -j 4
+cmake --build . --target install --config Release -- -j `nproc`
