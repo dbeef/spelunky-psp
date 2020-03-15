@@ -1,0 +1,43 @@
+language: cpp
+
+git:
+  depth: 1
+
+services:
+  - docker
+
+env:
+  global:
+    - _C=build
+    - WORKDIR=/spelunky
+    - BUILD_IMAGE=bedzior/spelunky-psp
+
+stages:
+  - build
+  - name: deploy
+    if: tag is present
+
+install:
+  - docker run -it -d --volume `pwd`:$WORKDIR --name $_C $BUILD_IMAGE /bin/bash
+  - mkdir -p install
+
+jobs:
+  include:
+  - stage: build
+    name: "Build PSP"
+    script:
+      - docker exec -w $WORKDIR $_C /bin/bash -c "./scripts/config-psp.sh ; ./scripts/build-psp.sh"
+      - cp tmp/build-psp/SpelunkyPSP.PBP install/SpelunkyPSP.pbp
+  - name: "Build Linux"
+    script:
+      - docker exec -w $WORKDIR $_C /bin/bash -c "./scripts/config-linux.sh ; ./scripts/build-linux.sh"
+      - cp tmp/install-linux/Release/bin/Spelunky_PSP install/SpelunkyLinux
+
+deploy:
+  provider: releases
+  token: $GITHUB_TOKEN
+  file_glob: true
+  file: install/Spelunky*
+  skip_cleanup: true
+  on:
+    tags: true
