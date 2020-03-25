@@ -5,21 +5,20 @@ jobs:
   analyse:
     name: Run Cppcheck
     runs-on: ubuntu-latest
-    env:
-      _C: build
-      IMAGE: facthunder/cppcheck
-      INCLUDES: "-Ivendor/glad/glad_opengl_1.3/include -Ivendor/glad/glad_opengl_es_1.0/include -Ivendor/glm -Ivendor/logger/interface -Ivendor/stb/include"
-      EXCLUDES: "-ivendor"
-      WORKDIR: /spelunky
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
-    - name: Start container
-      run: docker run -it -d --volume `pwd`:$WORKDIR --name $_C $IMAGE /bin/sh
-    - name: Run analysis
-      run: docker exec -w $WORKDIR $_C cppcheck src --enable=all --inconclusive --output-file=report.xml -j `nproc` --xml $EXCLUDES $INCLUDES
-    - name: Prepare report
-      run: docker exec -w $WORKDIR $_C cppcheck-htmlreport --file=report.xml --title=SpelunkyPSP --report-dir=output
+      with:
+        depth: 1
+        submodules: 'recursive'
+    - name: Run Cppcheck
+      uses: Bedzior/cppcheck-action@v1.0.0
+      with:
+        enabled checks: all
+        enable inconclusive: true
+        include directories: '-Ivendor/glad/glad_opengl_1.3/include -Ivendor/glad/glad_opengl_es_1.0/include -Ivendor/glm -Ivendor/logger/interface -Ivendor/stb/include'
+        generate report: true
+        path: src
     - name: Upload report
       uses: actions/upload-artifact@v1
       with:
