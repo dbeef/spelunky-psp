@@ -76,7 +76,6 @@ root directory), you are ready to cross compile to PSP via `/scripts/config-psp.
 ##### To-be-done list
 
 * Establish CI, doing:
-    * static analysis
     * license scanning
 * Provide issue template on Github
 * Create resource-compiler subproject, outputting executable that would convert given asset (i.e image) to header file. Add automatic invoking resource-compiler to CMake every time assets were touched.
