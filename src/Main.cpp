@@ -4,6 +4,7 @@
 #include "LevelGenerator.hpp"
 #include "LevelRenderer.hpp"
 #include "Input.hpp"
+#include "level_renderer/interface/OAMRegistry.hpp"
 #include "game_loop/interface/GameLoop.hpp"
 
 #include <cstdlib>
@@ -15,6 +16,7 @@ int start()
     Camera::init();
     LevelGenerator::init();
     LevelRenderer::init();
+    OAMRegistry::init();
     Input::init();
     Video::init();
 
@@ -44,6 +46,7 @@ int start()
 
     Camera::dispose();
     LevelGenerator::dispose();
+    OAMRegistry::dispose();
     LevelRenderer::dispose();
 
     log_info("Exiting peacefully.");
