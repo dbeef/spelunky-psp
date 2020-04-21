@@ -20,14 +20,11 @@ option(ENABLE_CUSTOM_COMPILER_FLAGS "Enables custom compiler flags" ON)
 if (ENABLE_CUSTOM_COMPILER_FLAGS)
     if (("${CMAKE_C_COMPILER_ID}" STREQUAL "Clang") OR ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU"))
         list(APPEND custom_compiler_flags
-            -std=c89
-            -pedantic
-            -Wall
+            -std=c99
             -Wextra
             -Werror
             -Wstrict-prototypes
             -Wwrite-strings
-            -Wshadow
             -Winit-self
             -Wcast-align
             -Wformat=2
@@ -36,9 +33,7 @@ if (ENABLE_CUSTOM_COMPILER_FLAGS)
             -Wcast-qual
             -Wundef
             -Wswitch-default
-            -Wconversion
             -Wc++-compat
-#            -fstack-protector-strong
             -Wcomma
             -Wdouble-promotion
             -Wparentheses
