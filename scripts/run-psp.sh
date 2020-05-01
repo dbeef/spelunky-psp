@@ -3,5 +3,5 @@
 
 source scripts/variables-psp.sh
 
-cd $BUILD_PATH
-cmake --build . --target install --config Release -- -j `nproc`
+# Run, filtering all but internal, Spelunky-PSP output.
+ppsspp $BUILD_PATH/EBOOT.PBP 2>&1 | grep -F SPELUNKY

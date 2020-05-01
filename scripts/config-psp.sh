@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 # This script is meant to be run from the root of the project.
 
-# Cross compiles SpelunkyPSP for PSP, using following dependencies:
-# * SDL 1.2 as a vendor of creating window, retrieving OpenGL context, controls and sounds.
+source scripts/variables-psp.sh
 
-INSTALL_PATH=`pwd`/tmp/install-psp
+rm -rf $INSTALL_PATH
+mkdir -p $INSTALL_PATH
 
-rm -rf tmp/build-psp
-mkdir -p tmp/build-psp
-cd tmp/build-psp
+rm -rf $BUILD_PATH
+mkdir -p $BUILD_PATH
 
-cmake ../../ \
--G "Unix Makefiles" \
+cd $BUILD_PATH
+
+# psp-cmake is guaranteed to be in path after successful pspdev/psptoolchain installation;
+# it's a shell script calling host's vanilla cmake with cmake toolchain file already passed.
+
+psp-cmake $ROOT_PATH \
 -DCMAKE_BUILD_TYPE=Release \
--DCMAKE_INSTALL_PREFIX=$INSTALL_PATH \
--DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/PSP.cmake \
--DPSPDEV=/usr/local/pspdev
-
+-DCMAKE_INSTALL_PREFIX=$INSTALL_PATH
