@@ -27,7 +27,7 @@ jobs:
     name: "Build PSP"
     script:
       - docker exec -w $WORKDIR $_C /bin/bash -c "./scripts/config-psp.sh ; ./scripts/build-psp.sh"
-      - cp tmp/build-psp/SpelunkyPSP.PBP install/SpelunkyPSP.pbp
+      - cp tmp/build-psp/EBOOT.PBP install/SpelunkyPSP.pbp
   - name: "Build Linux"
     script:
       - docker exec -w $WORKDIR $_C /bin/bash -c "./scripts/config-linux.sh ; ./scripts/build-linux.sh"
