@@ -29,14 +29,14 @@ macro(spelunky_psp_add_platform_dependencies)
 endmacro()
 
 macro(spelunky_psp_post_build)
-    add_custom_command(
-        TARGET Spelunky_PSP
-        POST_BUILD COMMAND
-        "psp-strip" "$<TARGET_FILE:Spelunky_PSP>"
-        COMMENT "Stripping binary"
-    )
-
     if (${SPELUNKY_PSP_PLATFORM} STREQUAL PSP)
+        add_custom_command(
+            TARGET Spelunky_PSP
+            POST_BUILD COMMAND
+            "psp-strip" "$<TARGET_FILE:Spelunky_PSP>"
+            COMMENT "Stripping binary"
+        )
+
         create_pbp_file(TARGET Spelunky_PSP
             ICON_PATH ${ASSETS_PATH}/metadata/icon.png
             BACKGROUND_PATH ${ASSETS_PATH}/metadata/background.png
