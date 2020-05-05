@@ -17,13 +17,13 @@ add_executable(Spelunky_PSP src/Main.cpp)
 
 add_subdirectory(vendor)
 add_subdirectory(src/video)
-add_subdirectory(src/level_generator)
-add_subdirectory(src/level_renderer)
+add_subdirectory(src/level-generator)
+add_subdirectory(src/level-renderer)
 add_subdirectory(src/time)
 add_subdirectory(src/camera)
 add_subdirectory(src/input)
-add_subdirectory(src/graphics_utils)
-add_subdirectory(src/game_loop)
+add_subdirectory(src/graphics-utils)
+add_subdirectory(src/game-loop)
 
 target_include_directories(Spelunky_PSP PRIVATE src)
 

@@ -4,8 +4,8 @@
 #include "LevelGenerator.hpp"
 #include "LevelRenderer.hpp"
 #include "Input.hpp"
-#include "level_renderer/interface/OAMRegistry.hpp"
-#include "game_loop/interface/GameLoop.hpp"
+#include "OAMRegistry.hpp"
+#include "GameLoop.hpp"
 
 #include <cstdlib>
 
