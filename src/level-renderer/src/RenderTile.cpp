@@ -2,9 +2,10 @@
 // Created by dbeef on 2/5/20.
 //
 
-#include <RenderTile.hpp>
-#include <logger/log.h>
-#include <glad/glad.h>
+#include "RenderTile.hpp"
+#include "logger/log.h"
+#include "cJSON.h"
+#include "glad/glad.h"
 
 #include <cstdlib>
 #include <sstream>
@@ -18,14 +19,14 @@ namespace
     void parse_uvs(RenderTile& tile, cJSON* sprite);
 }
 
-RenderTile RenderTile::fromJson(MapTileType type, cJSON* document_root)
+RenderTile RenderTile::fromJson(MapTileType type, void* document_root)
 {
     RenderTile tile{};
     tile.type = type;
 
     auto tile_index = static_cast<std::uint32_t>(type);
 
-    cJSON* sprites_array = cJSON_GetObjectItemCaseSensitive(document_root, "sprites");
+    cJSON* sprites_array = cJSON_GetObjectItemCaseSensitive(reinterpret_cast<cJSON*>(document_root), "sprites");
     assert (sprites_array && cJSON_IsArray(sprites_array));
 
     std::stringstream s;

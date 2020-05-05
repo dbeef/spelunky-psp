@@ -29,8 +29,8 @@ target_link_libraries(LevelRenderer
             glm::glm
             GraphicsUtils
             TextureBank
-        PUBLIC
             cjson
+        PUBLIC
             glad
             LevelGenerator
         )

@@ -7,7 +7,6 @@
 
 #include "MapTileType.hpp"
 #include "glad/glad.h"
-#include "cJSON.h"
 
 #include <cstdint>
 #include <string>
@@ -15,7 +14,7 @@
 
 struct RenderTile
 {
-    static RenderTile fromJson(MapTileType type, cJSON* document_root);
+    static RenderTile fromJson(MapTileType type, void* document_root);
     void normalize(std::uint16_t spritesheet_width, std::uint16_t spritesheet_height);
 
     void push_uvs(std::vector<GLfloat>& out_uvs);
