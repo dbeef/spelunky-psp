@@ -28,6 +28,7 @@ target_link_libraries(LevelRenderer
             Video
             glm::glm
             GraphicsUtils
+            TextureBank
         PUBLIC
             cjson
             glad

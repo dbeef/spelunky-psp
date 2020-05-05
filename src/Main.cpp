@@ -6,19 +6,35 @@
 #include "Input.hpp"
 #include "OAMRegistry.hpp"
 #include "GameLoop.hpp"
+#include "TextureBank.hpp"
 
 #include <cstdlib>
 
-int start()
+void init_singletons()
 {
-    log_info("Started.");
-
     Camera::init();
     LevelGenerator::init();
     LevelRenderer::init();
     OAMRegistry::init();
+    TextureBank::init();
     Input::init();
     Video::init();
+}
+
+void dispose_singletons()
+{
+    Video::dispose();
+    Camera::dispose();
+    LevelGenerator::dispose();
+    TextureBank::dispose();
+    OAMRegistry::dispose();
+    LevelRenderer::dispose();
+}
+
+int start()
+{
+    log_info("Started.");
+    init_singletons();
 
     if (!Video::instance().setup_gl())
     {
@@ -33,7 +49,8 @@ int start()
     LevelGenerator::instance().getLevel().generate_frame();
     LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU_UPPER);
 
-    LevelRenderer::instance().load_textures();
+    TextureBank::instance().load_textures();
+    LevelRenderer::instance().load_texture_uv();
     LevelRenderer::instance().batch_vertices();
 
     {
@@ -42,13 +59,8 @@ int start()
     }
 
     Video::instance().tear_down_gl();
-    Video::dispose();
 
-    Camera::dispose();
-    LevelGenerator::dispose();
-    OAMRegistry::dispose();
-    LevelRenderer::dispose();
-
+    dispose_singletons();
     log_info("Exiting peacefully.");
     return EXIT_SUCCESS;
 }

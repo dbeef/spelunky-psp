@@ -1,5 +1,7 @@
 #include "LevelRenderer.hpp"
 #include "LevelGenerator.hpp"
+#include "TextureBank.hpp"
+#include "TextureType.hpp"
 #include "video/Context.hpp"
 #include "glad/glad.h"
 #include "logger/log.h"
@@ -44,66 +46,6 @@ void LevelRenderer::dispose()
     assert(_level_renderer);
     delete _level_renderer;
     _level_renderer = nullptr;
-}
-
-
-void LevelRenderer::load_textures()
-{
-    log_info("Loading tilesheet.");
-
-    _tilesheet = graphics_utils::create_texture(level_tiles_image::data, sizeof(level_tiles_image::data));
-    assert(_tilesheet);
-
-    try
-    {
-        char* json_ptr = &level_tiles_json::data[0];
-        cJSON* document_root = cJSON_Parse(json_ptr);
-        if (!document_root)
-        {
-            const char *error_ptr = cJSON_GetErrorPtr();
-            if (error_ptr != nullptr)
-            {
-                throw std::runtime_error(std::string(error_ptr));
-            }
-            else
-            {
-                throw std::runtime_error("Failed to parse document root.");
-            }
-        }
-
-        std::string filename;
-        cJSON* filename_document = cJSON_GetObjectItemCaseSensitive(document_root, "image");
-        assert(cJSON_IsString(filename_document) && (filename_document->valuestring != nullptr));
-        filename = filename_document->valuestring;
-
-        uint16_t image_width = 0;
-        cJSON* image_width_document = cJSON_GetObjectItemCaseSensitive(document_root, "image_width");
-        assert(cJSON_IsNumber(image_width_document));
-        image_width = image_width_document->valueint;
-
-        uint16_t image_height = 0;
-        cJSON* image_height_document = cJSON_GetObjectItemCaseSensitive(document_root, "image_height");
-        assert(cJSON_IsNumber(image_height_document));
-        image_height = image_height_document->valueint;
-
-        log_info("Parsing metadata out of texture atlas: %s, width: %i, height: %i",
-                filename.c_str(), image_width, image_height);
-
-        for (std::size_t index = 0; index < static_cast<std::uint32_t>(MapTileType::_SIZE); index++)
-        {
-            _tiles[index] = RenderTile::fromJson(static_cast<MapTileType>(index), document_root);
-            _tiles[index].normalize(image_width, image_height);
-        }
-
-        cJSON_Delete(document_root);
-    }
-    catch (const std::exception& e)
-    {
-        log_error("Exception while parsing spritesheet metadata JSON: %s", e.what());
-        assert(false);
-    }
-
-    log_info("Done loading tilesheet.");
 }
 
 void LevelRenderer::render() const
@@ -183,4 +125,63 @@ void LevelRenderer::batch_vertices()
         vertex.v = _render_batch.uv[index + 1];
         _render_batch.merged.push_back(vertex);
     }
+}
+
+void LevelRenderer::load_texture_uv()
+{
+    log_info("Loading tilesheet.");
+
+    _tilesheet = TextureBank::instance().get_texture(TextureType::CAVE_LEVEL_TILES);
+    assert(_tilesheet);
+
+    try
+    {
+        char* json_ptr = &level_tiles_json::data[0];
+        cJSON* document_root = cJSON_Parse(json_ptr);
+        if (!document_root)
+        {
+            const char *error_ptr = cJSON_GetErrorPtr();
+            if (error_ptr != nullptr)
+            {
+                throw std::runtime_error(std::string(error_ptr));
+            }
+            else
+            {
+                throw std::runtime_error("Failed to parse document root.");
+            }
+        }
+
+        std::string filename;
+        cJSON* filename_document = cJSON_GetObjectItemCaseSensitive(document_root, "image");
+        assert(cJSON_IsString(filename_document) && (filename_document->valuestring != nullptr));
+        filename = filename_document->valuestring;
+
+        uint16_t image_width = 0;
+        cJSON* image_width_document = cJSON_GetObjectItemCaseSensitive(document_root, "image_width");
+        assert(cJSON_IsNumber(image_width_document));
+        image_width = image_width_document->valueint;
+
+        uint16_t image_height = 0;
+        cJSON* image_height_document = cJSON_GetObjectItemCaseSensitive(document_root, "image_height");
+        assert(cJSON_IsNumber(image_height_document));
+        image_height = image_height_document->valueint;
+
+        log_info("Parsing metadata out of texture atlas: %s, width: %i, height: %i",
+                 filename.c_str(), image_width, image_height);
+
+        for (std::size_t index = 0; index < static_cast<std::uint32_t>(MapTileType::_SIZE); index++)
+        {
+            _tiles[index] = RenderTile::fromJson(static_cast<MapTileType>(index), document_root);
+            _tiles[index].normalize(image_width, image_height);
+        }
+
+        cJSON_Delete(document_root);
+    }
+    catch (const std::exception& e)
+    {
+        log_error("Exception while parsing spritesheet metadata JSON: %s", e.what());
+        assert(false);
+    }
+
+    log_info("Done loading tilesheet.");
 }

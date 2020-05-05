@@ -24,6 +24,7 @@ add_subdirectory(src/camera)
 add_subdirectory(src/input)
 add_subdirectory(src/graphics-utils)
 add_subdirectory(src/game-loop)
+add_subdirectory(src/texture-bank)
 
 target_include_directories(Spelunky_PSP PRIVATE src)
 
@@ -36,6 +37,7 @@ target_link_libraries(Spelunky_PSP PRIVATE
         Input
         GraphicsUtils
         GameLoop
+        TextureBank
         Dependencies
 )
 

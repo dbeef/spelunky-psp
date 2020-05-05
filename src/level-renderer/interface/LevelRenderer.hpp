@@ -17,7 +17,7 @@ public:
     bool re_batching_needed();
     void batch_vertices();
     void render() const;
-    void load_textures();
+    void load_texture_uv();
 
 private:
 
