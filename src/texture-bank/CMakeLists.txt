@@ -2,8 +2,10 @@ project(TextureBank)
 
 add_library(TextureBank STATIC
         src/TextureBank.cpp
+        src/TextureRegion.cpp
         interface/TextureBank.hpp
         interface/TextureType.hpp
+        interface/TextureRegion.hpp
         )
 
 target_include_directories(TextureBank

@@ -2,7 +2,6 @@
 
 #include "glad/glad.h"
 #include "MapTileType.hpp"
-#include "RenderTile.hpp"
 
 #include <vector>
 
@@ -17,15 +16,11 @@ public:
     bool re_batching_needed();
     void batch_vertices();
     void render() const;
-    void load_texture_uv();
 
 private:
 
     int32_t _last_camera_x_in_tiles = 0;
     int32_t _last_camera_y_in_tiles = 0;
-
-    RenderTile _tiles[static_cast<uint32_t>(MapTileType::_SIZE)];
-    GLuint _tilesheet = 0;
 
     struct Vertex
     {

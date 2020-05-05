@@ -3,7 +3,7 @@
 #include <limits>
 #include <type_traits>
 
-#include "RenderTile.hpp"
+#include "TextureRegion.hpp"
 
 struct OAMEntry
 {
@@ -12,7 +12,7 @@ struct OAMEntry
     int y = std::numeric_limits<int>::min();
 
     bool used = false;
-    RenderTile render_tile{};
+    TextureRegion render_tile{};
 };
 
 using OAMEntryID = int;

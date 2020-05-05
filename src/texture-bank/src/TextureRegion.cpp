@@ -2,42 +2,46 @@
 // Created by dbeef on 2/5/20.
 //
 
-#include "RenderTile.hpp"
+#include "TextureRegion.hpp"
 #include "logger/log.h"
 #include "cJSON.h"
 #include "glad/glad.h"
 
 #include <cstdlib>
+#include <cassert>
+#include <limits>
 #include <sstream>
 
 namespace
 {
-    const char* to_string(MapTileType);
-    void parse_dimensions(RenderTile& tile, cJSON* sprite);
-    void parse_indices(RenderTile& tile, cJSON* sprite);
-    void parse_positions(RenderTile& tile, cJSON* sprite);
-    void parse_uvs(RenderTile& tile, cJSON* sprite);
+    void parse_dimensions(TextureRegion& tile, cJSON* sprite);
+    void parse_indices(TextureRegion& tile, cJSON* sprite);
+    void parse_positions(TextureRegion& tile, cJSON* sprite);
+    void parse_uvs(TextureRegion& tile, cJSON* sprite);
 }
 
-RenderTile RenderTile::fromJson(MapTileType type, void* document_root)
+TextureRegion TextureRegion::fromJson(std::size_t region_index, void* document_root)
 {
-    RenderTile tile{};
-    tile.type = type;
-
-    auto tile_index = static_cast<std::uint32_t>(type);
+    TextureRegion tile{};
+    tile.region_index = region_index;
 
     cJSON* sprites_array = cJSON_GetObjectItemCaseSensitive(reinterpret_cast<cJSON*>(document_root), "sprites");
     assert (sprites_array && cJSON_IsArray(sprites_array));
 
     std::stringstream s;
-    s << tile_index;
+    s << region_index;
     s << ".png";
     const std::string filename = s.str();
 
-    for (std::uint16_t index = 0; index < static_cast<std::uint16_t>(MapTileType::_SIZE); index++)
+    // Iterate as long as there is any sprite left in the document, or found the one matching type:
+    for (std::uint16_t index = 0; index < std::numeric_limits<uint16_t>::max(); index++)
     {
         cJSON* sprite_document = cJSON_GetArrayItem(sprites_array, index);
-        assert(sprite_document);
+        if (!sprite_document)
+        {
+            break;
+        }
+
         cJSON* sprite_filename_document = cJSON_GetObjectItemCaseSensitive(sprite_document, "name");
         assert(sprite_filename_document && cJSON_IsString(sprite_filename_document));
 
@@ -49,18 +53,14 @@ RenderTile RenderTile::fromJson(MapTileType type, void* document_root)
             parse_indices(tile, sprite_document);
             parse_positions(tile, sprite_document);
             parse_uvs(tile, sprite_document);
-
-            log_info("Parsed tile: %s (%s)", filename.c_str(), to_string(tile.type));
+            tile.ok = true;
             return tile;
         }
     }
-
-    log_error("Failed to parse tile: %i (%s)", tile_index, to_string(tile.type));
-    assert(false);
     return tile;
 }
 
-void RenderTile::normalize(std::uint16_t spritesheet_width, std::uint16_t spritesheet_height)
+void TextureRegion::normalize(std::uint16_t spritesheet_width, std::uint16_t spritesheet_height)
 {
     for (std::size_t index = 0; index < 4; index++)
     {
@@ -75,7 +75,7 @@ void RenderTile::normalize(std::uint16_t spritesheet_width, std::uint16_t sprite
     }
 }
 
-void RenderTile::push_uvs(std::vector<GLfloat> &out_uvs)
+void TextureRegion::push_uvs(std::vector<GLfloat> &out_uvs) const
 {
     for(std::size_t x = 0; x < 4; x++)
     {
@@ -84,7 +84,7 @@ void RenderTile::push_uvs(std::vector<GLfloat> &out_uvs)
     }
 }
 
-void RenderTile::push_positions(std::vector<int16_t > &out_positions, int x_offset, int y_offset)
+void TextureRegion::push_positions(std::vector<int16_t > &out_positions, int x_offset, int y_offset) const
 {
     for(std::size_t x = 0; x < 4; x++)
     {
@@ -93,7 +93,7 @@ void RenderTile::push_positions(std::vector<int16_t > &out_positions, int x_offs
     }
 }
 
-void RenderTile::push_indices(std::vector<std::int16_t> &out_indices, std::size_t offset)
+void TextureRegion::push_indices(std::vector<std::int16_t> &out_indices, std::size_t offset) const
 {
     for(std::size_t x = 0; x < 6; x++)
     {
@@ -103,63 +103,7 @@ void RenderTile::push_indices(std::vector<std::int16_t> &out_indices, std::size_
 
 namespace
 {
-#define caseToString(X) case X: return #X;
-
-    const char *to_string(MapTileType type)
-    {
-        switch (type)
-        {
-            caseToString(MapTileType::NOTHING)
-            caseToString(MapTileType::CAVE_ROCK)
-            caseToString(MapTileType::CAVE_REGULAR)
-            caseToString(MapTileType::STONE_BLOCK)
-            caseToString(MapTileType::CAVE_DOWN_ORIENTED)
-            caseToString(MapTileType::CAVE_SOME_GOLD)
-            caseToString(MapTileType::CAVE_MUCH_GOLD)
-            caseToString(MapTileType::CAVE_UP_ORIENTED)
-            caseToString(MapTileType::CAVE_UP_DOWN_ORIENTED)
-            caseToString(MapTileType::LADDER)
-            caseToString(MapTileType::LADDER_DECK)
-            caseToString(MapTileType::ARROW_TRAP_LEFT)
-            caseToString(MapTileType::ARROW_TRAP_RIGHT)
-            caseToString(MapTileType::ENTRANCE)
-            caseToString(MapTileType::EXIT)
-            caseToString(MapTileType::CONSOLE_LEFT_BAR_TOP_ROUNDED)
-            caseToString(MapTileType::CONSOLE_RIGHT_BAR_TOP_ROUNDED)
-            caseToString(MapTileType::CONSOLE_LEFT_BAR_BOT_ROUNDED)
-            caseToString(MapTileType::CONSOLE_RIGHT_BAR_BOT_ROUNDED)
-            caseToString(MapTileType::CONSOLE_TOP_BAR)
-            caseToString(MapTileType::CONSOLE_BOTTOM_BAR)
-            caseToString(MapTileType::CONSOLE_LEFT_BAR)
-            caseToString(MapTileType::CONSOLE_RIGHT_BAR)
-            caseToString(MapTileType::CONSOLE_BLACK_BACKGROUND)
-            caseToString(MapTileType::CAVE_SMOOTH)
-            caseToString(MapTileType::SCORES_STAR_DOOR)
-            caseToString(MapTileType::SCORES_SUN_DOOR)
-            caseToString(MapTileType::SCORES_MOON_DOOR)
-            caseToString(MapTileType::SCORES_CHANGING_DOOR)
-            caseToString(MapTileType::SHOP_SIGN_RARE)
-            caseToString(MapTileType::SHOP_SIGN_WEAPON)
-            caseToString(MapTileType::SHOP_SIGN_BOMBS)
-            caseToString(MapTileType::SHOP_SIGN_CLOTHING)
-            caseToString(MapTileType::SHOP_SIGN_CRAPS)
-            caseToString(MapTileType::SHOP_SIGN_GENERAL)
-            caseToString(MapTileType::SHOP_SIGN_KISSING)
-            caseToString(MapTileType::NA)
-            caseToString(MapTileType::SHOP_MUGSHOT_1)
-            caseToString(MapTileType::SHOP_MUGSHOT_2)
-            caseToString(MapTileType::SHOP_MUGSHOT_3)
-            caseToString(MapTileType::SHOP_MUGSHOT_4)
-            caseToString(MapTileType::ALTAR_LEFT)
-            caseToString(MapTileType::ALTAR_RIGHT)
-            caseToString(MapTileType::_SIZE)
-            default:
-                assert(false);
-                return "Undefined MapTileType value";
-        }
-    }
-
-    void parse_dimensions(RenderTile &tile, cJSON* sprite)
+    void parse_dimensions(TextureRegion &tile, cJSON* sprite)
     {
         cJSON* dimensions_array = cJSON_GetObjectItemCaseSensitive(sprite, "size");
         assert(dimensions_array && cJSON_IsArray(dimensions_array) && cJSON_GetArraySize(dimensions_array) == 2);
@@ -168,7 +112,7 @@ namespace
         tile.height = cJSON_GetArrayItem(dimensions_array, 1)->valueint;
     }
 
-    void parse_indices(RenderTile &tile, cJSON* sprite)
+    void parse_indices(TextureRegion &tile, cJSON* sprite)
     {
         cJSON* mesh_document = cJSON_GetObjectItemCaseSensitive(sprite, "mesh");
         assert(mesh_document);
@@ -181,7 +125,7 @@ namespace
         }
     }
 
-    void parse_positions(RenderTile &tile, cJSON* sprite)
+    void parse_positions(TextureRegion &tile, cJSON* sprite)
     {
         cJSON* mesh_document = cJSON_GetObjectItemCaseSensitive(sprite, "mesh");
         assert(mesh_document);
@@ -198,7 +142,7 @@ namespace
         }
     }
 
-    void parse_uvs(RenderTile &tile, cJSON* sprite)
+    void parse_uvs(TextureRegion &tile, cJSON* sprite)
     {
         cJSON* mesh_document = cJSON_GetObjectItemCaseSensitive(sprite, "mesh");
         assert(mesh_document);
@@ -214,6 +158,4 @@ namespace
             tile.uv[index][1] = cJSON_GetArrayItem(xy, 1)->valueint;
         }
     }
-
-#undef caseToString
 }

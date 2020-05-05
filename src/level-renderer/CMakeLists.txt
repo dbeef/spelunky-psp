@@ -3,10 +3,8 @@ project(LevelRenderer)
 add_library(LevelRenderer STATIC
         src/LevelRenderer.cpp
         interface/LevelRenderer.hpp
-        interface/RenderTile.hpp
         interface/OAMEntry.hpp
         interface/OAMRegistry.hpp
-        src/RenderTile.cpp
         src/OAMRegistry.cpp
 )
 

@@ -50,7 +50,8 @@ int start()
     LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU_UPPER);
 
     TextureBank::instance().load_textures();
-    LevelRenderer::instance().load_texture_uv();
+    TextureBank::instance().load_texture_regions();
+
     LevelRenderer::instance().batch_vertices();
 
     {
