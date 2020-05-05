@@ -151,7 +151,7 @@ if (BUILD_SHARED_AND_STATIC_LIBS)
 endif()
 if(ENABLE_TARGET_EXPORT)
     # export library information for CMake projects
-    install(EXPORT "${CJSON_LIB}" DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/cmake/cJSON")
+    # install(EXPORT "${CJSON_LIB}" DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/cmake/cJSON")
 endif()
 
 set_target_properties("${CJSON_LIB}"
