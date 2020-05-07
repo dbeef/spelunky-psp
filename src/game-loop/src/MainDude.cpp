@@ -7,7 +7,13 @@
 #include "Renderer.hpp"
 #include <cstring>
 
-MainDude::MainDude()
+namespace
+{
+    const float MAIN_DUDE_WIDTH = 1.0f;
+    const float MAIN_DUDE_HEIGHT = 1.0f;
+}
+
+MainDude::MainDude() : _physics_component(MAIN_DUDE_WIDTH, MAIN_DUDE_HEIGHT)
 {
     const auto texture_region = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, static_cast<std::size_t>(MapTileType::STONE_BLOCK));
 
@@ -32,9 +38,9 @@ MainDude::~MainDude()
     }
 }
 
-void MainDude::update()
+void MainDude::update(uint32_t delta_time_ms)
 {
-    _physics_component.update(*this);
+    _physics_component.update(*this, delta_time_ms);
     _input_component.update(*this);
 
     // Update render entity:

@@ -28,11 +28,11 @@ public:
 
     bool setup_gl();
 
-    inline uint32_t get_delta_time() { return _timestep.get_delta(); }
+    inline uint32_t get_delta_time() { return _timestep.get_delta_ms(); }
 
     void tear_down_gl();
 
-    void run_loop(std::function<void()> &loop_callback);
+    void run_loop(std::function<void(uint32_t delta_time_ms)> &loop_callback);
 
     inline void swap_buffers() const;
 

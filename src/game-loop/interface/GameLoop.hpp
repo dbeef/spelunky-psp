@@ -15,10 +15,10 @@ class GameLoop
 {
 public:
     GameLoop();
-    std::function<void()>& get();
+    std::function<void(uint32_t delta_time_ms)>& get();
 private:
     std::vector<std::shared_ptr<GameObject>> _game_objects;
-    std::function<void()> _loop;
+    std::function<void(uint32_t delta_time_ms)> _loop;
 };
 
 

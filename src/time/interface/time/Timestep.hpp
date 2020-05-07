@@ -26,7 +26,7 @@ public:
 
     void delay() const;
 
-    inline std::uint64_t get_delta() const { return _end - _start;  };
+    inline std::uint64_t get_delta_ms() const { return _end - _start;  };
 
 private:
 
