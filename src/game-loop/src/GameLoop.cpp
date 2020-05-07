@@ -41,7 +41,7 @@ namespace
     }
 }
 
-std::function<void()>& GameLoop::get()
+std::function<void(uint32_t delta_time_ms)>& GameLoop::get()
 {
     return _loop;
 }
@@ -62,7 +62,7 @@ GameLoop::GameLoop()
     LevelGenerator::instance().getLevel().add_render_entity();
     _game_objects.emplace_back(std::make_shared<MainDude>());
 
-    _loop = [this]()
+    _loop = [this](uint32_t delta_time_ms)
     {
         auto &camera = Camera::instance();
         auto &level_renderer = Renderer::instance();
@@ -76,7 +76,7 @@ GameLoop::GameLoop()
 
         for (auto& game_object : _game_objects)
         {
-            game_object->update();
+            game_object->update(delta_time_ms);
         }
 
         // Remove game objects marked for disposal:

@@ -53,7 +53,7 @@ void Video::swap_buffers() const
     SDL_GL_SwapBuffers();
 }
 
-void Video::run_loop(std::function<void()> &loop_callback)
+void Video::run_loop(std::function<void(uint32_t delta_time_ms)> &loop_callback)
 {
 
     auto& input = Input::instance();
@@ -65,7 +65,7 @@ void Video::run_loop(std::function<void()> &loop_callback)
 #ifndef NDEBUG
         DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
 #endif
-        loop_callback();
+        loop_callback(_timestep.get_delta_ms());
         // Force GPU to render commands queued in the callback:
         DebugGlCall(glFlush());
         // Now CPU-consuming calls for the rest of the frame:

@@ -13,7 +13,7 @@ public:
 
     MainDude();
     ~MainDude() override;
-    void update() override;
+    void update(uint32_t delta_time_ms) override;
 
 private:
 
