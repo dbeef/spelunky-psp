@@ -2,9 +2,11 @@ project(GameLoop)
 
 add_library(GameLoop STATIC
         src/GameLoop.cpp
+        src/MainDude.cpp
         interface/GameLoop.hpp
         interface/GameState.hpp
         include/MainDude.hpp
+        include/GameObject.hpp
 )
 
 target_include_directories(GameLoop

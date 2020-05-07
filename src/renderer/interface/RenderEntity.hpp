@@ -4,15 +4,6 @@
 #include <cstdint>
 
 using RenderEntityID = uint16_t;
-using IndicesType = int16_t;
-
-struct Vertex
-{
-    int16_t x;
-    int16_t y;
-    float u;
-    float v;
-};
 
 struct RenderEntity
 {
