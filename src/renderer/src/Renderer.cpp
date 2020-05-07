@@ -54,3 +54,16 @@ void Renderer::render() const
         DebugGlCall(glDrawElements(GL_TRIANGLES, entity.indices_count, GL_UNSIGNED_SHORT, entity.indices));
     }
 }
+
+void Renderer::update()
+{
+    for (const auto &id : _for_removal)
+    {
+        const auto predicate = [&id](const RenderEntity& e) { return e.id == id;};
+        const auto it = std::remove_if(_render_entities.begin(), _render_entities.end(), predicate);
+        if (it != _render_entities.end())
+        {
+            _render_entities.erase(it);
+        }
+    }
+}

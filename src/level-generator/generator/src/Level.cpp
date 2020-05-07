@@ -260,9 +260,17 @@ Level::Level()
 Level::~Level()
 {
     for (int a = 0; a < 32; a++)
-        for (int b = 0; b < 32; b++) {
+    {
+        for (int b = 0; b < 32; b++)
+        {
             delete map_tiles[a][b];
         }
+    }
+
+    if (_render_entity.id != Renderer::INVALID_ENTITY)
+    {
+        Renderer::instance().mark_for_removal(_render_entity.id);
+    }
 }
 
 void Level::batch_vertices()

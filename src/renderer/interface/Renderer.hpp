@@ -12,11 +12,14 @@ class Renderer
 {
 public:
 
+    static const RenderEntityID INVALID_ENTITY = 0;
+
     static Renderer& instance();
     static void init();
     static void dispose();
 
     void render() const;
+    void update();
 
     RenderEntityID add_entity(RenderEntity e)
     {

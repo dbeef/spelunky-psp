@@ -64,6 +64,8 @@ GameLoop::GameLoop()
         camera.update_gl_modelview_matrix();
 
         level_renderer.render();
+        level_renderer.update();
+
         handle_input();
     };
 }
