@@ -2,7 +2,7 @@
 #include "logger/log.h"
 #include "Camera.hpp"
 #include "LevelGenerator.hpp"
-#include "LevelRenderer.hpp"
+#include "Renderer.hpp"
 #include "Input.hpp"
 #include "OAMRegistry.hpp"
 #include "GameLoop.hpp"
@@ -14,7 +14,7 @@ void init_singletons()
 {
     Camera::init();
     LevelGenerator::init();
-    LevelRenderer::init();
+    Renderer::init();
     OAMRegistry::init();
     TextureBank::init();
     Input::init();
@@ -28,7 +28,7 @@ void dispose_singletons()
     LevelGenerator::dispose();
     TextureBank::dispose();
     OAMRegistry::dispose();
-    LevelRenderer::dispose();
+    Renderer::dispose();
 }
 
 int start()
@@ -41,18 +41,6 @@ int start()
         log_error("Failed to setup OpenGL.");
         return EXIT_FAILURE;
     }
-
-    Camera::instance().update_gl_projection_matrix();
-
-    // TODO: State pattern: "main menu" state should handle this, or "start game" because of also loading assets
-    LevelGenerator::instance().getLevel().clean_map_layout();
-    LevelGenerator::instance().getLevel().generate_frame();
-    LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU_UPPER);
-
-    TextureBank::instance().load_textures();
-    TextureBank::instance().load_texture_regions();
-
-    LevelRenderer::instance().batch_vertices();
 
     {
         GameLoop loop;

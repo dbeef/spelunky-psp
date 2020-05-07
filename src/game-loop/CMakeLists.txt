@@ -3,7 +3,9 @@ project(GameLoop)
 add_library(GameLoop STATIC
         src/GameLoop.cpp
         interface/GameLoop.hpp
-        interface/GameState.hpp)
+        interface/GameState.hpp
+        include/MainDude.hpp
+)
 
 target_include_directories(GameLoop
         PRIVATE include interface
@@ -23,5 +25,5 @@ target_link_libraries(GameLoop PRIVATE
         Camera
         Input
         GraphicsUtils
-        LevelRenderer
+        Renderer
 )

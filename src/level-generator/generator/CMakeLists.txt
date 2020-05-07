@@ -25,4 +25,4 @@ set_target_properties(LevelGenerator PROPERTIES
         14
 )
 
-target_link_libraries(LevelGenerator PRIVATE Rooms Camera)
+target_link_libraries(LevelGenerator PRIVATE Rooms Camera glad TextureBank Renderer)

@@ -10,6 +10,9 @@
 #include "SplashScreenType.hpp"
 #include "RoomType.hpp"
 #include "Camera.hpp"
+#include "glad/glad.h"
+#include "RenderEntity.hpp"
+
 #include <vector>
 
 namespace Consts
@@ -63,6 +66,24 @@ public:
     void initialise_tiles_from_splash_screen(SplashScreenType splashScreenType);
 
     void get_first_tile_of_given_type(MapTileType mapTileType, MapTile *&m);
+
+    void batch_vertices();
+
+    void add_render_entity();
+
+private:
+
+    struct
+    {
+        std::vector<int16_t > xyz;
+        std::vector<GLfloat> uv;
+        std::vector<std::int16_t> indices;
+
+        std::vector<Vertex> merged;
+        std::size_t tile_counter = 0;
+    } _render_batch;
+
+    RenderEntity _render_entity;
 };
 
 #endif //SPELUNKYDS_LEVELGENERATOR_H

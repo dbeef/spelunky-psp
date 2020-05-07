@@ -1,8 +1,10 @@
 #pragma once
 
 #include <limits>
+#include <cstdint>
 #include <type_traits>
 
+#include "TextureBank.hpp"
 #include "TextureRegion.hpp"
 
 struct OAMEntry

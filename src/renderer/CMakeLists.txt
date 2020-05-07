@@ -1,24 +1,25 @@
-project(LevelRenderer)
+project(Renderer)
 
-add_library(LevelRenderer STATIC
-        src/LevelRenderer.cpp
-        interface/LevelRenderer.hpp
+add_library(Renderer STATIC
+        src/Renderer.cpp
+        interface/Renderer.hpp
         interface/OAMEntry.hpp
+        interface/RenderEntity.hpp
         interface/OAMRegistry.hpp
         src/OAMRegistry.cpp
 )
 
-target_include_directories(LevelRenderer
+target_include_directories(Renderer
         PRIVATE include interface
         INTERFACE interface
 )
 
-set_target_properties(LevelRenderer PROPERTIES
+set_target_properties(Renderer PROPERTIES
         CXX_STANDARD
         14
 )
 
-target_link_libraries(LevelRenderer
+target_link_libraries(Renderer
         PRIVATE
             Logger
             stb
@@ -26,16 +27,16 @@ target_link_libraries(LevelRenderer
             Video
             glm::glm
             GraphicsUtils
-            TextureBank
             cjson
         PUBLIC
+            TextureBank
             glad
             LevelGenerator
         )
 
 if (SPELUNKY_PSP_PLATFORM_LINUX)
-    target_link_libraries(LevelRenderer PRIVATE dl)
-    target_compile_definitions(LevelRenderer PRIVATE SPELUNKY_PSP_PLATFORM_LINUX)
+    target_link_libraries(Renderer PRIVATE dl)
+    target_compile_definitions(Renderer PRIVATE SPELUNKY_PSP_PLATFORM_LINUX)
 elseif(SPELUNKY_PSP_PLATFORM_PSP)
-    target_compile_definitions(LevelRenderer PRIVATE SPELUNKY_PSP_PLATFORM_PSP)
+    target_compile_definitions(Renderer PRIVATE SPELUNKY_PSP_PLATFORM_PSP)
 endif()
