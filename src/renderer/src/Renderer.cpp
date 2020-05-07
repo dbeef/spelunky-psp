@@ -41,14 +41,14 @@ void Renderer::render() const
     {
         // Interleaving vertex attributes instead of separate buffers for small performance boost from data locality:
         const auto *vertices = reinterpret_cast<const char *>(entity.vertices);
-        const auto *uvs = vertices + 2 * sizeof(GLshort);
+        const auto *uvs = vertices + 2 * sizeof(float);
 
         // Tightly packed Vertex type:
         const size_t stride = sizeof(Vertex);
 
         DebugGlCall(glBindTexture(GL_TEXTURE_2D, entity.texture));
 
-        DebugGlCall(glVertexPointer(2, GL_SHORT, stride, vertices));
+        DebugGlCall(glVertexPointer(2, GL_FLOAT, stride, vertices));
         DebugGlCall(glTexCoordPointer(2, GL_FLOAT, stride, uvs));
 
         DebugGlCall(glDrawElements(GL_TRIANGLES, entity.indices_count, GL_UNSIGNED_SHORT, entity.indices));

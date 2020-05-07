@@ -15,8 +15,8 @@ using IndicesType = int16_t;
 
 struct Vertex
 {
-    int16_t x;
-    int16_t y;
+    float x;
+    float y;
     float u;
     float v;
 };
@@ -26,7 +26,7 @@ struct TextureRegion
     static TextureRegion fromJson(std::size_t region_index, void* document_root);
     void normalize(std::uint16_t spritesheet_width, std::uint16_t spritesheet_height);
 
-    std::vector<Vertex> get_quad_mesh(int16_t x, int16_t y) const;
+    std::vector<Vertex> get_quad_mesh(float x, float y) const;
     std::vector<IndicesType> get_quad_indices(uint16_t offset = 0) const;
 
     std::size_t region_index;
