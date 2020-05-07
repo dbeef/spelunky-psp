@@ -32,4 +32,5 @@ target_link_libraries(GameLoop PRIVATE
         Input
         GraphicsUtils
         Renderer
+        Collisions
 )
