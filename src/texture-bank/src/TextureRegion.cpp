@@ -75,30 +75,29 @@ void TextureRegion::normalize(std::uint16_t spritesheet_width, std::uint16_t spr
     }
 }
 
-void TextureRegion::push_uvs(std::vector<GLfloat> &out_uvs) const
+std::vector<Vertex> TextureRegion::get_quad_mesh(int16_t x, int16_t y) const
 {
-    for(std::size_t x = 0; x < 4; x++)
+    std::vector<Vertex> out;
+    for(std::size_t index = 0; index < 4; index++)
     {
-        out_uvs.push_back(uv_normalized[x][0]);
-        out_uvs.push_back(uv_normalized[x][1]);
+        Vertex v;
+        v.x = positions_normalized[index][0] + x;
+        v.y = positions_normalized[index][1] + y;
+        v.u = uv_normalized[index][0];
+        v.v = uv_normalized[index][1];
+        out.push_back(v);
     }
+    return out;
 }
 
-void TextureRegion::push_positions(std::vector<int16_t > &out_positions, int x_offset, int y_offset) const
+std::vector<IndicesType> TextureRegion::get_quad_indices(uint16_t offset) const
 {
-    for(std::size_t x = 0; x < 4; x++)
+    std::vector<IndicesType> out;
+    for(unsigned short i : indices)
     {
-        out_positions.push_back(positions_normalized[x][0] + x_offset);
-        out_positions.push_back(positions_normalized[x][1] + y_offset);
+        out.push_back(i + (offset * 4));
     }
-}
-
-void TextureRegion::push_indices(std::vector<std::int16_t> &out_indices, std::size_t offset) const
-{
-    for(std::size_t x = 0; x < 6; x++)
-    {
-        out_indices.push_back(indices[x] + (offset * 4));
-    }
+    return out;
 }
 
 namespace

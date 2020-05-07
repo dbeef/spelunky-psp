@@ -5,7 +5,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
-#include <Level.hpp>
+#include <algorithm>
 
 #include "Renderer.hpp"
 #include "Level.hpp"
@@ -277,11 +277,10 @@ void Level::batch_vertices()
 {
     const auto &camera = Camera::instance();
 
-    _render_batch.xyz.clear();
-    _render_batch.uv.clear();
-    _render_batch.indices.clear();
-    _render_batch.tile_counter = 0;
+    _mesh.clear();
+    _indices.clear();
 
+    std::size_t tile_counter = 0;
     // FIXME: Rewrite level generator for more sane convention of storing tiles.
     // iterating from left-lower corner of the room to the right-upper (spelunky-ds convention)
     for (int x = 0; x < Consts::MAP_GAME_WIDTH_TILES; x++)
@@ -298,33 +297,23 @@ void Level::batch_vertices()
             auto tile_type = static_cast<int>(t->mapTileType);
             const auto &tile = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, tile_type);
 
-            tile.push_positions(_render_batch.xyz, x, y);
-            tile.push_indices(_render_batch.indices, _render_batch.tile_counter);
-            tile.push_uvs(_render_batch.uv);
-            _render_batch.tile_counter++;
-        }
-    }
+            const auto mesh = tile.get_quad_mesh(x, y);
+            const auto indices = tile.get_quad_indices(tile_counter);
 
-    // This could be done in the loop before, but this way is more readable, and does not affect performance much
-    // as batching vertices is not done very often.
-    assert(_render_batch.xyz.size() == _render_batch.uv.size());
-    for (std::size_t index = 0; index < _render_batch.xyz.size(); index += 2)
-    {
-        Vertex vertex{};
-        vertex.x = _render_batch.xyz[index];
-        vertex.y = _render_batch.xyz[index + 1];
-        vertex.u = _render_batch.uv[index];
-        vertex.v = _render_batch.uv[index + 1];
-        _render_batch.merged.push_back(vertex);
+            std::copy(mesh.begin(), mesh.end(), std::back_inserter(_mesh));
+            std::copy(indices.begin(), indices.end(), std::back_inserter(_indices));
+
+            tile_counter++;
+        }
     }
 }
 
 void Level::add_render_entity()
 {
     auto& renderer = Renderer::instance();
-    _render_entity.vertices = _render_batch.merged.data();
-    _render_entity.indices = _render_batch.indices.data();
-    _render_entity.indices_count = _render_batch.indices.size();
+    _render_entity.vertices = _mesh.data();
+    _render_entity.indices = _indices.data();
+    _render_entity.indices_count = _indices.size();
     _render_entity.texture = TextureBank::instance().get_texture(TextureType::CAVE_LEVEL_TILES);
     _render_entity.id = renderer.add_entity(_render_entity);
 }

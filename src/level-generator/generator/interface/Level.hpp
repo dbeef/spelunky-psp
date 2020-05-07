@@ -75,16 +75,8 @@ public:
 
 private:
 
-    struct
-    {
-        std::vector<int16_t > xyz;
-        std::vector<GLfloat> uv;
-        std::vector<std::int16_t> indices;
-
-        std::vector<Vertex> merged;
-        std::size_t tile_counter = 0;
-    } _render_batch;
-
+    std::vector<Vertex> _mesh;
+    std::vector<IndicesType> _indices;
     RenderEntity _render_entity;
 };
 
