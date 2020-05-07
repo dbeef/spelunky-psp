@@ -3,11 +3,8 @@ project(Renderer)
 add_library(Renderer STATIC
         src/Renderer.cpp
         interface/Renderer.hpp
-        interface/OAMEntry.hpp
         interface/RenderEntity.hpp
-        interface/OAMRegistry.hpp
-        src/OAMRegistry.cpp
-)
+        )
 
 target_include_directories(Renderer
         PRIVATE include interface

@@ -4,7 +4,6 @@
 #include "LevelGenerator.hpp"
 #include "Renderer.hpp"
 #include "Input.hpp"
-#include "OAMRegistry.hpp"
 #include "GameLoop.hpp"
 #include "TextureBank.hpp"
 
@@ -15,7 +14,6 @@ void init_singletons()
     Camera::init();
     LevelGenerator::init();
     Renderer::init();
-    OAMRegistry::init();
     TextureBank::init();
     Input::init();
     Video::init();
@@ -27,7 +25,6 @@ void dispose_singletons()
     Camera::dispose();
     LevelGenerator::dispose();
     TextureBank::dispose();
-    OAMRegistry::dispose();
     Renderer::dispose();
 }
 
