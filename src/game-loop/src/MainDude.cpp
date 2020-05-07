@@ -2,18 +2,16 @@
 // Created by dbeef on 5/7/20.
 //
 
-#include <MainDude.hpp>
-#include <MapTileType.hpp>
-#include <Renderer.hpp>
+#include "MainDude.hpp"
+#include "MapTileType.hpp"
+#include "Renderer.hpp"
+#include <cstring>
 
 MainDude::MainDude()
 {
     const auto texture_region = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, static_cast<std::size_t>(MapTileType::STONE_BLOCK));
 
-    int pos_x = 0;
-    int pos_y = 0;
-
-    _mesh = texture_region.get_quad_mesh(pos_x, pos_y);
+    _mesh = texture_region.get_quad_mesh(_x, _y);
     _indices = texture_region.get_quad_indices();
 
     // Render entity
@@ -32,5 +30,18 @@ MainDude::~MainDude()
     {
         Renderer::instance().mark_for_removal(_render_entity.id);
     }
+}
+
+void MainDude::update()
+{
+    _physics_component.update(*this);
+    _input_component.update(*this);
+
+    // Update render entity:
+    // TODO: Util for only updating position
+
+    const auto texture_region = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, static_cast<std::size_t>(MapTileType::STONE_BLOCK));
+    const auto new_mesh = texture_region.get_quad_mesh(_x, _y);
+    std::memcpy(_mesh.data(), new_mesh.data(), new_mesh.size() * sizeof(Vertex));
 }
 

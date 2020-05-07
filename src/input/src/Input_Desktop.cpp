@@ -31,6 +31,22 @@ void Input::poll()
             {
                 _down = v;
             }
+            else if (key == SDLK_w)
+            {
+                _triangle = v;
+            }
+            else if (key == SDLK_a)
+            {
+                _square = v;
+            }
+            else if (key == SDLK_d)
+            {
+                _circle = v;
+            }
+            else if (key == SDLK_s)
+            {
+                _cross = v;
+            }
         }
     }
 }

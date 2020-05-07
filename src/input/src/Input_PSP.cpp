@@ -20,4 +20,9 @@ void Input::poll()
     _down = pad.Buttons & PSP_CTRL_DOWN;
     _left = pad.Buttons & PSP_CTRL_LEFT;
     _right = pad.Buttons & PSP_CTRL_RIGHT;
+
+    _triangle = pad.Buttons & PSP_CTRL_TRIANGLE;
+    _cross = pad.Buttons & PSP_CTRL_CROSS;
+    _square = pad.Buttons & PSP_CTRL_SQUARE;
+    _circle = pad.Buttons & PSP_CTRL_CIRCLE;
 }

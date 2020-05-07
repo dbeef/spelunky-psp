@@ -75,7 +75,7 @@ void TextureRegion::normalize(std::uint16_t spritesheet_width, std::uint16_t spr
     }
 }
 
-std::vector<Vertex> TextureRegion::get_quad_mesh(int16_t x, int16_t y) const
+std::vector<Vertex> TextureRegion::get_quad_mesh(float x, float y) const
 {
     std::vector<Vertex> out;
     for(std::size_t index = 0; index < 4; index++)
