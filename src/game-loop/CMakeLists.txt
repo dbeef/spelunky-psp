@@ -3,14 +3,14 @@ project(GameLoop)
 add_library(GameLoop STATIC
         src/GameLoop.cpp
         src/MainDude.cpp
-        src/PhysicsComponent.cpp
-        src/InputComponent.cpp
+        src/components/PhysicsComponent.cpp
+        src/components/InputComponent.cpp
         interface/GameLoop.hpp
         interface/GameState.hpp
         include/MainDude.hpp
         include/GameObject.hpp
-        include/PhysicsComponent.hpp
-        include/InputComponent.hpp
+        include/components/PhysicsComponent.hpp
+        include/components/InputComponent.hpp
 )
 
 target_include_directories(GameLoop

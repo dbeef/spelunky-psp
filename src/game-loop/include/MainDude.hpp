@@ -2,8 +2,8 @@
 
 #include "RenderEntity.hpp"
 #include "GameObject.hpp"
-#include "PhysicsComponent.hpp"
-#include "InputComponent.hpp"
+#include "components/PhysicsComponent.hpp"
+#include "components/InputComponent.hpp"
 
 #include <vector>
 

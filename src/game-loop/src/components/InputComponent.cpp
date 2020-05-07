@@ -1,6 +1,6 @@
 #include "Camera.hpp"
 #include "Input.hpp"
-#include "InputComponent.hpp"
+#include "components/InputComponent.hpp"
 #include "MainDude.hpp"
 
 void InputComponent::update(MainDude& main_dude)
