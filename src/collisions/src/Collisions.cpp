@@ -58,10 +58,16 @@ void collisions::get_neighbouring_tiles(Level &level, float x, float y, MapTile 
     out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::RIGHT_DOWN)] = right_down;
 }
 
-MapTile *collisions::check_bottom_collision(MapTile **neighboring_tiles, float x, float y)
+MapTile *collisions::check_bottom_collision(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height)
 {
-    bool condition_x = false;
-    bool condition_y = false;
+    bool condition_x;
+    bool condition_y;
+
+    const float half_w = width / 2;
+    const float half_h = height / 2;
+
+    const float tile_w = 1.0f;
+    const float tile_h = 1.0f;
 
     for (int a = 0; a < 9; a++) {
 
@@ -75,8 +81,43 @@ MapTile *collisions::check_bottom_collision(MapTile **neighboring_tiles, float x
             continue;
         }
 
-        condition_x = x + 0.5f >= neighboring_tiles[a]->x && x < neighboring_tiles[a]->x + 1.5f;
-        condition_y = y + 0.5f >= neighboring_tiles[a]->y && y < neighboring_tiles[a]->y + 1.5f;
+        condition_x = x_center + half_w >= neighboring_tiles[a]->x && x_center < neighboring_tiles[a]->x + tile_w + half_w;
+        condition_y = y_center + half_h >= neighboring_tiles[a]->y && y_center < neighboring_tiles[a]->y + tile_h + half_h;
+
+        if (condition_x && condition_y)
+        {
+            return neighboring_tiles[a];
+        }
+    }
+
+    return nullptr;
+}
+
+MapTile *collisions::check_top_collision(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height)
+{
+    bool condition_x;
+    bool condition_y;
+
+    const float half_w = width / 2;
+    const float half_h = height / 2;
+
+    const float tile_w = 1.0f;
+    const float tile_h = 1.0f;
+
+    for (int a = 0; a < 9; a++) {
+
+        if (neighboring_tiles[a] == nullptr)
+        {
+            continue;
+        }
+
+        if (!neighboring_tiles[a]->collidable)
+        {
+            continue;
+        }
+
+        condition_x = x_center + half_w >= neighboring_tiles[a]->x && x_center < neighboring_tiles[a]->x + tile_w + half_w;
+        condition_y = y_center + half_h >= neighboring_tiles[a]->y && y_center < neighboring_tiles[a]->y + tile_h + half_h;
 
         if (condition_x && condition_y)
         {
