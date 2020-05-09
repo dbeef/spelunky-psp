@@ -5,6 +5,7 @@
 
 #include <cmath>
 #include <logger/log.h>
+#include <components/PhysicsComponent.hpp>
 
 namespace
 {
@@ -37,7 +38,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 log_info("Overlaping exit tile!");
             }
 
-            auto collision_tile = collisions::check_bottom_collision(neighbours, main_dude._x, main_dude._y);
+            auto collision_tile = collisions::check_bottom_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
             if (collision_tile)
             {
                 log_info("Collision with tile: %i", collision_tile->mapTileType);
