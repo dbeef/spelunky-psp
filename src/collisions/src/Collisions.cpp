@@ -152,7 +152,7 @@ MapTile *collisions::check_right_collision(MapTile **neighboring_tiles, float x_
         }
 
         condition_x = x_center + half_w >= neighboring_tiles[a]->x && x_center + half_w < neighboring_tiles[a]->x + tile_w;
-        condition_y = y_center + half_h >= neighboring_tiles[a]->y && y_center - half_h <= neighboring_tiles[a]->y + tile_h;
+        condition_y = y_center + half_h > neighboring_tiles[a]->y && y_center - half_h < neighboring_tiles[a]->y + tile_h;
 
         if (condition_x && condition_y)
         {
@@ -187,7 +187,7 @@ MapTile *collisions::check_left_collision(MapTile **neighboring_tiles, float x_c
         }
 
         condition_x = x_center - half_w <= neighboring_tiles[a]->x + tile_w && x_center - half_w > neighboring_tiles[a]->x;
-        condition_y = y_center + half_h >= neighboring_tiles[a]->y && y_center - half_h <= neighboring_tiles[a]->y + tile_h;
+        condition_y = y_center + half_h > neighboring_tiles[a]->y && y_center - half_h < neighboring_tiles[a]->y + tile_h;
 
         if (condition_x && condition_y)
         {

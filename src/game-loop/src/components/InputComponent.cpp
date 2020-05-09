@@ -9,19 +9,18 @@ void InputComponent::update(MainDude& main_dude)
 
     if (input.square())
     {
-        main_dude._x = main_dude._x - 0.1f;
+        // Left
+        main_dude._physics_component.add_velocity(-0.25f, 0.0f);
     }
     if (input.circle())
     {
-        main_dude._x = main_dude._x + 0.1f;
+        // Right
+        main_dude._physics_component.add_velocity(+0.25f, 0.0f);
     }
     if (input.triangle())
     {
-        main_dude._y = main_dude._y - 0.1f;
-    }
-    if (input.cross())
-    {
-        main_dude._y = main_dude._y + 0.1f;
+        // Jump
+        main_dude._physics_component.add_velocity(0.0f, -0.05f);
     }
 }
 

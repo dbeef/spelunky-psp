@@ -12,6 +12,7 @@ public:
     void update(MainDude&, uint32_t delta_time_ms);
     float get_width() const { return _dimensions.width; }
     float get_height() const { return _dimensions.height; }
+    void add_velocity(float x, float y);
 private:
 
     struct
