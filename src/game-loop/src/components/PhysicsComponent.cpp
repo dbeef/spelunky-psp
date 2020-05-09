@@ -27,7 +27,8 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
         _pos_update_delta_ms -= default_pos_update_delta_ms;
 
         MapTile *neighbours[9] = {};
-        collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), main_dude._x, main_dude._y, neighbours);
+        collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), main_dude._x, main_dude._y,
+                                           neighbours);
 
         auto bottom_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::CENTER)];
 
@@ -39,13 +40,10 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
             }
         }
 
-        auto collision_tile = collisions::check_bottom_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
-        if (collision_tile)
-        {
-            log_info("Collision with tile: %i", collision_tile->mapTileType);
-        }
-
-        // TODO: left/right/bottom/top collisions
+        auto collision_tile_right = collisions::check_right_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
+        auto collision_tile_left = collisions::check_left_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
+        auto collision_tile_top = collisions::check_top_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
+        auto collision_tile_bottom = collisions::check_bottom_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
     }
 }
 

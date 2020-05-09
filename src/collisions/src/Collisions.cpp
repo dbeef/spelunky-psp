@@ -82,7 +82,7 @@ MapTile *collisions::check_bottom_collision(MapTile **neighboring_tiles, float x
         }
 
         condition_x = x_center + half_w >= neighboring_tiles[a]->x && x_center < neighboring_tiles[a]->x + tile_w + half_w;
-        condition_y = y_center + half_h >= neighboring_tiles[a]->y && y_center < neighboring_tiles[a]->y + tile_h + half_h;
+        condition_y = y_center + half_h >= neighboring_tiles[a]->y && y_center + half_h < neighboring_tiles[a]->y + tile_h;
 
         if (condition_x && condition_y)
         {
@@ -117,7 +117,77 @@ MapTile *collisions::check_top_collision(MapTile **neighboring_tiles, float x_ce
         }
 
         condition_x = x_center + half_w >= neighboring_tiles[a]->x && x_center < neighboring_tiles[a]->x + tile_w + half_w;
-        condition_y = y_center + half_h >= neighboring_tiles[a]->y && y_center < neighboring_tiles[a]->y + tile_h + half_h;
+        condition_y = neighboring_tiles[a]->y + tile_h >= y_center - half_h && y_center - half_h > neighboring_tiles[a]->y;
+
+        if (condition_x && condition_y)
+        {
+            return neighboring_tiles[a];
+        }
+    }
+
+    return nullptr;
+}
+
+MapTile *collisions::check_right_collision(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height)
+{
+    bool condition_x;
+    bool condition_y;
+
+    const float half_w = width / 2;
+    const float half_h = height / 2;
+
+    const float tile_w = 1.0f;
+    const float tile_h = 1.0f;
+
+    for (int a = 0; a < 9; a++) {
+
+        if (neighboring_tiles[a] == nullptr)
+        {
+            continue;
+        }
+
+        if (!neighboring_tiles[a]->collidable)
+        {
+            continue;
+        }
+
+        condition_x = x_center + half_w >= neighboring_tiles[a]->x && x_center + half_w < neighboring_tiles[a]->x + tile_w;
+        condition_y = y_center + half_h >= neighboring_tiles[a]->y && y_center - half_h <= neighboring_tiles[a]->y + tile_h;
+
+        if (condition_x && condition_y)
+        {
+            return neighboring_tiles[a];
+        }
+    }
+
+    return nullptr;
+}
+
+MapTile *collisions::check_left_collision(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height)
+{
+    bool condition_x;
+    bool condition_y;
+
+    const float half_w = width / 2;
+    const float half_h = height / 2;
+
+    const float tile_w = 1.0f;
+    const float tile_h = 1.0f;
+
+    for (int a = 0; a < 9; a++) {
+
+        if (neighboring_tiles[a] == nullptr)
+        {
+            continue;
+        }
+
+        if (!neighboring_tiles[a]->collidable)
+        {
+            continue;
+        }
+
+        condition_x = x_center - half_w <= neighboring_tiles[a]->x + tile_w && x_center - half_w > neighboring_tiles[a]->x;
+        condition_y = y_center + half_h >= neighboring_tiles[a]->y && y_center - half_h <= neighboring_tiles[a]->y + tile_h;
 
         if (condition_x && condition_y)
         {
