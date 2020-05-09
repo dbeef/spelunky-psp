@@ -1,4 +1,8 @@
 tmp/
 cmake-build-debug/
 cmake-build-release/
+build/
+deps/
+install/
+.vscode
 .idea

@@ -1,4 +1,3 @@
-#include <SDL/SDL_timer.h>
 #include "time/Timestep.hpp"
 
 void Timestep::delay() const

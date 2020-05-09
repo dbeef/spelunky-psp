@@ -1,4 +1,4 @@
-if (SPELUNKY_PSP_PLATFORM_LINUX)
+if (SPELUNKY_PSP_PLATFORM_LINUX OR SPELUNKY_PSP_PLATFORM_WINDOWS)
     add_subdirectory(glad_opengl_1.3)
 elseif(SPELUNKY_PSP_PLATFORM_PSP)
     add_subdirectory(glad_opengl_es_1.0)
