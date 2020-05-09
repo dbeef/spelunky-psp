@@ -5,6 +5,7 @@ add_library(Input STATIC
         interface/Input.hpp
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,src/Input_PSP.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Input_Linux.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,src/Input_Linux.cpp,>
 )
 
 target_include_directories(Input
@@ -17,4 +18,4 @@ set_target_properties(Input PROPERTIES
         14
 )
 
-target_link_libraries(Input PRIVATE Logger Camera)
+target_link_libraries(Input PRIVATE Logger Camera Dependencies)

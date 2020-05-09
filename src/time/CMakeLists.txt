@@ -10,6 +10,8 @@ target_include_directories(Time
         INTERFACE interface
 )
 
+target_link_libraries(Time PUBLIC Dependencies)
+
 set_target_properties(Time PROPERTIES
         CXX_STANDARD
         14

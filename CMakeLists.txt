@@ -47,19 +47,24 @@ set_target_properties(Spelunky_PSP
         14
         CXX_EXTENSIONS
         OFF
-        COMPILE_FLAGS
-        # Treat every warning as an error
-        -Werror
-        # Disables exceptions support and uses the variant of C++ libraries without exceptions
-        -fno-exceptions
-        # Disable generation of information about every class with virtual functions for use by
-        # the C++ runtime type identification features (dynamic_cast and typeid).
-        -fno-rtti
-        # Debugging information level. 0 is lowest.
-        -G0
-        # Optimize
-        -O2
         )
+if(SPELUNKY_PSP_PLATFORM_LINUX OR SPELUNKY_PSP_PLATFORM_PSP)
+        set_target_properties(Spelunky_PSP
+                PROPERTIES
+                COMPILE_FLAGS
+                # Treat every warning as an error
+                -Werror
+                # Disables exceptions support and uses the variant of C++ libraries without exceptions
+                -fno-exceptions
+                # Disable generation of information about every class with virtual functions for use by
+                # the C++ runtime type identification features (dynamic_cast and typeid).
+                -fno-rtti
+                # Debugging information level. 0 is lowest.
+                -G0
+                # Optimize
+                -O2
+        )
+endif()
 
 install(TARGETS Spelunky_PSP
         CONFIGURATIONS Debug

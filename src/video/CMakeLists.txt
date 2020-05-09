@@ -5,6 +5,7 @@ add_library(Video STATIC
         src/Context.cpp
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,src/Context_PSP.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Context_Linux.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,src/Context_Linux.cpp,>
         src/Context.cpp)
 
 target_include_directories(Video

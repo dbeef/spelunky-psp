@@ -62,7 +62,7 @@ int SDL_main(int argc, char *argv[]) {
 }
 #endif
 
-#if defined(SPELUNKY_PSP_PLATFORM_LINUX)
+#if defined(SPELUNKY_PSP_PLATFORM_LINUX) || defined(SPELUNKY_PSP_PLATFORM_WINDOWS)
 
 int main()
 {

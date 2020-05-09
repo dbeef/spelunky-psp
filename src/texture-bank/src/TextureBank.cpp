@@ -8,6 +8,7 @@
 #include <limits>
 #include <vector>
 #include <cassert>
+#include <stdexcept>
 
 TextureBank *TextureBank::_instance = nullptr;
 
