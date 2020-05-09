@@ -69,44 +69,42 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
             MapTile *neighbours[9] = { nullptr };
             collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), main_dude._x, main_dude._y, neighbours);
 
-            auto collision_tile_bottom = collisions::check_bottom_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
-            if (collision_tile_bottom)
-            {
-                main_dude._y = collision_tile_bottom->y - (_dimensions.height / 2);
-                _collisions.bottom = true;
-            }
-
-            auto collision_tile_top = collisions::check_top_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
-            if (collision_tile_top)
-            {
-                main_dude._y = collision_tile_top->y + 1.0f + (_dimensions.height / 2);
-                _collisions.upper = true;
-            }
-
-            auto collision_tile_left = collisions::check_left_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
-            if (collision_tile_left)
-            {
-                main_dude._x = collision_tile_left->x + 1.0f + (_dimensions.width / 2.0f); // TODO: Global const literal for tile width/height
-                _collisions.left = true;
-            }
-
-            auto collision_tile_right = collisions::check_right_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
-            if (collision_tile_right)
-            {
-                main_dude._x = collision_tile_right->x - (_dimensions.width / 2.0f);
-                _collisions.right = true;
-            }
-
             // Update velocity step-by-step:
             if (delta_v_x != 0)
             {
                 main_dude._x += std::copysign(smallest_position_step, delta_v_x);
                 delta_v_x = move_to_zero(delta_v_x, smallest_position_step);
+                auto collision_tile_left = collisions::check_left_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
+                if (collision_tile_left)
+                {
+                    main_dude._x = collision_tile_left->x + 1.0f + (_dimensions.width / 2.0f); // TODO: Global const literal for tile width/height
+                    _collisions.left = true;
+                }
+
+                auto collision_tile_right = collisions::check_right_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
+                if (collision_tile_right)
+                {
+                    main_dude._x = collision_tile_right->x - (_dimensions.width / 2.0f);
+                    _collisions.right = true;
+                }
             }
             else
             {
                 main_dude._y += std::copysign(smallest_position_step, delta_v_y);
                 delta_v_y = move_to_zero(delta_v_y, smallest_position_step);
+                auto collision_tile_bottom = collisions::check_bottom_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
+                if (collision_tile_bottom)
+                {
+                    main_dude._y = collision_tile_bottom->y - (_dimensions.height / 2.0f);
+                    _collisions.bottom = true;
+                }
+
+                auto collision_tile_top = collisions::check_top_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
+                if (collision_tile_top)
+                {
+                    main_dude._y = collision_tile_top->y + 1.0f + (_dimensions.height / 2.0f);
+                    _collisions.upper = true;
+                }
             }
         }
 
