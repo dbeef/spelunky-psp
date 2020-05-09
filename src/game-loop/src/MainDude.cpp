@@ -15,6 +15,9 @@ namespace
 
 MainDude::MainDude() : _physics_component(MAIN_DUDE_WIDTH, MAIN_DUDE_HEIGHT)
 {
+    _x = 3;
+    _y = 3;
+
     const auto texture_region = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, static_cast<std::size_t>(MapTileType::STONE_BLOCK));
 
     float offset_x = _x - _physics_component.get_width() / 2;
