@@ -28,11 +28,19 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
         MapTile *neighbours[9] = {};
         collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), main_dude._x, main_dude._y, neighbours);
 
-        if (neighbours[static_cast<int>(collisions::NeighbouringTiles::DOWN_MIDDLE)] != nullptr)
+        auto bottom_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::CENTER)];
+
+        if (bottom_tile != nullptr)
         {
-            if (neighbours[static_cast<int>(collisions::NeighbouringTiles::DOWN_MIDDLE)]->mapTileType == MapTileType::EXIT)
+            if (bottom_tile->mapTileType == MapTileType::EXIT)
             {
-                log_info("Exit tile beneath!");
+                log_info("Overlaping exit tile!");
+            }
+
+            auto collision_tile = collisions::check_bottom_collision(neighbours, main_dude._x, main_dude._y);
+            if (collision_tile)
+            {
+                log_info("Collision with tile: %i", collision_tile->mapTileType);
             }
         }
 

@@ -21,6 +21,7 @@ private:
     std::vector<IndicesType> _indices;
     RenderEntity _render_entity;
 
+    // Position of the CENTER of the body
     float _x = 0;
     float _y = 0;
 

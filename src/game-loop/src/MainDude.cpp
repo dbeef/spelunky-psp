@@ -17,7 +17,10 @@ MainDude::MainDude() : _physics_component(MAIN_DUDE_WIDTH, MAIN_DUDE_HEIGHT)
 {
     const auto texture_region = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, static_cast<std::size_t>(MapTileType::STONE_BLOCK));
 
-    _mesh = texture_region.get_quad_mesh(_x, _y);
+    float offset_x = _x - _physics_component.get_width() / 2;
+    float offset_y = _y - _physics_component.get_height() / 2;
+
+    _mesh = texture_region.get_quad_mesh(offset_x, offset_y);
     _indices = texture_region.get_quad_indices();
 
     // Render entity
@@ -46,8 +49,13 @@ void MainDude::update(uint32_t delta_time_ms)
     // Update render entity:
     // TODO: Util for only updating position
 
+    float offset_x = _x - _physics_component.get_width() / 2;
+    float offset_y = _y - _physics_component.get_height() / 2;
+
+    // TODO: Dirty flag
+
     const auto texture_region = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, static_cast<std::size_t>(MapTileType::STONE_BLOCK));
-    const auto new_mesh = texture_region.get_quad_mesh(_x, _y);
+    const auto new_mesh = texture_region.get_quad_mesh(offset_x, offset_y);
     std::memcpy(_mesh.data(), new_mesh.data(), new_mesh.size() * sizeof(Vertex));
 }
 
