@@ -20,6 +20,13 @@ namespace
 
 Camera *Camera::_camera = nullptr;
 
+Camera::Camera()
+    : _bounding_x(2.f)
+    , _bounding_y(1.3f)
+    , _bounding_x_half(_bounding_x / 2)
+    , _bounding_y_half(_bounding_y / 2)
+{ }
+
 Camera &Camera::instance()
 {
     assert(_camera);
@@ -51,8 +58,7 @@ void Camera::update_gl_modelview_matrix()
 void Camera::update_gl_projection_matrix() const
 {
     const auto& video = Video::instance();
-
-    DebugGlCall(glViewport(0, 0, (float) (video.get_window_width()), (float) (video.get_window_height())));
+    DebugGlCall(glViewport(0, 0, (GLsizei) (video.get_window_width()), (GLsizei) (video.get_window_height())));
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
 
@@ -66,4 +72,22 @@ void Camera::update_gl_projection_matrix() const
                         -1 * coeff,
                          near,
                          far));
+}
+
+void Camera::adjust_to_bounding_box(float x, float y)
+{
+    auto dx = (x / 2) - _x;
+    auto dy = (y / 2) - _y;
+
+    if (std::abs(dx) > _bounding_x_half)
+    {
+        _x+= dx + (dx > 0.f ? -_bounding_x_half : _bounding_x_half);
+        _dirty = true;
+    }
+    
+    if (std::abs(dy) > _bounding_y_half)
+    {
+        _y+= dy + (dy > 0.f ? -_bounding_y_half : _bounding_y_half);
+        _dirty = true;
+    }
 }

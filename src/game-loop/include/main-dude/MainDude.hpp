@@ -7,6 +7,7 @@
 #include "components/PhysicsComponent.hpp"
 #include "components/QuadComponent.hpp"
 #include "components/AnimationComponent.hpp"
+#include "components/CameraComponent.hpp"
 
 #include "main-dude/states/MainDudeRunningState.hpp"
 #include "main-dude/states/MainDudeExitingState.hpp"
@@ -38,9 +39,11 @@ private:
     friend class PhysicsComponent;
     friend class QuadComponent;
     friend class AnimationComponent;
+    friend class CameraComponent;
     PhysicsComponent _physics;
     QuadComponent _quad;
     AnimationComponent _animation;
+    CameraComponent _camera;
 
     friend class MainDudeBaseState;
     friend class MainDudeRunningState;
