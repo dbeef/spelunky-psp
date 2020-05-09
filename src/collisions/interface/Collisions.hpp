@@ -18,5 +18,6 @@ namespace collisions
         RIGHT_DOWN,
     };
 
+    MapTile* check_bottom_collision(MapTile *neighboring_tiles[9], float x, float y);
     void get_neighbouring_tiles(Level&, float x, float y, MapTile *out_neighboring_tiles[9]);
 }

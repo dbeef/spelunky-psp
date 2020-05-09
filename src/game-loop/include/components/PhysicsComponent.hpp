@@ -10,6 +10,8 @@ class PhysicsComponent
 public:
     PhysicsComponent(float width, float height);
     void update(MainDude&, uint32_t delta_time_ms);
+    float get_width() const { return _dimensions.width; }
+    float get_height() const { return _dimensions.height; }
 private:
 
     struct

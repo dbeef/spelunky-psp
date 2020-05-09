@@ -3,10 +3,22 @@
 #include <cstdint>
 #include <cmath>
 
+// XY axes go as following:
+// ____ +x
+// |
+// |
+// +y
+//
+// Rendering dimensions are same as physical dimensions, in other words,
+// a quad made of 1x1 vertices will have a collision box of 1x1.
+
 void collisions::get_neighbouring_tiles(Level &level, float x, float y, MapTile *out_neighboring_tiles[9])
 {
-    std::uint16_t x_tiles = std::ceil(x);
-    std::uint16_t y_tiles = std::ceil(y);
+    const float width = 1.0f;
+    const float height = 1.0f;
+
+    std::uint16_t x_tiles = std::floor(x + (width / 2));
+    std::uint16_t y_tiles = std::floor(y + (height / 2));
 
     if (x_tiles >= 32 || x_tiles < 0 || y_tiles >= 32 || y_tiles < 0)
     {
@@ -14,7 +26,7 @@ void collisions::get_neighbouring_tiles(Level &level, float x, float y, MapTile 
     }
 
     const auto& tiles = level.map_tiles;
-    
+
     MapTile *left_middle = nullptr,
             *right_middle = nullptr,
             *up_middle = nullptr,
@@ -44,4 +56,33 @@ void collisions::get_neighbouring_tiles(Level &level, float x, float y, MapTile 
     out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::RIGHT_UP)] = right_up;
     out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::LEFT_DOWN)] = left_down;
     out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::RIGHT_DOWN)] = right_down;
+}
+
+MapTile *collisions::check_bottom_collision(MapTile **neighboring_tiles, float x, float y)
+{
+    bool condition_x = false;
+    bool condition_y = false;
+
+    for (int a = 0; a < 9; a++) {
+
+        if (neighboring_tiles[a] == nullptr)
+        {
+            continue;
+        }
+
+        if (!neighboring_tiles[a]->collidable)
+        {
+            continue;
+        }
+
+        condition_x = x + 0.5f >= neighboring_tiles[a]->x && x < neighboring_tiles[a]->x + 1.5f;
+        condition_y = y + 0.5f >= neighboring_tiles[a]->y && y < neighboring_tiles[a]->y + 1.5f;
+
+        if (condition_x && condition_y)
+        {
+            return neighboring_tiles[a];
+        }
+    }
+
+    return nullptr;
 }
