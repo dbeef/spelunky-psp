@@ -95,10 +95,13 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                     }
 
                     _velocity.x = 0.0f;
-                    temp_velocity_y = 0.0f;
+                    temp_velocity_x = 0.0f;
                 }
-
-                temp_velocity_x = move_to_zero(temp_velocity_x, smallest_position_step);
+                else
+                {
+                    last_step_x = main_dude._x;
+                    temp_velocity_x = move_to_zero(temp_velocity_x, smallest_position_step);
+                }
             }
             else if (temp_velocity_y != 0.0f)
             {
@@ -124,8 +127,11 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                     _velocity.y = 0.0f;
                     temp_velocity_y = 0.0f;
                 }
-
-                temp_velocity_y = move_to_zero(temp_velocity_y, smallest_position_step);
+                else
+                {
+                    last_step_y = main_dude._y;
+                    temp_velocity_y = move_to_zero(temp_velocity_y, smallest_position_step);
+                }
             }
         }
 
@@ -150,24 +156,12 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
 
         if (std::abs(_velocity.x) > default_max_x_speed)
         {
-            if (_velocity.x > 0)
-            {
-                _velocity.x = default_max_x_speed;
-            } else
-            {
-                _velocity.x = -default_max_x_speed;
-            }
+            _velocity.x = std::copysign(default_max_x_speed, _velocity.x);
         }
 
         if (std::abs(_velocity.y) > default_max_y_speed)
         {
-            if (_velocity.y > 0)
-            {
-                _velocity.y = default_max_y_speed;
-            } else
-            {
-                _velocity.y = -default_max_y_speed;
-            }
+            _velocity.y = std::copysign(default_max_y_speed, _velocity.y);
         }
     }
 }
