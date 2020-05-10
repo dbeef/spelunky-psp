@@ -6,7 +6,7 @@
 #include "MapTileType.hpp"
 #include "Renderer.hpp"
 #include <cstring>
-#include <main-dude/MainDudeSpritesheet.hpp>
+#include <main-dude/MainDudeSpritesheetFrames.hpp>
 
 namespace
 {
@@ -19,7 +19,7 @@ MainDude::MainDude() : _physics_component(MAIN_DUDE_WIDTH, MAIN_DUDE_HEIGHT)
     _x = 3;
     _y = 3;
 
-    const auto texture_region = TextureBank::instance().get_region(TextureType::MAIN_DUDE, static_cast<std::size_t>(MainDudeSpritesheet::STAND_LEFT));
+    const auto texture_region = TextureBank::instance().get_region(TextureType::MAIN_DUDE, static_cast<std::size_t>(MainDudeSpritesheetFrames::STAND_LEFT));
 
     float offset_x = _x - _physics_component.get_width() / 2;
     float offset_y = _y - _physics_component.get_height() / 2;
@@ -50,6 +50,88 @@ void MainDude::update(uint32_t delta_time_ms)
     _physics_component.update(*this, delta_time_ms);
     _input_component.update(*this);
 
+    _animation_update_delta_ms += delta_time_ms;
+
+    bool vflip = false;
+
+    // TODO: State pattern
+
+    switch (_state)
+    {
+        case MainDudeState::STANDING_LEFT:
+        {
+            _current_frame = MainDudeSpritesheetFrames::STAND_LEFT;
+            break;
+        }
+        case MainDudeState::STANDING_RIGHT:
+        {
+            _current_frame = MainDudeSpritesheetFrames::STAND_LEFT;
+            vflip = true;
+            break;
+        }
+        case MainDudeState::RUNNING_LEFT:
+        {
+            if (_physics_component.get_x_velocity() == 0)
+            {
+                _state = MainDudeState::STANDING_LEFT;
+                break;
+            }
+
+            if (_animation_update_delta_ms < 75)
+            {
+                break;
+            }
+
+            bool running_animation_on = _current_frame >= MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST &&
+                                        _current_frame <= MainDudeSpritesheetFrames::RUN_LEFT_5_LAST;
+            bool last_frame = _current_frame == MainDudeSpritesheetFrames::RUN_LEFT_5_LAST;
+
+            if (!running_animation_on || last_frame)
+            {
+                _current_frame = MainDudeSpritesheetFrames ::RUN_LEFT_0_FIRST;
+            }
+            else
+            {
+                _current_frame = static_cast<MainDudeSpritesheetFrames>(static_cast<int>(_current_frame) + 1);
+            }
+
+            _animation_update_delta_ms = 0;
+
+
+            break;
+        }
+        case MainDudeState::RUNNING_RIGHT:
+        {
+            if (_physics_component.get_x_velocity() == 0)
+            {
+                _state = MainDudeState::STANDING_RIGHT;
+            }
+            vflip = true;
+
+            if (_animation_update_delta_ms < 75)
+            {
+                break;
+            }
+
+            bool running_animation_on = _current_frame >= MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST &&
+                                        _current_frame <= MainDudeSpritesheetFrames::RUN_LEFT_5_LAST;
+            bool last_frame = _current_frame == MainDudeSpritesheetFrames::RUN_LEFT_5_LAST;
+
+            if (!running_animation_on || last_frame)
+            {
+                _current_frame = MainDudeSpritesheetFrames ::RUN_LEFT_0_FIRST;
+            }
+            else
+            {
+                _current_frame = static_cast<MainDudeSpritesheetFrames>(static_cast<int>(_current_frame) + 1);
+            }
+
+            _animation_update_delta_ms = 0;
+
+            break;
+        }
+    }
+
     // Update render entity:
     // TODO: Util for only updating position
 
@@ -58,10 +140,8 @@ void MainDude::update(uint32_t delta_time_ms)
 
     // TODO: Dirty flag
 
-    const auto texture_region = TextureBank::instance().get_region(TextureType::MAIN_DUDE, static_cast<std::size_t>(MainDudeSpritesheet::STAND_LEFT));
-
-    bool flip_texture_vertically = _physics_component.get_x_velocity() > 0;
-    const auto new_mesh = texture_region.get_quad_mesh(offset_x, offset_y, flip_texture_vertically, false);
+    const auto texture_region = TextureBank::instance().get_region(TextureType::MAIN_DUDE, static_cast<std::size_t>(_current_frame));
+    const auto new_mesh = texture_region.get_quad_mesh(offset_x, offset_y, vflip, false);
     std::memcpy(_mesh.data(), new_mesh.data(), new_mesh.size() * sizeof(Vertex));
 }
 
