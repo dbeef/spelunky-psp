@@ -11,7 +11,7 @@
 #include "graphics_utils/DebugGlCall.hpp"
 #include "Renderer.hpp"
 #include "GameObject.hpp"
-#include "MainDude.hpp"
+#include "main-dude/MainDude.hpp"
 
 #include <algorithm>
 

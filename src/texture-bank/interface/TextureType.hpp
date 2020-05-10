@@ -3,5 +3,5 @@
 enum class TextureType
 {
     CAVE_LEVEL_TILES,
-    SPELUNKER
+    MAIN_DUDE
 };

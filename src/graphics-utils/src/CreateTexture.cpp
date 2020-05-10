@@ -13,7 +13,7 @@ namespace
         int width{};
         int height{};
         int bytes_per_pixel{};
-        const int desiredChannels = 3;
+        const int desiredChannels = 4;
     };
 
     int get_max_texture_size()
@@ -100,7 +100,7 @@ GLuint graphics_utils::create_texture(const char *data, std::size_t size)
              tex.width, rounded_width, tex.height, rounded_height);
     log_info("Uploading texture.");
 
-    DebugGlCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, rounded_width, rounded_height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex.buffer));
+    DebugGlCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, rounded_width, rounded_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.buffer));
 
     // Don't need the buffer anymore:
     dispose_buffer(tex);

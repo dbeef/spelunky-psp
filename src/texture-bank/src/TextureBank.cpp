@@ -16,14 +16,22 @@ namespace
 {
     namespace level_tiles_png
     {
+        #include "generated/level_tiles.png.hpp"
+    }
 
-#include "generated/level_tiles.png.hpp"
-}
+    namespace level_tiles_json
+    {
+        #include "generated/level_tiles.json.hpp"
+    }
 
-namespace level_tiles_json
-{
-#include "generated/level_tiles.json.hpp"
+    namespace main_dude_png
+    {
+        #include "generated/main-dude-spritesheet.png.hpp"
+    }
 
+    namespace main_dude_json
+    {
+        #include "generated/main-dude-spritesheet.json.hpp"
     }
 
     struct TextureInput
@@ -43,6 +51,7 @@ namespace level_tiles_json
     {
         std::vector<TextureInput> out;
         out.push_back({level_tiles_png::data, sizeof(level_tiles_png::data), TextureType::CAVE_LEVEL_TILES});
+        out.push_back({main_dude_png::data, sizeof(main_dude_png::data), TextureType::MAIN_DUDE});
         return out;
     }
 
@@ -50,6 +59,7 @@ namespace level_tiles_json
     {
         std::vector<TextureRegionInput> out;
         out.push_back({level_tiles_json::data, TextureType::CAVE_LEVEL_TILES});
+        out.push_back({main_dude_json::data, TextureType::MAIN_DUDE});
         return out;
     }
 }
