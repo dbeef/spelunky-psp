@@ -103,7 +103,8 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                     temp_velocity_x = move_to_zero(temp_velocity_x, smallest_position_step);
                 }
             }
-            else if (temp_velocity_y != 0.0f)
+
+            if (temp_velocity_y != 0.0f)
             {
                 // Step on Y axis
 
