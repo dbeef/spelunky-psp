@@ -15,6 +15,8 @@ public:
     float get_height() const { return _dimensions.height; }
 
     void add_velocity(float x, float y);
+    float get_x_velocity() const { return _velocity.x; }
+    float get_y_velocity() const { return _velocity.y; }
 
     bool is_bottom_collision() const { return _collisions.bottom; }
     bool is_upper_collision() const { return _collisions.upper; }

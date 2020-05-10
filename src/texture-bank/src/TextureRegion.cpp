@@ -75,16 +75,40 @@ void TextureRegion::normalize(std::uint16_t spritesheet_width, std::uint16_t spr
     }
 }
 
-std::vector<Vertex> TextureRegion::get_quad_mesh(float x, float y) const
+std::vector<Vertex> TextureRegion::get_quad_mesh(float x, float y, bool vflip, bool hflip) const
 {
     std::vector<Vertex> out;
-    for(std::size_t index = 0; index < 4; index++)
+
+    for (std::size_t index = 0; index < 4; index++)
     {
         Vertex v;
         v.x = positions_normalized[index][0] + x;
         v.y = positions_normalized[index][1] + y;
-        v.u = uv_normalized[index][0];
-        v.v = uv_normalized[index][1];
+
+        if (hflip)
+        {
+            v.u = uv_normalized[3 - index][0];
+            v.v = uv_normalized[3 - index][1];
+        }
+        else if (vflip)
+        {
+            if (index % 2)
+            {
+                v.u = uv_normalized[index - 1][0];
+                v.v = uv_normalized[index - 1][1];
+            }
+            else
+            {
+                v.u = uv_normalized[index + 1][0];
+                v.v = uv_normalized[index + 1][1];
+            }
+        }
+        else
+        {
+            v.u = uv_normalized[index][0];
+            v.v = uv_normalized[index][1];
+        }
+
         out.push_back(v);
     }
     return out;
