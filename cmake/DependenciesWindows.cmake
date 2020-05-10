@@ -12,6 +12,7 @@ macro(add_windows_dependencies)
 
     target_compile_definitions(Dependencies INTERFACE
             SPELUNKY_PSP_PLATFORM_WINDOWS
+            SPELUNKY_PSP_PLATFORM_DESKTOP
             )
 endmacro()
 

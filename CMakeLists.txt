@@ -26,8 +26,6 @@ add_subdirectory(src/graphics-utils)
 add_subdirectory(src/game-loop)
 add_subdirectory(src/texture-bank)
 
-target_include_directories(Spelunky_PSP PRIVATE src)
-
 target_link_libraries(Spelunky_PSP PRIVATE
         Logger
         Video

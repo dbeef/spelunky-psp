@@ -99,7 +99,7 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
     va_list args;
     char buf[16];
     buf[strftime(buf, sizeof(buf), "%H:%M:%S", lt)] = '\0';
-#ifdef SPELUNKY_PSP_PLATFORM_LINUX
+#ifdef SPELUNKY_PSP_PLATFORM_DESKTOP
 
     #ifdef LOG_USE_COLOR
       fprintf(
