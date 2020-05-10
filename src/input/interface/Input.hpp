@@ -4,8 +4,6 @@ class Input
 {
 public:
 
-    Input();
-
     static Input& instance();
     static void init();
     static void dispose();
@@ -26,17 +24,17 @@ public:
 
 private:
 
-    bool _exit;
+    bool _exit = false;
 
-    bool _left;
-    bool _right;
-    bool _up;
-    bool _down;
+    bool _left = false;
+    bool _right = false;
+    bool _up = false;
+    bool _down = false;
 
-    bool _square;
-    bool _circle;
-    bool _triangle;
-    bool _cross;
+    bool _square = false;
+    bool _circle = false;
+    bool _triangle = false;
+    bool _cross = false;
 
     static Input* _input;
 };

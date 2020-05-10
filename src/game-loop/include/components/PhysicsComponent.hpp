@@ -10,9 +10,17 @@ class PhysicsComponent
 public:
     PhysicsComponent(float width, float height);
     void update(MainDude&, uint32_t delta_time_ms);
+
     float get_width() const { return _dimensions.width; }
     float get_height() const { return _dimensions.height; }
+
     void add_velocity(float x, float y);
+
+    bool is_bottom_collision() const { return _collisions.bottom; }
+    bool is_upper_collision() const { return _collisions.upper; }
+    bool is_right_collision() const { return _collisions.right; }
+    bool is_left_collision() const { return _collisions.left; }
+
 private:
 
     struct
