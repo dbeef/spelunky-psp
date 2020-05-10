@@ -24,7 +24,7 @@ MainDude::MainDude() : _physics_component(MAIN_DUDE_WIDTH, MAIN_DUDE_HEIGHT)
     float offset_x = _x - _physics_component.get_width() / 2;
     float offset_y = _y - _physics_component.get_height() / 2;
 
-    _mesh = texture_region.get_quad_mesh(offset_x, offset_y);
+    _mesh = texture_region.get_quad_mesh(offset_x, offset_y, true, false);
     _indices = texture_region.get_quad_indices();
 
     // Render entity
@@ -59,7 +59,9 @@ void MainDude::update(uint32_t delta_time_ms)
     // TODO: Dirty flag
 
     const auto texture_region = TextureBank::instance().get_region(TextureType::MAIN_DUDE, static_cast<std::size_t>(MainDudeSpritesheet::STAND_LEFT));
-    const auto new_mesh = texture_region.get_quad_mesh(offset_x, offset_y);
+
+    bool flip_texture_vertically = _physics_component.get_x_velocity() > 0;
+    const auto new_mesh = texture_region.get_quad_mesh(offset_x, offset_y, flip_texture_vertically, false);
     std::memcpy(_mesh.data(), new_mesh.data(), new_mesh.size() * sizeof(Vertex));
 }
 
