@@ -10,10 +10,12 @@ void InputComponent::update(MainDude& main_dude)
     if (input.square()) // Left
     {
         main_dude._physics_component.add_velocity(-0.025f, 0.0f);
+        main_dude._state = MainDudeState::RUNNING_LEFT;
     }
     if (input.circle()) // Right
     {
         main_dude._physics_component.add_velocity(+0.025f, 0.0f);
+        main_dude._state = MainDudeState::RUNNING_RIGHT;
     }
     if (input.triangle()) // Jump
     {

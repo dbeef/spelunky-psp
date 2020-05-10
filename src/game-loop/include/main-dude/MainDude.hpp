@@ -4,6 +4,8 @@
 #include "GameObject.hpp"
 #include "components/PhysicsComponent.hpp"
 #include "components/InputComponent.hpp"
+#include "MainDudeState.hpp"
+#include "MainDudeSpritesheetFrames.hpp"
 
 #include <vector>
 
@@ -20,6 +22,10 @@ private:
     std::vector<Vertex> _mesh;
     std::vector<IndicesType> _indices;
     RenderEntity _render_entity;
+
+    MainDudeState _state;
+    MainDudeSpritesheetFrames _current_frame;
+    float _animation_update_delta_ms = 0;
 
     // Position of the CENTER of the body
     float _x = 0;

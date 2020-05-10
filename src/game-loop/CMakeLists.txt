@@ -11,7 +11,8 @@ add_library(GameLoop STATIC
         include/GameObject.hpp
         include/components/PhysicsComponent.hpp
         include/components/InputComponent.hpp
-        include/main-dude/MainDudeSpritesheet.hpp
+        include/main-dude/MainDudeSpritesheetFrames.hpp
+        include/main-dude/MainDudeState.hpp
 )
 
 target_include_directories(GameLoop
