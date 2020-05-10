@@ -10,6 +10,7 @@ macro(add_linux_dependencies)
 
     target_compile_definitions(Dependencies INTERFACE
             SPELUNKY_PSP_PLATFORM_LINUX
+            SPELUNKY_PSP_PLATFORM_DESKTOP
             )
 endmacro()
 

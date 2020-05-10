@@ -4,8 +4,7 @@ add_library(Input STATIC
         src/Input.cpp
         interface/Input.hpp
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,src/Input_PSP.cpp,>
-        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Input_Linux.cpp,>
-        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,src/Input_Linux.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DESKTOP}>,src/Input_Desktop.cpp,>
 )
 
 target_include_directories(Input
