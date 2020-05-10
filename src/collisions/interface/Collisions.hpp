@@ -18,6 +18,8 @@ namespace collisions
         RIGHT_DOWN,
     };
 
+    MapTile* overlaps(MapTile *neighboring_tiles[9], float x_center, float y_center, float width, float height);
+
     MapTile* check_bottom_collision(MapTile *neighboring_tiles[9], float x_center, float y_center, float width, float height);
     MapTile* check_top_collision(MapTile *neighboring_tiles[9], float x_center, float y_center, float width, float height);
 
