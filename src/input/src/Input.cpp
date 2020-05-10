@@ -24,8 +24,3 @@ void Input::dispose()
     delete _input;
     _input = nullptr;
 }
-
-Input::Input() : _left(false), _right(false), _up(false), _down(false), _exit(false)
-{
-
-}

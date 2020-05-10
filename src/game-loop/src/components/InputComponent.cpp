@@ -7,20 +7,20 @@ void InputComponent::update(MainDude& main_dude)
 {
     Input& input = Input::instance();
 
-    if (input.square())
+    if (input.square()) // Left
     {
-        // Left
-        main_dude._physics_component.add_velocity(-0.25f, 0.0f);
+        main_dude._physics_component.add_velocity(-0.025f, 0.0f);
     }
-    if (input.circle())
+    if (input.circle()) // Right
     {
-        // Right
-        main_dude._physics_component.add_velocity(+0.25f, 0.0f);
+        main_dude._physics_component.add_velocity(+0.025f, 0.0f);
     }
-    if (input.triangle())
+    if (input.triangle()) // Jump
     {
-        // Jump
-        main_dude._physics_component.add_velocity(0.0f, -0.05f);
+        if (main_dude._physics_component.is_bottom_collision())
+        {
+            main_dude._physics_component.add_velocity(0.0f, -0.18f);
+        }
     }
 }
 

@@ -13,7 +13,7 @@ namespace
 
     constexpr double default_max_x_speed = 0.1875f;
     constexpr double default_max_y_speed = 0.21875f;
-    constexpr double default_friction = 0.0034375f;
+    constexpr double default_friction = 0.017f;
     constexpr float default_gravity = 0.011875f;
     constexpr float default_bouncing_factor_x = 0.15f;
     constexpr float default_bouncing_factor_y = 0.35f;
