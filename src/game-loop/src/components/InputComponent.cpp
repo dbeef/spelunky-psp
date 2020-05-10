@@ -1,7 +1,7 @@
 #include "Camera.hpp"
 #include "Input.hpp"
 #include "components/InputComponent.hpp"
-#include "MainDude.hpp"
+#include "main-dude/MainDude.hpp"
 
 void InputComponent::update(MainDude& main_dude)
 {

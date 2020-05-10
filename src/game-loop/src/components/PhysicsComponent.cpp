@@ -1,11 +1,15 @@
 #include "components/PhysicsComponent.hpp"
-#include "MainDude.hpp"
+#include "main-dude/MainDude.hpp"
 #include "LevelGenerator.hpp"
 #include "Collisions.hpp"
 
-#include <cmath>
 #include <logger/log.h>
 #include <components/PhysicsComponent.hpp>
+
+// Using C-style <math.h> instead of <cmath> because of some symbols being
+// missing in the PSP's CPP standard library.
+
+#include <math.h>
 
 namespace
 {
@@ -77,7 +81,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
             {
                 // Step on X axis
 
-                main_dude._x += std::copysign(smallest_position_step, temp_velocity_x);
+                main_dude._x += copysign(smallest_position_step, temp_velocity_x);
                 collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), main_dude._x, main_dude._y, neighbours);
                 const auto* overlapping_tile = collisions::overlaps(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
                 if (overlapping_tile)
@@ -108,7 +112,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
             {
                 // Step on Y axis
 
-                main_dude._y += std::copysign(smallest_position_step, temp_velocity_y);
+                main_dude._y += copysign(smallest_position_step, temp_velocity_y);
                 collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), main_dude._x, main_dude._y, neighbours);
                 const auto* overlapping_tile = collisions::overlaps(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
                 if (overlapping_tile)
@@ -139,7 +143,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
         if (_collisions.bottom)
         {
             // Apply friction
-            _velocity.x += std::copysign(default_friction, -_velocity.x);
+            _velocity.x += copysign(default_friction, -_velocity.x);
 
             // For near-zero speed make it zero:
             if (std::abs(_velocity.x) <= default_friction)
@@ -157,12 +161,12 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
 
         if (std::abs(_velocity.x) > default_max_x_speed)
         {
-            _velocity.x = std::copysign(default_max_x_speed, _velocity.x);
+            _velocity.x = copysign(default_max_x_speed, _velocity.x);
         }
 
         if (std::abs(_velocity.y) > default_max_y_speed)
         {
-            _velocity.y = std::copysign(default_max_y_speed, _velocity.y);
+            _velocity.y = copysign(default_max_y_speed, _velocity.y);
         }
     }
 }

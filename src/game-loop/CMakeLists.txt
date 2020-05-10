@@ -7,10 +7,11 @@ add_library(GameLoop STATIC
         src/components/InputComponent.cpp
         interface/GameLoop.hpp
         interface/GameState.hpp
-        include/MainDude.hpp
+        include/main-dude/MainDude.hpp
         include/GameObject.hpp
         include/components/PhysicsComponent.hpp
         include/components/InputComponent.hpp
+        include/main-dude/MainDudeSpritesheet.hpp
 )
 
 target_include_directories(GameLoop

@@ -2,10 +2,11 @@
 // Created by dbeef on 5/7/20.
 //
 
-#include "MainDude.hpp"
+#include "main-dude/MainDude.hpp"
 #include "MapTileType.hpp"
 #include "Renderer.hpp"
 #include <cstring>
+#include <main-dude/MainDudeSpritesheet.hpp>
 
 namespace
 {
@@ -18,7 +19,7 @@ MainDude::MainDude() : _physics_component(MAIN_DUDE_WIDTH, MAIN_DUDE_HEIGHT)
     _x = 3;
     _y = 3;
 
-    const auto texture_region = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, static_cast<std::size_t>(MapTileType::STONE_BLOCK));
+    const auto texture_region = TextureBank::instance().get_region(TextureType::MAIN_DUDE, static_cast<std::size_t>(MainDudeSpritesheet::STAND_LEFT));
 
     float offset_x = _x - _physics_component.get_width() / 2;
     float offset_y = _y - _physics_component.get_height() / 2;
@@ -31,7 +32,7 @@ MainDude::MainDude() : _physics_component(MAIN_DUDE_WIDTH, MAIN_DUDE_HEIGHT)
     _render_entity.indices_count = _indices.size();
     _render_entity.indices = _indices.data();
     _render_entity.vertices = _mesh.data();
-    _render_entity.texture = TextureBank::instance().get_texture(TextureType::CAVE_LEVEL_TILES);
+    _render_entity.texture = TextureBank::instance().get_texture(TextureType::MAIN_DUDE);
 
     _render_entity.id = Renderer::instance().add_entity(_render_entity);
 }
@@ -57,7 +58,7 @@ void MainDude::update(uint32_t delta_time_ms)
 
     // TODO: Dirty flag
 
-    const auto texture_region = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, static_cast<std::size_t>(MapTileType::STONE_BLOCK));
+    const auto texture_region = TextureBank::instance().get_region(TextureType::MAIN_DUDE, static_cast<std::size_t>(MainDudeSpritesheet::STAND_LEFT));
     const auto new_mesh = texture_region.get_quad_mesh(offset_x, offset_y);
     std::memcpy(_mesh.data(), new_mesh.data(), new_mesh.size() * sizeof(Vertex));
 }

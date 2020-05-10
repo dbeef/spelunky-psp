@@ -59,6 +59,9 @@ bool Video::setup_gl()
     DebugGlCall(glShadeModel(GL_SMOOTH));
     DebugGlCall(glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE));
 
+    DebugGlCall(glEnable(GL_BLEND));
+    DebugGlCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
     DebugGlCall(glEnableClientState(GL_VERTEX_ARRAY)); // For glVertexPointer
     DebugGlCall(glEnableClientState(GL_TEXTURE_COORD_ARRAY)); // For glTexCoordPointer
 
@@ -72,7 +75,6 @@ bool Video::setup_gl()
     DebugGlCall(glDisable(GL_LIGHTING));
     DebugGlCall(glDisable(GL_CULL_FACE));
     DebugGlCall(glDisable(GL_ALPHA_TEST));
-    DebugGlCall(glDisable(GL_BLEND));
     DebugGlCall(glDisable(GL_COLOR_LOGIC_OP));
     DebugGlCall(glDisable(GL_DITHER));
     DebugGlCall(glDisable(GL_STENCIL_TEST));
