@@ -56,80 +56,84 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
     {
         _pos_update_delta_ms -= default_pos_update_delta_ms;
 
-        float delta_v_x = _velocity.x;
-        float delta_v_y = _velocity.y;
+        // Step by step:
 
-        _collisions.bottom = false;
-        _collisions.upper = false;
+        MapTile* neighbours[9] = { nullptr };
+
+        float last_step_x = main_dude._x;
+        float last_step_y = main_dude._y;
+
+        float temp_velocity_x = _velocity.x;
+        float temp_velocity_y = _velocity.y;
+
         _collisions.left = false;
         _collisions.right = false;
+        _collisions.upper = false;
+        _collisions.bottom = false;
 
-        while (delta_v_x != 0 || delta_v_y != 0)
+        while (temp_velocity_x != 0.0f || temp_velocity_y != 0.0f)
         {
-            MapTile *neighbours[9] = { nullptr };
-            collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), main_dude._x, main_dude._y, neighbours);
-
-            // Update velocity step-by-step:
-            if (delta_v_x != 0)
+            if (temp_velocity_x != 0.0f)
             {
-                main_dude._x += std::copysign(smallest_position_step, delta_v_x);
-                delta_v_x = move_to_zero(delta_v_x, smallest_position_step);
-                auto collision_tile_left = collisions::check_left_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
-                if (collision_tile_left)
+                // Step on X axis
+
+                main_dude._x += std::copysign(smallest_position_step, temp_velocity_x);
+                collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), main_dude._x, main_dude._y, neighbours);
+                const auto* overlapping_tile = collisions::overlaps(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
+                if (overlapping_tile)
                 {
-                    main_dude._x = collision_tile_left->x + 1.0f + (_dimensions.width / 2.0f); // TODO: Global const literal for tile width/height
-                    _collisions.left = true;
+                    // step back
+                    main_dude._x = last_step_x;
+
+                    if (_velocity.x < 0.0f)
+                    {
+                        _collisions.left = true;
+                    }
+                    else
+                    {
+                        _collisions.right = true;
+                    }
+
+                    _velocity.x = 0.0f;
+                    temp_velocity_y = 0.0f;
                 }
 
-                auto collision_tile_right = collisions::check_right_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
-                if (collision_tile_right)
-                {
-                    main_dude._x = collision_tile_right->x - (_dimensions.width / 2.0f);
-                    _collisions.right = true;
-                }
+                temp_velocity_x = move_to_zero(temp_velocity_x, smallest_position_step);
             }
-            else
+            else if (temp_velocity_y != 0.0f)
             {
-                main_dude._y += std::copysign(smallest_position_step, delta_v_y);
-                delta_v_y = move_to_zero(delta_v_y, smallest_position_step);
-                auto collision_tile_bottom = collisions::check_bottom_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
-                if (collision_tile_bottom)
+                // Step on Y axis
+
+                main_dude._y += std::copysign(smallest_position_step, temp_velocity_y);
+                collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), main_dude._x, main_dude._y, neighbours);
+                const auto* overlapping_tile = collisions::overlaps(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
+                if (overlapping_tile)
                 {
-                    main_dude._y = collision_tile_bottom->y - (_dimensions.height / 2.0f);
-                    _collisions.bottom = true;
+                    // step back
+                    main_dude._y = last_step_y;
+
+                    if (_velocity.y < 0.0f)
+                    {
+                        _collisions.upper = true;
+                    }
+                    else
+                    {
+                        _collisions.bottom = true;
+                    }
+
+                    _velocity.y = 0.0f;
+                    temp_velocity_y = 0.0f;
                 }
 
-                auto collision_tile_top = collisions::check_top_collision(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
-                if (collision_tile_top)
-                {
-                    main_dude._y = collision_tile_top->y + 1.0f + (_dimensions.height / 2.0f);
-                    _collisions.upper = true;
-                }
+                temp_velocity_y = move_to_zero(temp_velocity_y, smallest_position_step);
             }
-        }
-
-        if (_collisions.left || _collisions.right)
-        {
-            _velocity.x = 0;
-        }
-
-
-        if (_collisions.bottom || _collisions.upper)
-        {
-            _velocity.y = 0;
         }
 
         if (_collisions.bottom)
         {
             // Apply friction
-            if (_velocity.x > 0)
-            {
-                _velocity.x -= default_friction;
-            }
-            if (_velocity.x < 0)
-            {
-                _velocity.x += default_friction;
-            }
+            _velocity.x += std::copysign(default_friction, -_velocity.x);
+
             // For near-zero speed make it zero:
             if (std::abs(_velocity.x) <= default_friction)
             {
