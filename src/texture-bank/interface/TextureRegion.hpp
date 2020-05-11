@@ -17,7 +17,7 @@ struct TextureRegion
     static TextureRegion fromJson(std::size_t region_index, void* document_root);
     void normalize(std::uint16_t spritesheet_width, std::uint16_t spritesheet_height);
 
-    std::vector<Vertex> get_quad_mesh(float x, float y, bool vflip = false, bool hflip = false) const;
+    std::vector<Vertex> get_quad_vertices(float x, float y, bool vflip = false, bool hflip = false) const;
     std::vector<IndicesType> get_quad_indices(uint16_t offset = 0) const;
 
     std::size_t region_index;

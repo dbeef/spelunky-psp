@@ -20,9 +20,8 @@ public:
 
 private:
 
-    std::vector<Vertex> _mesh;
-    std::vector<IndicesType> _indices;
-    RenderEntity _render_entity;
+    Mesh _mesh;
+    RenderEntityID _render_entity_id;
 
     bool _facing_left;
     MainDudeSpritesheetFrames _current_frame;

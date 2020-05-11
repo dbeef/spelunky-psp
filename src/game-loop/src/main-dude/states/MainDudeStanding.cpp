@@ -12,7 +12,7 @@ MainDudeStanding::MainDudeStanding()
 
 void MainDudeStanding::enter(MainDude& main_dude)
 {
-
+    main_dude._current_frame = MainDudeSpritesheetFrames::STAND_LEFT;
 }
 
 MainDudeBaseState *MainDudeStanding::update(MainDude& main_dude, uint32_t delta_time_ms)
@@ -57,8 +57,8 @@ MainDudeBaseState *MainDudeStanding::update(MainDude& main_dude, uint32_t delta_
     // TODO: Dirty flag
 
     const auto texture_region = TextureBank::instance().get_region(TextureType::MAIN_DUDE, static_cast<std::size_t>(main_dude._current_frame));
-    const auto new_mesh = texture_region.get_quad_mesh(offset_x, offset_y, vflip, false);
-    std::memcpy(main_dude._mesh.data(), new_mesh.data(), new_mesh.size() * sizeof(Vertex));
+    const auto new_vertices = texture_region.get_quad_vertices(offset_x, offset_y, vflip, false);
+    std::memcpy(main_dude._mesh.vertices.data(), new_vertices.data(), new_vertices.size() * sizeof(Vertex));
 
     return this;
 }

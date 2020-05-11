@@ -75,7 +75,7 @@ void TextureRegion::normalize(std::uint16_t spritesheet_width, std::uint16_t spr
     }
 }
 
-std::vector<Vertex> TextureRegion::get_quad_mesh(float x, float y, bool vflip, bool hflip) const
+std::vector<Vertex> TextureRegion::get_quad_vertices(float x, float y, bool vflip, bool hflip) const
 {
     std::vector<Vertex> out;
 
