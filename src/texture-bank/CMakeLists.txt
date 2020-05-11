@@ -29,6 +29,7 @@ target_link_libraries(TextureBank
             cjson
         PUBLIC
             glad
+            Renderer
         )
 
 if (SPELUNKY_PSP_PLATFORM_LINUX)

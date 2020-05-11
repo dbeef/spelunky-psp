@@ -6,20 +6,11 @@
 #define RESOURCE_COMPILER_TEXTUREREGION_HPP
 
 #include "glad/glad.h"
+#include "Mesh.hpp"
 
 #include <cstdint>
 #include <string>
 #include <vector>
-
-using IndicesType = int16_t;
-
-struct Vertex
-{
-    float x;
-    float y;
-    float u;
-    float v;
-};
 
 struct TextureRegion
 {

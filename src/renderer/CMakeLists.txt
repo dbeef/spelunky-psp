@@ -4,6 +4,7 @@ add_library(Renderer STATIC
         src/Renderer.cpp
         interface/Renderer.hpp
         interface/RenderEntity.hpp
+        interface/Mesh.hpp
         )
 
 target_include_directories(Renderer
