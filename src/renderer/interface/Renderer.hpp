@@ -3,6 +3,7 @@
 #include "glad/glad.h"
 #include "MapTileType.hpp"
 #include "RenderEntity.hpp"
+#include "Mesh.hpp"
 
 #include <limits>
 #include <algorithm>
@@ -20,6 +21,16 @@ public:
 
     void render() const;
     void update();
+
+    RenderEntityID add_entity(Mesh& mesh, TextureID texture)
+    {
+        RenderEntity entity;
+        entity.indices_count = mesh.indices.size();
+        entity.indices = mesh.indices.data();
+        entity.vertices = mesh.vertices.data();
+        entity.texture = texture;
+        return add_entity(entity);
+    }
 
     RenderEntityID add_entity(RenderEntity e)
     {
