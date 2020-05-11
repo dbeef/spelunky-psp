@@ -19,33 +19,26 @@ namespace
 MainDude::MainDude() : _physics_component(MAIN_DUDE_WIDTH, MAIN_DUDE_HEIGHT)
 {
     _states.current = &_states.standing;
+     _states.current->enter(*this);
 
     _x = 3;
     _y = 3;
 
-    const auto texture_region = TextureBank::instance().get_region(TextureType::MAIN_DUDE, static_cast<std::size_t>(MainDudeSpritesheetFrames::STAND_LEFT));
+    const auto texture_region = TextureBank::instance().get_region(TextureType::MAIN_DUDE, static_cast<std::size_t>(_current_frame));
 
     float offset_x = _x - _physics_component.get_width() / 2;
     float offset_y = _y - _physics_component.get_height() / 2;
 
-    _mesh = texture_region.get_quad_mesh(offset_x, offset_y, true, false);
-    _indices = texture_region.get_quad_indices();
-
-    // Render entity
-
-    _render_entity.indices_count = _indices.size();
-    _render_entity.indices = _indices.data();
-    _render_entity.vertices = _mesh.data();
-    _render_entity.texture = TextureBank::instance().get_texture(TextureType::MAIN_DUDE);
-
-    _render_entity.id = Renderer::instance().add_entity(_render_entity);
+    _mesh.vertices = texture_region.get_quad_vertices(offset_x, offset_y, _facing_left, false);
+    _mesh.indices = texture_region.get_quad_indices();
+    _render_entity_id = Renderer::instance().add_entity(_mesh, TextureBank::instance().get_texture(TextureType::MAIN_DUDE));
 }
 
 MainDude::~MainDude()
 {
-    if (_render_entity.id != Renderer::INVALID_ENTITY)
+    if (_render_entity_id != Renderer::INVALID_ENTITY)
     {
-        Renderer::instance().mark_for_removal(_render_entity.id);
+        Renderer::instance().mark_for_removal(_render_entity_id);
     }
 }
 

@@ -297,7 +297,7 @@ void Level::batch_vertices()
             auto tile_type = static_cast<int>(t->mapTileType);
             const auto &tile = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, tile_type);
 
-            const auto mesh = tile.get_quad_mesh(x, y);
+            const auto mesh = tile.get_quad_vertices(x, y);
             const auto indices = tile.get_quad_indices(tile_counter);
 
             std::copy(mesh.begin(), mesh.end(), std::back_inserter(_mesh));
