@@ -7,6 +7,7 @@
 
 #include "glad/glad.h"
 #include "Mesh.hpp"
+#include "Quad.hpp"
 
 #include <cstdint>
 #include <string>
@@ -17,8 +18,11 @@ struct TextureRegion
     static TextureRegion fromJson(std::size_t region_index, void* document_root);
     void normalize(std::uint16_t spritesheet_width, std::uint16_t spritesheet_height);
 
+    void set_quad_vertices(Quad&, bool vflip = false, bool hflip = false) const;
+    void set_quad_indices(Quad&, uint16_t offset = 0) const;
+
     std::vector<Vertex> get_quad_vertices(float x, float y, bool vflip = false, bool hflip = false) const;
-    std::vector<IndicesType> get_quad_indices(uint16_t offset = 0) const;
+    std::vector<IndexType> get_quad_indices(uint16_t offset = 0) const;
 
     std::size_t region_index;
     std::uint16_t width;

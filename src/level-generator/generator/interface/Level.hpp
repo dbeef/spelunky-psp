@@ -76,7 +76,7 @@ public:
 private:
 
     std::vector<Vertex> _mesh;
-    std::vector<IndicesType> _indices;
+    std::vector<IndexType> _indices;
     RenderEntity _render_entity;
 };
 

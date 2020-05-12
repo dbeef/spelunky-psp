@@ -2,18 +2,11 @@
 
 #include <vector>
 
-using IndicesType = int16_t;
-
-struct Vertex
-{
-    float x;
-    float y;
-    float u;
-    float v;
-};
+#include "Vertex.hpp"
+#include "IndexType.hpp"
 
 struct Mesh
 {
     std::vector <Vertex> vertices;
-    std::vector <IndicesType> indices;
+    std::vector <IndexType> indices;
 };

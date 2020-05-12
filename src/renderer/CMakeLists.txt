@@ -2,9 +2,13 @@ project(Renderer)
 
 add_library(Renderer STATIC
         src/Renderer.cpp
+        src/Quad.cpp
         interface/Renderer.hpp
         interface/RenderEntity.hpp
         interface/Mesh.hpp
+        interface/Quad.hpp
+        interface/Vertex.hpp
+        interface/IndexType.hpp
         )
 
 target_include_directories(Renderer

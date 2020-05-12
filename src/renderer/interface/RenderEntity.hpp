@@ -8,7 +8,7 @@ using RenderEntityID = uint16_t;
 struct RenderEntity
 {
     Vertex* vertices;
-    IndicesType* indices;
+    IndexType* indices;
     uint32_t indices_count;
     TextureID texture;
 

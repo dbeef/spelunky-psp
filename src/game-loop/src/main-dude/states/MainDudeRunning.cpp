@@ -30,6 +30,7 @@ MainDudeBaseState *MainDudeRunning::update(MainDude& main_dude, uint32_t delta_t
     }
 
     main_dude._physics_component.update(main_dude, delta_time_ms);
+    main_dude._quad_component.update(main_dude, delta_time_ms);
     main_dude._animation_update_delta_ms += delta_time_ms;
 
     if (main_dude._physics_component.get_x_velocity() == 0.0f)
@@ -63,20 +64,6 @@ MainDudeBaseState *MainDudeRunning::update(MainDude& main_dude, uint32_t delta_t
 
         }
     }
-
-
-    // Update render entity:
-    // TODO: Util for only updating position
-
-    float offset_x = main_dude._x - main_dude._physics_component.get_width() / 2;
-    float offset_y = main_dude._y - main_dude._physics_component.get_height() / 2;
-
-    // TODO: Dirty flag
-
-    const auto texture_region = TextureBank::instance().get_region(TextureType::MAIN_DUDE, static_cast<std::size_t>(main_dude._current_frame));
-    const auto new_vertices = texture_region.get_quad_vertices(offset_x, offset_y, vflip, false);
-    std::memcpy(main_dude._mesh.vertices.data(), new_vertices.data(), new_vertices.size() * sizeof(Vertex));
-
     return this;
 }
 
