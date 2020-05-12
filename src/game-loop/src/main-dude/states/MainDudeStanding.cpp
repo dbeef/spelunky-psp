@@ -12,7 +12,7 @@ MainDudeStanding::MainDudeStanding()
 
 void MainDudeStanding::enter(MainDude& main_dude)
 {
-    main_dude._current_frame = MainDudeSpritesheetFrames::STAND_LEFT;
+    main_dude._quad_component.frame_changed(MainDudeSpritesheetFrames::STAND_LEFT);
 }
 
 MainDudeBaseState *MainDudeStanding::update(MainDude& main_dude, uint32_t delta_time_ms)
@@ -45,6 +45,6 @@ MainDudeBaseState *MainDudeStanding::update(MainDude& main_dude, uint32_t delta_
         return &main_dude._states.running;
     }
 
-    main_dude._current_frame = MainDudeSpritesheetFrames::STAND_LEFT;
+    main_dude._quad_component.frame_changed(MainDudeSpritesheetFrames::STAND_LEFT);
     return this;
 }

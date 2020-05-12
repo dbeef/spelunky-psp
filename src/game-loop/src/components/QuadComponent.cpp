@@ -3,28 +3,33 @@
 #include "TextureBank.hpp"
 #include "components/QuadComponent.hpp"
 
-void QuadComponent::update(MainDude& main_dude, uint32_t delta_time_ms)
+void QuadComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
 {
-    const auto current_frame_index = static_cast<std::size_t>(main_dude._current_frame);
-    const auto texture_region = TextureBank::instance().get_region(TextureType::MAIN_DUDE, current_frame_index);
-    const bool vflip = !main_dude._facing_left;
+    if (_frame_changed)
+    {
+        const auto texture_region = TextureBank::instance().get_region(_texture_type, _frame_index);
+        const bool vflip = !main_dude._facing_left;
 
-    texture_region.set_quad_xy(_quad);
-    texture_region.set_quad_uv(_quad, vflip);
-    texture_region.set_quad_indices(_quad);
+        texture_region.set_quad_xy(_quad);
+        texture_region.set_quad_uv(_quad, vflip);
+        texture_region.set_quad_indices(_quad);
+
+        _frame_changed = false;
+    }
 
     // Make quad center to be at 0.0:
-    float pos_x = main_dude._x - main_dude._physics_component.get_width() / 2;
-    float pos_y = main_dude._y - main_dude._physics_component.get_height() / 2;
+    const float pos_x = main_dude._x - main_dude._physics_component.get_width() / 2;
+    const float pos_y = main_dude._y - main_dude._physics_component.get_height() / 2;
 
-    _quad.translate(pos_x, pos_y);
-    _quad.scale(main_dude._physics_component.get_width(), main_dude._physics_component.get_height());
+    _quad.set_translation(pos_x, pos_y);
+    _quad.set_scale(main_dude._physics_component.get_width(), main_dude._physics_component.get_height());
+    _quad.write();
 }
 
 QuadComponent::QuadComponent(TextureType type) : _texture_type(type)
 {
     RenderEntity entity;
-    entity.vertices = _quad.get_vertices();
+    entity.vertices = _quad.get_vertices_transformed();
     entity.indices = _quad.get_indices();
     entity.indices_count = Quad::get_indices_count();
     entity.texture = TextureBank::instance().get_texture(_texture_type);
