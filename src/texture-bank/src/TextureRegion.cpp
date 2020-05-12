@@ -114,14 +114,62 @@ std::vector<Vertex> TextureRegion::get_quad_vertices(float x, float y, bool vfli
     return out;
 }
 
-std::vector<IndicesType> TextureRegion::get_quad_indices(uint16_t offset) const
+std::vector<IndexType> TextureRegion::get_quad_indices(uint16_t offset) const
 {
-    std::vector<IndicesType> out;
+    std::vector<IndexType> out;
     for(unsigned short i : indices)
     {
         out.push_back(i + (offset * 4));
     }
     return out;
+}
+
+void TextureRegion::set_quad_vertices(Quad& quad, bool vflip, bool hflip) const
+{
+    Vertex* out = quad.get_vertices();
+
+    for (std::size_t index = 0; index < 4; index++)
+    {
+        Vertex* v = out + index;
+
+        v->x = positions_normalized[index][0];
+        v->y = positions_normalized[index][1];
+
+        if (hflip)
+        {
+            v->u = uv_normalized[3 - index][0];
+            v->v = uv_normalized[3 - index][1];
+        }
+        else if (vflip)
+        {
+            if (index % 2)
+            {
+                v->u = uv_normalized[index - 1][0];
+                v->v = uv_normalized[index - 1][1];
+            }
+            else
+            {
+                v->u = uv_normalized[index + 1][0];
+                v->v = uv_normalized[index + 1][1];
+            }
+        }
+        else
+        {
+            v->u = uv_normalized[index][0];
+            v->v = uv_normalized[index][1];
+        }
+    }
+}
+
+void TextureRegion::set_quad_indices(Quad& quad, uint16_t offset) const
+{
+    IndexType* out = quad.get_indices();
+
+    for (std::size_t index = 0; index < 6; index++)
+    {
+        auto value = indices[index];
+        out[index] = (value + (offset * 4));
+    }
 }
 
 namespace
