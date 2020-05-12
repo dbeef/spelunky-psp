@@ -1,20 +1,29 @@
 #include "Quad.hpp"
 #include <cstring>
 
-void Quad::scale(float x, float y)
+void Quad::set_scale(float x, float y)
 {
-    for (auto& vertex : _vertices)
-    {
-        vertex.x *= x;
-        vertex.y *= y;
-    }
+    _scale.x = x;
+    _scale.y = y;
 }
 
-void Quad::translate(float x, float y)
+void Quad::set_translation(float x, float y)
 {
-    for (auto& vertex : _vertices)
+    _translation.x = x;
+    _translation.y = y;
+}
+
+void Quad::write()
+{
+    for (int index = 0; index < Quad::get_vertices_count(); ++index)
     {
-        vertex.x += x;
-        vertex.y += y;
+        const Vertex& in = _base_vertices[index];
+        Vertex& out = _transformed_vertices[index];
+
+        out.x = (in.x * _scale.x) + _translation.x;
+        out.y = (in.y * _scale.y) + _translation.y;
+
+        out.u = in.u;
+        out.v = in.v;
     }
 }

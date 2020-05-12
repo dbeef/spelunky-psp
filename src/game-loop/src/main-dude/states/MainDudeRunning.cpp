@@ -13,6 +13,7 @@ MainDudeBaseState *MainDudeRunning::update(MainDude& main_dude, uint32_t delta_t
 {
     Input& input = Input::instance();
 
+    // TODO: Bring back input component
     if (input.square())
     {
         main_dude._physics_component.add_velocity(-0.025f, 0.0f);
@@ -42,26 +43,24 @@ MainDudeBaseState *MainDudeRunning::update(MainDude& main_dude, uint32_t delta_t
         main_dude._facing_left = main_dude._physics_component.get_x_velocity() < 0.0f;
     }
 
-    const bool vflip = !main_dude._facing_left;
-
-    // TODO: State pattern
-
-    bool running_animation_on = main_dude._current_frame >= MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST &&
-                                main_dude._current_frame <= MainDudeSpritesheetFrames::RUN_LEFT_5_LAST;
-    bool last_frame = main_dude._current_frame == MainDudeSpritesheetFrames::RUN_LEFT_5_LAST;
+    const auto current_frame = main_dude._quad_component.get_current_frame<MainDudeSpritesheetFrames>();
+    
+    bool running_animation_on = current_frame >= MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST &&
+                                current_frame <= MainDudeSpritesheetFrames::RUN_LEFT_5_LAST;
+    bool last_frame = current_frame == MainDudeSpritesheetFrames::RUN_LEFT_5_LAST;
 
     if (!running_animation_on || last_frame)
     {
-        main_dude._current_frame  = MainDudeSpritesheetFrames ::RUN_LEFT_0_FIRST;
+        main_dude._quad_component.frame_changed(MainDudeSpritesheetFrames ::RUN_LEFT_0_FIRST);
     }
     else
     {
         if (main_dude._animation_update_delta_ms >= 75)
         {
-            main_dude._current_frame = static_cast<MainDudeSpritesheetFrames>(
-                    static_cast<int>(main_dude._current_frame ) + 1);
-            main_dude._animation_update_delta_ms = 0;
+            auto next_frame = static_cast<MainDudeSpritesheetFrames>( static_cast<int>(current_frame ) + 1);
+            main_dude._quad_component.frame_changed(next_frame);
 
+            main_dude._animation_update_delta_ms = 0;
         }
     }
     return this;

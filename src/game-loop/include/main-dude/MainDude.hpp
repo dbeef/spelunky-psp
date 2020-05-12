@@ -21,11 +21,8 @@ public:
 
 private:
 
-    Mesh _mesh;
     RenderEntityID _render_entity_id;
-
     bool _facing_left;
-    MainDudeSpritesheetFrames _current_frame;
     float _animation_update_delta_ms = 0;
 
     // Position of the CENTER of the body
