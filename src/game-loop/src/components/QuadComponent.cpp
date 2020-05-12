@@ -9,7 +9,8 @@ void QuadComponent::update(MainDude& main_dude, uint32_t delta_time_ms)
     const auto texture_region = TextureBank::instance().get_region(TextureType::MAIN_DUDE, current_frame_index);
     const bool vflip = !main_dude._facing_left;
 
-    texture_region.set_quad_vertices(_quad, vflip);
+    texture_region.set_quad_xy(_quad);
+    texture_region.set_quad_uv(_quad, vflip);
     texture_region.set_quad_indices(_quad);
 
     // Make quad center to be at 0.0:
