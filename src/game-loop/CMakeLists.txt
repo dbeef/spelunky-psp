@@ -7,12 +7,14 @@ add_library(GameLoop STATIC
         src/main-dude/states/MainDudeRunning.cpp
         src/components/PhysicsComponent.cpp
         src/components/QuadComponent.cpp
+        src/components/InputComponent.cpp
         interface/GameLoop.hpp
         interface/GameState.hpp
         include/main-dude/MainDude.hpp
         include/GameObject.hpp
         include/components/PhysicsComponent.hpp
         include/components/QuadComponent.hpp
+        include/components/InputComponent.hpp
         include/main-dude/MainDudeSpritesheetFrames.hpp
         include/main-dude/states/MainDudeBaseState.hpp
         include/main-dude/states/MainDudeRunning.hpp

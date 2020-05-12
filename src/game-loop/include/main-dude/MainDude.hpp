@@ -4,6 +4,7 @@
 #include "GameObject.hpp"
 #include "components/PhysicsComponent.hpp"
 #include "components/QuadComponent.hpp"
+#include "components/InputComponent.hpp"
 #include "MainDudeSpritesheetFrames.hpp"
 #include "main-dude/states/MainDudeRunning.hpp"
 #include "main-dude/states/MainDudeStanding.hpp"
@@ -34,6 +35,9 @@ private:
 
     friend class QuadComponent;
     QuadComponent _quad_component;
+
+    friend class InputComponent;
+    InputComponent _input_component;
 
     friend class MainDudeBaseState;
     friend class MainDudeRunning;
