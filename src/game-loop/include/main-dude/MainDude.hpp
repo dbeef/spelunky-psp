@@ -5,6 +5,8 @@
 #include "components/PhysicsComponent.hpp"
 #include "components/QuadComponent.hpp"
 #include "components/InputComponent.hpp"
+#include "components/AnimationComponent.hpp"
+
 #include "MainDudeSpritesheetFrames.hpp"
 #include "main-dude/states/MainDudeRunning.hpp"
 #include "main-dude/states/MainDudeStanding.hpp"
@@ -24,7 +26,6 @@ private:
 
     RenderEntityID _render_entity_id;
     bool _facing_left;
-    float _animation_update_delta_ms = 0;
 
     // Position of the CENTER of the body
     float _x = 0;
@@ -38,6 +39,9 @@ private:
 
     friend class InputComponent;
     InputComponent _input_component;
+
+    friend class AnimationComponent;
+    AnimationComponent _animation_component;
 
     friend class MainDudeBaseState;
     friend class MainDudeRunning;
