@@ -6,6 +6,7 @@
 
 void MainDudeStanding::enter(MainDude& main_dude)
 {
+    main_dude._animation_component.stop();
     main_dude._quad_component.frame_changed(MainDudeSpritesheetFrames::STAND_LEFT);
 }
 
