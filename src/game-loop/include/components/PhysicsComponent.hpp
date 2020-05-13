@@ -11,6 +11,10 @@ public:
     PhysicsComponent(float width, float height);
     void update(MainDude&, uint32_t delta_time_ms);
 
+    void set_position(float x, float y) { _position.x = x; _position.y = y;}
+    float get_x_position() const { return _position.x; }
+    float get_y_position() const { return _position.y; }
+
     float get_width() const { return _dimensions.width; }
     float get_height() const { return _dimensions.height; }
 
@@ -24,6 +28,12 @@ public:
     bool is_left_collision() const { return _collisions.left; }
 
 private:
+
+    struct
+    {
+        float x = 0;
+        float y = 0;
+    } _position; // Position of the CENTER of the body
 
     struct
     {
@@ -45,6 +55,5 @@ private:
         bool right = false;
     } _collisions;
 
-    MapTile *_neighboring_tiles[9]{};
     float _pos_update_delta_ms = 0;
 };
