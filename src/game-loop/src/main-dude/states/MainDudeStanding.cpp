@@ -17,8 +17,7 @@ MainDudeBaseState *MainDudeStanding::update(MainDude& main_dude, uint32_t delta_
 
     // Other:
 
-    const auto velocity_x = main_dude._physics.get_x_velocity();
-    if (velocity_x != 0.0f)
+    if (main_dude._physics.get_x_velocity() != 0.0f)
     {
         return &main_dude._states.running;
     }

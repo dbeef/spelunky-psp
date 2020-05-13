@@ -3,12 +3,8 @@
 #include "LevelGenerator.hpp"
 #include "Collisions.hpp"
 
-#include <logger/log.h>
-#include <components/PhysicsComponent.hpp>
-
-// Using C-style <math.h> instead of <cmath> because of some symbols being
-// missing in the PSP's CPP standard library.
-
+// Using C-style <math.h> instead of <cmath> because of some symbols (namely std::copysign)
+// being missing in the PSP's CPP standard library.
 #include <math.h>
 
 namespace
@@ -176,8 +172,3 @@ PhysicsComponent::PhysicsComponent(float width, float height) : _dimensions{widt
 
 }
 
-void PhysicsComponent::add_velocity(float x, float y)
-{
-    _velocity.x += x;
-    _velocity.y += y;
-}
