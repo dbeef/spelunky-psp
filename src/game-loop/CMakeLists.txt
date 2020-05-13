@@ -5,6 +5,7 @@ add_library(GameLoop STATIC
         src/main-dude/MainDude.cpp
         src/main-dude/states/MainDudeStanding.cpp
         src/main-dude/states/MainDudeRunning.cpp
+        src/main-dude/states/MainDudePushing.cpp
         src/components/PhysicsComponent.cpp
         src/components/QuadComponent.cpp
         src/components/InputComponent.cpp
@@ -21,6 +22,7 @@ add_library(GameLoop STATIC
         include/main-dude/states/MainDudeBaseState.hpp
         include/main-dude/states/MainDudeRunning.hpp
         include/main-dude/states/MainDudeStanding.hpp
+        include/main-dude/states/MainDudePushing.hpp
 )
 
 target_include_directories(GameLoop
