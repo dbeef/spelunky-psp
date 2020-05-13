@@ -1,8 +1,3 @@
-//
-// Created by dbeef on 5/7/20.
-//
-
-#include <main-dude/MainDude.hpp>
 #include "main-dude/MainDude.hpp"
 #include "MapTileType.hpp"
 #include "Renderer.hpp"
@@ -17,22 +12,13 @@ namespace
 }
 
 MainDude::MainDude()
-    : _physics_component(MAIN_DUDE_WIDTH, MAIN_DUDE_HEIGHT)
-    , _quad_component(TextureType::MAIN_DUDE)
+    : _physics(MAIN_DUDE_WIDTH, MAIN_DUDE_HEIGHT)
+    , _quad(TextureType::MAIN_DUDE)
 {
     _states.current = &_states.standing;
-     _states.current->enter(*this);
+    _states.current->enter(*this);
 
-    _x = 3;
-    _y = 3;
-}
-
-MainDude::~MainDude()
-{
-    if (_render_entity_id != Renderer::INVALID_ENTITY)
-    {
-        Renderer::instance().mark_for_removal(_render_entity_id);
-    }
+    _physics.set_position(3, 3);
 }
 
 void MainDude::update(uint32_t delta_time_ms)

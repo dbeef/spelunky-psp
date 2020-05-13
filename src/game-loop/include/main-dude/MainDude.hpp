@@ -19,38 +19,31 @@ class MainDude : public GameObject
 public:
 
     MainDude();
-    ~MainDude() override;
     void update(uint32_t delta_time_ms) override;
 
 private:
 
-    RenderEntityID _render_entity_id;
-    bool _facing_left;
-
-    // Position of the CENTER of the body
-    float _x = 0;
-    float _y = 0;
-
     friend class PhysicsComponent;
-    PhysicsComponent _physics_component;
-
     friend class QuadComponent;
-    QuadComponent _quad_component;
-
     friend class InputComponent;
-    InputComponent _input_component;
-
     friend class AnimationComponent;
-    AnimationComponent _animation_component;
+    PhysicsComponent _physics;
+    QuadComponent _quad;
+    InputComponent _input;
+    AnimationComponent _animation;
 
     friend class MainDudeBaseState;
     friend class MainDudeRunning;
     friend class MainDudeStanding;
-
     struct
     {
         MainDudeBaseState* current = nullptr;
         MainDudeRunning running;
         MainDudeStanding standing;
     } _states;
+
+    struct
+    {
+        bool facing_left;
+    } _other;
 };

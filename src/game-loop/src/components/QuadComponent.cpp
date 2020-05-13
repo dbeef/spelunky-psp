@@ -1,3 +1,4 @@
+#include <main-dude/MainDude.hpp>
 #include "main-dude/MainDude.hpp"
 #include "Renderer.hpp"
 #include "TextureBank.hpp"
@@ -8,7 +9,7 @@ void QuadComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
     if (_frame_changed)
     {
         const auto texture_region = TextureBank::instance().get_region(_texture_type, _frame_index);
-        const bool vflip = !main_dude._facing_left;
+        const bool vflip = !main_dude._other.facing_left;
 
         texture_region.set_quad_xy(_quad);
         texture_region.set_quad_uv(_quad, vflip);
@@ -18,11 +19,11 @@ void QuadComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
     }
 
     // Make quad center to be at 0.0:
-    const float pos_x = main_dude._x - main_dude._physics_component.get_width() / 2;
-    const float pos_y = main_dude._y - main_dude._physics_component.get_height() / 2;
+    const float pos_x = main_dude._physics.get_x_position() - main_dude._physics.get_width() / 2;
+    const float pos_y = main_dude._physics.get_y_position() - main_dude._physics.get_height() / 2;
 
     _quad.set_translation(pos_x, pos_y);
-    _quad.set_scale(main_dude._physics_component.get_width(), main_dude._physics_component.get_height());
+    _quad.set_scale(main_dude._physics.get_width(), main_dude._physics.get_height());
     _quad.write();
 }
 

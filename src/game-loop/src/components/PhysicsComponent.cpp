@@ -64,8 +64,8 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
 
         MapTile* neighbours[9] = { nullptr };
 
-        float last_step_x = main_dude._x;
-        float last_step_y = main_dude._y;
+        float last_step_x = _position.x;
+        float last_step_y = _position.y;
 
         float temp_velocity_x = _velocity.x;
         float temp_velocity_y = _velocity.y;
@@ -81,13 +81,13 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
             {
                 // Step on X axis
 
-                main_dude._x += copysign(smallest_position_step, temp_velocity_x);
-                collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), main_dude._x, main_dude._y, neighbours);
-                const auto* overlapping_tile = collisions::overlaps(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
+                _position.x += copysign(smallest_position_step, temp_velocity_x);
+                collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), _position.x, _position.y, neighbours);
+                const auto* overlapping_tile = collisions::overlaps(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
                 if (overlapping_tile)
                 {
                     // step back
-                    main_dude._x = last_step_x;
+                    _position.x = last_step_x;
 
                     if (_velocity.x < 0.0f)
                     {
@@ -103,7 +103,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 }
                 else
                 {
-                    last_step_x = main_dude._x;
+                    last_step_x = _position.x;
                     temp_velocity_x = move_to_zero(temp_velocity_x, smallest_position_step);
                 }
             }
@@ -112,13 +112,13 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
             {
                 // Step on Y axis
 
-                main_dude._y += copysign(smallest_position_step, temp_velocity_y);
-                collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), main_dude._x, main_dude._y, neighbours);
-                const auto* overlapping_tile = collisions::overlaps(neighbours, main_dude._x, main_dude._y, _dimensions.width, _dimensions.height);
+                _position.y += copysign(smallest_position_step, temp_velocity_y);
+                collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), _position.x,  _position.y, neighbours);
+                const auto* overlapping_tile = collisions::overlaps(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
                 if (overlapping_tile)
                 {
                     // step back
-                    main_dude._y = last_step_y;
+                    _position.y = last_step_y;
 
                     if (_velocity.y < 0.0f)
                     {
@@ -134,7 +134,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 }
                 else
                 {
-                    last_step_y = main_dude._y;
+                    last_step_y = _position.y;
                     temp_velocity_y = move_to_zero(temp_velocity_y, smallest_position_step);
                 }
             }
