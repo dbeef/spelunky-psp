@@ -2,9 +2,19 @@
 #include "Input.hpp"
 #include "main-dude/MainDude.hpp"
 
+namespace
+{
+    const uint32_t POLLING_INTERVAL = 16;
+}
+
 void InputComponent::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
-    // TODO: Input polling timer
+    _polling_timer += delta_time_ms;
+    if (_polling_timer < POLLING_INTERVAL)
+    {
+        return;
+    }
+
     Input& input = Input::instance();
 
     if (input.square())
@@ -23,5 +33,5 @@ void InputComponent::update(MainDude& main_dude, uint32_t delta_time_ms)
         }
     }
 
+    _polling_timer = 0;
 }
-
