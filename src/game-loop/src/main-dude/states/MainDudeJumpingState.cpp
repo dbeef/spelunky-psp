@@ -44,5 +44,16 @@ MainDudeBaseState *MainDudeJumping::handle_input(MainDude& main_dude, const Inpu
         main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
 
+    if (input.bumper_l())
+    {
+        main_dude._physics.set_max_x_velocity(MainDude::MAX_RUNNING_VELOCITY_X);
+        main_dude._animation.set_time_per_frame_ms(50);
+    }
+    else
+    {
+        main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
+        main_dude._animation.set_time_per_frame_ms(75);
+    }
+
     return this;
 }
