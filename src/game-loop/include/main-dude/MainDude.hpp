@@ -6,7 +6,6 @@
 
 #include "components/PhysicsComponent.hpp"
 #include "components/QuadComponent.hpp"
-#include "components/InputComponent.hpp"
 #include "components/AnimationComponent.hpp"
 
 #include "main-dude/states/MainDudeRunning.hpp"
@@ -35,11 +34,9 @@ private:
 
     friend class PhysicsComponent;
     friend class QuadComponent;
-    friend class InputComponent;
     friend class AnimationComponent;
     PhysicsComponent _physics;
     QuadComponent _quad;
-    InputComponent _input;
     AnimationComponent _animation;
 
     friend class MainDudeBaseState;

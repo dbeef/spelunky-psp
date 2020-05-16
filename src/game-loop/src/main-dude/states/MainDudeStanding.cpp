@@ -1,5 +1,6 @@
 #include "main-dude/states/MainDudeStanding.hpp"
 #include "main-dude/MainDude.hpp"
+#include "Input.hpp"
 
 void MainDudeStanding::enter(MainDude& main_dude)
 {
@@ -11,7 +12,6 @@ MainDudeBaseState *MainDudeStanding::update(MainDude& main_dude, uint32_t delta_
 {
     // Update components:
 
-    main_dude._input.update(main_dude, delta_time_ms);
     main_dude._physics.update(main_dude, delta_time_ms);
     main_dude._quad.update(main_dude, delta_time_ms);
 
@@ -41,7 +41,23 @@ MainDudeBaseState *MainDudeStanding::update(MainDude& main_dude, uint32_t delta_
     }
 }
 
-MainDudeBaseState *MainDudeStanding::handle_input(MainDude &, const Input &input)
+MainDudeBaseState *MainDudeStanding::handle_input(MainDude& main_dude, const Input &input)
 {
+    if (input.square())
+    {
+        main_dude._physics.add_velocity(-0.025f, 0.0f);
+    }
+    if (input.circle())
+    {
+        main_dude._physics.add_velocity(+0.025f, 0.0f);
+    }
+    if (input.triangle())
+    {
+        if (main_dude._physics.is_bottom_collision())
+        {
+            main_dude._physics.add_velocity(0.0f, -0.18f);
+        }
+    }
+
     return this;
 }
