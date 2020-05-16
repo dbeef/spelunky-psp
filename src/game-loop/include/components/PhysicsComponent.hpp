@@ -25,8 +25,6 @@ public:
     void set_max_x_velocity(float x) { _velocity.max_x = x;}
     void set_max_y_velocity(float y) { _velocity.max_y = y;}
 
-    void set_friction(float f) { _friction_coefficient = f; }
-
     bool is_bottom_collision() const { return _collisions.bottom; }
     bool is_upper_collision() const { return _collisions.upper; }
     bool is_right_collision() const { return _collisions.right; }
@@ -62,6 +60,5 @@ private:
         bool right = false;
     } _collisions;
 
-    float _friction_coefficient = 0;
     int32_t _pos_update_delta_ms = 0;
 };
