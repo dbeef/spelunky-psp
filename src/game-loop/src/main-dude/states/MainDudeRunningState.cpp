@@ -3,8 +3,12 @@
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 
+// FIXME: Technically, this state is walking.
+
 void MainDudeRunningState::enter(MainDude &main_dude)
 {
+    main_dude._physics.set_friction(MainDude::DEFAULT_FRICTION_COEFFICIENT);
+    main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_5_LAST),
                                75, true);
@@ -41,15 +45,15 @@ MainDudeBaseState *MainDudeRunningState::handle_input(MainDude& main_dude, const
 {
     if (input.square())
     {
-        main_dude._physics.add_velocity(-0.025f, 0.0f);
+        main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
     }
     if (input.circle())
     {
-        main_dude._physics.add_velocity(+0.025f, 0.0f);
+        main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
     if (input.triangle())
     {
-        main_dude._physics.add_velocity(0.0f, -0.18f);
+        main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;
     }
     if (input.cross())

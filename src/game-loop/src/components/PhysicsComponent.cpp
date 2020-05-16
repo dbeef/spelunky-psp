@@ -6,14 +6,11 @@
 // Using C-style <math.h> instead of <cmath> because of some symbols (namely std::copysign)
 // being missing in the PSP's CPP standard library.
 #include <math.h>
+#include <components/PhysicsComponent.hpp>
 
 namespace
 {
     constexpr float smallest_position_step = 1.0f / 16.0f;
-
-    constexpr double default_max_x_speed = 0.0575f;
-    constexpr double default_max_y_speed = 0.1875f;
-    constexpr double default_friction = 0.017f;
     constexpr float default_gravity = 0.011875f;
     constexpr float default_bouncing_factor_x = 0.15f;
     constexpr float default_bouncing_factor_y = 0.35f;
@@ -92,9 +89,9 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
             }
         }
 
-        while (temp_velocity_x != 0.0f || temp_velocity_y != 0.0f)
+        while (std::abs(temp_velocity_x) >= smallest_position_step || std::abs(temp_velocity_y) >= smallest_position_step)
         {
-            if (temp_velocity_x != 0.0f)
+            if (std::abs(temp_velocity_x) > smallest_position_step)
             {
                 // Step on X axis
 
@@ -124,7 +121,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 }
             }
 
-            if (temp_velocity_y != 0.0f)
+            if (std::abs(temp_velocity_y) > smallest_position_step)
             {
                 // Step on Y axis
 
@@ -159,13 +156,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
         if (_collisions.bottom)
         {
             // Apply friction
-            _velocity.x += copysign(default_friction, -_velocity.x);
-
-            // For near-zero speed make it zero:
-            if (std::abs(_velocity.x) <= default_friction)
-            {
-                _velocity.x = 0;
-            }
+            _velocity.x = move_to_zero(_velocity.x, _friction_coefficient);
         }
         else
         {
@@ -175,14 +166,14 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
 
         // Limit speed
 
-        if (std::abs(_velocity.x) > default_max_x_speed)
+        if (std::abs(_velocity.x) > _velocity.max_x)
         {
-            _velocity.x = copysign(default_max_x_speed, _velocity.x);
+            _velocity.x = copysign(_velocity.max_x, _velocity.x);
         }
 
-        if (std::abs(_velocity.y) > default_max_y_speed)
+        if (std::abs(_velocity.y) > _velocity.max_y)
         {
-            _velocity.y = copysign(default_max_y_speed, _velocity.y);
+            _velocity.y = copysign(_velocity.max_y, _velocity.y);
         }
     }
 }

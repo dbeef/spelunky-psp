@@ -5,7 +5,8 @@
 
 void MainDudeCrawling::enter(MainDude& main_dude)
 {
-    // TODO: Trim speed, either here or in PhysicsComponent::update
+    main_dude._physics.set_max_x_velocity(MainDude::MAX_CRAWLING_VELOCITY_X);
+    main_dude._physics.set_friction(MainDude::CRAWLING_FRICTION_COEFFICIENT);
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::CRAWLING_LEFT_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::CRAWLING_LEFT_9_LAST),
                                75, true);
@@ -42,17 +43,15 @@ MainDudeBaseState *MainDudeCrawling::handle_input(MainDude& main_dude, const Inp
 {
     if (input.square())
     {
-        main_dude._physics.add_velocity(-0.0051f, 0.0f);
-        // crawling state
+        main_dude._physics.add_velocity(-MainDude::CRAWLING_DELTA_X, 0.0f);
     }
     if (input.circle())
     {
-        main_dude._physics.add_velocity(+0.0051f, 0.0f);
-        // crawling state
+        main_dude._physics.add_velocity(MainDude::CRAWLING_DELTA_X, 0.0f);
     }
     if (input.triangle())
     {
-        main_dude._physics.add_velocity(0.0f, -0.18f);
+        main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;
     }
     if (!input.cross())
