@@ -50,7 +50,7 @@ void Renderer::render() const
 
         DebugGlCall(glVertexPointer(2, GL_FLOAT, stride, vertices));
         DebugGlCall(glTexCoordPointer(2, GL_FLOAT, stride, uvs));
-
+        // FIXME: Spontaneously generates SEGFAULT on application start.
         DebugGlCall(glDrawElements(GL_TRIANGLES, entity.indices_count, GL_UNSIGNED_SHORT, entity.indices));
     }
 }
