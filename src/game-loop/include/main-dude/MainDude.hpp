@@ -74,9 +74,9 @@ private:
     static constexpr float DEFAULT_DELTA_X = 0.01f;
     static constexpr float DEFAULT_MAX_X_VELOCITY = 0.050f;
 
-    static constexpr float MAX_RUNNING_VELOCITY_X = 0.125f;
+    static constexpr float MAX_RUNNING_VELOCITY_X = 0.15f;
     static constexpr float MAX_CRAWLING_VELOCITY_X = 0.008f;
     static constexpr float CRAWLING_DELTA_X = 0.008f;
 
-    static constexpr float JUMP_SPEED = 0.35f;
+    static constexpr float JUMP_SPEED = 0.25f;
 };

@@ -19,7 +19,7 @@ namespace
     const float MAIN_DUDE_QUAD_WIDTH = 1.0f;
     const float MAIN_DUDE_QUAD_HEIGHT = 1.0f;
 
-    const float MAIN_DUDE_MAX_Y_VELOCITY = 0.128f;
+    const float MAIN_DUDE_MAX_Y_VELOCITY = 0.26f;
 }
 
 MainDude::MainDude()
