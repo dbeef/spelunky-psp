@@ -2,14 +2,16 @@
 
 #include "RenderEntity.hpp"
 #include "GameObject.hpp"
+#include "MainDudeSpritesheetFrames.hpp"
+
 #include "components/PhysicsComponent.hpp"
 #include "components/QuadComponent.hpp"
 #include "components/InputComponent.hpp"
 #include "components/AnimationComponent.hpp"
 
-#include "MainDudeSpritesheetFrames.hpp"
 #include "main-dude/states/MainDudeRunning.hpp"
 #include "main-dude/states/MainDudeStanding.hpp"
+#include "main-dude/states/MainDudePushing.hpp"
 
 #include <vector>
 
@@ -35,11 +37,13 @@ private:
     friend class MainDudeBaseState;
     friend class MainDudeRunning;
     friend class MainDudeStanding;
+    friend class MainDudePushing;
     struct
     {
         MainDudeBaseState* current = nullptr;
         MainDudeRunning running;
         MainDudeStanding standing;
+        MainDudePushing pushing;
     } _states;
 
     struct

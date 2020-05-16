@@ -23,6 +23,15 @@ MainDude::MainDude()
 
 void MainDude::update(uint32_t delta_time_ms)
 {
+    // Update generic properties:
+    
+    if (_physics.get_x_velocity() != 0.0f)
+    {
+        _other.facing_left = _physics.get_x_velocity() < 0.0f;
+    }
+    
+    // Update current state:
+    
     assert(_states.current);
     auto new_state = _states.current->update(*this, delta_time_ms);
 
