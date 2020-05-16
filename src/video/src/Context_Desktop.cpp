@@ -37,10 +37,12 @@ bool Video::setup_gl()
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
     //  Create a window
-    auto surface = SDL_SetVideoMode(get_window_width(),
-                                    get_window_height(),
+    auto surface = SDL_SetVideoMode(0,
+                                    0,
                                     0, // current display's bpp
-                                    SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE);
+                                    SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE | SDL_FULLSCREEN);
+
+
 
     if (!surface)
     {
@@ -54,6 +56,10 @@ bool Video::setup_gl()
         log_error("Error while loading ptrs to OpenGL functions");
         return false;
     }
+
+    _width = surface->w;
+    _height = surface->h;
+    _aspect = static_cast<float>(_width) / _height;
 
     DebugGlCall(glEnable(GL_TEXTURE_2D));
     DebugGlCall(glShadeModel(GL_SMOOTH));

@@ -10,7 +10,11 @@
 #include "graphics_utils/DebugGlCall.hpp"
 #include "logger/log.h"
 
-bool Video::setup_gl() {
+bool Video::setup_gl()
+{
+    _width = 480;
+    _height = 272;
+    _aspect = static_cast<float>(_width) / _height;
 
     log_info("Entered Video::setupGL");
 

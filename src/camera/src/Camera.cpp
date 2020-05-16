@@ -38,14 +38,16 @@ void Camera::update_gl_modelview_matrix()
 
 void Camera::update_gl_projection_matrix() const
 {
-    DebugGlCall(glViewport(0, 0, (float) (Video::get_window_width()), (float) (Video::get_window_height())));
+    const auto& video = Video::instance();
+
+    DebugGlCall(glViewport(0, 0, (float) (video.get_window_width()), (float) (video.get_window_height())));
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
 
     const float coeff = 6.0f;
 
-    DebugGlCall(glOrtho(-1 * coeff * Video::get_aspect(),
-                         1 * coeff * Video::get_aspect(),
+    DebugGlCall(glOrtho(-1 * coeff * video.get_aspect(),
+                         1 * coeff * video.get_aspect(),
                          1 * coeff,
                         -1 * coeff,
                         -1 * coeff,
