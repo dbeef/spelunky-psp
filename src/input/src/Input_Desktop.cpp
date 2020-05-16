@@ -8,7 +8,12 @@ void Input::poll()
 
     while (SDL_PollEvent(&event))
     {
-        _exit = event.type == SDL_QUIT;
+        _exit = event.type == SDL_QUIT || (event.type == SDL_EventType::SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE);
+        if (_exit)
+        {
+            // FIXME: Better exit handling
+            std::exit(0);
+        }
 
         if (event.type == SDL_EventType::SDL_KEYDOWN || event.type == SDL_EventType::SDL_KEYUP)
         {

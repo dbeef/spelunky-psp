@@ -38,14 +38,14 @@ void Video::tear_down_gl()
     SDL_Quit();
 }
 
-uint16_t Video::get_window_width()
+uint16_t Video::get_window_width() const
 {
-    return 480;
+    return _width;
 }
 
-uint16_t Video::get_window_height()
+uint16_t Video::get_window_height() const
 {
-    return 272;
+    return _height;
 }
 
 void Video::swap_buffers() const
@@ -82,7 +82,7 @@ void Video::run_loop(const std::function<void(uint32_t delta_time_ms)> &loop_cal
     }
 }
 
-float Video::get_aspect()
+float Video::get_aspect() const
 {
-    return static_cast<float>(Video::get_window_width()) / Video::get_window_height();
+    return _aspect;
 }

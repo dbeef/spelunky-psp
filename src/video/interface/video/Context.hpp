@@ -20,11 +20,11 @@ public:
 
     static Video &instance();
 
-    static float get_aspect();
+    float get_aspect() const;
 
-    static uint16_t get_window_width();
+    uint16_t get_window_width() const;
 
-    static uint16_t get_window_height();
+    uint16_t get_window_height() const;
 
     bool setup_gl();
 
@@ -37,6 +37,10 @@ public:
     inline void swap_buffers() const;
 
 private:
+
+    uint16_t _width = 0;
+    uint16_t _height = 0;
+    float _aspect = 0;
 
     Timestep _timestep;
     static Video *_instance;
