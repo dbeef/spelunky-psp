@@ -6,7 +6,6 @@
 void MainDudeCrawling::enter(MainDude& main_dude)
 {
     main_dude._physics.set_max_x_velocity(MainDude::MAX_CRAWLING_VELOCITY_X);
-    main_dude._physics.set_friction(MainDude::CRAWLING_FRICTION_COEFFICIENT);
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::CRAWLING_LEFT_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::CRAWLING_LEFT_9_LAST),
                                75, true);

@@ -13,6 +13,7 @@ namespace
     constexpr float smallest_position_step = 1.0f / 128.0f;
 
     constexpr float default_gravity = 0.011875f;
+    constexpr float default_friction = 0.005f;
     constexpr float default_bouncing_factor_x = 0.15f;
     constexpr float default_bouncing_factor_y = 0.35f;
     constexpr uint16_t default_pos_update_delta_ms = 15;
@@ -157,7 +158,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
         if (_collisions.bottom)
         {
             // Apply friction
-            _velocity.x = move_to_zero(_velocity.x, _friction_coefficient);
+            _velocity.x = move_to_zero(_velocity.x, default_friction);
         }
         else
         {

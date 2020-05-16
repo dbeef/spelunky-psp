@@ -3,7 +3,6 @@
 
 void MainDudePushingState::enter(MainDude& main_dude)
 {
-    main_dude._physics.set_friction(MainDude::DEFAULT_FRICTION_COEFFICIENT);
     main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::PUSH_LEFT_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::PUSH_LEFT_6_LAST),
