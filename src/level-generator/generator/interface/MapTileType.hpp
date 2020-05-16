@@ -51,5 +51,9 @@ enum class MapTileType : std::uint32_t {
     SHOP_MUGSHOT_4,                 // 40
     ALTAR_LEFT,                     // 41
     ALTAR_RIGHT,                    // 42
-    _SIZE                           // 43 Total elements
+    CAVE_BG_1,                      // 43
+    CAVE_BG_2,                      // 44
+    CAVE_BG_3,                      // 45
+    CAVE_BG_4,                      // 46
+    _SIZE                           // 47 Total elements
 };
