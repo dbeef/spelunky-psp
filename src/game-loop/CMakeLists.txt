@@ -12,7 +12,6 @@ add_library(GameLoop STATIC
         src/main-dude/states/MainDudeJumpingState.cpp
         src/components/PhysicsComponent.cpp
         src/components/QuadComponent.cpp
-        src/components/InputComponent.cpp
         src/components/AnimationComponent.cpp
         interface/GameLoop.hpp
         interface/GameState.hpp
@@ -20,7 +19,6 @@ add_library(GameLoop STATIC
         include/GameObject.hpp
         include/components/PhysicsComponent.hpp
         include/components/QuadComponent.hpp
-        include/components/InputComponent.hpp
         include/components/AnimationComponent.hpp
         include/main-dude/MainDudeSpritesheetFrames.hpp
         include/main-dude/states/MainDudeBaseState.hpp
