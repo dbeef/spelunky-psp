@@ -74,5 +74,18 @@ MainDudeBaseState *MainDudeStandingState::handle_input(MainDude& main_dude, cons
         return &main_dude._states.throwing;
     }
 
+    if (input.bumper_l()) // FIXME: Awkward key mapping, change once camera following is implemented
+    {
+        const auto* exit_tile = main_dude.is_overlaping_exit();
+        if (exit_tile)
+        {
+            main_dude._physics.set_position(
+                    exit_tile->x + main_dude._quad.get_quad_width() / 2,
+                    exit_tile->y + main_dude._quad.get_quad_height() / 2);
+
+            return &main_dude._states.exiting;
+        }
+    }
+
     return this;
 }

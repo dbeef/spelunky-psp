@@ -58,7 +58,7 @@ void collisions::get_neighbouring_tiles(Level &level, float x, float y, MapTile 
     out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::RIGHT_DOWN)] = right_down;
 }
 
-MapTile *collisions::overlaps_strict(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height)
+MapTile *collisions::overlaps_strict(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height, bool collidable)
 {
     bool condition_x;
     bool condition_y;
@@ -76,7 +76,7 @@ MapTile *collisions::overlaps_strict(MapTile **neighboring_tiles, float x_center
             continue;
         }
 
-        if (!neighboring_tiles[a]->collidable)
+        if (neighboring_tiles[a]->collidable != collidable)
         {
             continue;
         }
@@ -93,7 +93,31 @@ MapTile *collisions::overlaps_strict(MapTile **neighboring_tiles, float x_center
     return nullptr;
 }
 
-MapTile *collisions::overlaps(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height)
+MapTile *collisions::overlaps(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height, bool collidable)
+{
+    for (int a = 0; a < 9; a++)
+    {
+
+        if (neighboring_tiles[a] == nullptr)
+        {
+            continue;
+        }
+
+        if (neighboring_tiles[a]->collidable != collidable)
+        {
+            continue;
+        }
+
+        if (overlaps(neighboring_tiles[a], x_center, y_center, width, height))
+        {
+            return neighboring_tiles[a];
+        }
+    }
+
+    return nullptr;
+}
+
+bool collisions::overlaps(MapTile *tile, float x_center, float y_center, float width, float height)
 {
     bool condition_x;
     bool condition_y;
@@ -104,26 +128,8 @@ MapTile *collisions::overlaps(MapTile **neighboring_tiles, float x_center, float
     const float tile_w = 1.0f;
     const float tile_h = 1.0f;
 
-    for (int a = 0; a < 9; a++) {
+    condition_x = x_center + half_w > tile->x && x_center - half_w < tile->x + tile_w;
+    condition_y = y_center + half_h > tile->y && y_center - half_h < tile->y + tile_h;
 
-        if (neighboring_tiles[a] == nullptr)
-        {
-            continue;
-        }
-
-        if (!neighboring_tiles[a]->collidable)
-        {
-            continue;
-        }
-
-        condition_x = x_center + half_w > neighboring_tiles[a]->x && x_center - half_w < neighboring_tiles[a]->x + tile_w;
-        condition_y = y_center + half_h > neighboring_tiles[a]->y && y_center - half_h < neighboring_tiles[a]->y + tile_h;
-
-        if (condition_x && condition_y)
-        {
-            return neighboring_tiles[a];
-        }
-    }
-
-    return nullptr;
+    return condition_x && condition_y;
 }

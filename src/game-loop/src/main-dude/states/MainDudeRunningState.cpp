@@ -1,3 +1,4 @@
+#include <main-dude/MainDude.hpp>
 #include "main-dude/states/MainDudeRunningState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
@@ -71,6 +72,19 @@ MainDudeBaseState *MainDudeRunningState::handle_input(MainDude& main_dude, const
     if (input.bumper_r())
     {
         return &main_dude._states.throwing;
+    }
+
+    if (input.bumper_l()) // FIXME: Awkward key mapping, change once camera following is implemented
+    {
+        const auto* exit_tile = main_dude.is_overlaping_exit();
+        if (exit_tile)
+        {
+            main_dude._physics.set_position(
+                    exit_tile->x + main_dude._quad.get_quad_width() / 2,
+                    exit_tile->y + main_dude._quad.get_quad_height() / 2);
+
+            return &main_dude._states.exiting;
+        }
     }
 
     return this;

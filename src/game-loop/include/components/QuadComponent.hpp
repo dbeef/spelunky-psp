@@ -23,6 +23,9 @@ public:
     template <class T>
     T get_current_frame() const { return static_cast<T>(_frame_index); }
 
+    float get_quad_width() const { return _quad_dimensions.width; }
+    float get_quad_height() const { return _quad_dimensions.height; }
+
 private:
 
     const struct
