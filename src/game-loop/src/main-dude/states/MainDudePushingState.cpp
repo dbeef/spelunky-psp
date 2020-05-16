@@ -65,5 +65,10 @@ MainDudeBaseState *MainDudePushingState::handle_input(MainDude& main_dude, const
         return &main_dude._states.ducking;
     }
 
+    if (input.bumper_r())
+    {
+        return &main_dude._states.throwing;
+    }
+
     return this;
 }
