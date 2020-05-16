@@ -58,6 +58,41 @@ void collisions::get_neighbouring_tiles(Level &level, float x, float y, MapTile 
     out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::RIGHT_DOWN)] = right_down;
 }
 
+MapTile *collisions::overlaps_strict(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height)
+{
+    bool condition_x;
+    bool condition_y;
+
+    const float half_w = width / 2;
+    const float half_h = height / 2;
+
+    const float tile_w = 1.0f;
+    const float tile_h = 1.0f;
+
+    for (int a = 0; a < 9; a++) {
+
+        if (neighboring_tiles[a] == nullptr)
+        {
+            continue;
+        }
+
+        if (!neighboring_tiles[a]->collidable)
+        {
+            continue;
+        }
+
+        condition_x = x_center + half_w >= neighboring_tiles[a]->x && x_center - half_w <= neighboring_tiles[a]->x + tile_w;
+        condition_y = y_center + half_h >= neighboring_tiles[a]->y && y_center - half_h <= neighboring_tiles[a]->y + tile_h;
+
+        if (condition_x && condition_y)
+        {
+            return neighboring_tiles[a];
+        }
+    }
+
+    return nullptr;
+}
+
 MapTile *collisions::overlaps(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height)
 {
     bool condition_x;
@@ -81,7 +116,7 @@ MapTile *collisions::overlaps(MapTile **neighboring_tiles, float x_center, float
             continue;
         }
 
-        condition_x = x_center + half_w > neighboring_tiles[a]->x && x_center < neighboring_tiles[a]->x + tile_w + half_w;
+        condition_x = x_center + half_w > neighboring_tiles[a]->x && x_center - half_w < neighboring_tiles[a]->x + tile_w;
         condition_y = y_center + half_h > neighboring_tiles[a]->y && y_center - half_h < neighboring_tiles[a]->y + tile_h;
 
         if (condition_x && condition_y)

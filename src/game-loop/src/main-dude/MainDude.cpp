@@ -20,8 +20,8 @@ MainDude::MainDude()
 {
     _states.current = &_states.standing;
     _states.current->enter(*this);
-
     _physics.set_position(3, 3);
+    update(0);
 }
 
 void MainDude::update(uint32_t delta_time_ms)
