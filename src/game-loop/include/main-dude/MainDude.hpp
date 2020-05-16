@@ -9,6 +9,7 @@
 #include "components/AnimationComponent.hpp"
 
 #include "main-dude/states/MainDudeRunningState.hpp"
+#include "main-dude/states/MainDudeExitingState.hpp"
 #include "main-dude/states/MainDudeStandingState.hpp"
 #include "main-dude/states/MainDudePushingState.hpp"
 #include "main-dude/states/MainDudeCrawlingState.hpp"
@@ -49,6 +50,7 @@ private:
     friend class MainDudeFalling;
     friend class MainDudeJumping;
     friend class MainDudeThrowingState;
+    friend class MainDudeExitingState;
     struct
     {
         MainDudeBaseState* current = nullptr;
@@ -60,6 +62,7 @@ private:
         MainDudeFalling falling; // TODO: Postfixes
         MainDudeJumping jumping; // TODO: Postfixes
         MainDudeThrowingState throwing;
+        MainDudeExitingState exiting;
     } _states;
 
     struct
