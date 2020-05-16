@@ -10,3 +10,8 @@ MainDudeBaseState* MainDudeCrawling::update(MainDude& main_dude, uint32_t delta_
     // TODO
     return this;
 }
+
+MainDudeBaseState *MainDudeCrawling::handle_input(MainDude &, const Input &input)
+{
+    return this;
+}

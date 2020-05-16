@@ -10,3 +10,8 @@ MainDudeBaseState* MainDudeJumping::update(MainDude& main_dude, uint32_t delta_t
     // TODO
     return this;
 }
+
+MainDudeBaseState *MainDudeJumping::handle_input(MainDude &, const Input &input)
+{
+    return this;
+}
