@@ -41,14 +41,18 @@ MainDudeBaseState *MainDudePushingState::handle_input(MainDude& main_dude, const
     {
         main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
     }
+    else if (main_dude._other.facing_left)
+    {
+        return &main_dude._states.running;
+    }
+
     if (input.circle())
     {
         main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
-
-    if (!input.square() && !input.circle())
+    else if (!main_dude._other.facing_left)
     {
-        return &main_dude._states.standing;
+        return &main_dude._states.running;
     }
 
     if (input.triangle())

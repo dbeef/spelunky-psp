@@ -47,6 +47,14 @@ void Input::poll()
             {
                 _cross = v;
             }
+            else if (key == SDLK_LSHIFT)
+            {
+                _bumper_l = v;
+            }
+            else if (key == SDLK_q)
+            {
+                _bumper_r = v;
+            }
         }
     }
 }

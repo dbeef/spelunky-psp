@@ -22,6 +22,9 @@ public:
     inline bool triangle() const { return _triangle; }
     inline bool cross() const { return _cross; }
 
+    inline bool bumper_l() const { return _bumper_l; }
+    inline bool bumper_r() const { return _bumper_r; }
+
 private:
 
     bool _exit = false;
@@ -35,6 +38,9 @@ private:
     bool _circle = false;
     bool _triangle = false;
     bool _cross = false;
+
+    bool _bumper_l = false;
+    bool _bumper_r = false;
 
     static Input* _input;
 };

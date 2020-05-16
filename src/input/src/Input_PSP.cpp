@@ -25,4 +25,7 @@ void Input::poll()
     _cross = pad.Buttons & PSP_CTRL_CROSS;
     _square = pad.Buttons & PSP_CTRL_SQUARE;
     _circle = pad.Buttons & PSP_CTRL_CIRCLE;
+
+    _bumper_l = pad.Buttons & PSP_CTRL_LTRIGGER;
+    _bumper_r = pad.Buttons & PSP_CTRL_RTRIGGER;
 }
