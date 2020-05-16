@@ -1,4 +1,3 @@
-#include <main-dude/MainDude.hpp>
 #include "main-dude/MainDude.hpp"
 #include "Renderer.hpp"
 #include "TextureBank.hpp"
@@ -19,15 +18,17 @@ void QuadComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
     }
 
     // Make quad center to be at 0.0:
-    const float pos_x = main_dude._physics.get_x_position() - main_dude._physics.get_width() / 2;
-    const float pos_y = main_dude._physics.get_y_position() - main_dude._physics.get_height() / 2;
+    const float pos_x = main_dude._physics.get_x_position() - (_quad_dimensions.width / 2);
+    const float pos_y = main_dude._physics.get_y_position() - (_quad_dimensions.height / 2);
 
     _quad.set_translation(pos_x, pos_y);
-    _quad.set_scale(main_dude._physics.get_width(), main_dude._physics.get_height());
+    _quad.set_scale(_quad_dimensions.width, _quad_dimensions.height);
     _quad.write();
 }
 
-QuadComponent::QuadComponent(TextureType type) : _texture_type(type)
+QuadComponent::QuadComponent(TextureType type, float quad_width, float quad_height)
+    : _texture_type(type)
+    , _quad_dimensions {quad_width, quad_height }
 {
     RenderEntity entity;
     entity.vertices = _quad.get_vertices_transformed();

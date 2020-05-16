@@ -1,5 +1,3 @@
-#include <logger/log.h>
-#include <main-dude/MainDude.hpp>
 #include "main-dude/MainDude.hpp"
 #include "MapTileType.hpp"
 #include "Renderer.hpp"
@@ -10,14 +8,21 @@
 
 namespace
 {
-    const float MAIN_DUDE_WIDTH = 1.0f;
-    const float MAIN_DUDE_HEIGHT = 1.0f;
+    // Main dude sprites are of 16x16 pixels, but the main dude fits
+    // into the portion with 2px margin on the left and right side of a sprite,
+    // thus making collision box smaller:
+    const float MAIN_DUDE_PHYSICAL_WIDTH = 1.0f - 2 * (2.0f / 16.0f);
+    const float MAIN_DUDE_PHYSICAL_HEIGHT = 1.0f;
+
+    const float MAIN_DUDE_QUAD_WIDTH = 1.0f;
+    const float MAIN_DUDE_QUAD_HEIGHT = 1.0f;
+
     const float MAIN_DUDE_MAX_Y_VELOCITY = 0.128f;
 }
 
 MainDude::MainDude()
-    : _physics(MAIN_DUDE_WIDTH, MAIN_DUDE_HEIGHT)
-    , _quad(TextureType::MAIN_DUDE)
+    : _physics(MAIN_DUDE_PHYSICAL_WIDTH, MAIN_DUDE_PHYSICAL_HEIGHT)
+    , _quad(TextureType::MAIN_DUDE, MAIN_DUDE_QUAD_WIDTH, MAIN_DUDE_QUAD_HEIGHT)
 {
     _states.current = &_states.standing;
     _states.current->enter(*this);

@@ -12,7 +12,7 @@ class QuadComponent
 {
 public:
 
-    explicit QuadComponent(TextureType type);
+    explicit QuadComponent(TextureType type, float quad_width, float quad_height);
     ~QuadComponent();
     void update(MainDude&, uint32_t delta_time_ms);
 
@@ -24,6 +24,12 @@ public:
     T get_current_frame() const { return static_cast<T>(_frame_index); }
 
 private:
+
+    const struct
+    {
+        float width;
+        float height;
+    } _quad_dimensions;
 
     std::size_t _frame_index = 0;
     bool _frame_changed = true;

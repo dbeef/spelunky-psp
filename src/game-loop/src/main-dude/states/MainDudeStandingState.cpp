@@ -5,6 +5,7 @@
 
 void MainDudeStandingState::enter(MainDude& main_dude)
 {
+    _x_collision_timer = 0;
     main_dude._animation.stop();
     main_dude._quad.frame_changed(MainDudeSpritesheetFrames::STAND_LEFT);
 }
