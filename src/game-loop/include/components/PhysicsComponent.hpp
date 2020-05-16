@@ -8,6 +8,9 @@ class MainDude;
 class PhysicsComponent
 {
 public:
+
+    // TODO: void set_max_speed(float x, float y);
+
     PhysicsComponent(float width, float height);
     void update(MainDude&, uint32_t delta_time_ms);
 

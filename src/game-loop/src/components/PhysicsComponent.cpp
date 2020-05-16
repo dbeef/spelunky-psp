@@ -60,9 +60,6 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
 
         MapTile* neighbours[9] = { nullptr };
 
-        float last_step_x = _position.x;
-        float last_step_y = _position.y;
-
         float temp_velocity_x = _velocity.x;
         float temp_velocity_y = _velocity.y;
 
@@ -70,6 +67,30 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
         _collisions.right = false;
         _collisions.upper = false;
         _collisions.bottom = false;
+
+        {
+            collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), _position.x, _position.y, neighbours);
+            const auto* overlapping_tile = collisions::overlaps_strict(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
+            if (overlapping_tile)
+            {
+                if (_velocity.x < 0.0f)
+                {
+                    _collisions.left = true;
+                }
+                else
+                {
+                    _collisions.right = true;
+                }
+                if (_velocity.y < 0.0f)
+                {
+                    _collisions.upper = true;
+                }
+                else
+                {
+                    _collisions.bottom = true;
+                }
+            }
+        }
 
         while (temp_velocity_x != 0.0f || temp_velocity_y != 0.0f)
         {
@@ -83,14 +104,14 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 if (overlapping_tile)
                 {
                     // step back
-                    _position.x = last_step_x;
-
                     if (_velocity.x < 0.0f)
                     {
                         _collisions.left = true;
+                        _position.x = overlapping_tile->x + 1.0f + (get_width() / 2.0f);
                     }
                     else
                     {
+                        _position.x = overlapping_tile->x - (get_width() / 2.0f);
                         _collisions.right = true;
                     }
 
@@ -99,7 +120,6 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 }
                 else
                 {
-                    last_step_x = _position.x;
                     temp_velocity_x = move_to_zero(temp_velocity_x, smallest_position_step);
                 }
             }
@@ -114,15 +134,16 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 if (overlapping_tile)
                 {
                     // step back
-                    _position.y = last_step_y;
 
                     if (_velocity.y < 0.0f)
                     {
                         _collisions.upper = true;
+                        _position.y = overlapping_tile->y + 1.0f + (get_width() / 2);
                     }
                     else
                     {
                         _collisions.bottom = true;
+                        _position.y = overlapping_tile->y - 1.0f + (get_width() / 2);
                     }
 
                     _velocity.y = 0.0f;
@@ -130,7 +151,6 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 }
                 else
                 {
-                    last_step_y = _position.y;
                     temp_velocity_y = move_to_zero(temp_velocity_y, smallest_position_step);
                 }
             }

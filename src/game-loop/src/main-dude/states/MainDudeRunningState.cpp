@@ -1,3 +1,4 @@
+#include <main-dude/MainDude.hpp>
 #include "main-dude/states/MainDudeRunningState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
@@ -24,6 +25,15 @@ MainDudeBaseState *MainDudeRunningState::update(MainDude& main_dude, uint32_t de
         return &main_dude._states.standing;
     }
 
+    if (main_dude._physics.get_y_velocity() > 0.0f)
+    {
+        return &main_dude._states.falling;
+    }
+    else if (main_dude._physics.get_y_velocity() < 0.0f)
+    {
+        return &main_dude._states.jumping;
+    }
+
     return this;
 }
 
@@ -39,11 +49,12 @@ MainDudeBaseState *MainDudeRunningState::handle_input(MainDude& main_dude, const
     }
     if (input.triangle())
     {
-        if (main_dude._physics.is_bottom_collision())
-        {
-            main_dude._physics.add_velocity(0.0f, -0.18f);
-            return &main_dude._states.jumping;
-        }
+        main_dude._physics.add_velocity(0.0f, -0.18f);
+        return &main_dude._states.jumping;
+    }
+    if (input.cross())
+    {
+        return &main_dude._states.crawling;
     }
 
     return this;

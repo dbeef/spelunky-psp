@@ -19,5 +19,7 @@ namespace collisions
     };
 
     MapTile* overlaps(MapTile *neighboring_tiles[9], float x_center, float y_center, float width, float height);
+    MapTile* overlaps_strict(MapTile *neighboring_tiles[9], float x_center, float y_center, float width, float height);
+
     void get_neighbouring_tiles(Level&, float x, float y, MapTile *out_neighboring_tiles[9]);
 }
