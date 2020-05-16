@@ -58,5 +58,10 @@ MainDudeBaseState *MainDudeCrawling::handle_input(MainDude& main_dude, const Inp
         return &main_dude._states.running;
     }
 
+    if (input.bumper_r())
+    {
+        return &main_dude._states.throwing;
+    }
+
     return this;
 }

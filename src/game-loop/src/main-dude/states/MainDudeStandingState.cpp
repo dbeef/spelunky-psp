@@ -1,3 +1,4 @@
+#include <main-dude/MainDude.hpp>
 #include "main-dude/states/MainDudeStandingState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
@@ -66,6 +67,10 @@ MainDudeBaseState *MainDudeStandingState::handle_input(MainDude& main_dude, cons
     if (input.cross())
     {
         return &main_dude._states.ducking;
+    }
+    if (input.bumper_r())
+    {
+        return &main_dude._states.throwing;
     }
 
     return this;

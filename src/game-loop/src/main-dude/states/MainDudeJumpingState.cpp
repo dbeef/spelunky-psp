@@ -55,5 +55,10 @@ MainDudeBaseState *MainDudeJumping::handle_input(MainDude& main_dude, const Inpu
         main_dude._animation.set_time_per_frame_ms(75);
     }
 
+    if (input.bumper_r())
+    {
+        return &main_dude._states.throwing;
+    }
+
     return this;
 }

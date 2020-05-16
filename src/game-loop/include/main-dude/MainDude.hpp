@@ -15,6 +15,7 @@
 #include "main-dude/states/MainDudeDuckingState.hpp"
 #include "main-dude/states/MainDudeFallingState.hpp"
 #include "main-dude/states/MainDudeJumpingState.hpp"
+#include "main-dude/states/MainDudeThrowingState.hpp"
 
 #include <vector>
 
@@ -47,16 +48,18 @@ private:
     friend class MainDudeDucking;
     friend class MainDudeFalling;
     friend class MainDudeJumping;
+    friend class MainDudeThrowingState;
     struct
     {
         MainDudeBaseState* current = nullptr;
         MainDudeRunningState running;
         MainDudeStandingState standing;
         MainDudePushingState pushing;
-        MainDudeCrawling crawling;
-        MainDudeDucking ducking;
-        MainDudeFalling falling;
-        MainDudeJumping jumping;
+        MainDudeCrawling crawling; // TODO: Postfixes
+        MainDudeDucking ducking; // TODO: Postfixes
+        MainDudeFalling falling; // TODO: Postfixes
+        MainDudeJumping jumping; // TODO: Postfixes
+        MainDudeThrowingState throwing;
     } _states;
 
     struct

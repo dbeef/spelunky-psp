@@ -57,5 +57,10 @@ MainDudeBaseState *MainDudeDucking::handle_input(MainDude& main_dude, const Inpu
         return &main_dude._states.standing;
     }
 
+    if (input.bumper_r())
+    {
+        return &main_dude._states.throwing;
+    }
+
     return this;
 }
