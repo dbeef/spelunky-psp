@@ -1,3 +1,4 @@
+#include <main-dude/MainDude.hpp>
 #include "main-dude/states/MainDudeRunning.hpp"
 #include "main-dude/MainDude.hpp"
 
@@ -18,14 +19,10 @@ MainDudeBaseState *MainDudeRunning::update(MainDude& main_dude, uint32_t delta_t
     main_dude._animation.update(main_dude, delta_time_ms);
 
     // Other:
-
+    
     if (main_dude._physics.get_x_velocity() == 0.0f)
     {
         return &main_dude._states.standing;
-    }
-    else
-    {
-        main_dude._other.facing_left = main_dude._physics.get_x_velocity() < 0.0f;
     }
 
     return this;

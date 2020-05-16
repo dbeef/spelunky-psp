@@ -23,6 +23,20 @@ MainDudeBaseState *MainDudeStanding::update(MainDude& main_dude, uint32_t delta_
     }
     else
     {
+        if (main_dude._physics.is_left_collision() || main_dude._physics.is_right_collision())
+        {
+            _x_collision_timer += delta_time_ms;
+            if (_x_collision_timer > 2000)
+            {
+                _x_collision_timer = 0;
+                return &main_dude._states.pushing;
+            }
+        }
+        else
+        {
+            _x_collision_timer = 0;
+        }
+
         return this;
     }
 }

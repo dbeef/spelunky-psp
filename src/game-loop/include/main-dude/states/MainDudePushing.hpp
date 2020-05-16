@@ -1,8 +1,11 @@
-//
-// Created by dbeef on 5/13/20.
-//
+#pragma once
 
-#ifndef SPELUNKY_PSP_MAINDUDEPUSHING_HPP
-#define SPELUNKY_PSP_MAINDUDEPUSHING_HPP
+#include "main-dude/states/MainDudeBaseState.hpp"
 
-#endif //SPELUNKY_PSP_MAINDUDEPUSHING_HPP
+class MainDudePushing : public MainDudeBaseState
+{
+public:
+
+    MainDudeBaseState* update(MainDude&, uint32_t delta_time_ms) override;
+    void enter(MainDude&) override;
+};
