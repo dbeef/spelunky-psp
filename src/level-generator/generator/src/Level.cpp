@@ -331,24 +331,25 @@ void Level::add_render_entity()
 
 void Level::generate_cave_background()
 {
+    int random_offset = std::rand();
+
     for (int x = 0; x < 32; x++)
     {
         for (int y = 0; y < 32; y++)
         {
             if (map_tiles[x][y]->mapTileType == MapTileType::NOTHING)
             {
-                if (y % 1)
+                if (x % 4)
                 {
-                    const auto type = static_cast<MapTileType >(static_cast<int>(MapTileType::CAVE_BG_1) + (x % 2));
-                    map_tiles[x][y]->mapTileType = type;
-                    map_tiles[x][y]->match_tile(type);
+                    random_offset = std::rand();
                 }
-                else
-                {
-                    const auto type = static_cast<MapTileType >(static_cast<int>(MapTileType::CAVE_BG_3) + (x % 2));
-                    map_tiles[x][y]->mapTileType = type;
-                    map_tiles[x][y]->match_tile(type);
-                }
+
+                int type_index = x + y + random_offset;
+                type_index = type_index % 4;
+
+                const auto type = static_cast<MapTileType>(type_index + static_cast<int>(MapTileType::CAVE_BG_1));
+                map_tiles[x][y]->mapTileType = type;
+                map_tiles[x][y]->match_tile(type);
             }
         }
     }
