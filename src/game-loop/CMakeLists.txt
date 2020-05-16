@@ -8,6 +8,8 @@ add_library(GameLoop STATIC
         src/main-dude/states/MainDudePushing.cpp
         src/main-dude/states/MainDudeCrawlingState.cpp
         src/main-dude/states/MainDudeDuckingState.cpp
+        src/main-dude/states/MainDudeFallingState.cpp
+        src/main-dude/states/MainDudeJumpingState.cpp
         src/components/PhysicsComponent.cpp
         src/components/QuadComponent.cpp
         src/components/InputComponent.cpp
@@ -27,6 +29,8 @@ add_library(GameLoop STATIC
         include/main-dude/states/MainDudePushing.hpp
         include/main-dude/states/MainDudeCrawlingState.hpp
         include/main-dude/states/MainDudeDuckingState.hpp
+        include/main-dude/states/MainDudeFallingState.hpp
+        include/main-dude/states/MainDudeJumpingState.hpp
 )
 
 target_include_directories(GameLoop
