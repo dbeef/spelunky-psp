@@ -6,11 +6,12 @@
 // Using C-style <math.h> instead of <cmath> because of some symbols (namely std::copysign)
 // being missing in the PSP's CPP standard library.
 #include <math.h>
-#include <components/PhysicsComponent.hpp>
 
 namespace
 {
-    constexpr float smallest_position_step = 1.0f / 16.0f;
+    // TODO: Should be a function of velocity
+    constexpr float smallest_position_step = 1.0f / 128.0f;
+
     constexpr float default_gravity = 0.011875f;
     constexpr float default_bouncing_factor_x = 0.15f;
     constexpr float default_bouncing_factor_y = 0.35f;
@@ -89,9 +90,9 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
             }
         }
 
-        while (std::abs(temp_velocity_x) >= smallest_position_step || std::abs(temp_velocity_y) >= smallest_position_step)
+        while (temp_velocity_x != 0.0f || temp_velocity_y != 0.0f)
         {
-            if (std::abs(temp_velocity_x) > smallest_position_step)
+            if (temp_velocity_x != 0.0f)
             {
                 // Step on X axis
 
@@ -121,7 +122,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 }
             }
 
-            if (std::abs(temp_velocity_y) > smallest_position_step)
+            if (temp_velocity_y != 0.0f)
             {
                 // Step on Y axis
 

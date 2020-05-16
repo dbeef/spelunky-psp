@@ -63,5 +63,5 @@ private:
     } _collisions;
 
     float _friction_coefficient = 0;
-    float _pos_update_delta_ms = 0;
+    int32_t _pos_update_delta_ms = 0;
 };

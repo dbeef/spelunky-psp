@@ -65,12 +65,12 @@ private:
     } _other;
 
     static constexpr float DEFAULT_FRICTION_COEFFICIENT = 0.005f;
-    static constexpr float DEFAULT_DELTA_X = 0.050f;
+    static constexpr float DEFAULT_DELTA_X = 0.01f;
     static constexpr float DEFAULT_MAX_X_VELOCITY = 0.050f;
 
-    static constexpr float CRAWLING_FRICTION_COEFFICIENT = 0.000125f;
-    static constexpr float MAX_CRAWLING_VELOCITY_X = 0.03f;
-    static constexpr float CRAWLING_DELTA_X = 0.03f;
+    static constexpr float CRAWLING_FRICTION_COEFFICIENT = 0.000315f;
+    static constexpr float MAX_CRAWLING_VELOCITY_X = 0.008f;
+    static constexpr float CRAWLING_DELTA_X = 0.008f;
 
     static constexpr float JUMP_SPEED = 0.18f;
 };

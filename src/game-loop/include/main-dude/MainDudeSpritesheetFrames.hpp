@@ -20,7 +20,7 @@ enum class MainDudeSpritesheetFrames : uint16_t
     PUSH_LEFT_4,
     PUSH_LEFT_5,
     PUSH_LEFT_6_LAST,
-    // ************** // TODO
+    // ************** //
     CRAWLING_LEFT_0_FIRST,
     CRAWLING_LEFT_1,
     CRAWLING_LEFT_2,
@@ -41,7 +41,7 @@ enum class MainDudeSpritesheetFrames : uint16_t
     THROWING_LEFT_6,
     THROWING_LEFT_7,
     THROWING_LEFT_8_LAST,
-    // ************** // TODO
+    // ************** //
     JUMP_LEFT,
     // ************** // TODO
     EXITING_LEFT_0_FIRST,
