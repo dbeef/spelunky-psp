@@ -1,3 +1,5 @@
+#include <logger/log.h>
+#include <main-dude/MainDude.hpp>
 #include "main-dude/MainDude.hpp"
 #include "MapTileType.hpp"
 #include "Renderer.hpp"
@@ -29,6 +31,7 @@ void MainDude::update(uint32_t delta_time_ms)
     if (_physics.get_x_velocity() != 0.0f)
     {
         _other.facing_left = _physics.get_x_velocity() < 0.0f;
+        _quad.frame_changed();
     }
 
     // Handle input

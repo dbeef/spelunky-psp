@@ -42,6 +42,7 @@ MainDudeBaseState *MainDudeRunning::handle_input(MainDude& main_dude, const Inpu
         if (main_dude._physics.is_bottom_collision())
         {
             main_dude._physics.add_velocity(0.0f, -0.18f);
+            return &main_dude._states.jumping;
         }
     }
 

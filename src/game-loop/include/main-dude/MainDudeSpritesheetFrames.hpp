@@ -27,6 +27,7 @@ enum class MainDudeSpritesheetFrames : uint16_t
     CRAWLING_LEFT_3,
     CRAWLING_LEFT_4,
     CRAWLING_LEFT_5,
+    CRAWLING_LEFT_6,
     CRAWLING_LEFT_7,
     CRAWLING_LEFT_8,
     CRAWLING_LEFT_9_LAST,
@@ -37,6 +38,7 @@ enum class MainDudeSpritesheetFrames : uint16_t
     THROWING_LEFT_3,
     THROWING_LEFT_4,
     THROWING_LEFT_5,
+    THROWING_LEFT_6,
     THROWING_LEFT_7,
     THROWING_LEFT_8_LAST,
     // ************** // TODO

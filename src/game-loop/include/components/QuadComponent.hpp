@@ -18,6 +18,7 @@ public:
 
     template <class T>
     void frame_changed(T frame_index) { _frame_index = static_cast<std::size_t>(frame_index);_frame_changed = true; }
+    void frame_changed() { _frame_changed = true; }
 
     template <class T>
     T get_current_frame() const { return static_cast<T>(_frame_index); }
