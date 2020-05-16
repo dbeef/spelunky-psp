@@ -59,6 +59,8 @@ public:
     //sets all tiles to !existing
     void clean_map_layout();
 
+    void generate_cave_background();
+
     void generate_frame();
 
     void initialise_tiles_from_room_layout();

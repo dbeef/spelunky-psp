@@ -137,6 +137,13 @@ void MapTile::match_tile(MapTileType type) {
             collidable = false;
             destroyable = false;
             break;
+        case MapTileType::CAVE_BG_1:
+        case MapTileType::CAVE_BG_2:
+        case MapTileType::CAVE_BG_3:
+        case MapTileType::CAVE_BG_4:
+            collidable = false;
+            destroyable = false;
+            break;
         default:
             // most of the tiles are destroyable and collidable,
             // if happens to be otherwise, set it in a specific switch-case

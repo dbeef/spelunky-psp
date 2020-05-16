@@ -328,3 +328,28 @@ void Level::add_render_entity()
     _render_entity.texture = TextureBank::instance().get_texture(TextureType::CAVE_LEVEL_TILES);
     _render_entity.id = renderer.add_entity(_render_entity);
 }
+
+void Level::generate_cave_background()
+{
+    for (int x = 0; x < 32; x++)
+    {
+        for (int y = 0; y < 32; y++)
+        {
+            if (map_tiles[x][y]->mapTileType == MapTileType::NOTHING)
+            {
+                if (y % 1)
+                {
+                    const auto type = static_cast<MapTileType >(static_cast<int>(MapTileType::CAVE_BG_1) + (x % 2));
+                    map_tiles[x][y]->mapTileType = type;
+                    map_tiles[x][y]->match_tile(type);
+                }
+                else
+                {
+                    const auto type = static_cast<MapTileType >(static_cast<int>(MapTileType::CAVE_BG_3) + (x % 2));
+                    map_tiles[x][y]->mapTileType = type;
+                    map_tiles[x][y]->match_tile(type);
+                }
+            }
+        }
+    }
+}
