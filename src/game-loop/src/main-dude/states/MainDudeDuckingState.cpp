@@ -2,13 +2,13 @@
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 
-void MainDudeDucking::enter(MainDude& main_dude)
+void MainDudeDuckingState::enter(MainDude& main_dude)
 {
     main_dude._animation.stop();
     main_dude._quad.frame_changed(MainDudeSpritesheetFrames::CRAWLING_LEFT_0_FIRST);
 }
 
-MainDudeBaseState* MainDudeDucking::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeDuckingState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
     // Update components:
 
@@ -34,7 +34,7 @@ MainDudeBaseState* MainDudeDucking::update(MainDude& main_dude, uint32_t delta_t
     return this;
 }
 
-MainDudeBaseState *MainDudeDucking::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeDuckingState::handle_input(MainDude& main_dude, const Input &input)
 {
     if (input.square())
     {

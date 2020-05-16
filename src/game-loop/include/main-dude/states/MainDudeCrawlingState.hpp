@@ -2,7 +2,7 @@
 
 #include "main-dude/states/MainDudeBaseState.hpp"
 
-class MainDudeCrawling : public MainDudeBaseState
+class MainDudeCrawlingState : public MainDudeBaseState
 {
 public:
 

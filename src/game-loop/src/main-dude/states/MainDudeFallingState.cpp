@@ -2,14 +2,14 @@
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 
-void MainDudeFalling::enter(MainDude& main_dude)
+void MainDudeFallingState::enter(MainDude& main_dude)
 {
     main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
     main_dude._animation.stop();
     main_dude._quad.frame_changed(MainDudeSpritesheetFrames::JUMP_LEFT);
 }
 
-MainDudeBaseState* MainDudeFalling::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeFallingState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
     // Update components:
 
@@ -33,7 +33,7 @@ MainDudeBaseState* MainDudeFalling::update(MainDude& main_dude, uint32_t delta_t
     return this;
 }
 
-MainDudeBaseState *MainDudeFalling::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeFallingState::handle_input(MainDude& main_dude, const Input &input)
 {
     if (input.square())
     {
