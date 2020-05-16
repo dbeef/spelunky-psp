@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include "MapTile.hpp"
 
 class MainDude;
 
