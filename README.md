@@ -71,6 +71,17 @@ hence no additional action is required.
 After toolchain's build scripts set up environment variables (make sure `echo $PSPDEV` returns your PSP toolchain's 
 root directory), you are ready to cross compile to PSP via `/scripts/config-psp.sh` and `/scripts/build-psp.sh`.
 
+#### Windows
+
+The only dependency is SDL 1.2.15. Download the [Visual Studio development files](https://www.libsdl.org/release/SDL-devel-1.2.15-VC.zip) to start your journey.
+Alternatively, from project's root directory run
+```powershell
+.\scripts\dependencies-install.ps1 [-DepsDirectory <DIR>] # deps is default
+.\scripts\config-windows.ps1 [-DepsDirectory <DIR>] # deps is default
+```
+This will configure the required SDL dependency and effectively set you up.
+
+
 ### Contributing
 
 ##### To-be-done list

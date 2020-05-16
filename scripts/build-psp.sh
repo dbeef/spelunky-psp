@@ -3,5 +3,4 @@
 
 source scripts/variables-psp.sh
 
-cd $BUILD_PATH
-cmake --build . --target install --config Release -- -j `nproc`
+cmake --build $BUILD_PATH --target install --config Release -j `nproc`

@@ -4,5 +4,4 @@
 # Builds SpelunkyPSP natively on Linux, using following dependencies:
 # * SDL2 as a vendor of creating window, retrieving OpenGL context, controls and sounds.
 
-cd tmp/build-linux
-cmake --build . --target install --config Release -- -j `nproc`
+cmake --build tmp/build-linux --target install --config Release -j `nproc`

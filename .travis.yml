@@ -1,5 +1,9 @@
 language: cpp
 
+os:
+  - linux
+  - windows
+
 git:
   depth: 1
 
@@ -18,20 +22,32 @@ stages:
     if: tag is present
 
 install:
-  - docker run -it -d --volume `pwd`:$WORKDIR --name $_C $BUILD_IMAGE /bin/bash
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then docker run -it -d --volume `pwd`:$WORKDIR --name $_C $BUILD_IMAGE /bin/bash ; fi
+  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then powershell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned' ; fi
   - mkdir -p install
 
 jobs:
+  exclude:
+    - stage: test
   include:
   - stage: build
+    os: linux
     name: "Build PSP"
     script:
       - docker exec -w $WORKDIR $_C /bin/bash -c "./scripts/config-psp.sh ; ./scripts/build-psp.sh"
       - cp tmp/build-psp/EBOOT.PBP install/SpelunkyPSP.pbp
   - name: "Build Linux"
+    os: linux
     script:
       - docker exec -w $WORKDIR $_C /bin/bash -c "./scripts/config-linux.sh ; ./scripts/build-linux.sh"
       - cp tmp/install-linux/Release/bin/Spelunky_PSP install/SpelunkyLinux
+  - name: "Build Windows"
+    os: windows
+    script:
+      - powershell -File ./scripts/dependencies-install.ps1
+      - powershell -File ./scripts/config-windows.ps1
+      - powershell -File ./scripts/build-windows.ps1
+      - 7z a -sdel install/SpelunkyWindows.zip ./tmp/install-windows/Release/bin/*
 
 deploy:
   provider: releases
