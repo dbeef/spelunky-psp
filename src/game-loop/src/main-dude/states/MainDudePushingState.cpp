@@ -1,9 +1,10 @@
+#include <main-dude/MainDude.hpp>
 #include "main-dude/states/MainDudePushingState.hpp"
 #include "main-dude/MainDude.hpp"
+#include "Input.hpp"
 
 void MainDudePushingState::enter(MainDude& main_dude)
 {
-    main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::PUSH_LEFT_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::PUSH_LEFT_6_LAST),
                                75, true);
@@ -34,7 +35,31 @@ MainDudeBaseState* MainDudePushingState::update(MainDude& main_dude, uint32_t de
     return this;
 }
 
-MainDudeBaseState *MainDudePushingState::handle_input(MainDude &, const Input &input)
+MainDudeBaseState *MainDudePushingState::handle_input(MainDude& main_dude, const Input &input)
 {
+    if (input.square())
+    {
+        main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
+    }
+    if (input.circle())
+    {
+        main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
+    }
+
+    if (!input.square() && !input.circle())
+    {
+        return &main_dude._states.standing;
+    }
+
+    if (input.triangle())
+    {
+        main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
+        return &main_dude._states.jumping;
+    }
+    if (input.cross())
+    {
+        return &main_dude._states.ducking;
+    }
+
     return this;
 }
