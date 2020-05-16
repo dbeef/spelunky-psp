@@ -1,4 +1,3 @@
-#include <main-dude/MainDude.hpp>
 #include "main-dude/states/MainDudeDuckingState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
