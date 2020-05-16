@@ -46,10 +46,10 @@ private:
     friend class MainDudeRunningState;
     friend class MainDudeStandingState;
     friend class MainDudePushingState;
-    friend class MainDudeCrawling;
-    friend class MainDudeDucking;
-    friend class MainDudeFalling;
-    friend class MainDudeJumping;
+    friend class MainDudeCrawlingState;
+    friend class MainDudeDuckingState;
+    friend class MainDudeFallingState;
+    friend class MainDudeJumpingState;
     friend class MainDudeThrowingState;
     friend class MainDudeExitingState;
     struct
@@ -58,10 +58,10 @@ private:
         MainDudeRunningState running;
         MainDudeStandingState standing;
         MainDudePushingState pushing;
-        MainDudeCrawling crawling; // TODO: Postfixes
-        MainDudeDucking ducking; // TODO: Postfixes
-        MainDudeFalling falling; // TODO: Postfixes
-        MainDudeJumping jumping; // TODO: Postfixes
+        MainDudeCrawlingState crawling;
+        MainDudeDuckingState ducking;
+        MainDudeFallingState falling;
+        MainDudeJumpingState jumping;
         MainDudeThrowingState throwing;
         MainDudeExitingState exiting;
     } _states;

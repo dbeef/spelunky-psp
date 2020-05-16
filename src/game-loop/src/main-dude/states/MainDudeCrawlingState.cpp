@@ -2,7 +2,7 @@
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 
-void MainDudeCrawling::enter(MainDude& main_dude)
+void MainDudeCrawlingState::enter(MainDude& main_dude)
 {
     main_dude._physics.set_max_x_velocity(MainDude::MAX_CRAWLING_VELOCITY_X);
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::CRAWLING_LEFT_0_FIRST),
@@ -10,7 +10,7 @@ void MainDudeCrawling::enter(MainDude& main_dude)
                                75, true);
 }
 
-MainDudeBaseState* MainDudeCrawling::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeCrawlingState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
     // Update components:
 
@@ -37,7 +37,7 @@ MainDudeBaseState* MainDudeCrawling::update(MainDude& main_dude, uint32_t delta_
     return this;
 }
 
-MainDudeBaseState *MainDudeCrawling::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeCrawlingState::handle_input(MainDude& main_dude, const Input &input)
 {
     if (input.square())
     {
