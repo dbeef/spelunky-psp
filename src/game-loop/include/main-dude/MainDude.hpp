@@ -12,6 +12,8 @@
 #include "main-dude/states/MainDudeRunning.hpp"
 #include "main-dude/states/MainDudeStanding.hpp"
 #include "main-dude/states/MainDudePushing.hpp"
+#include "main-dude/states/MainDudeCrawlingState.hpp"
+#include "main-dude/states/MainDudeDuckingState.hpp"
 
 #include <vector>
 
@@ -38,12 +40,16 @@ private:
     friend class MainDudeRunning;
     friend class MainDudeStanding;
     friend class MainDudePushing;
+    friend class MainDudeCrawling;
+    friend class MainDudeDucking;
     struct
     {
         MainDudeBaseState* current = nullptr;
         MainDudeRunning running;
         MainDudeStanding standing;
         MainDudePushing pushing;
+        MainDudeCrawling crawling;
+        MainDudeDucking ducking;
     } _states;
 
     struct
