@@ -8,9 +8,9 @@
 #include "components/QuadComponent.hpp"
 #include "components/AnimationComponent.hpp"
 
-#include "main-dude/states/MainDudeRunning.hpp"
-#include "main-dude/states/MainDudeStanding.hpp"
-#include "main-dude/states/MainDudePushing.hpp"
+#include "main-dude/states/MainDudeRunningState.hpp"
+#include "main-dude/states/MainDudeStandingState.hpp"
+#include "main-dude/states/MainDudePushingState.hpp"
 #include "main-dude/states/MainDudeCrawlingState.hpp"
 #include "main-dude/states/MainDudeDuckingState.hpp"
 #include "main-dude/states/MainDudeFallingState.hpp"
@@ -40,9 +40,9 @@ private:
     AnimationComponent _animation;
 
     friend class MainDudeBaseState;
-    friend class MainDudeRunning;
-    friend class MainDudeStanding;
-    friend class MainDudePushing;
+    friend class MainDudeRunningState;
+    friend class MainDudeStandingState;
+    friend class MainDudePushingState;
     friend class MainDudeCrawling;
     friend class MainDudeDucking;
     friend class MainDudeFalling;
@@ -50,9 +50,9 @@ private:
     struct
     {
         MainDudeBaseState* current = nullptr;
-        MainDudeRunning running;
-        MainDudeStanding standing;
-        MainDudePushing pushing;
+        MainDudeRunningState running;
+        MainDudeStandingState standing;
+        MainDudePushingState pushing;
         MainDudeCrawling crawling;
         MainDudeDucking ducking;
         MainDudeFalling falling;

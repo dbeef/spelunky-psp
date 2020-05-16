@@ -5,8 +5,8 @@
 #include "Renderer.hpp"
 #include "Input.hpp"
 #include "main-dude/MainDudeSpritesheetFrames.hpp"
-#include "main-dude/states/MainDudeRunning.hpp"
-#include "main-dude/states/MainDudeStanding.hpp"
+#include "main-dude/states/MainDudeRunningState.hpp"
+#include "main-dude/states/MainDudeStandingState.hpp"
 
 namespace
 {
