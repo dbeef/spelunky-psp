@@ -12,7 +12,7 @@ namespace
     // TODO: Should be a function of velocity
     constexpr float smallest_position_step = 1.0f / 128.0f;
 
-    constexpr float default_gravity = 0.011875f;
+    constexpr float default_gravity = 0.0225f;
     constexpr float default_friction = 0.005f;
     constexpr float default_bouncing_factor_x = 0.15f;
     constexpr float default_bouncing_factor_y = 0.35f;
