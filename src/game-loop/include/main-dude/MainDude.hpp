@@ -33,6 +33,7 @@ public:
 private:
 
     void handle_input(const Input& input);
+    MapTile* is_overlaping_exit() const;
 
     friend class PhysicsComponent;
     friend class QuadComponent;

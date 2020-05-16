@@ -1,3 +1,5 @@
+#include "LevelGenerator.hpp"
+#include "Collisions.hpp"
 #include "main-dude/MainDude.hpp"
 #include "MapTileType.hpp"
 #include "Renderer.hpp"
@@ -71,3 +73,23 @@ void MainDude::handle_input(const Input &input)
     }
 }
 
+MapTile* MainDude::is_overlaping_exit() const
+{
+    MapTile* exit;
+    LevelGenerator::instance().getLevel().get_first_tile_of_given_type(MapTileType::EXIT, exit);
+    if (exit)
+    {
+        if (collisions::overlaps(exit, _physics.get_x_position(), _physics.get_y_position(), _physics.get_width(), _physics.get_height()))
+        {
+            return exit;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+    else
+    {
+        return nullptr;
+    }
+}
