@@ -1,14 +1,14 @@
-#include "main-dude/states/MainDudeStanding.hpp"
+#include "main-dude/states/MainDudeStandingState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 
-void MainDudeStanding::enter(MainDude& main_dude)
+void MainDudeStandingState::enter(MainDude& main_dude)
 {
     main_dude._animation.stop();
     main_dude._quad.frame_changed(MainDudeSpritesheetFrames::STAND_LEFT);
 }
 
-MainDudeBaseState *MainDudeStanding::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState *MainDudeStandingState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
     // Update components:
 
@@ -41,7 +41,7 @@ MainDudeBaseState *MainDudeStanding::update(MainDude& main_dude, uint32_t delta_
     }
 }
 
-MainDudeBaseState *MainDudeStanding::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeStandingState::handle_input(MainDude& main_dude, const Input &input)
 {
     if (input.square())
     {

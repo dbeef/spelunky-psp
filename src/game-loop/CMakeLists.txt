@@ -3,9 +3,9 @@ project(GameLoop)
 add_library(GameLoop STATIC
         src/GameLoop.cpp
         src/main-dude/MainDude.cpp
-        src/main-dude/states/MainDudeStanding.cpp
-        src/main-dude/states/MainDudeRunning.cpp
-        src/main-dude/states/MainDudePushing.cpp
+        src/main-dude/states/MainDudeStandingState.cpp
+        src/main-dude/states/MainDudeRunningState.cpp
+        src/main-dude/states/MainDudePushingState.cpp
         src/main-dude/states/MainDudeCrawlingState.cpp
         src/main-dude/states/MainDudeDuckingState.cpp
         src/main-dude/states/MainDudeFallingState.cpp
@@ -22,9 +22,9 @@ add_library(GameLoop STATIC
         include/components/AnimationComponent.hpp
         include/main-dude/MainDudeSpritesheetFrames.hpp
         include/main-dude/states/MainDudeBaseState.hpp
-        include/main-dude/states/MainDudeRunning.hpp
-        include/main-dude/states/MainDudeStanding.hpp
-        include/main-dude/states/MainDudePushing.hpp
+        include/main-dude/states/MainDudeRunningState.hpp
+        include/main-dude/states/MainDudeStandingState.hpp
+        include/main-dude/states/MainDudePushingState.hpp
         include/main-dude/states/MainDudeCrawlingState.hpp
         include/main-dude/states/MainDudeDuckingState.hpp
         include/main-dude/states/MainDudeFallingState.hpp

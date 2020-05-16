@@ -1,15 +1,15 @@
-#include "main-dude/states/MainDudeRunning.hpp"
+#include "main-dude/states/MainDudeRunningState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 
-void MainDudeRunning::enter(MainDude &main_dude)
+void MainDudeRunningState::enter(MainDude &main_dude)
 {
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_5_LAST),
                                75, true);
 }
 
-MainDudeBaseState *MainDudeRunning::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState *MainDudeRunningState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
     // Update components:
 
@@ -27,7 +27,7 @@ MainDudeBaseState *MainDudeRunning::update(MainDude& main_dude, uint32_t delta_t
     return this;
 }
 
-MainDudeBaseState *MainDudeRunning::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeRunningState::handle_input(MainDude& main_dude, const Input &input)
 {
     if (input.square())
     {

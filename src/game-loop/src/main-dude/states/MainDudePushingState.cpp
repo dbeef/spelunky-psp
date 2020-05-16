@@ -1,14 +1,14 @@
-#include "main-dude/states/MainDudePushing.hpp"
+#include "main-dude/states/MainDudePushingState.hpp"
 #include "main-dude/MainDude.hpp"
 
-void MainDudePushing::enter(MainDude& main_dude)
+void MainDudePushingState::enter(MainDude& main_dude)
 {
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::PUSH_LEFT_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::PUSH_LEFT_6_LAST),
                                75, true);
 }
 
-MainDudeBaseState* MainDudePushing::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudePushingState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
     // Update components:
 
@@ -33,7 +33,7 @@ MainDudeBaseState* MainDudePushing::update(MainDude& main_dude, uint32_t delta_t
     return this;
 }
 
-MainDudeBaseState *MainDudePushing::handle_input(MainDude &, const Input &input)
+MainDudeBaseState *MainDudePushingState::handle_input(MainDude &, const Input &input)
 {
     return this;
 }
