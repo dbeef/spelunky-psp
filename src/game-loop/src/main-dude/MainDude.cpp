@@ -1,6 +1,7 @@
 #include "main-dude/MainDude.hpp"
 #include "MapTileType.hpp"
 #include "Renderer.hpp"
+#include "Input.hpp"
 #include "main-dude/MainDudeSpritesheetFrames.hpp"
 #include "main-dude/states/MainDudeRunning.hpp"
 #include "main-dude/states/MainDudeStanding.hpp"
@@ -29,11 +30,27 @@ void MainDude::update(uint32_t delta_time_ms)
     {
         _other.facing_left = _physics.get_x_velocity() < 0.0f;
     }
-    
+
+    // Handle input
+
+    handle_input(Input::instance());
+
     // Update current state:
     
     assert(_states.current);
     auto new_state = _states.current->update(*this, delta_time_ms);
+
+    if (new_state != _states.current)
+    {
+        new_state->enter(*this);
+        _states.current = new_state;
+    }
+}
+
+void MainDude::handle_input(const Input &input)
+{
+    assert(_states.current);
+    auto new_state = _states.current->handle_input(*this, input);
 
     if (new_state != _states.current)
     {

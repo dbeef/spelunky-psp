@@ -20,6 +20,8 @@
 #include <vector>
 
 class MainDudeBaseState;
+class Input;
+
 class MainDude : public GameObject
 {
 public:
@@ -28,6 +30,8 @@ public:
     void update(uint32_t delta_time_ms) override;
 
 private:
+
+    void handle_input(const Input& input);
 
     friend class PhysicsComponent;
     friend class QuadComponent;

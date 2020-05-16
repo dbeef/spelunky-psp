@@ -40,3 +40,8 @@ MainDudeBaseState *MainDudeStanding::update(MainDude& main_dude, uint32_t delta_
         return this;
     }
 }
+
+MainDudeBaseState *MainDudeStanding::handle_input(MainDude &, const Input &input)
+{
+    return this;
+}

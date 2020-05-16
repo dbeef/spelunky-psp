@@ -33,3 +33,8 @@ MainDudeBaseState* MainDudePushing::update(MainDude& main_dude, uint32_t delta_t
 
     return this;
 }
+
+MainDudeBaseState *MainDudePushing::handle_input(MainDude &, const Input &input)
+{
+    return this;
+}

@@ -26,3 +26,8 @@ MainDudeBaseState *MainDudeRunning::update(MainDude& main_dude, uint32_t delta_t
 
     return this;
 }
+
+MainDudeBaseState *MainDudeRunning::handle_input(MainDude &, const Input &input)
+{
+    return this;
+}
