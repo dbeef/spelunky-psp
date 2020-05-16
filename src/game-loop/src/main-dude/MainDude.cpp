@@ -12,6 +12,7 @@ namespace
 {
     const float MAIN_DUDE_WIDTH = 1.0f;
     const float MAIN_DUDE_HEIGHT = 1.0f;
+    const float MAIN_DUDE_MAX_Y_VELOCITY = 0.128f;
 }
 
 MainDude::MainDude()
@@ -20,7 +21,10 @@ MainDude::MainDude()
 {
     _states.current = &_states.standing;
     _states.current->enter(*this);
+
     _physics.set_position(3, 3);
+    _physics.set_max_y_velocity(MAIN_DUDE_MAX_Y_VELOCITY);
+
     update(0);
 }
 

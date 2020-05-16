@@ -9,8 +9,6 @@ class PhysicsComponent
 {
 public:
 
-    // TODO: void set_max_speed(float x, float y);
-
     PhysicsComponent(float width, float height);
     void update(MainDude&, uint32_t delta_time_ms);
 
@@ -24,6 +22,10 @@ public:
     void add_velocity(float x, float y) { _velocity.x += x; _velocity.y += y; }
     float get_x_velocity() const { return _velocity.x; }
     float get_y_velocity() const { return _velocity.y; }
+    void set_max_x_velocity(float x) { _velocity.max_x = x;}
+    void set_max_y_velocity(float y) { _velocity.max_y = y;}
+
+    void set_friction(float f) { _friction_coefficient = f; }
 
     bool is_bottom_collision() const { return _collisions.bottom; }
     bool is_upper_collision() const { return _collisions.upper; }
@@ -48,6 +50,8 @@ private:
     {
         float x = 0;
         float y = 0;
+        float max_x = 0;
+        float max_y = 0;
     } _velocity;
 
     struct
@@ -58,5 +62,6 @@ private:
         bool right = false;
     } _collisions;
 
+    float _friction_coefficient = 0;
     float _pos_update_delta_ms = 0;
 };

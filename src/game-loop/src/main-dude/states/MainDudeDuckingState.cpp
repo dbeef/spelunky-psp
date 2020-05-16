@@ -39,17 +39,17 @@ MainDudeBaseState *MainDudeDucking::handle_input(MainDude& main_dude, const Inpu
 {
     if (input.square())
     {
-        main_dude._physics.add_velocity(-0.045f, 0.0f);
+        main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
         return &main_dude._states.crawling;
     }
     if (input.circle())
     {
-        main_dude._physics.add_velocity(+0.045f, 0.0f);
+        main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
         return &main_dude._states.crawling;
     }
     if (input.triangle())
     {
-        main_dude._physics.add_velocity(0.0f, -0.18f);
+        main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;
     }
     if (!input.cross())

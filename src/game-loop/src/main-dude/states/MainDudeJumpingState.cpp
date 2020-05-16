@@ -4,6 +4,7 @@
 
 void MainDudeJumping::enter(MainDude& main_dude)
 {
+    main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
     main_dude._animation.stop();
     main_dude._quad.frame_changed(MainDudeSpritesheetFrames::JUMP_LEFT);
 }
@@ -36,11 +37,11 @@ MainDudeBaseState *MainDudeJumping::handle_input(MainDude& main_dude, const Inpu
 {
     if (input.square())
     {
-        main_dude._physics.add_velocity(-0.025f, 0.0f);
+        main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
     }
     if (input.circle())
     {
-        main_dude._physics.add_velocity(+0.025f, 0.0f);
+        main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
 
     return this;
