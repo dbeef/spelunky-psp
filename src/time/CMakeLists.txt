@@ -10,7 +10,7 @@ target_include_directories(Time
         INTERFACE interface
 )
 
-target_link_libraries(Time PUBLIC Dependencies)
+target_link_libraries(Time PUBLIC SDL_1_XX)
 
 set_target_properties(Time PROPERTIES
         CXX_STANDARD
