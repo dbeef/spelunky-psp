@@ -17,4 +17,6 @@ set_target_properties(Input PROPERTIES
         14
 )
 
-target_link_libraries(Input PRIVATE Logger Camera Dependencies)
+target_link_libraries(Input PRIVATE Logger Camera 
+        $<$<BOOL:${SPELUNKY_PSP_PLATFORM_DESKTOP}>:SDL_1_XX>
+        )

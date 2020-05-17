@@ -1,11 +1,15 @@
 # FIXME: This macro probably defines target that links to more libraries than actually needed.
 macro(add_psp_dependencies)
-    add_library(Dependencies INTERFACE)
+    add_library(SDL_1_XX INTERFACE)
+    target_link_libraries(SDL_1_XX INTERFACE
+        -lSDLmain
+        -lSDL
+        )
 
+    add_library(Dependencies INTERFACE)
     target_link_libraries(Dependencies INTERFACE
             -L${PSPDEV}/psp/lib
-            -lSDLmain
-            -lSDL
+            SDL_1_XX
             -lg
             -lstdc++
             -lc
