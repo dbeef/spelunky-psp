@@ -275,8 +275,6 @@ Level::~Level()
 
 void Level::batch_vertices()
 {
-    const auto &camera = Camera::instance();
-
     _mesh.clear();
     _indices.clear();
 
