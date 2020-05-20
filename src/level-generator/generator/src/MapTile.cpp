@@ -152,17 +152,3 @@ void MapTile::match_tile(MapTileType type) {
             break;
     }
 }
-
-bool MapTile::in_viewport(const Camera *camera) {
-
-    // screen center is camera.x and camera.y
-    // screen width is 30 tiles times 17 tiles (with used projection matrix)
-
-    float x_pos = x;
-    float y_pos = y;
-
-    bool condition_x = camera->getX() + (25.0f) > x_pos && camera->getX() - (25.0f) < x_pos;
-    bool condition_y = camera->getY() + (13.0f + 1.0f) > y_pos && camera->getY() - (13.0f + 1.0f) < y_pos;
-
-    return condition_x && condition_y;
-}

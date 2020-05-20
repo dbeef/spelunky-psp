@@ -9,8 +9,6 @@
 #include "Direction.hpp"
 #include "SplashScreenType.hpp"
 #include "RoomType.hpp"
-#include "Camera.hpp"
-#include "glad/glad.h"
 #include "RenderEntity.hpp"
 
 #include <vector>

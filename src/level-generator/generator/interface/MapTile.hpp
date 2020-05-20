@@ -6,7 +6,6 @@
 #ifndef SPELUNKYDS_MAPTILE_H
 #define SPELUNKYDS_MAPTILE_H
 
-#include "Camera.hpp"
 #include "MapTileType.hpp"
 
 class MapTile {
@@ -26,7 +25,6 @@ public:
     MapTileType mapTileType;
 
     void match_tile(MapTileType type);
-    bool in_viewport(const Camera *camera);
 };
 
 

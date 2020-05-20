@@ -18,7 +18,4 @@ set_target_properties(Collisions PROPERTIES
 target_link_libraries(Collisions PRIVATE
         Logger
         LevelGenerator
-        Camera
-        glad
-        Renderer
         )
