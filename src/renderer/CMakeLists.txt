@@ -22,18 +22,14 @@ set_target_properties(Renderer PROPERTIES
 )
 
 target_link_libraries(Renderer
-        PRIVATE
-            Logger
-            stb
-            Camera
-            Video
-            glm::glm
-            GraphicsUtils
-            cjson
-        PUBLIC
-            TextureBank
-            glad
-            LevelGenerator
+    PUBLIC
+        TextureBank
+        LevelGenerator
+    PRIVATE
+        Logger
+        Video
+        GraphicsUtils
+        cjson
         )
 
 if (SPELUNKY_PSP_PLATFORM_LINUX)
