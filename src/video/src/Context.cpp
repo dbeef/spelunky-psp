@@ -53,7 +53,7 @@ void Video::swap_buffers() const
     SDL_GL_SwapBuffers();
 }
 
-void Video::run_loop(std::function<void(uint32_t delta_time_ms)> &loop_callback)
+void Video::run_loop(const std::function<void(uint32_t delta_time_ms)> &loop_callback)
 {
 
     auto& input = Input::instance();

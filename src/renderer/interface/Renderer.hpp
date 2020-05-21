@@ -34,9 +34,8 @@ public:
     RenderEntityID add_entity(RenderEntity e)
     {
         static RenderEntityID unique_id_pool = std::numeric_limits<RenderEntityID>::max();
-        unique_id_pool--;
 
-        e.id = unique_id_pool;
+        e.id = --unique_id_pool;
         _render_entities.emplace_back(e);
         return unique_id_pool;
     }

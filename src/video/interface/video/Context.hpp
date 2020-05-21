@@ -32,7 +32,7 @@ public:
 
     void tear_down_gl();
 
-    void run_loop(std::function<void(uint32_t delta_time_ms)> &loop_callback);
+    void run_loop(const std::function<void(uint32_t delta_time_ms)> &loop_callback);
 
     inline void swap_buffers() const;
 
