@@ -9,7 +9,7 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
       with:
-        depth: 1
+        fetch-depth: 1
         submodules: 'recursive'
     - name: Run Cppcheck
       uses: Bedzior/cppcheck-action@v1.0.0
