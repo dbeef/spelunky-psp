@@ -5,7 +5,6 @@
 #include "TextureRegion.hpp"
 #include "logger/log.h"
 #include "cJSON.h"
-#include "glad/glad.h"
 
 #include <cstdlib>
 #include <cassert>
