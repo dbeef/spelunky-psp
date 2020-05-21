@@ -25,4 +25,11 @@ set_target_properties(LevelGenerator PROPERTIES
         14
 )
 
-target_link_libraries(LevelGenerator PUBLIC Renderer PRIVATE Rooms glad TextureBank)
+target_link_libraries(LevelGenerator
+    PUBLIC
+        Renderer
+    PRIVATE
+        Rooms
+        glad
+        TextureBank
+        )

@@ -11,14 +11,14 @@
 
 #include "glad/glad.h"
 
-void graphics_utils::look_at(const Camera &camera)
+void graphics_utils::look_at(float x, float y)
 {
     DebugGlCall(glMatrixMode(GL_MODELVIEW));
     DebugGlCall(glLoadIdentity());
     DebugGlCall(glTranslatef(0, 0, 0));
 
-    const glm::vec3 eye = {camera.getX(), camera.getY(), 1.0f};
-    const glm::vec3 center = {camera.getX(), camera.getY(), 0.0f};
+    const glm::vec3 eye = {x, y, 1.0f};
+    const glm::vec3 center = {x, y, 0.0f};
     const glm::vec3 up = {0.0f, 1.0f, 0.0f};
 
     const auto M = glm::lookAt(eye, center, up);
