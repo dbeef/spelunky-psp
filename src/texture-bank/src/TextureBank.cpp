@@ -1,6 +1,5 @@
 #include "TextureBank.hpp"
 #include "graphics_utils/CreateTexture.hpp"
-#include "graphics_utils/DisposeTexture.hpp"
 #include "logger/log.h"
 #include "cJSON.h"
 
@@ -73,15 +72,6 @@ void TextureBank::load_textures()
         assert(texture);
         _texture_ids.emplace(in.type, texture);
     }
-}
-
-void TextureBank::dispose_textures()
-{
-    for (const auto &kv : _texture_ids)
-    {
-        graphics_utils::dispose_texture(kv.second);
-    }
-    _texture_ids = {};
 }
 
 TextureBank &TextureBank::instance()
@@ -162,9 +152,4 @@ void TextureBank::load_texture_regions()
         }
         _texture_regions.emplace(in.type, regions);
     }
-}
-
-void TextureBank::dispose_texture_regions()
-{
-    _texture_regions = {};
 }

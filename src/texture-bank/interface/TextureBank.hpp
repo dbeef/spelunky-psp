@@ -23,8 +23,6 @@ public:
 
     void load_textures();
     void load_texture_regions();
-    void dispose_textures();
-    void dispose_texture_regions();
 
     const TextureRegion& get_region(TextureType t, std::size_t index)
     {
