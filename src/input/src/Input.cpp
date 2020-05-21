@@ -1,8 +1,6 @@
 #include <cassert>
-#include <logger/log.h>
 
 #include "Input.hpp"
-#include "Camera.hpp"
 
 Input *Input::_input = nullptr;
 
