@@ -27,8 +27,8 @@ void QuadComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
 }
 
 QuadComponent::QuadComponent(TextureType type, float quad_width, float quad_height)
-    : _texture_type(type)
-    , _quad_dimensions {quad_width, quad_height }
+    : _quad_dimensions {quad_width, quad_height}
+    , _texture_type(type)
 {
     RenderEntity entity;
     entity.vertices = _quad.get_vertices_transformed();

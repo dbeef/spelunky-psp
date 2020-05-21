@@ -65,7 +65,7 @@ public:
 
     void initialise_tiles_from_splash_screen(SplashScreenType splashScreenType);
 
-    void get_first_tile_of_given_type(MapTileType mapTileType, MapTile *&m);
+    void get_first_tile_of_given_type(MapTileType mapTileType, MapTile *&m) const;
 
     void batch_vertices();
 

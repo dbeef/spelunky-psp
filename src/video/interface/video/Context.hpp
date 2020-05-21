@@ -28,7 +28,7 @@ public:
 
     bool setup_gl();
 
-    inline uint32_t get_delta_time() { return _timestep.get_delta_ms(); }
+    inline uint32_t get_delta_time() const { return _timestep.get_delta_ms(); }
 
     void tear_down_gl();
 
