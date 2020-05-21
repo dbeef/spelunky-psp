@@ -40,7 +40,7 @@ public:
         return unique_id_pool;
     }
 
-    RenderEntity* get_entity(const RenderEntityID id)
+    RenderEntity* get_entity(RenderEntityID id)
     {
         const auto it = std::find_if(_render_entities.begin(), _render_entities.end(), [&id](const RenderEntity& e)
         {
@@ -55,7 +55,7 @@ public:
         return nullptr;
     }
 
-    void mark_for_removal(const RenderEntityID id)
+    void mark_for_removal(RenderEntityID id)
     {
         _for_removal.push_back(id);
     }

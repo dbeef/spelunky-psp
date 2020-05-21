@@ -227,7 +227,7 @@ void Level::initialise_tiles_from_room_layout() {
  * @param mapTileType
  * @param m
  */
-void Level::get_first_tile_of_given_type(MapTileType mapTileType, MapTile *&m) {
+void Level::get_first_tile_of_given_type(MapTileType mapTileType, MapTile *&m) const {
     for (int a = 0; a < MAP_GAME_WIDTH_TILES; a++) {
         for (int b = 0; b < MAP_GAME_HEIGHT_TILES; b++) {
             if (map_tiles[a][b]->exists && map_tiles[a][b]->mapTileType == mapTileType) {
