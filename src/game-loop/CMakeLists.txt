@@ -45,11 +45,10 @@ set_target_properties(GameLoop PROPERTIES
         14
 )
 
-target_link_libraries(GameLoop PRIVATE
+target_link_libraries(GameLoop
+    PRIVATE
         glad
-        stb
         Logger
-        glm
         Camera
         Input
         GraphicsUtils
