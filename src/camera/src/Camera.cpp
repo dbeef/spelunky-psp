@@ -31,7 +31,7 @@ void Camera::update_gl_modelview_matrix()
 {
     if (_dirty)
     {
-        graphics_utils::look_at(*this);
+        graphics_utils::look_at(_x, _y);
         _dirty = false;
     }
 }

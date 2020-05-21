@@ -19,4 +19,11 @@ set_target_properties(GraphicsUtils PROPERTIES
         14
 )
 
-target_link_libraries(GraphicsUtils PRIVATE glad stb Logger glm Camera)
+target_link_libraries(GraphicsUtils
+    PUBLIC
+        glad
+    PRIVATE
+        stb
+        Logger
+        glm
+        )
