@@ -19,7 +19,7 @@ namespace
 {
     void handle_input()
     {
-        Input& input = Input::instance();
+        const auto& input = Input::instance();
         Camera& camera = Camera::instance();
 
         if (input.left())

@@ -22,5 +22,5 @@ namespace collisions
     MapTile* overlaps(MapTile* neighboring_tiles[9], float x_center, float y_center, float width, float height, bool collidable = true);
     MapTile* overlaps_strict(MapTile *neighboring_tiles[9], float x_center, float y_center, float width, float height, bool collidable = true);
 
-    void get_neighbouring_tiles(Level&, float x, float y, MapTile *out_neighboring_tiles[9]);
+    void get_neighbouring_tiles(const Level&, float x, float y, MapTile *out_neighboring_tiles[9]);
 }
