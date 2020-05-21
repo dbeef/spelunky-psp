@@ -19,17 +19,13 @@ set_target_properties(TextureBank PROPERTIES
         )
 
 target_link_libraries(TextureBank
-        PRIVATE
-            Logger
-            stb
-            Camera
-            Video
-            glm::glm
-            GraphicsUtils
-            cjson
-        PUBLIC
-            glad
-            Renderer
+    PUBLIC
+        glad
+        Renderer
+    PRIVATE
+        Logger
+        GraphicsUtils
+        cjson
         )
 
 if (SPELUNKY_PSP_PLATFORM_LINUX)
