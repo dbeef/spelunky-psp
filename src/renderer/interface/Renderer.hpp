@@ -1,6 +1,5 @@
 #pragma once
 
-#include "glad/glad.h"
 #include "MapTileType.hpp"
 #include "RenderEntity.hpp"
 #include "Mesh.hpp"
