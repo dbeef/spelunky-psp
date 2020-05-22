@@ -1,6 +1,7 @@
 #include "Input.hpp"
 
 #include <SDL/SDL_events.h>
+#include <cstdlib>
 
 void Input::poll()
 {
