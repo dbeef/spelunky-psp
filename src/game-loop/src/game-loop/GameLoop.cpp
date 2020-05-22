@@ -22,47 +22,18 @@ std::function<void(uint32_t delta_time_ms)>& GameLoop::get()
 
 GameLoop::GameLoop()
 {
-    TextureBank::instance().load_textures();
-    TextureBank::instance().load_texture_regions();
-
-    Camera::instance().update_gl_projection_matrix();
-
-    // TODO: State pattern: "main menu" state should handle this, or "start game" because of also loading assets
-    LevelGenerator::instance().getLevel().clean_map_layout();
-    LevelGenerator::instance().getLevel().generate_frame();
-    LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU);
-    LevelGenerator::instance().getLevel().generate_cave_background();
-    LevelGenerator::instance().getLevel().batch_vertices();
-    LevelGenerator::instance().getLevel().add_render_entity();
-    _game_objects.emplace_back(std::make_shared<MainDude>());
+    _states.current = &_states.started;
+    _states.current->enter(*this);
 
     _loop = [this](uint32_t delta_time_ms)
     {
-        auto &camera = Camera::instance();
-        auto &level_renderer = Renderer::instance();
+        assert(_states.current);
+        auto new_state = _states.current->update(*this, delta_time_ms);
 
-        camera.update_gl_modelview_matrix();
-
-        level_renderer.render();
-        level_renderer.update();
-
-        // Update game objects:
-
-        for (auto& game_object : _game_objects)
+        if (new_state != _states.current)
         {
-            game_object->update(delta_time_ms);
-        }
-
-        // Remove game objects marked for disposal:
-
-        const auto it = std::remove_if(_game_objects.begin(), _game_objects.end(), [](const auto& game_object)
-        {
-            return game_object->is_marked_for_disposal();
-        });
-
-        if (it != _game_objects.end())
-        {
-            _game_objects.erase(it, _game_objects.end());
+            new_state->enter(*this);
+            _states.current = new_state;
         }
     };
 }
