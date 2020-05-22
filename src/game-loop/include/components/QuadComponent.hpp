@@ -10,6 +10,7 @@
 class MainDude;
 class MainLogo;
 class QuitSign;
+class StartSign;
 
 class QuadComponent
 {
@@ -21,6 +22,7 @@ public:
     void update(MainDude&, uint32_t delta_time_ms);
     void update(MainLogo&, uint32_t delta_time_ms);
     void update(QuitSign&, uint32_t delta_time_ms);
+    void update(StartSign&, uint32_t delta_time_ms);
 
     template <class T>
     void frame_changed(T frame_index) { _frame_index = static_cast<std::size_t>(frame_index);_frame_changed = true; }
