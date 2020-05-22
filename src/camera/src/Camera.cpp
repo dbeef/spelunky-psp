@@ -6,6 +6,18 @@
 #include "graphics_utils/LookAt.hpp"
 #include "Camera.hpp"
 
+namespace
+{
+    // Returns coefficient to glOrtho of such value,
+    // so screen with dimensions of screen_width_tiles would entirely fit on the screen.
+    float calculate_coefficient(std::size_t screen_width_tiles)
+    {
+        const auto& video = Video::instance();
+        return (screen_width_tiles / video.get_aspect()) / 2.0f;
+    }
+
+}
+
 Camera *Camera::_camera = nullptr;
 
 Camera &Camera::instance()
@@ -44,12 +56,14 @@ void Camera::update_gl_projection_matrix() const
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
 
-    const float coeff = 6.0f;
+    static const float coeff = calculate_coefficient(20);
+    static const GLdouble near = -100;
+    static const GLdouble far = 100;
 
-    DebugGlCall(glOrtho(-1 * coeff * video.get_aspect(),
+    DebugGlCall(glOrtho(-1 * coeff * video.get_aspect(), // How much tiles will fit on half of the screen width.
                          1 * coeff * video.get_aspect(),
-                         1 * coeff,
+                         1 * coeff, // How much tiles will fit on half of the screen height.
                         -1 * coeff,
-                        -1 * coeff,
-                         1 * coeff));
+                         near,
+                         far));
 }
