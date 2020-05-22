@@ -82,25 +82,15 @@ void Level::initialise_tiles_from_splash_screen(SplashScreenType splash_type) {
     int tab[SPLASH_SCREEN_HEIGHT][SPLASH_SCREEN_WIDTH];
     bool offset_on_upper_screen = false;
 
-    if (splash_type == ON_LEVEL_DONE_UPPER || splash_type == SCORES_UPPER || splash_type == MAIN_MENU_UPPER) {
+    if (splash_type == ON_LEVEL_DONE || splash_type == SCORES || splash_type == MAIN_MENU) {
         offset_on_upper_screen = true;
 
-        if (splash_type == MAIN_MENU_UPPER)
+        if (splash_type == MAIN_MENU)
             memcpy(tab, main_menu_upper, sizeof(main_menu_upper));
-        else if (splash_type == ON_LEVEL_DONE_UPPER)
+        else if (splash_type == ON_LEVEL_DONE)
             memcpy(tab, on_level_done_upper, sizeof(on_level_done_upper));
-        else if (splash_type == SCORES_UPPER)
+        else if (splash_type == SCORES)
             memcpy(tab, scores_upper, sizeof(scores_upper));
-    }
-
-    if (splash_type == ON_LEVEL_DONE_LOWER || splash_type == SCORES_LOWER || splash_type == MAIN_MENU_LOWER) {
-
-        if (splash_type == ON_LEVEL_DONE_LOWER)
-            memcpy(tab, on_level_done_lower, sizeof(on_level_done_lower));
-        else if (splash_type == MAIN_MENU_LOWER)
-            memcpy(tab, main_menu_lower, sizeof(main_menu_lower));
-        else if (splash_type == SCORES_LOWER)
-            memcpy(tab, scores_lower, sizeof(scores_lower));
     }
 
     //Now we initialise every tile in the splash screen and give it a map_index, which describes its location

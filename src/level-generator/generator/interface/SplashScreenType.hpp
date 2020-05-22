@@ -11,13 +11,11 @@
  * There's a division between lower-screen splash screen and upper-screen splash screen,
  * as they may be composed of different tiles.
  */
-enum SplashScreenType {
-    ON_LEVEL_DONE_UPPER,
-    ON_LEVEL_DONE_LOWER,
-    SCORES_UPPER,
-    SCORES_LOWER,
-    MAIN_MENU_UPPER,
-    MAIN_MENU_LOWER,
+enum SplashScreenType
+{
+    ON_LEVEL_DONE,
+    SCORES,
+    MAIN_MENU,
 };
 
 #endif //SPELUNKYDS_SPLASHSCREENTYPE_H
