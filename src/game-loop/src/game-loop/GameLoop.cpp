@@ -1,7 +1,3 @@
-//
-// Created by dbeef on 2/5/20.
-//
-
 #include "LevelGenerator.hpp"
 #include "SplashScreenType.hpp"
 #include "Camera.hpp"

@@ -1,10 +1,3 @@
-//
-// Created by dbeef on 5/22/20.
-//
-
-#ifndef SPELUNKY_PSP_GAMELOOPBASESTATE_HPP
-#define SPELUNKY_PSP_GAMELOOPBASESTATE_HPP
-
 #pragma once
 
 #include <cstdint>
@@ -19,6 +12,3 @@ public:
     virtual void enter(GameLoop&) = 0;
     virtual void exit(GameLoop&) = 0;
 };
-
-
-#endif //SPELUNKY_PSP_GAMELOOPBASESTATE_HPP

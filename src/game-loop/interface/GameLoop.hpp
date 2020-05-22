@@ -1,9 +1,4 @@
-//
-// Created by dbeef on 2/5/20.
-//
-
-#ifndef RESOURCE_COMPILER_GAMELOOP_HPP
-#define RESOURCE_COMPILER_GAMELOOP_HPP
+#pragma once
 
 #include <functional>
 #include <memory>
@@ -39,6 +34,3 @@ private:
     std::vector<std::shared_ptr<GameObject>> _game_objects;
     std::function<void(uint32_t delta_time_ms)> _loop;
 };
-
-
-#endif //RESOURCE_COMPILER_GAMELOOP_HPP
