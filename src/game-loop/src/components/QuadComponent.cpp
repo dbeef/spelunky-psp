@@ -4,6 +4,7 @@
 #include "components/QuadComponent.hpp"
 #include "game-objects/MainLogo.hpp"
 #include "game-objects/QuitSign.hpp"
+#include "game-objects/StartSign.hpp"
 
 void QuadComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
 {
@@ -91,6 +92,30 @@ void QuadComponent::update(QuitSign& quit_sign, uint32_t delta_time_ms)
     // Make quad center to be at 0.0:
     const float pos_x = quit_sign._position.x_center - (_quad_dimensions.width / 2);
     const float pos_y = quit_sign._position.y_center - (_quad_dimensions.height / 2);
+
+    _quad.set_translation(pos_x, pos_y);
+    _quad.set_scale(_quad_dimensions.width, _quad_dimensions.height);
+    _quad.write();
+}
+
+void QuadComponent::update(StartSign& start_sign, uint32_t delta_time_ms)
+{
+    // FIXME: Probably this should be common between game objects, as nothing differs between MainDude and StartSign.
+
+    if (_frame_changed)
+    {
+        const auto texture_region = TextureBank::instance().get_region(_texture_type, _frame_index);
+
+        texture_region.set_quad_xy(_quad);
+        texture_region.set_quad_uv(_quad);
+        texture_region.set_quad_indices(_quad);
+
+        _frame_changed = false;
+    }
+
+    // Make quad center to be at 0.0:
+    const float pos_x = start_sign._position.x_center - (_quad_dimensions.width / 2);
+    const float pos_y = start_sign._position.y_center - (_quad_dimensions.height / 2);
 
     _quad.set_translation(pos_x, pos_y);
     _quad.set_scale(_quad_dimensions.width, _quad_dimensions.height);
