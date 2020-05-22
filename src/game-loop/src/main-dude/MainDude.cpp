@@ -1,3 +1,4 @@
+#include <main-dude/MainDude.hpp>
 #include "LevelGenerator.hpp"
 #include "Collisions.hpp"
 #include "main-dude/MainDude.hpp"
@@ -22,15 +23,17 @@ namespace
     const float MAIN_DUDE_MAX_Y_VELOCITY = 0.26f;
 }
 
-MainDude::MainDude()
+MainDude::MainDude(float x_pos_center, float y_pos_center)
     : _physics(MAIN_DUDE_PHYSICAL_WIDTH, MAIN_DUDE_PHYSICAL_HEIGHT)
     , _quad(TextureType::MAIN_DUDE, MAIN_DUDE_QUAD_WIDTH, MAIN_DUDE_QUAD_HEIGHT)
 {
     _states.current = &_states.standing;
     _states.current->enter(*this);
 
-    _physics.set_position(3, 3);
+    _physics.set_position(x_pos_center, y_pos_center);
     _physics.set_max_y_velocity(MAIN_DUDE_MAX_Y_VELOCITY);
+
+    _other.facing_left = true;
 
     update(0);
 }

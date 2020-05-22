@@ -28,7 +28,7 @@ class MainDude : public GameObject
 {
 public:
 
-    MainDude();
+    MainDude(float x_pos_center, float y_pos_center);
     void update(uint32_t delta_time_ms) override;
 
 private:
