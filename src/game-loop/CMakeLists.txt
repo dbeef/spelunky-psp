@@ -4,6 +4,7 @@ add_library(GameLoop STATIC
         src/game-loop/GameLoop.cpp
         src/game-loop/GameLoopMainMenuState.cpp
         src/game-loop/GameLoopPlayingState.cpp
+        src/game-loop/GameLoopStartedState.cpp
         src/main-dude/MainDude.cpp
         src/main-dude/states/MainDudeStandingState.cpp
         src/main-dude/states/MainDudeExitingState.cpp
@@ -22,6 +23,7 @@ add_library(GameLoop STATIC
         interface/GameLoopBaseState.hpp
         interface/GameLoopMainMenuState.hpp
         interface/GameLoopPlayingState.hpp
+        interface/GameLoopStartedState.hpp
         include/main-dude/MainDude.hpp
         include/GameObject.hpp
         include/components/PhysicsComponent.hpp

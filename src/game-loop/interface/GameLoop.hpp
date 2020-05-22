@@ -12,6 +12,7 @@
 #include "GameLoopBaseState.hpp"
 #include "GameLoopMainMenuState.hpp"
 #include "GameLoopPlayingState.hpp"
+#include "GameLoopStartedState.hpp"
 
 class GameObject;
 
@@ -25,11 +26,13 @@ private:
     friend class GameLoopBaseState;
     friend class GameLoopMainMenuState;
     friend class GameLoopPlayingState;
+    friend class GameLoopStartedState;
 
     struct
     {
         GameLoopMainMenuState main_menu;
         GameLoopPlayingState playing;
+        GameLoopStartedState started;
     } _states;
 
     std::vector<std::shared_ptr<GameObject>> _game_objects;
