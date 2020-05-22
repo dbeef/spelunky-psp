@@ -30,7 +30,7 @@ GameLoop::GameLoop()
     // TODO: State pattern: "main menu" state should handle this, or "start game" because of also loading assets
     LevelGenerator::instance().getLevel().clean_map_layout();
     LevelGenerator::instance().getLevel().generate_frame();
-    LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU_UPPER);
+    LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU);
     LevelGenerator::instance().getLevel().generate_cave_background();
     LevelGenerator::instance().getLevel().batch_vertices();
     LevelGenerator::instance().getLevel().add_render_entity();
