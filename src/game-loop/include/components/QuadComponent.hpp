@@ -13,6 +13,7 @@ class QuitSign;
 class StartSign;
 class ScoresSign;
 class TutorialSign;
+class CopyrightsSign;
 
 class QuadComponent
 {
@@ -27,6 +28,7 @@ public:
     void update(StartSign&, uint32_t delta_time_ms);
     void update(ScoresSign&, uint32_t delta_time_ms);
     void update(TutorialSign&, uint32_t delta_time_ms);
+    void update(CopyrightsSign&, uint32_t delta_time_ms);
 
     template <class T>
     void frame_changed(T frame_index) { _frame_index = static_cast<std::size_t>(frame_index);_frame_changed = true; }
