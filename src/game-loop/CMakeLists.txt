@@ -27,6 +27,7 @@ add_library(GameLoop STATIC
         include/main-dude/MainDude.hpp
         include/game-objects/GameObject.hpp
         include/game-objects/MainLogo.hpp
+        include/game-objects/QuitSign.hpp
         include/game-objects/MainMenuSpritesheetFrames.hpp
         include/components/PhysicsComponent.hpp
         include/components/QuadComponent.hpp
