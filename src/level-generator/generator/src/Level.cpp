@@ -7,6 +7,7 @@
 #include <cstring>
 #include <algorithm>
 
+#include "LevelGenerator.hpp"
 #include "Renderer.hpp"
 #include "Level.hpp"
 #include "SplashScreenType.hpp"
@@ -23,6 +24,169 @@
 #include "Direction.hpp"
 
 using namespace Consts;
+
+/**
+ * Used in the process of placing rooms.
+ * !\relates generate_new_rooms
+ */
+void obtain_new_direction(int curr_x, Direction &direction) {
+    if (curr_x == 0)
+        //we're on the left side of the map, so go right
+        direction = Direction::RIGHT;
+    else if (curr_x == 2)
+        //we're on the right side of the map, so go left
+        direction = Direction::LEFT;
+    else
+        //we're in the middle, so make a guess where should we gow now
+        direction = static_cast<Direction>(rand() % 2); //left or right
+}
+
+void Level::generate_new_level_layout() 
+{
+    auto& level = LevelGenerator::instance().getLevel();
+    
+    //clean current layout
+    level.clean_map_layout();
+    for (auto &room_type : level.layout)
+        for (RoomType &b : room_type)
+            //not visited rooms are of CLOSED type by default
+            b = RoomType::R_CLOSED;
+
+    //generate new seed for the random number generator
+//    srand(timerElapsed(1));
+
+    //set starting position to the random room in the most upper row
+    int curr_x = rand() % 3;
+    int curr_y = ROOMS_Y - 1;
+    //direction represents where the generator will go in the next loop iteration
+    Direction direction;
+    obtain_new_direction(curr_x, direction);
+
+    bool exit_placed = false;
+
+    //set the starting room as an entrance room
+    level.layout[curr_x][curr_y] = RoomType::R_ENTRANCE;
+
+    //while we're on the very bottom floor or higher, do
+    while (curr_y >= 0) {
+
+        if (direction == Direction::LEFT || direction == Direction::RIGHT) {
+
+            if ((direction == Direction::LEFT && curr_x == 0) || (direction == Direction::RIGHT && curr_x == 2)) {
+                //our direction is to go left, but we're already on the left side of the map, so go down
+                direction = Direction::DOWN;
+            } else {
+
+                if (direction == Direction::LEFT)
+                    //our direction is to go left, and we're not on the left side of the map yet
+                    curr_x--;
+                else
+                    //same, if right side
+                    curr_x++;
+
+                if (curr_y == 0 && !exit_placed && rand() % 2 == 0) {
+                    //we're on the most bottom floor, we didn't plant an exit yet and we've guessed that's the place
+                    exit_placed = true;
+                    level.layout[curr_x][curr_y] = RoomType::R_EXIT;
+                } else
+                    level.layout[curr_x][curr_y] = RoomType::R_LEFT_RIGHT;
+
+                if (rand() % 3 == 2)
+                    //random chance that we change our direction to go down in the next iteration
+                    direction = Direction::DOWN;
+            }
+
+        } else if (direction == Direction::DOWN) {
+
+            if (curr_y > 0) {
+
+                level.layout[curr_x][curr_y] = RoomType::R_LEFT_RIGHT_DOWN;
+                curr_y--;
+                level.layout[curr_x][curr_y] = RoomType::R_LEFT_RIGHT_UP;
+
+                if (curr_y == 0 && !exit_placed && rand() % 2 == 0) {
+                    //if we're on the very bottom floor, no exit planted yet and a guess tells us so, place an exit
+                    exit_placed = true;
+                    level.layout[curr_x][curr_y] = RoomType::R_EXIT;
+                }
+
+                obtain_new_direction(curr_x, direction);
+            } else {
+
+                if (!exit_placed)
+                    //we're on the very bottom floor, didn't plant an exit yet and we're
+                    //done with iterating through map, so plant an exit
+                    level.layout[curr_x][curr_y] = RoomType::R_EXIT;
+
+                break;
+            }
+
+        }
+    }
+
+    //TODO more post-generation effects, i.e if there's a column of '0' type rooms, then make a snake well
+    place_an_altar();
+    place_a_shop();
+}
+
+void Level::place_an_altar() {
+    auto& level = LevelGenerator::instance().getLevel();
+    for (int a = 0; a < ROOMS_X; a++) {
+        for (int b = 0; b < ROOMS_Y; b++) {
+            if (level.layout[a][b] == RoomType::R_CLOSED) {
+                level.layout[a][b] = RoomType::R_ALTAR;
+                return;
+            }
+        }
+    }
+}
+
+
+/**
+ * Finds a closed room that is not blocked from left or right side by other closed room,
+ * and plants a shop there that is oriented to the not-blocked side.
+ * !\relates generate_new_rooms
+ */
+void Level::place_a_shop() {
+    auto& level = LevelGenerator::instance().getLevel();
+
+    for (int a = 0; a < ROOMS_X; a++) {
+        for (int b = 0; b < ROOMS_Y; b++) {
+            if (level.layout[a][b] == RoomType::R_CLOSED) {
+                if (a == 0) {
+                    if (level.layout[a + 1][b] != RoomType::R_CLOSED) {
+//                        if (GameState::instance().robbed_or_killed_shopkeeper)
+                        if (false)
+                            level.layout[a][b] = RoomType::R_SHOP_RIGHT_MUGSHOT;
+                        else
+                            level.layout[a][b] = RoomType::R_SHOP_RIGHT;
+                        return;
+                    }
+                } else if (a == 2) {
+                    if (level.layout[a - 1][b] != RoomType::R_CLOSED) {
+//                        if (GameState::instance().robbed_or_killed_shopkeeper)
+                        if (false)
+                            level.layout[a][b] = RoomType::R_SHOP_LEFT_MUGSHOT;
+                        else
+                            level.layout[a][b] = RoomType::R_SHOP_LEFT;
+                        return;
+                    }
+                } else if (a == 1) {
+                    if (level.layout[a - 1][b] != RoomType::R_CLOSED &&
+                        level.layout[a + 1][b] != RoomType::R_CLOSED) {
+
+                        if (rand() % 2 == 0)
+                            level.layout[a][b] = RoomType::R_SHOP_LEFT;
+                        else
+                            level.layout[a][b] = RoomType::R_SHOP_RIGHT;
+
+                        return;
+                    }
+                }
+            }
+        }
+    }
+}
 
 void Level::generate_frame() {
 
