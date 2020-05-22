@@ -1,3 +1,4 @@
+#include <main-dude/MainDude.hpp>
 #include "main-dude/states/MainDudeExitingState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
@@ -17,8 +18,7 @@ MainDudeBaseState* MainDudeExitingState::update(MainDude& main_dude, uint32_t de
 
     if (main_dude._animation.is_finished())
     {
-        // Normally should enter next level, yet for now just change state:
-        return &main_dude._states.standing;
+        main_dude._other.entered_door = true;
     }
 
     return this;
