@@ -1,3 +1,4 @@
+#include "LevelGenerator.hpp"
 #include "logger/log.h"
 #include "Renderer.hpp"
 #include "GameLoop.hpp"
@@ -71,6 +72,14 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
 void GameLoopPlayingState::enter(GameLoop&)
 {
     log_info("Entered GameLoopPlayingState");
+
+    LevelGenerator::instance().getLevel().clean_map_layout();
+    LevelGenerator::instance().getLevel().generate_frame();
+    LevelGenerator::instance().getLevel().generate_new_level_layout();
+    LevelGenerator::instance().getLevel().initialise_tiles_from_room_layout();
+    LevelGenerator::instance().getLevel().generate_cave_background();
+    LevelGenerator::instance().getLevel().batch_vertices();
+    LevelGenerator::instance().getLevel().add_render_entity();
 }
 
 void GameLoopPlayingState::exit(GameLoop &)

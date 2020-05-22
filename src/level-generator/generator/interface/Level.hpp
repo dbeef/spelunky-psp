@@ -57,6 +57,8 @@ public:
     //sets all tiles to !existing
     void clean_map_layout();
 
+    void generate_new_level_layout();
+
     void generate_cave_background();
 
     void generate_frame();
@@ -72,6 +74,9 @@ public:
     void add_render_entity();
 
 private:
+
+    void place_an_altar();
+    void place_a_shop();
 
     std::vector<Vertex> _mesh;
     std::vector<IndexType> _indices;
