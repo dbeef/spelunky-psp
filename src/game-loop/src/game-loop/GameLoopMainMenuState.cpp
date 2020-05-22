@@ -11,6 +11,7 @@
 #include "game-objects/StartSign.hpp"
 #include "game-objects/ScoresSign.hpp"
 #include "game-objects/TutorialSign.hpp"
+#include "game-objects/CopyrightsSign.hpp"
 
 namespace
 {
@@ -97,14 +98,15 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     camera.setX(5.0f);
     camera.setY(7.2f);
 
-    _main_dude = std::make_shared<MainDude>(17.37f, 18.5f);
+    _main_dude = std::make_shared<MainDude>(17.37f, 17.5f);
 
     game_loop._game_objects.push_back(_main_dude);
-    game_loop._game_objects.emplace_back(std::make_shared<MainLogo>(9.9f, 14.25f));
+    game_loop._game_objects.emplace_back(std::make_shared<MainLogo>(9.9f, 13.25f));
     game_loop._game_objects.emplace_back(std::make_shared<QuitSign>(16.0f, 9.5f));
-    game_loop._game_objects.emplace_back(std::make_shared<StartSign>(5.5f, 18.0f));
-    game_loop._game_objects.emplace_back(std::make_shared<ScoresSign>(9.5f, 18.0f));
-    game_loop._game_objects.emplace_back(std::make_shared<TutorialSign>(1.0f, 17.5f));
+    game_loop._game_objects.emplace_back(std::make_shared<StartSign>(5.5f, 17.0f));
+    game_loop._game_objects.emplace_back(std::make_shared<ScoresSign>(9.5f, 17.0f));
+    game_loop._game_objects.emplace_back(std::make_shared<TutorialSign>(1.0f, 16.5f));
+    game_loop._game_objects.emplace_back(std::make_shared<CopyrightsSign>(10.0f, 19.5f));
 
     // TODO: Implement a mechanism for sprite rendering priority, so the main logo would be always rendered
     //       behind other sprites. Some RenderingPriority enum representing depth (Z axis) would be sufficient.

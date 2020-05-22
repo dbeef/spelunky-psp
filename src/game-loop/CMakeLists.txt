@@ -31,6 +31,7 @@ add_library(GameLoop STATIC
         include/game-objects/StartSign.hpp
         include/game-objects/ScoresSign.hpp
         include/game-objects/TutorialSign.hpp
+        include/game-objects/CopyrightsSign.hpp
         include/game-objects/MainMenuSpritesheetFrames.hpp
         include/components/PhysicsComponent.hpp
         include/components/QuadComponent.hpp
