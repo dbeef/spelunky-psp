@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GameLoopBaseState.hpp"
-#include <cstdint>
 
 class GameLoop;
 
