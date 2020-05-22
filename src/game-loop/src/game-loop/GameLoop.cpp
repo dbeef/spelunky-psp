@@ -6,7 +6,7 @@
 #include "glad/glad.h"
 #include "graphics_utils/DebugGlCall.hpp"
 #include "Renderer.hpp"
-#include "GameObject.hpp"
+#include "game-objects/GameObject.hpp"
 #include "main-dude/MainDude.hpp"
 
 #include <algorithm>

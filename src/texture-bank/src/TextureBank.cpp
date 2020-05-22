@@ -33,6 +33,16 @@ namespace
         #include "generated/main-dude-spritesheet.json.hpp"
     }
 
+    namespace main_menu_png
+    {
+        #include "generated/main-menu-spritesheet.png.hpp"
+    }
+
+    namespace main_menu_json
+    {
+        #include "generated/main-menu-spritesheet.json.hpp"
+    }
+
     struct TextureInput
     {
         const char *data;
@@ -51,6 +61,7 @@ namespace
         std::vector<TextureInput> out;
         out.push_back({level_tiles_png::data, sizeof(level_tiles_png::data), TextureType::CAVE_LEVEL_TILES});
         out.push_back({main_dude_png::data, sizeof(main_dude_png::data), TextureType::MAIN_DUDE});
+        out.push_back({main_menu_png::data, sizeof(main_menu_png::data), TextureType::MAIN_MENU});
         return out;
     }
 
@@ -59,6 +70,7 @@ namespace
         std::vector<TextureRegionInput> out;
         out.push_back({level_tiles_json::data, TextureType::CAVE_LEVEL_TILES});
         out.push_back({main_dude_json::data, TextureType::MAIN_DUDE});
+        out.push_back({main_menu_json::data, TextureType::MAIN_MENU});
         return out;
     }
 }

@@ -2,11 +2,13 @@
 
 #include <cstdint>
 
+#include "RenderEntity.hpp"
 #include "TextureType.hpp"
 #include "Quad.hpp"
 #include "MapTile.hpp"
 
 class MainDude;
+class MainLogo;
 
 class QuadComponent
 {
@@ -14,7 +16,9 @@ public:
 
     explicit QuadComponent(TextureType type, float quad_width, float quad_height);
     ~QuadComponent();
+
     void update(MainDude&, uint32_t delta_time_ms);
+    void update(MainLogo&, uint32_t delta_time_ms);
 
     template <class T>
     void frame_changed(T frame_index) { _frame_index = static_cast<std::size_t>(frame_index);_frame_changed = true; }

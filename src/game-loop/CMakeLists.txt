@@ -25,7 +25,9 @@ add_library(GameLoop STATIC
         interface/GameLoopPlayingState.hpp
         interface/GameLoopStartedState.hpp
         include/main-dude/MainDude.hpp
-        include/GameObject.hpp
+        include/game-objects/GameObject.hpp
+        include/game-objects/MainLogo.hpp
+        include/game-objects/MainMenuSpritesheetFrames.hpp
         include/components/PhysicsComponent.hpp
         include/components/QuadComponent.hpp
         include/components/AnimationComponent.hpp
