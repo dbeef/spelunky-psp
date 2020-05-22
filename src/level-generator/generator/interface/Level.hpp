@@ -18,10 +18,10 @@ namespace Consts
     const int ROOMS_X = 3;
     const int ROOMS_Y = 3;
 
-    const int SPLASH_SCREEN_WIDTH = 16;
+    const int SPLASH_SCREEN_WIDTH = 20;
     const int SPLASH_SCREEN_HEIGHT = 12;
 
-    const int ROOM_TILE_WIDTH_SPLASH_SCREEN = 16;
+    const int ROOM_TILE_WIDTH_SPLASH_SCREEN = 20;
     const int ROOM_TILE_HEIGHT_SPLASH_SCREEN = 12;
 
     const int ROOM_TILE_WIDTH_GAME = 10;
