@@ -10,6 +10,7 @@
 #include "game-objects/QuitSign.hpp"
 #include "game-objects/StartSign.hpp"
 #include "game-objects/ScoresSign.hpp"
+#include "game-objects/TutorialSign.hpp"
 
 namespace
 {
@@ -93,6 +94,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     game_loop._game_objects.emplace_back(std::make_shared<QuitSign>(16.0f, 9.5f));
     game_loop._game_objects.emplace_back(std::make_shared<StartSign>(5.5f, 18.0f));
     game_loop._game_objects.emplace_back(std::make_shared<ScoresSign>(9.5f, 18.0f));
+    game_loop._game_objects.emplace_back(std::make_shared<TutorialSign>(1.0f, 17.5f));
 
     // TODO: Implement a mechanism for sprite rendering priority, so the main logo would be always rendered
     //       behind other sprites. Some RenderingPriority enum representing depth (Z axis) would be sufficient.
