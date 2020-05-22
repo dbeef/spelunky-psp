@@ -69,6 +69,14 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
         game_objects.erase(it, game_objects.end());
     }
 
+    // Other:
+
+    if (_main_dude->entered_door())
+    {
+        // Right now only "start" room is handled.
+        return &game_loop._states.playing;
+    }
+
     handle_input();
     
     return this;
@@ -89,7 +97,9 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     camera.setX(5.0f);
     camera.setY(7.2f);
 
-    game_loop._game_objects.emplace_back(std::make_shared<MainDude>(17.37f, 18.5f));
+    _main_dude = std::make_shared<MainDude>(17.37f, 18.5f);
+
+    game_loop._game_objects.push_back(_main_dude);
     game_loop._game_objects.emplace_back(std::make_shared<MainLogo>(9.9f, 14.25f));
     game_loop._game_objects.emplace_back(std::make_shared<QuitSign>(16.0f, 9.5f));
     game_loop._game_objects.emplace_back(std::make_shared<StartSign>(5.5f, 18.0f));
@@ -100,7 +110,8 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     //       behind other sprites. Some RenderingPriority enum representing depth (Z axis) would be sufficient.
 }
 
-void GameLoopMainMenuState::exit(GameLoop &)
+void GameLoopMainMenuState::exit(GameLoop& game_loop)
 {
-
+    game_loop._game_objects = {};
+    _main_dude = {};
 }

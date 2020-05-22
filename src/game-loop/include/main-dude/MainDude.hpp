@@ -31,6 +31,8 @@ public:
     MainDude(float x_pos_center, float y_pos_center);
     void update(uint32_t delta_time_ms) override;
 
+    bool entered_door() const { return _other.entered_door; }
+
 private:
 
     void handle_input(const Input& input);
@@ -72,6 +74,7 @@ private:
     struct
     {
         bool facing_left;
+        bool entered_door = false;
     } _other;
 
     static constexpr float DEFAULT_DELTA_X = 0.01f;
