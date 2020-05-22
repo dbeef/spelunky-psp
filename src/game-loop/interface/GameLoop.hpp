@@ -33,6 +33,7 @@ private:
         GameLoopMainMenuState main_menu;
         GameLoopPlayingState playing;
         GameLoopStartedState started;
+        GameLoopBaseState* current;
     } _states;
 
     std::vector<std::shared_ptr<GameObject>> _game_objects;
