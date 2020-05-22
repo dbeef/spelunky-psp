@@ -9,7 +9,7 @@ class StartSign : public GameObject
 public:
 
     StartSign(float pos_x_center, float pos_y_center)
-            :_quad(TextureType::MAIN_MENU, LOGO_QUAD_WIDTH, LOGO_QUAD_HEIGHT)
+            :_quad(TextureType::MAIN_MENU, START_SIGN_QUAD_WIDTH, START_SIGN_QUAD_HEIGHT)
             , _position {pos_x_center, pos_y_center}
     {
         _quad.frame_changed<MainMenuSpritesheetFrames>(MainMenuSpritesheetFrames::START);
@@ -22,8 +22,8 @@ public:
 
 private:
 
-    const float LOGO_QUAD_WIDTH = 3;
-    const float LOGO_QUAD_HEIGHT = 2;
+    const float START_SIGN_QUAD_WIDTH = 3;
+    const float START_SIGN_QUAD_HEIGHT = 2;
 
     struct
     {
