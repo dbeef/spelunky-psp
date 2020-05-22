@@ -90,7 +90,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     camera.setY(7.2f);
 
     game_loop._game_objects.emplace_back(std::make_shared<MainDude>(17.37f, 18.5f));
-    game_loop._game_objects.emplace_back(std::make_shared<MainLogo>(9.37f, 14.25f));
+    game_loop._game_objects.emplace_back(std::make_shared<MainLogo>(9.9f, 14.25f));
     game_loop._game_objects.emplace_back(std::make_shared<QuitSign>(16.0f, 9.5f));
     game_loop._game_objects.emplace_back(std::make_shared<StartSign>(5.5f, 18.0f));
     game_loop._game_objects.emplace_back(std::make_shared<ScoresSign>(9.5f, 18.0f));
