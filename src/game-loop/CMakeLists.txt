@@ -1,7 +1,9 @@
 project(GameLoop)
 
 add_library(GameLoop STATIC
-        src/GameLoop.cpp
+        src/game-loop/GameLoop.cpp
+        src/game-loop/GameLoopMainMenuState.cpp
+        src/game-loop/GameLoopPlayingState.cpp
         src/main-dude/MainDude.cpp
         src/main-dude/states/MainDudeStandingState.cpp
         src/main-dude/states/MainDudeExitingState.cpp
@@ -17,7 +19,9 @@ add_library(GameLoop STATIC
         src/components/CameraComponent.cpp
         src/components/AnimationComponent.cpp
         interface/GameLoop.hpp
-        interface/GameState.hpp
+        interface/GameLoopBaseState.hpp
+        interface/GameLoopMainMenuState.hpp
+        interface/GameLoopPlayingState.hpp
         include/main-dude/MainDude.hpp
         include/GameObject.hpp
         include/components/PhysicsComponent.hpp
