@@ -6,6 +6,7 @@
 #include "LevelGenerator.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
+#include "game-objects/MainLogo.hpp"
 
 namespace
 {
@@ -85,6 +86,10 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     camera.setY(7.2f);
 
     game_loop._game_objects.emplace_back(std::make_shared<MainDude>(17.37f, 18.5f));
+    game_loop._game_objects.emplace_back(std::make_shared<MainLogo>(9.37f, 14.5f));
+
+    // TODO: Implement a mechanism for sprite rendering priority, so the main logo would be always rendered
+    //       behind other sprites. Some RenderingPriority enum representing depth (Z axis) would be sufficient.
 }
 
 void GameLoopMainMenuState::exit(GameLoop &)

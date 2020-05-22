@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RenderEntity.hpp"
-#include "GameObject.hpp"
+#include "game-objects/GameObject.hpp"
 #include "MainDudeSpritesheetFrames.hpp"
 
 #include "components/PhysicsComponent.hpp"
