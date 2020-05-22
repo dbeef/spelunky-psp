@@ -9,7 +9,7 @@ class QuitSign : public GameObject
 public:
 
     QuitSign(float pos_x_center, float pos_y_center)
-            :_quad(TextureType::MAIN_MENU, LOGO_QUAD_WIDTH, LOGO_QUAD_HEIGHT)
+            :_quad(TextureType::MAIN_MENU, QUIT_SIGN_QUAD_WIDTH, QUIT_SIGN_QUAD_HEIGHT)
             , _position {pos_x_center, pos_y_center}
     {
         _quad.frame_changed<MainMenuSpritesheetFrames>(MainMenuSpritesheetFrames::QUIT);
@@ -22,8 +22,8 @@ public:
 
 private:
 
-    const float LOGO_QUAD_WIDTH = 2;
-    const float LOGO_QUAD_HEIGHT = 1;
+    const float QUIT_SIGN_QUAD_WIDTH = 2;
+    const float QUIT_SIGN_QUAD_HEIGHT = 1;
 
     struct
     {
