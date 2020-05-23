@@ -1,6 +1,6 @@
 ## Spelunky® remake for the Sony PSP.
 
-[![`Build status`](https://travis-ci.org/dbeef/spelunky-psp.svg?branch=master)](https://travis-ci.org/dbeef/spelunky-psp)
+[![`Build status`](https://api.travis-ci.com/dbeef/spelunky-psp.svg?branch=master)](https://travis-ci.com/github/dbeef/spelunky-psp/)
 
 ### How?
 
