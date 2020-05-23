@@ -50,7 +50,12 @@ void Camera::update_gl_modelview_matrix()
 {
     if (_dirty)
     {
-        graphics_utils::look_at(_x, _y);
+        // rounding the values to 1 decimal point
+        // to avoid vertical screen-tearing like artifacts
+        auto rounded_x = (10.f * _x + .5f) / 10;
+        auto rounded_y = (10.f * _y + .5f) / 10;
+
+        graphics_utils::look_at(rounded_x, rounded_y);
         _dirty = false;
     }
 }
