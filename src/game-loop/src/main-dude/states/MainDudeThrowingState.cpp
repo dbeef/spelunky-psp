@@ -51,11 +51,11 @@ MainDudeBaseState *MainDudeThrowingState::update(MainDude& main_dude, uint32_t d
 
 MainDudeBaseState *MainDudeThrowingState::handle_input(MainDude& main_dude, const Input &input)
 {
-    if (input.square())
+    if (input.left())
     {
         main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
     }
-    if (input.circle())
+    if (input.right())
     {
         main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }

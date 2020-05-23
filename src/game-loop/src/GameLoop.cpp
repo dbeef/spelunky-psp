@@ -15,32 +15,6 @@
 
 #include <algorithm>
 
-namespace
-{
-    void handle_input()
-    {
-        const auto& input = Input::instance();
-        Camera& camera = Camera::instance();
-
-        if (input.left())
-        {
-            camera.setX(camera.getX() - 0.1f);
-        }
-        if (input.right())
-        {
-            camera.setX(camera.getX() + 0.1f);
-        }
-        if (input.up())
-        {
-            camera.setY(camera.getY() - 0.1f);
-        }
-        if (input.down())
-        {
-            camera.setY(camera.getY() + 0.1f);
-        }
-    }
-}
-
 std::function<void(uint32_t delta_time_ms)>& GameLoop::get()
 {
     return _loop;
@@ -90,7 +64,5 @@ GameLoop::GameLoop()
         {
             _game_objects.erase(it, _game_objects.end());
         }
-
-        handle_input();
     };
 }
