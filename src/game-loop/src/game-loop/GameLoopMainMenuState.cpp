@@ -13,33 +13,6 @@
 #include "game-objects/TutorialSign.hpp"
 #include "game-objects/CopyrightsSign.hpp"
 
-namespace
-{
-    // TODO: Remove once camera following main-dude is implemented.
-    void handle_input()
-    {
-        const auto& input = Input::instance();
-        Camera& camera = Camera::instance();
-
-        if (input.left())
-        {
-            camera.setX(camera.getX() - 0.1f);
-        }
-        if (input.right())
-        {
-            camera.setX(camera.getX() + 0.1f);
-        }
-        if (input.up())
-        {
-            camera.setY(camera.getY() - 0.1f);
-        }
-        if (input.down())
-        {
-            camera.setY(camera.getY() + 0.1f);
-        }
-    }
-}
-
 GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
     auto &camera = Camera::instance();
@@ -78,8 +51,6 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
         return &game_loop._states.playing;
     }
 
-    handle_input();
-    
     return this;
 }
 

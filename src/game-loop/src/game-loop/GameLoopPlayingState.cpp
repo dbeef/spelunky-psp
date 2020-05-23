@@ -7,33 +7,6 @@
 #include "GameLoopPlayingState.hpp"
 #include "game-objects/GameObject.hpp"
 
-namespace
-{
-    // TODO: Remove once camera following main-dude is implemented.
-    void handle_input()
-    {
-        const auto& input = Input::instance();
-        Camera& camera = Camera::instance();
-
-        if (input.left())
-        {
-            camera.setX(camera.getX() - 0.1f);
-        }
-        if (input.right())
-        {
-            camera.setX(camera.getX() + 0.1f);
-        }
-        if (input.up())
-        {
-            camera.setY(camera.getY() - 0.1f);
-        }
-        if (input.down())
-        {
-            camera.setY(camera.getY() + 0.1f);
-        }
-    }
-}
-
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
     auto &camera = Camera::instance();
@@ -63,8 +36,6 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     {
         game_objects.erase(it, game_objects.end());
     }
-
-    handle_input();
 
     return this;
 }
