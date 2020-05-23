@@ -6,7 +6,7 @@ include(cmake/CurrentPlatform.cmake)
 spelunky_psp_detect_platform()
 spelunky_psp_add_platform_dependencies()
 
-if (SPELUNKY_PSP_PLATFORM_LINUX)
+if (SPELUNKY_PSP_PLATFORM_DESKTOP)
     # Tools meant to be run only on host (development) system.
     add_subdirectory(tools)
 endif()
