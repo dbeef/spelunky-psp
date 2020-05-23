@@ -152,6 +152,8 @@ endif()
 if (SX_SHARED_LIB)
     add_definitions(-DSX_CONFIG_SHARED_LIB=1)
     set(LIB_TYPE SHARED)
+else()
+    set(LIB_TYPE STATIC)
 endif()
 
 add_library(sx ${LIB_TYPE} ${SOURCE_FILES} ${INCLUDE_FILES} ${ASM_SOURCES})
