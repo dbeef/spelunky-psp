@@ -37,7 +37,7 @@ MainDudeBaseState* MainDudePushingState::update(MainDude& main_dude, uint32_t de
 
 MainDudeBaseState *MainDudePushingState::handle_input(MainDude& main_dude, const Input &input)
 {
-    if (input.square())
+    if (input.left())
     {
         main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
     }
@@ -46,7 +46,7 @@ MainDudeBaseState *MainDudePushingState::handle_input(MainDude& main_dude, const
         return &main_dude._states.running;
     }
 
-    if (input.circle())
+    if (input.right())
     {
         main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
@@ -55,7 +55,7 @@ MainDudeBaseState *MainDudePushingState::handle_input(MainDude& main_dude, const
         return &main_dude._states.running;
     }
 
-    if (input.triangle())
+    if (input.circle())
     {
         main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;

@@ -36,11 +36,11 @@ MainDudeBaseState* MainDudeJumpingState::update(MainDude& main_dude, uint32_t de
 
 MainDudeBaseState *MainDudeJumpingState::handle_input(MainDude& main_dude, const Input &input)
 {
-    if (input.square())
+    if (input.left())
     {
         main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
     }
-    if (input.circle())
+    if (input.right())
     {
         main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
@@ -61,7 +61,7 @@ MainDudeBaseState *MainDudeJumpingState::handle_input(MainDude& main_dude, const
         return &main_dude._states.throwing;
     }
 
-    if (input.bumper_l()) // FIXME: Awkward key mapping, change once camera following is implemented
+    if (input.up())
     {
         const auto* exit_tile = main_dude.is_overlaping_exit();
         if (exit_tile)
