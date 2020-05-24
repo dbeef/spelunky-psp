@@ -13,7 +13,7 @@
  */
 enum SplashScreenType
 {
-    ON_LEVEL_DONE,
+    LEVEL_SUMMARY,
     SCORES,
     MAIN_MENU,
 };
