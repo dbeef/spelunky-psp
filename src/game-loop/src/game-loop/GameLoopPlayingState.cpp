@@ -1,4 +1,5 @@
 #include "LevelGenerator.hpp"
+#include "Level.hpp"
 #include "logger/log.h"
 #include "Renderer.hpp"
 #include "GameLoop.hpp"
@@ -17,6 +18,7 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     auto x = game_loop._main_dude->get_x_pos_center();
     auto y = game_loop._main_dude->get_y_pos_center();
     camera.adjust_to_bounding_box(x, y);
+    camera.adjust_to_level_boundaries(Consts::MAP_GAME_WIDTH_TILES, Consts::MAP_GAME_HEIGHT_TILES);
 
     camera.update_gl_modelview_matrix();
 
