@@ -7,7 +7,6 @@
 #include "components/PhysicsComponent.hpp"
 #include "components/QuadComponent.hpp"
 #include "components/AnimationComponent.hpp"
-#include "components/CameraComponent.hpp"
 
 #include "main-dude/states/MainDudeRunningState.hpp"
 #include "main-dude/states/MainDudeExitingState.hpp"
@@ -23,6 +22,7 @@
 
 class MainDudeBaseState;
 class Input;
+class MapTile;
 
 class MainDude : public GameObject
 {
@@ -30,6 +30,11 @@ public:
 
     MainDude(float x_pos_center, float y_pos_center);
     void update(uint32_t delta_time_ms) override;
+
+    float get_x_pos_center() const { return _physics.get_x_position(); }
+    float get_y_pos_center() const { return _physics.get_y_position(); }
+
+    void set_position_on_tile(MapTile* map_tile);
 
     bool entered_door() const { return _other.entered_door; }
 
@@ -41,11 +46,9 @@ private:
     friend class PhysicsComponent;
     friend class QuadComponent;
     friend class AnimationComponent;
-    friend class CameraComponent;
     PhysicsComponent _physics;
     QuadComponent _quad;
     AnimationComponent _animation;
-    CameraComponent _camera;
 
     friend class MainDudeBaseState;
     friend class MainDudeRunningState;

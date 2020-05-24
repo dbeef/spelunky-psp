@@ -8,6 +8,8 @@
 
 namespace
 {
+    const std::size_t SCREEN_WIDTH_IN_TILES = 20;
+
     // Returns coefficient to glOrtho of such value,
     // so screen with dimensions of screen_width_tiles would entirely fit on the screen.
     float calculate_coefficient(std::size_t screen_width_tiles)
@@ -67,7 +69,7 @@ void Camera::update_gl_projection_matrix() const
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
 
-    static const float coeff = calculate_coefficient(20);
+    static const float coeff = calculate_coefficient(SCREEN_WIDTH_IN_TILES);
     static const GLdouble near = -100;
     static const GLdouble far = 100;
 

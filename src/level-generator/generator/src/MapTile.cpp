@@ -72,6 +72,9 @@ void MapTile::match_tile(MapTileType type) {
         case MapTileType::CAVE_SMOOTH:
             collidable = true;
             destroyable = true;
+        case MapTileType::CAVE_REGULAR:
+            collidable = true;
+            destroyable = true;
             break;
         case MapTileType::SCORES_STAR_DOOR:
             collidable = false;

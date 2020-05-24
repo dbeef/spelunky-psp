@@ -96,3 +96,10 @@ MapTile* MainDude::is_overlaping_exit() const
         return nullptr;
     }
 }
+
+void MainDude::set_position_on_tile(MapTile *map_tile)
+{
+    const auto x = map_tile->x + _quad.get_quad_width() / 2;
+    const auto y = map_tile->y + _quad.get_quad_height() / 2;
+    _physics.set_position(x, y);
+}

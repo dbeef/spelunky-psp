@@ -18,7 +18,7 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
     auto &camera = Camera::instance();
     auto &level_renderer = Renderer::instance();
     auto& game_objects = game_loop._game_objects;
-    
+
     camera.update_gl_modelview_matrix();
 
     level_renderer.render();
@@ -45,9 +45,8 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
 
     // Other:
 
-    if (_main_dude->entered_door())
+    if (game_loop._main_dude->entered_door())
     {
-        // Right now only "start" room is handled.
         return &game_loop._states.playing;
     }
 
@@ -66,25 +65,26 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     LevelGenerator::instance().getLevel().add_render_entity();
 
     auto &camera = Camera::instance();
-    camera.setX(5.0f);
-    camera.setY(7.2f);
+    camera.set_x(5.0f);
+    camera.set_y(7.3f);
 
-    _main_dude = std::make_shared<MainDude>(17.37f, 17.5f);
+    game_loop._game_objects.emplace_back(std::make_shared<MainLogo>(9.7f, 14.5f));
+    game_loop._game_objects.emplace_back(std::make_shared<QuitSign>(16.0f, 10.5f));
+    game_loop._game_objects.emplace_back(std::make_shared<StartSign>(5.5f, 18.0f));
+    game_loop._game_objects.emplace_back(std::make_shared<ScoresSign>(9.5f, 18.0f));
+    game_loop._game_objects.emplace_back(std::make_shared<TutorialSign>(1.0f, 17.5f));
+    game_loop._game_objects.emplace_back(std::make_shared<CopyrightsSign>(10.0f, 19.75f));
 
-    game_loop._game_objects.push_back(_main_dude);
-    game_loop._game_objects.emplace_back(std::make_shared<MainLogo>(9.9f, 13.25f));
-    game_loop._game_objects.emplace_back(std::make_shared<QuitSign>(16.0f, 9.5f));
-    game_loop._game_objects.emplace_back(std::make_shared<StartSign>(5.5f, 17.0f));
-    game_loop._game_objects.emplace_back(std::make_shared<ScoresSign>(9.5f, 17.0f));
-    game_loop._game_objects.emplace_back(std::make_shared<TutorialSign>(1.0f, 16.5f));
-    game_loop._game_objects.emplace_back(std::make_shared<CopyrightsSign>(10.0f, 19.5f));
+    game_loop._main_dude = std::make_shared<MainDude>(17.45f, 8.5f);
+    game_loop._game_objects.push_back(game_loop._main_dude);
 
     // TODO: Implement a mechanism for sprite rendering priority, so the main logo would be always rendered
     //       behind other sprites. Some RenderingPriority enum representing depth (Z axis) would be sufficient.
+    //       Right now stacking logo and signs before the main dude handles the problem.
 }
 
 void GameLoopMainMenuState::exit(GameLoop& game_loop)
 {
     game_loop._game_objects = {};
-    _main_dude = {};
+    game_loop._main_dude = {};
 }
