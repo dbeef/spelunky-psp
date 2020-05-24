@@ -25,6 +25,7 @@ void GameLoopStartedState::enter(GameLoop &)
     TextureBank::instance().load_textures();
     TextureBank::instance().load_texture_regions();
 
+    Camera::instance().calculate_coefficients();
     Camera::instance().update_gl_projection_matrix();
 
     _game_initialized = true;
