@@ -246,15 +246,15 @@ void Level::initialise_tiles_from_splash_screen(SplashScreenType splash_type) {
     int tab[SPLASH_SCREEN_HEIGHT][SPLASH_SCREEN_WIDTH];
     bool offset_on_upper_screen = false;
 
-    if (splash_type == ON_LEVEL_DONE || splash_type == SCORES || splash_type == MAIN_MENU) {
+    if (splash_type == LEVEL_SUMMARY || splash_type == SCORES || splash_type == MAIN_MENU) {
         offset_on_upper_screen = true;
 
         if (splash_type == MAIN_MENU)
-            memcpy(tab, main_menu_upper, sizeof(main_menu_upper));
-        else if (splash_type == ON_LEVEL_DONE)
-            memcpy(tab, on_level_done_upper, sizeof(on_level_done_upper));
+            memcpy(tab, main_menu, sizeof(main_menu));
+        else if (splash_type == LEVEL_SUMMARY)
+            memcpy(tab, level_summary, sizeof(level_summary));
         else if (splash_type == SCORES)
-            memcpy(tab, scores_upper, sizeof(scores_upper));
+            memcpy(tab, scores, sizeof(scores));
     }
 
     //Now we initialise every tile in the splash screen and give it a map_index, which describes its location

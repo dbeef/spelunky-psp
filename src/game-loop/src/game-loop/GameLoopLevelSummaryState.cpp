@@ -1,25 +1,23 @@
-#include <GameLoop.hpp>
-#include "LevelGenerator.hpp"
-#include "Level.hpp"
 #include "logger/log.h"
-#include "Renderer.hpp"
-#include "GameLoop.hpp"
-#include "Input.hpp"
 #include "Camera.hpp"
-#include "GameLoopPlayingState.hpp"
-#include "game-objects/GameObject.hpp"
+#include "Renderer.hpp"
+#include "GameLoopLevelSummaryState.hpp"
+#include "GameLoop.hpp"
+#include "LevelGenerator.hpp"
 #include "main-dude/MainDude.hpp"
+#include "Input.hpp"
+#include "game-objects/MainLogo.hpp"
+#include "game-objects/QuitSign.hpp"
+#include "game-objects/StartSign.hpp"
+#include "game-objects/ScoresSign.hpp"
+#include "game-objects/TutorialSign.hpp"
+#include "game-objects/CopyrightsSign.hpp"
 
-GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
+GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
     auto &camera = Camera::instance();
     auto &level_renderer = Renderer::instance();
     auto& game_objects = game_loop._game_objects;
-
-    auto x = game_loop._main_dude->get_x_pos_center();
-    auto y = game_loop._main_dude->get_y_pos_center();
-    camera.adjust_to_bounding_box(x, y);
-    camera.adjust_to_level_boundaries(Consts::MAP_GAME_WIDTH_TILES, Consts::MAP_GAME_HEIGHT_TILES);
 
     camera.update_gl_modelview_matrix();
 
@@ -49,23 +47,26 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
 
     if (game_loop._main_dude->entered_door())
     {
-        return &game_loop._states.level_summary;
+        return &game_loop._states.playing;
     }
 
     return this;
 }
 
-void GameLoopPlayingState::enter(GameLoop& game_loop)
+void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
 {
-    log_info("Entered GameLoopPlayingState");
+    log_info("Entered GameLoopLevelSummaryState");
 
     LevelGenerator::instance().getLevel().clean_map_layout();
-    LevelGenerator::instance().getLevel().generate_new_level_layout();
-    LevelGenerator::instance().getLevel().initialise_tiles_from_room_layout();
     LevelGenerator::instance().getLevel().generate_frame();
+    LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::LEVEL_SUMMARY);
     LevelGenerator::instance().getLevel().generate_cave_background();
     LevelGenerator::instance().getLevel().batch_vertices();
     LevelGenerator::instance().getLevel().add_render_entity();
+
+    auto &camera = Camera::instance();
+    camera.set_x_not_rounded(5.0f);
+    camera.set_y_not_rounded(7.0f);
 
     game_loop._main_dude = std::make_shared<MainDude>(0, 0);
     game_loop._game_objects.push_back(game_loop._main_dude);
@@ -74,9 +75,10 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     LevelGenerator::instance().getLevel().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
     assert(entrance);
     game_loop._main_dude->set_position_on_tile(entrance);
+    game_loop._main_dude->enter_level_summary_state();
 }
 
-void GameLoopPlayingState::exit(GameLoop& game_loop)
+void GameLoopLevelSummaryState::exit(GameLoop& game_loop)
 {
     game_loop._game_objects = {};
     game_loop._main_dude = {};

@@ -18,6 +18,7 @@ public:
     float get_width() const { return _dimensions.width; }
     float get_height() const { return _dimensions.height; }
 
+    void set_velocity(float x, float y) { _velocity.x = x; _velocity.y = y; }
     void add_velocity(float x, float y) { _velocity.x += x; _velocity.y += y; }
     float get_x_velocity() const { return _velocity.x; }
     float get_y_velocity() const { return _velocity.y; }

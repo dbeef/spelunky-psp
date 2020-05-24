@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "GameLoopBaseState.hpp"
+#include "GameLoopLevelSummaryState.hpp"
 #include "GameLoopMainMenuState.hpp"
 #include "GameLoopPlayingState.hpp"
 #include "GameLoopStartedState.hpp"
@@ -23,12 +24,14 @@ private:
     friend class GameLoopMainMenuState;
     friend class GameLoopPlayingState;
     friend class GameLoopStartedState;
+    friend class GameLoopLevelSummaryState;
 
     struct
     {
         GameLoopMainMenuState main_menu;
         GameLoopPlayingState playing;
         GameLoopStartedState started;
+        GameLoopLevelSummaryState level_summary;
         GameLoopBaseState* current;
     } _states;
 

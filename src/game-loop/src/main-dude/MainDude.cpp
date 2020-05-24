@@ -103,3 +103,9 @@ void MainDude::set_position_on_tile(MapTile *map_tile)
     const auto y = map_tile->y + _quad.get_quad_height() / 2;
     _physics.set_position(x, y);
 }
+
+void MainDude::enter_level_summary_state()
+{
+    _states.current = &_states.level_summary;
+    _states.current->enter(*this);
+}

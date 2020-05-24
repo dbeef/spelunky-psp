@@ -5,8 +5,10 @@ add_library(GameLoop STATIC
         src/game-loop/GameLoopMainMenuState.cpp
         src/game-loop/GameLoopPlayingState.cpp
         src/game-loop/GameLoopStartedState.cpp
+        src/game-loop/GameLoopLevelSummaryState.cpp
         src/main-dude/MainDude.cpp
         src/main-dude/states/MainDudeStandingState.cpp
+        src/main-dude/states/MainDudeLevelSummaryState.cpp
         src/main-dude/states/MainDudeExitingState.cpp
         src/main-dude/states/MainDudeThrowingState.cpp
         src/main-dude/states/MainDudeRunningState.cpp
@@ -23,6 +25,7 @@ add_library(GameLoop STATIC
         interface/GameLoopMainMenuState.hpp
         interface/GameLoopPlayingState.hpp
         interface/GameLoopStartedState.hpp
+        interface/GameLoopLevelSummaryState.hpp
         include/main-dude/MainDude.hpp
         include/game-objects/GameObject.hpp
         include/game-objects/MainLogo.hpp
@@ -37,6 +40,7 @@ add_library(GameLoop STATIC
         include/components/AnimationComponent.hpp
         include/main-dude/MainDudeSpritesheetFrames.hpp
         include/main-dude/states/MainDudeBaseState.hpp
+        include/main-dude/states/MainDudeLevelSummaryState.hpp
         include/main-dude/states/MainDudeRunningState.hpp
         include/main-dude/states/MainDudeStandingState.hpp
         include/main-dude/states/MainDudePushingState.hpp

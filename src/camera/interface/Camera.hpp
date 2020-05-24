@@ -18,6 +18,9 @@ public:
     inline void set_x(float x) { _dirty = true; _x = x; round_position_x(); }
     inline void set_y(float y) { _dirty = true; _y = y; round_position_y(); }
 
+    inline void set_x_not_rounded(float x) { _dirty = true; _x = x; }
+    inline void set_y_not_rounded(float y) { _dirty = true; _y = y; }
+
     void adjust_to_bounding_box(float x, float y);
     void adjust_to_level_boundaries(float level_width, float level_height);
 

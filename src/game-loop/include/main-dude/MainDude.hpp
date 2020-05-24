@@ -17,6 +17,7 @@
 #include "main-dude/states/MainDudeFallingState.hpp"
 #include "main-dude/states/MainDudeJumpingState.hpp"
 #include "main-dude/states/MainDudeThrowingState.hpp"
+#include "main-dude/states/MainDudeLevelSummaryState.hpp"
 
 #include <vector>
 
@@ -35,6 +36,7 @@ public:
     float get_y_pos_center() const { return _physics.get_y_position(); }
 
     void set_position_on_tile(MapTile* map_tile);
+    void enter_level_summary_state();
 
     bool entered_door() const { return _other.entered_door; }
 
@@ -60,6 +62,7 @@ private:
     friend class MainDudeJumpingState;
     friend class MainDudeThrowingState;
     friend class MainDudeExitingState;
+    friend class MainDudeLevelSummaryState;
     struct
     {
         MainDudeBaseState* current = nullptr;
@@ -72,6 +75,7 @@ private:
         MainDudeJumpingState jumping;
         MainDudeThrowingState throwing;
         MainDudeExitingState exiting;
+        MainDudeLevelSummaryState level_summary;
     } _states;
 
     struct
