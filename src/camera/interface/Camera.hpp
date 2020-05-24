@@ -21,9 +21,6 @@ public:
     void adjust_to_bounding_box(float x, float y);
     void adjust_to_level_boundaries(float level_width, float level_height);
 
-    float get_screen_width_in_tiles() const { return _screen_width_tiles; };
-    float get_screen_height_in_tiles() const { return _screen_height_tiles; };
-
     void calculate_coefficients();
 
 private:
