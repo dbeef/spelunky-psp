@@ -16,7 +16,6 @@ MainDudeBaseState *MainDudeRunningState::update(MainDude& main_dude, uint32_t de
 
     main_dude._physics.update(main_dude, delta_time_ms);
     main_dude._quad.update(main_dude, delta_time_ms);
-    main_dude._camera.update(main_dude, delta_time_ms);
     main_dude._animation.update(main_dude, delta_time_ms);
 
     // Other:

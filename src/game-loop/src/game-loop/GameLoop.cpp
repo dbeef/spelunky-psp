@@ -28,8 +28,8 @@ GameLoop::GameLoop()
 
         if (new_state != _states.current)
         {
-            new_state->enter(*this);
             _states.current->exit(*this);
+            new_state->enter(*this);
             _states.current = new_state;
         }
     };

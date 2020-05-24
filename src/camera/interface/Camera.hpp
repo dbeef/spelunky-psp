@@ -12,11 +12,11 @@ public:
     static void init();
     static void dispose();
 
-    inline float getX() const { return _x; }
-    inline float getY() const { return _y; }
+    inline float get_x() const { return _x; }
+    inline float get_y() const { return _y; }
 
-    inline void setX(float x) { _dirty = true; _x = x; }
-    inline void setY(float y) { _dirty = true; _y = y; }
+    inline void set_x(float x) { _dirty = true; _x = x; }
+    inline void set_y(float y) { _dirty = true; _y = y; }
 
     void adjust_to_bounding_box(float x, float y);
 private:

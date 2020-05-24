@@ -10,6 +10,7 @@
 #include "GameLoopStartedState.hpp"
 
 class GameObject;
+class MainDude;
 
 class GameLoop
 {
@@ -31,6 +32,7 @@ private:
         GameLoopBaseState* current;
     } _states;
 
+    std::shared_ptr<MainDude> _main_dude;
     std::vector<std::shared_ptr<GameObject>> _game_objects;
     std::function<void(uint32_t delta_time_ms)> _loop;
 };

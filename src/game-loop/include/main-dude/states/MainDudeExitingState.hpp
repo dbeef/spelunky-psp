@@ -1,5 +1,7 @@
 #pragma once
 
+#include <main-dude/MainDude.hpp>
+
 #include "main-dude/states/MainDudeBaseState.hpp"
 
 class MainDudeExitingState : public MainDudeBaseState
@@ -10,3 +12,4 @@ public:
     MainDudeBaseState* handle_input(MainDude&, const Input& input) override;
     void enter(MainDude&) override;
 };
+
