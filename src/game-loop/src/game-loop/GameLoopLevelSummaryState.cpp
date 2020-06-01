@@ -62,7 +62,6 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::LEVEL_SUMMARY);
     LevelGenerator::instance().getLevel().generate_cave_background();
     LevelGenerator::instance().getLevel().batch_vertices();
-    LevelGenerator::instance().getLevel().add_render_entity();
 
     auto &camera = Camera::instance();
     camera.set_x_not_rounded(5.0f);

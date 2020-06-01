@@ -1,3 +1,4 @@
+#include "LevelGenerator.hpp"
 #include "logger/log.h"
 #include "GameLoopStartedState.hpp"
 #include "Camera.hpp"
@@ -27,6 +28,11 @@ void GameLoopStartedState::enter(GameLoop &)
 
     Camera::instance().calculate_coefficients();
     Camera::instance().update_gl_projection_matrix();
+
+    LevelGenerator::instance().getLevel().clean_map_layout();
+    LevelGenerator::instance().getLevel().generate_cave_background();
+    LevelGenerator::instance().getLevel().batch_vertices();
+    LevelGenerator::instance().getLevel().add_render_entity();
 
     _game_initialized = true;
 }
