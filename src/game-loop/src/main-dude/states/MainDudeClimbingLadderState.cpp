@@ -25,6 +25,7 @@ void MainDudeClimbingLadderState::enter(MainDude& main_dude)
 {
     main_dude._physics.set_velocity(0.0f, 0.0f);
     main_dude._physics.disable_gravity();
+    main_dude._quad.frame_changed(MainDudeSpritesheetFrames::CLIMBING_LADDER_0_FIRST);
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::CLIMBING_LADDER_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::CLIMBING_LADDER_5_LAST),
                                75, true);
@@ -67,6 +68,12 @@ MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude
         else if (input.down())
         {
             main_dude._physics.set_velocity(0.0f, 0.025f);
+
+            if (main_dude._physics.is_bottom_collision())
+            {
+                main_dude._physics.enable_gravity();
+                return &main_dude._states.standing;
+            }
         }
         else
         {
@@ -74,13 +81,16 @@ MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude
         }
     }
 
-    // Ladders are always topped with LADDER_DECK tiles, therefore checking only for this type:
-    if (ladder_deck_tile && is_end_of_ladder(ladder_deck_tile))
+    // Ladders are always topped with MapTileType::LADDER tiles, therefore checking only for this type:
+    if (ladder_tile && is_end_of_ladder(ladder_tile))
     {
-        main_dude._physics.set_velocity(0.0f, 0.0f);
-        if (main_dude._physics.get_y_position() > ladder_deck_tile->y + 0.5f)
+        if (main_dude._physics.get_y_position() <= ladder_tile->y)
         {
-            main_dude._physics.set_position(main_dude.get_x_pos_center(), ladder_deck_tile->y + 0.5f);
+            main_dude._physics.set_position(main_dude.get_x_pos_center(), ladder_tile->y);
+            if (main_dude._physics.get_y_velocity() < 0.0f)
+            {
+                main_dude._physics.set_velocity(0.0f, 0.0f);
+            }
         }
     }
 
