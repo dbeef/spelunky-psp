@@ -1,8 +1,6 @@
-#include <LevelGenerator.hpp>
-#include <logger/log.h>
-#include <main-dude/MainDude.hpp>
-#include "main-dude/states/MainDudeClimbingLadderState.hpp"
+#include "LevelGenerator.hpp"
 #include "main-dude/MainDude.hpp"
+#include "main-dude/states/MainDudeClimbingLadderState.hpp"
 #include "Input.hpp"
 
 namespace
@@ -41,8 +39,6 @@ MainDudeBaseState* MainDudeClimbingLadderState::update(MainDude& main_dude, uint
     {
         main_dude._animation.update(main_dude, delta_time_ms);
     }
-
-    // Other:
 
     return this;
 }
@@ -87,6 +83,7 @@ MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude
         if (main_dude._physics.get_y_position() <= ladder_tile->y)
         {
             main_dude._physics.set_position(main_dude.get_x_pos_center(), ladder_tile->y);
+            // Prohibit further climbing upwards:
             if (main_dude._physics.get_y_velocity() < 0.0f)
             {
                 main_dude._physics.set_velocity(0.0f, 0.0f);
