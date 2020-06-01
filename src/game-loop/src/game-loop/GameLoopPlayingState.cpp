@@ -65,7 +65,6 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     LevelGenerator::instance().getLevel().generate_frame();
     LevelGenerator::instance().getLevel().generate_cave_background();
     LevelGenerator::instance().getLevel().batch_vertices();
-    LevelGenerator::instance().getLevel().add_render_entity();
 
     game_loop._main_dude = std::make_shared<MainDude>(0, 0);
     game_loop._game_objects.push_back(game_loop._main_dude);
