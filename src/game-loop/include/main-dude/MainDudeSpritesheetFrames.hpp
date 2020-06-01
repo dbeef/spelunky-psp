@@ -10,9 +10,9 @@ enum class MainDudeSpritesheetFrames : uint16_t
     RUN_LEFT_3,
     RUN_LEFT_4,
     RUN_LEFT_5_LAST,
-    // ************** //
+
     STAND_LEFT,
-    // ************** //
+
     PUSH_LEFT_0_FIRST,
     PUSH_LEFT_1,
     PUSH_LEFT_2,
@@ -20,7 +20,7 @@ enum class MainDudeSpritesheetFrames : uint16_t
     PUSH_LEFT_4,
     PUSH_LEFT_5,
     PUSH_LEFT_6_LAST,
-    // ************** //
+
     CRAWLING_LEFT_0_FIRST,
     CRAWLING_LEFT_1,
     CRAWLING_LEFT_2,
@@ -31,7 +31,7 @@ enum class MainDudeSpritesheetFrames : uint16_t
     CRAWLING_LEFT_7,
     CRAWLING_LEFT_8,
     CRAWLING_LEFT_9_LAST,
-    // ************** // TODO
+
     THROWING_LEFT_0_FIRST,
     THROWING_LEFT_1,
     THROWING_LEFT_2,
@@ -41,9 +41,9 @@ enum class MainDudeSpritesheetFrames : uint16_t
     THROWING_LEFT_6,
     THROWING_LEFT_7,
     THROWING_LEFT_8_LAST,
-    // ************** //
+
     JUMP_LEFT,
-    // ************** // TODO
+
     EXITING_LEFT_0_FIRST,
     EXITING_LEFT_1,
     EXITING_LEFT_2,
@@ -60,16 +60,16 @@ enum class MainDudeSpritesheetFrames : uint16_t
     EXITING_LEFT_13,
     EXITING_LEFT_14,
     EXITING_LEFT_15_LAST,
-    // ************** // TODO
+
     HANGING_LEFT,
-    // ************** // TODO
+
     CLIMBING_LADDER_0_FIRST,
     CLIMBING_LADDER_1,
     CLIMBING_LADDER_2,
     CLIMBING_LADDER_3,
     CLIMBING_LADDER_4,
     CLIMBING_LADDER_5_LAST,
-    // ************** // TODO
+
     CLIMBING_ROPE_0_FIRST,
     CLIMBING_ROPE_1,
     CLIMBING_ROPE_2,

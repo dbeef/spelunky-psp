@@ -63,7 +63,7 @@ MainDudeBaseState *MainDudeDuckingState::handle_input(MainDude& main_dude, const
 
     if (input.up())
     {
-        const auto* exit_tile = main_dude.is_overlaping_exit();
+        const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
         if (exit_tile)
         {
             main_dude._physics.set_position(

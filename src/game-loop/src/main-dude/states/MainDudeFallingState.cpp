@@ -62,7 +62,7 @@ MainDudeBaseState *MainDudeFallingState::handle_input(MainDude& main_dude, const
 
     if (input.up())
     {
-        const auto* exit_tile = main_dude.is_overlaping_exit();
+        const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
         if (exit_tile)
         {
             main_dude._physics.set_position(
@@ -70,6 +70,19 @@ MainDudeBaseState *MainDudeFallingState::handle_input(MainDude& main_dude, const
                     exit_tile->y + main_dude._quad.get_quad_height() / 2);
 
             return &main_dude._states.exiting;
+        }
+
+        const auto* ladder_tile = main_dude.is_overlaping_tile(MapTileType::LADDER);
+        const auto* ladder_deck_tile = main_dude.is_overlaping_tile(MapTileType::LADDER_DECK);
+
+        if (ladder_tile || ladder_deck_tile)
+        {
+            const auto* tile = ladder_tile ? ladder_tile : ladder_deck_tile;
+            main_dude._physics.set_position(
+                    tile->x + main_dude._quad.get_quad_width() / 2,
+                    main_dude.get_y_pos_center());
+
+            return &main_dude._states.climbing;
         }
     }
 

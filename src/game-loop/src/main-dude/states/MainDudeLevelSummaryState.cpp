@@ -21,7 +21,7 @@ MainDudeBaseState* MainDudeLevelSummaryState::update(MainDude& main_dude, uint32
     // Other:
     main_dude._physics.set_velocity(0.095f, 0.0f);
 
-    const auto* exit_tile = main_dude.is_overlaping_exit();
+    const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
     if (exit_tile)
     {
         main_dude._physics.set_position(

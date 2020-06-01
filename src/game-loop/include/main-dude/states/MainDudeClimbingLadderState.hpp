@@ -1,10 +1,8 @@
 #pragma once
 
-#include <main-dude/MainDude.hpp>
-
 #include "main-dude/states/MainDudeBaseState.hpp"
 
-class MainDudeExitingState : public MainDudeBaseState
+class MainDudeClimbingLadderState : public MainDudeBaseState
 {
 public:
 
