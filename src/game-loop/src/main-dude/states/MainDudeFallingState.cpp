@@ -1,3 +1,7 @@
+#include <Collisions.hpp>
+#include <LevelGenerator.hpp>
+#include <main-dude/MainDude.hpp>
+#include <logger/log.h>
 #include "main-dude/states/MainDudeFallingState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
@@ -38,10 +42,60 @@ MainDudeBaseState *MainDudeFallingState::handle_input(MainDude& main_dude, const
     if (input.left())
     {
         main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
+
+        if (main_dude._physics.is_left_collision())
+        {
+            // Check if can hang from cliff:
+
+            MapTile *neighbours[9] = {nullptr};
+
+            collisions::get_neighbouring_tiles(
+                    LevelGenerator::instance().getLevel(),
+                    main_dude.get_x_pos_center(),
+                    main_dude.get_y_pos_center(),
+                    neighbours);
+
+            auto* left_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::LEFT_MIDDLE)];
+            auto* left_upper_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::LEFT_UP)];
+
+            if (left_tile && left_tile->exists && left_tile->collidable &&
+                (!left_upper_tile || !left_upper_tile->exists || !left_upper_tile->collidable))
+            {
+                main_dude._physics.set_position(
+                        left_tile->x + 1.0f + (main_dude._physics.get_width() / 2.0f),
+                        left_tile->y + 0.5f);
+                return &main_dude._states.cliff_hanging;
+            }
+        }
     }
     if (input.right())
     {
         main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
+
+        if (main_dude._physics.is_right_collision())
+        {
+            // Check if can hang from cliff:
+
+            MapTile *neighbours[9] = {nullptr};
+
+            collisions::get_neighbouring_tiles(
+                    LevelGenerator::instance().getLevel(),
+                    main_dude.get_x_pos_center(),
+                    main_dude.get_y_pos_center(),
+                    neighbours);
+
+            auto* right_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::CENTER)];
+            auto* right_upper_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::UP_MIDDLE)];
+
+            if (right_tile && right_tile->exists && right_tile->collidable &&
+                (!right_upper_tile || !right_upper_tile->exists || !right_upper_tile->collidable))
+            {
+                main_dude._physics.set_position(
+                        right_tile->x - (main_dude._physics.get_width() / 2.0f),
+                        right_tile->y + 0.5f);
+                return &main_dude._states.cliff_hanging;
+            }
+        }
     }
 
     if (input.bumper_l())

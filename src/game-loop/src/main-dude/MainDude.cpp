@@ -1,5 +1,6 @@
 #include <main-dude/MainDude.hpp>
 #include <cmath>
+#include <logger/log.h>
 #include "LevelGenerator.hpp"
 #include "Collisions.hpp"
 #include "main-dude/MainDude.hpp"
@@ -40,7 +41,7 @@ MainDude::MainDude(float x_pos_center, float y_pos_center)
 void MainDude::update(uint32_t delta_time_ms)
 {
     // Update generic properties:
-    
+
     if (_physics.get_x_velocity() != 0.0f)
     {
         _other.facing_left = _physics.get_x_velocity() < 0.0f;
