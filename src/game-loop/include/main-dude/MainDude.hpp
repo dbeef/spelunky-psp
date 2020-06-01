@@ -9,6 +9,7 @@
 #include "components/AnimationComponent.hpp"
 
 #include "main-dude/states/MainDudeRunningState.hpp"
+#include "main-dude/states/MainDudeClimbingLadderState.hpp"
 #include "main-dude/states/MainDudeExitingState.hpp"
 #include "main-dude/states/MainDudeStandingState.hpp"
 #include "main-dude/states/MainDudePushingState.hpp"
@@ -43,7 +44,7 @@ public:
 private:
 
     void handle_input(const Input& input);
-    MapTile* is_overlaping_exit() const;
+    MapTile* is_overlaping_tile(MapTileType) const;
 
     friend class PhysicsComponent;
     friend class QuadComponent;
@@ -63,6 +64,7 @@ private:
     friend class MainDudeThrowingState;
     friend class MainDudeExitingState;
     friend class MainDudeLevelSummaryState;
+    friend class MainDudeClimbingLadderState;
     struct
     {
         MainDudeBaseState* current = nullptr;
@@ -75,6 +77,7 @@ private:
         MainDudeJumpingState jumping;
         MainDudeThrowingState throwing;
         MainDudeExitingState exiting;
+        MainDudeClimbingLadderState climbing;
         MainDudeLevelSummaryState level_summary;
     } _states;
 
@@ -86,6 +89,7 @@ private:
 
     static constexpr float DEFAULT_DELTA_X = 0.01f;
     static constexpr float DEFAULT_MAX_X_VELOCITY = 0.050f;
+    static constexpr float DEFAULT_MAX_Y_VELOCITY = 0.26f;
 
     static constexpr float MAX_RUNNING_VELOCITY_X = 0.15f;
     static constexpr float MAX_CRAWLING_VELOCITY_X = 0.008f;

@@ -1,9 +1,11 @@
+#include <main-dude/MainDude.hpp>
 #include "main-dude/states/MainDudeJumpingState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 
 void MainDudeJumpingState::enter(MainDude& main_dude)
 {
+    main_dude._physics.set_max_y_velocity(MainDude::DEFAULT_MAX_Y_VELOCITY);
     main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
     main_dude._animation.stop();
     main_dude._quad.frame_changed(MainDudeSpritesheetFrames::JUMP_LEFT);
@@ -62,7 +64,7 @@ MainDudeBaseState *MainDudeJumpingState::handle_input(MainDude& main_dude, const
 
     if (input.up())
     {
-        const auto* exit_tile = main_dude.is_overlaping_exit();
+        const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
         if (exit_tile)
         {
             main_dude._physics.set_position(
@@ -70,6 +72,19 @@ MainDudeBaseState *MainDudeJumpingState::handle_input(MainDude& main_dude, const
                     exit_tile->y + main_dude._quad.get_quad_height() / 2);
 
             return &main_dude._states.exiting;
+        }
+
+        const auto* ladder_tile = main_dude.is_overlaping_tile(MapTileType::LADDER);
+        const auto* ladder_deck_tile = main_dude.is_overlaping_tile(MapTileType::LADDER_DECK);
+
+        if (ladder_tile || ladder_deck_tile)
+        {
+            const auto* tile = ladder_tile ? ladder_tile : ladder_deck_tile;
+            main_dude._physics.set_position(
+                    tile->x + main_dude._quad.get_quad_width() / 2,
+                    main_dude.get_y_pos_center());
+
+            return &main_dude._states.climbing;
         }
     }
 

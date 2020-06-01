@@ -25,6 +25,9 @@ public:
     void set_max_x_velocity(float x) { _velocity.max_x = x;}
     void set_max_y_velocity(float y) { _velocity.max_y = y;}
 
+    void disable_gravity() { _gravity = false; };
+    void enable_gravity() { _gravity = true; };
+
     bool is_bottom_collision() const { return _collisions.bottom; }
     bool is_upper_collision() const { return _collisions.upper; }
     bool is_right_collision() const { return _collisions.right; }
@@ -60,5 +63,6 @@ private:
         bool right = false;
     } _collisions;
 
+    bool _gravity = true;
     int32_t _pos_update_delta_ms = 0;
 };

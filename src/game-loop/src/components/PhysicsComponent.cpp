@@ -51,6 +51,18 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
 {
     _pos_update_delta_ms += delta_time_ms;
 
+    // Limit speed
+
+    if (std::abs(_velocity.x) > _velocity.max_x)
+    {
+        _velocity.x = copysign(_velocity.max_x, _velocity.x);
+    }
+
+    if (std::abs(_velocity.y) > _velocity.max_y)
+    {
+        _velocity.y = copysign(_velocity.max_y, _velocity.y);
+    }
+
     while (_pos_update_delta_ms >= default_pos_update_delta_ms)
     {
         _pos_update_delta_ms -= default_pos_update_delta_ms;
@@ -160,22 +172,10 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
             // Apply friction
             _velocity.x = move_to_zero(_velocity.x, default_friction);
         }
-        else
+        else if (_gravity)
         {
             // Apply gravity
             _velocity.y += default_gravity;
-        }
-
-        // Limit speed
-
-        if (std::abs(_velocity.x) > _velocity.max_x)
-        {
-            _velocity.x = copysign(_velocity.max_x, _velocity.x);
-        }
-
-        if (std::abs(_velocity.y) > _velocity.max_y)
-        {
-            _velocity.y = copysign(_velocity.max_y, _velocity.y);
         }
     }
 }

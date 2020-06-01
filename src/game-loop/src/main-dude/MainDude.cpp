@@ -1,4 +1,5 @@
 #include <main-dude/MainDude.hpp>
+#include <cmath>
 #include "LevelGenerator.hpp"
 #include "Collisions.hpp"
 #include "main-dude/MainDude.hpp"
@@ -19,8 +20,6 @@ namespace
 
     const float MAIN_DUDE_QUAD_WIDTH = 1.0f;
     const float MAIN_DUDE_QUAD_HEIGHT = 1.0f;
-
-    const float MAIN_DUDE_MAX_Y_VELOCITY = 0.26f;
 }
 
 MainDude::MainDude(float x_pos_center, float y_pos_center)
@@ -31,7 +30,7 @@ MainDude::MainDude(float x_pos_center, float y_pos_center)
     _states.current->enter(*this);
 
     _physics.set_position(x_pos_center, y_pos_center);
-    _physics.set_max_y_velocity(MAIN_DUDE_MAX_Y_VELOCITY);
+    _physics.set_max_y_velocity(MainDude::DEFAULT_MAX_Y_VELOCITY);
 
     _other.facing_left = true;
 
@@ -76,25 +75,25 @@ void MainDude::handle_input(const Input &input)
     }
 }
 
-MapTile* MainDude::is_overlaping_exit() const
+MapTile* MainDude::is_overlaping_tile(MapTileType type) const
 {
-    MapTile* exit;
-    LevelGenerator::instance().getLevel().get_first_tile_of_given_type(MapTileType::EXIT, exit);
-    if (exit)
+    MapTile* neighbours[9] = {nullptr};
+    collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), _physics.get_x_position(), _physics.get_y_position(), neighbours);
+
+    for (const auto neighbour : neighbours)
     {
-        if (collisions::overlaps(exit, _physics.get_x_position(), _physics.get_y_position(), _physics.get_width(), _physics.get_height()))
+        if (neighbour == nullptr || neighbour->mapTileType != type)
         {
-            return exit;
+            continue;
         }
-        else
+
+        if (collisions::overlaps(neighbour, _physics.get_x_position(), _physics.get_y_position(), _physics.get_width(), _physics.get_height()))
         {
-            return nullptr;
+            return neighbour;
         }
     }
-    else
-    {
-        return nullptr;
-    }
+
+    return nullptr;
 }
 
 void MainDude::set_position_on_tile(MapTile *map_tile)
