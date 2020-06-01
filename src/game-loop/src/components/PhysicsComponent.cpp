@@ -4,8 +4,9 @@
 #include "Collisions.hpp"
 
 // Using C-style <math.h> instead of <cmath> because of some symbols (namely std::copysign)
-// being missing in the PSP's CPP standard library.
+// are missing in the PSP's CPP standard library.
 #include <math.h>
+#include <components/PhysicsComponent.hpp>
 
 namespace
 {
@@ -74,35 +75,6 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
         float temp_velocity_x = _velocity.x;
         float temp_velocity_y = _velocity.y;
 
-        _collisions.left = false;
-        _collisions.right = false;
-        _collisions.upper = false;
-        _collisions.bottom = false;
-
-        {
-            collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), _position.x, _position.y, neighbours);
-            const auto* overlapping_tile = collisions::overlaps_strict(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
-            if (overlapping_tile)
-            {
-                if (_velocity.x < 0.0f)
-                {
-                    _collisions.left = true;
-                }
-                else
-                {
-                    _collisions.right = true;
-                }
-                if (_velocity.y < 0.0f)
-                {
-                    _collisions.upper = true;
-                }
-                else
-                {
-                    _collisions.bottom = true;
-                }
-            }
-        }
-
         while (temp_velocity_x != 0.0f || temp_velocity_y != 0.0f)
         {
             if (temp_velocity_x != 0.0f)
@@ -131,6 +103,8 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 }
                 else
                 {
+                    _collisions.right = false;
+                    _collisions.left = false;
                     temp_velocity_x = move_to_zero(temp_velocity_x, smallest_position_step);
                 }
             }
@@ -162,6 +136,8 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 }
                 else
                 {
+                    _collisions.upper = false;
+                    _collisions.bottom = false;
                     temp_velocity_y = move_to_zero(temp_velocity_y, smallest_position_step);
                 }
             }
