@@ -92,7 +92,7 @@ static void* g_alloc_ctx;
 #define S2O_MALLOC(sz) atlasc__malloc(sz, g_alloc_ctx)
 #include "sproutline/sproutline.h"
 
-#define VERSION 1021
+#define VERSION 1022
 
 static char g_error_str[512];
 
@@ -477,6 +477,8 @@ PUBLIC_DECL atlasc_atlas_data* atlasc_make_inmem_frommem(const atlasc_args_fromm
             for (int k = 0; k < pt_count; k++) {
                 sx_irect_add_point(&sprite_rect, sx_ivec2i(pts[k].x, pts[k].y));
             }
+            sprite_rect.xmax++;
+            sprite_rect.ymax++;
         } else {
             sprite_rect = sx_irecti(0, 0, spr->src_size.x, spr->src_size.y);
             pt_count = 4;
