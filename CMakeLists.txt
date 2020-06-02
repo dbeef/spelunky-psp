@@ -1,13 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 project(Spelunky_PSP)
 
+option(WITH_DEV_TOOLS "Tools meant to be run only on host (development) system." FALSE)
+
 include(cmake/CurrentPlatform.cmake)
 
 spelunky_psp_detect_platform()
 spelunky_psp_add_platform_dependencies()
 
-if (SPELUNKY_PSP_PLATFORM_DESKTOP)
-    # Tools meant to be run only on host (development) system.
+if (WITH_DEV_TOOLS)
     add_subdirectory(tools)
 endif()
 
