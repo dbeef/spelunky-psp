@@ -9,7 +9,7 @@ class ScoresSign : public GameObject
 public:
 
     ScoresSign(float pos_x_center, float pos_y_center)
-            :_quad(TextureType::MAIN_MENU, SCORES_SIGN_QUAD_WIDTH, SCORES_SIGN_QUAD_HEIGHT)
+            :_quad(TextureType::MAIN_MENU, Renderer::EntityType::MODEL_VIEW_SPACE, SCORES_SIGN_QUAD_WIDTH, SCORES_SIGN_QUAD_HEIGHT)
             , _position {pos_x_center, pos_y_center}
     {
         _quad.frame_changed<MainMenuSpritesheetFrames>(MainMenuSpritesheetFrames::SCORES);

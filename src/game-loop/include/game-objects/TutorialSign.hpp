@@ -9,7 +9,7 @@ class TutorialSign : public GameObject
 public:
 
     TutorialSign(float pos_x_center, float pos_y_center)
-            :_quad(TextureType::MAIN_MENU, TUTORIAL_SIGN_QUAD_WIDTH, TUTORIAL_SIGN_QUAD_HEIGHT)
+            :_quad(TextureType::MAIN_MENU, Renderer::EntityType::MODEL_VIEW_SPACE, TUTORIAL_SIGN_QUAD_WIDTH, TUTORIAL_SIGN_QUAD_HEIGHT)
             , _position {pos_x_center, pos_y_center}
     {
         _quad.frame_changed<MainMenuSpritesheetFrames>(MainMenuSpritesheetFrames::TUTORIAL);

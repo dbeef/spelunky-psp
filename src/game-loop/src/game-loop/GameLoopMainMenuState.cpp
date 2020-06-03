@@ -16,14 +16,17 @@
 GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
     auto &model_view_camera = game_loop._cameras.model_view;
-    auto &level_renderer = Renderer::instance();
+    auto &renderer = Renderer::instance();
     auto& game_objects = game_loop._game_objects;
 
     model_view_camera.update_gl_modelview_matrix();
     model_view_camera.update_gl_projection_matrix();
 
-    level_renderer.render();
-    level_renderer.update();
+    renderer.render(Renderer::EntityType::MODEL_VIEW_SPACE);
+
+    // Remove render entities marked for disposal:
+
+    renderer.update();
 
     // Update game objects:
 

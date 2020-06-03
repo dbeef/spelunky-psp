@@ -35,9 +35,9 @@ void Renderer::dispose()
     _level_renderer = nullptr;
 }
 
-void Renderer::render() const
+void Renderer::render(EntityType type) const
 {
-    for (const auto& entity : _render_entities)
+    for (const auto& entity : _render_entities[static_cast<std::size_t>(type)])
     {
         // Interleaving vertex attributes instead of separate buffers for small performance boost from data locality:
         const auto *vertices = reinterpret_cast<const char *>(entity.vertices);
@@ -57,13 +57,19 @@ void Renderer::render() const
 
 void Renderer::update()
 {
-    for (const auto &id : _for_removal)
+    for (std::size_t index = 0; index < static_cast<std::size_t>(EntityType::_SIZE); index++)
     {
-        const auto predicate = [&id](const RenderEntity& e) { return e.id == id;};
-        const auto it = std::remove_if(_render_entities.begin(), _render_entities.end(), predicate);
-        if (it != _render_entities.end())
+        const auto& id_collection = _for_removal[index];
+        auto& render_entities_collection = _render_entities[index];
+
+        for (const auto &id : id_collection)
         {
-            _render_entities.erase(it);
+            const auto predicate = [&id](const RenderEntity &e) { return e.id == id; };
+            const auto it = std::remove_if(render_entities_collection.begin(), render_entities_collection.end(), predicate);
+            if (it != render_entities_collection.end())
+            {
+                render_entities_collection.erase(it);
+            }
         }
     }
 }

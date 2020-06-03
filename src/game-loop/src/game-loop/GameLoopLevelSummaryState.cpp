@@ -18,19 +18,22 @@ GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32
 {
     auto &model_view_camera = game_loop._cameras.model_view;
     auto &screen_space_camera = game_loop._cameras.screen_space;
-    auto &level_renderer = Renderer::instance();
+    auto &renderer = Renderer::instance();
     auto& game_objects = game_loop._game_objects;
 
     model_view_camera.update_gl_modelview_matrix();
     model_view_camera.update_gl_projection_matrix();
 
-    level_renderer.render();
-    level_renderer.update();
+    renderer.render(Renderer::EntityType::MODEL_VIEW_SPACE);
 
     screen_space_camera.update_gl_modelview_matrix();
     screen_space_camera.update_gl_projection_matrix();
 
-    // TODO: Render HUD
+    renderer.render(Renderer::EntityType::SCREEN_SPACE);
+
+    // Remove render entities marked for disposal:
+
+    renderer.update();
 
     // Update game objects:
 

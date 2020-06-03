@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <Renderer.hpp>
 
 #include "RenderEntity.hpp"
 #include "TextureType.hpp"
@@ -19,7 +20,7 @@ class QuadComponent
 {
 public:
 
-    explicit QuadComponent(TextureType type, float quad_width, float quad_height);
+    explicit QuadComponent(TextureType, Renderer::EntityType, float quad_width, float quad_height);
     ~QuadComponent();
 
     void update(MainDude&, uint32_t delta_time_ms);
@@ -54,4 +55,5 @@ private:
     Quad _quad;
     RenderEntityID _render_entity_id;
     const TextureType _texture_type;
+    const Renderer::EntityType _entity_type;
 };

@@ -32,16 +32,17 @@ void QuadComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
     _quad.write();
 }
 
-QuadComponent::QuadComponent(TextureType type, float quad_width, float quad_height)
+QuadComponent::QuadComponent(TextureType texture_type, Renderer::EntityType entity_type, float quad_width, float quad_height)
     : _quad_dimensions {quad_width, quad_height}
-    , _texture_type(type)
+    , _texture_type(texture_type)
+    , _entity_type(entity_type)
 {
     RenderEntity entity;
     entity.vertices = _quad.get_vertices_transformed();
     entity.indices = _quad.get_indices();
     entity.indices_count = Quad::get_indices_count();
     entity.texture = TextureBank::instance().get_texture(_texture_type);
-    _render_entity_id = Renderer::instance().add_entity(entity);
+    _render_entity_id = Renderer::instance().add_entity(entity, Renderer::EntityType::MODEL_VIEW_SPACE);
     assert(_render_entity_id != Renderer::INVALID_ENTITY);
 }
 
@@ -49,7 +50,7 @@ QuadComponent::~QuadComponent()
 {
     if (_render_entity_id != Renderer::INVALID_ENTITY)
     {
-        Renderer::instance().mark_for_removal(_render_entity_id);
+        Renderer::instance().mark_for_removal(_render_entity_id, _entity_type);
     }
 }
 
