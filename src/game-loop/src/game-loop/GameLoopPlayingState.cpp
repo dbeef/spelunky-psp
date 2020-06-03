@@ -86,7 +86,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     game_loop._game_objects.push_back(game_loop._main_dude);
 
     const auto heart_pos_x = static_cast<float>(Video::instance().get_window_width() * 0.05f);
-    const auto heart_pos_y = static_cast<float>(-Video::instance().get_window_height() * 0.95f);
+    const auto heart_pos_y = static_cast<float>(Video::instance().get_window_height() * 0.95f);
 
     game_loop._game_objects.push_back(std::make_shared<HUD>(heart_pos_x, heart_pos_y));
 

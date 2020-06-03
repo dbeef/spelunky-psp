@@ -1,5 +1,13 @@
 #pragma once
 
+// Note: For both cameras coordinate system goes as following:
+//
+//   ------ +x
+//   |
+//   |
+//   +y
+//
+
 class ScreenSpaceCamera
 {
 public:
