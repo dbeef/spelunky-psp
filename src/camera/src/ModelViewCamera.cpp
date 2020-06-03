@@ -1,11 +1,11 @@
 #include <cassert>
-#include <Camera.hpp>
+#include <ModelViewCamera.hpp>
 
 #include "graphics_utils/DebugGlCall.hpp"
 #include "video/Context.hpp"
 #include "glad/glad.h"
 #include "graphics_utils/LookAt.hpp"
-#include "Camera.hpp"
+#include "ModelViewCamera.hpp"
 
 namespace
 {
@@ -21,44 +21,40 @@ namespace
 
 }
 
-Camera *Camera::_camera = nullptr;
+ModelViewCamera *ModelViewCamera::_camera = nullptr;
 
-Camera::Camera()
+ModelViewCamera::ModelViewCamera()
     : _bounding_x(2.f)
     , _bounding_y(1.3f)
     , _bounding_x_half(_bounding_x / 2)
     , _bounding_y_half(_bounding_y / 2)
 { }
 
-Camera &Camera::instance()
+ModelViewCamera &ModelViewCamera::instance()
 {
     assert(_camera);
     return *_camera;
 }
 
-void Camera::init()
+void ModelViewCamera::init()
 {
     assert(!_camera);
-    _camera = new Camera();
+    _camera = new ModelViewCamera();
 }
 
-void Camera::dispose()
+void ModelViewCamera::dispose()
 {
     assert(_camera);
     delete _camera;
     _camera = nullptr;
 }
 
-void Camera::update_gl_modelview_matrix()
+void ModelViewCamera::update_gl_modelview_matrix()
 {
-    if (_dirty)
-    {
-        graphics_utils::look_at(_x, _y);
-        _dirty = false;
-    }
+    graphics_utils::look_at(_x, _y);
 }
 
-void Camera::update_gl_projection_matrix() const
+void ModelViewCamera::update_gl_projection_matrix() const
 {
     const auto& video = Video::instance();
     DebugGlCall(glViewport(0, 0, (GLsizei) (video.get_window_width()), (GLsizei) (video.get_window_height())));
@@ -76,7 +72,7 @@ void Camera::update_gl_projection_matrix() const
                          far));
 }
 
-void Camera::adjust_to_bounding_box(float x, float y)
+void ModelViewCamera::adjust_to_bounding_box(float x, float y)
 {
     auto dx = (x / 2) - _x;
     auto dy = (y / 2) - _y;
@@ -85,18 +81,16 @@ void Camera::adjust_to_bounding_box(float x, float y)
     {
         _x += dx + (dx > 0.f ? -_bounding_x_half : _bounding_x_half);
         round_position_x();
-        _dirty = true;
     }
     
     if (std::abs(dy) > _bounding_y_half)
     {
         _y += dy + (dy > 0.f ? -_bounding_y_half : _bounding_y_half);
         round_position_y();
-        _dirty = true;
     }
 }
 
-void Camera::adjust_to_level_boundaries(float level_width, float level_height)
+void ModelViewCamera::adjust_to_level_boundaries(float level_width, float level_height)
 {
     // With assumption that the level starts on [0,0]:
 
@@ -110,32 +104,28 @@ void Camera::adjust_to_level_boundaries(float level_width, float level_height)
     {
         float x_camera_space = (level_width - half_screen_width_tiles) / 2.0f;
         _x = x_camera_space;
-        _dirty = true;
     }
 
     if (x_tile_space - half_screen_width_tiles < 0.0f)
     {
         float x_camera_space = (half_screen_width_tiles) / 2.0f;
         _x = x_camera_space;
-        _dirty = true;
     }
 
     if (y_tile_space + half_screen_height_tiles > level_height)
     {
         float y_camera_space = (level_height - half_screen_height_tiles) / 2.0f;
         _y = y_camera_space;
-        _dirty = true;
     }
 
     if (y_tile_space - half_screen_height_tiles < 0.0f)
     {
         float y_camera_space = (half_screen_height_tiles) / 2.0f;
         _y = y_camera_space;
-        _dirty = true;
     }
 }
 
-void Camera::calculate_coefficients()
+void ModelViewCamera::calculate_coefficients()
 {
     _projection_coefficient = calculate_coefficient(SCREEN_WIDTH_IN_TILES);
     _screen_width_tiles = SCREEN_WIDTH_IN_TILES;
@@ -144,5 +134,5 @@ void Camera::calculate_coefficients()
 
 // rounding the values to 1 decimal point
 // to avoid vertical screen-tearing like artifacts
-void Camera::round_position_x() { _x = ((10.f * _x + 0.5f) / 10); }
-void Camera::round_position_y() { _y = ((10.f * _y + 0.5f) / 10); }
+void ModelViewCamera::round_position_x() { _x = ((10.f * _x + 0.5f) / 10); }
+void ModelViewCamera::round_position_y() { _y = ((10.f * _y + 0.5f) / 10); }

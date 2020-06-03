@@ -1,6 +1,6 @@
 #include "LevelGenerator.hpp"
 #include "SplashScreenType.hpp"
-#include "Camera.hpp"
+#include "ModelViewCamera.hpp"
 #include "Input.hpp"
 #include "GameLoop.hpp"
 #include "glad/glad.h"

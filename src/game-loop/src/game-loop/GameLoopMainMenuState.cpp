@@ -1,5 +1,5 @@
 #include "logger/log.h"
-#include "Camera.hpp"
+#include "ModelViewCamera.hpp"
 #include "Renderer.hpp"
 #include "GameLoopMainMenuState.hpp"
 #include "GameLoop.hpp"
@@ -15,11 +15,12 @@
 
 GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
-    auto &camera = Camera::instance();
+    auto &model_view_camera = ModelViewCamera::instance();
     auto &level_renderer = Renderer::instance();
     auto& game_objects = game_loop._game_objects;
 
-    camera.update_gl_modelview_matrix();
+    model_view_camera.update_gl_modelview_matrix();
+    model_view_camera.update_gl_projection_matrix();
 
     level_renderer.render();
     level_renderer.update();
@@ -63,7 +64,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     LevelGenerator::instance().getLevel().generate_cave_background();
     LevelGenerator::instance().getLevel().batch_vertices();
 
-    auto &camera = Camera::instance();
+    auto &camera = ModelViewCamera::instance();
     camera.set_x_not_rounded(5.0f);
     camera.set_y_not_rounded(7.0f);
 

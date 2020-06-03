@@ -1,25 +1,25 @@
 #pragma once
 
-class Camera
+class ModelViewCamera
 {
 public:
 
     void update_gl_modelview_matrix();
     void update_gl_projection_matrix() const;
-    Camera(Camera&) = delete;
-    Camera(Camera&&) = delete;
-    static Camera& instance();
+    ModelViewCamera(ModelViewCamera&) = delete;
+    ModelViewCamera(ModelViewCamera&&) = delete;
+    static ModelViewCamera& instance();
     static void init();
     static void dispose();
 
     inline float get_x() const { return _x; }
     inline float get_y() const { return _y; }
 
-    inline void set_x(float x) { _dirty = true; _x = x; round_position_x(); }
-    inline void set_y(float y) { _dirty = true; _y = y; round_position_y(); }
+    inline void set_x(float x) { _x = x; round_position_x(); }
+    inline void set_y(float y) { _y = y; round_position_y(); }
 
-    inline void set_x_not_rounded(float x) { _dirty = true; _x = x; }
-    inline void set_y_not_rounded(float y) { _dirty = true; _y = y; }
+    inline void set_x_not_rounded(float x) { _x = x; }
+    inline void set_y_not_rounded(float y) { _y = y; }
 
     void adjust_to_bounding_box(float x, float y);
     void adjust_to_level_boundaries(float level_width, float level_height);
@@ -27,12 +27,10 @@ public:
     void calculate_coefficients();
 
 private:
-    explicit Camera();
+    explicit ModelViewCamera();
 
     void round_position_x();
     void round_position_y();
-
-    bool _dirty = false;
 
     float _x = 0;
     float _y = 0;
@@ -46,5 +44,5 @@ private:
     float _screen_width_tiles;
     float _screen_height_tiles;
 
-    static Camera* _camera;
+    static ModelViewCamera* _camera;
 };

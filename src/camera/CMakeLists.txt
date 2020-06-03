@@ -1,8 +1,10 @@
 project(Camera)
 
 add_library(Camera STATIC
-        src/Camera.cpp
-        interface/Camera.hpp
+        src/ModelViewCamera.cpp
+        src/ScreenSpaceCamera.cpp
+        interface/ModelViewCamera.hpp
+        interface/ScreenSpaceCamera.hpp
 )
 
 target_include_directories(Camera
