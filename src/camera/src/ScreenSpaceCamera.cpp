@@ -5,7 +5,7 @@
 #include "graphics_utils/DebugGlCall.hpp"
 #include "graphics_utils/LookAt.hpp"
 
-void ScreenSpaceCamera::update_gl_modelview_matrix()
+void ScreenSpaceCamera::update_gl_modelview_matrix() const
 {
     const auto& video = Video::instance();
 

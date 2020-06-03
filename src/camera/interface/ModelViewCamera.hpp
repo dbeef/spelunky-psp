@@ -6,7 +6,7 @@ public:
 
     ModelViewCamera();
 
-    void update_gl_modelview_matrix();
+    void update_gl_modelview_matrix() const;
     void update_gl_projection_matrix() const;
 
     inline float get_x() const { return _x; }
