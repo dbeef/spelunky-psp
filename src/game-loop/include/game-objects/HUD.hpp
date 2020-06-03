@@ -3,16 +3,17 @@
 #include "MainMenuSpritesheetFrames.hpp"
 #include "components/QuadComponent.hpp"
 #include "GameObject.hpp"
+#include "HUDSpritesheetFrames.hpp"
 
-class MainLogo : public GameObject
+class HUD : public GameObject
 {
 public:
 
-    MainLogo(float pos_x_center, float pos_y_center)
-            :_quad(TextureType::MAIN_MENU, Renderer::EntityType::MODEL_VIEW_SPACE, LOGO_QUAD_WIDTH, LOGO_QUAD_HEIGHT)
+    HUD(float pos_x_center, float pos_y_center)
+            :_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, HEART_WIDTH_PIXELS, HEART_HEIGHT_PIXELS)
             , _position {pos_x_center, pos_y_center}
     {
-        _quad.frame_changed<MainMenuSpritesheetFrames>(MainMenuSpritesheetFrames::MAIN_LOGO);
+        _quad.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HEART);
     }
 
     void update(uint32_t delta_time_ms) override
@@ -22,8 +23,8 @@ public:
 
 private:
 
-    const float LOGO_QUAD_WIDTH = 12;
-    const float LOGO_QUAD_HEIGHT = 5;
+    const float HEART_WIDTH_PIXELS = 16;
+    const float HEART_HEIGHT_PIXELS = 16;
 
     struct
     {

@@ -1,4 +1,4 @@
-#include <GameLoop.hpp>
+#include "video/Context.hpp"
 #include "LevelGenerator.hpp"
 #include "Level.hpp"
 #include "logger/log.h"
@@ -9,6 +9,7 @@
 #include "ScreenSpaceCamera.hpp"
 #include "GameLoopPlayingState.hpp"
 #include "game-objects/GameObject.hpp"
+#include "game-objects/HUD.hpp"
 #include "main-dude/MainDude.hpp"
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
@@ -83,6 +84,11 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
     game_loop._main_dude = std::make_shared<MainDude>(0, 0);
     game_loop._game_objects.push_back(game_loop._main_dude);
+
+    const auto heart_pos_x = static_cast<float>(Video::instance().get_window_width() * 0.05f);
+    const auto heart_pos_y = static_cast<float>(-Video::instance().get_window_height() * 0.95f);
+
+    game_loop._game_objects.push_back(std::make_shared<HUD>(heart_pos_x, heart_pos_y));
 
     MapTile* entrance = nullptr;
     LevelGenerator::instance().getLevel().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
