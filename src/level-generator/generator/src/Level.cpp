@@ -423,7 +423,7 @@ Level::~Level()
 
     if (_render_entity.id != Renderer::INVALID_ENTITY)
     {
-        Renderer::instance().mark_for_removal(_render_entity.id);
+        Renderer::instance().mark_for_removal(_render_entity.id, Renderer::EntityType::MODEL_VIEW_SPACE);
     }
 }
 
@@ -467,7 +467,7 @@ void Level::add_render_entity()
     _render_entity.indices = _indices.data();
     _render_entity.indices_count = _indices.size();
     _render_entity.texture = TextureBank::instance().get_texture(TextureType::CAVE_LEVEL_TILES);
-    _render_entity.id = renderer.add_entity(_render_entity);
+    _render_entity.id = renderer.add_entity(_render_entity, Renderer::EntityType::MODEL_VIEW_SPACE);
 }
 
 void Level::generate_cave_background()

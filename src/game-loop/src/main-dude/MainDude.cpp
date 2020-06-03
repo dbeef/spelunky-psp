@@ -25,7 +25,7 @@ namespace
 
 MainDude::MainDude(float x_pos_center, float y_pos_center)
     : _physics(MAIN_DUDE_PHYSICAL_WIDTH, MAIN_DUDE_PHYSICAL_HEIGHT)
-    , _quad(TextureType::MAIN_DUDE, MAIN_DUDE_QUAD_WIDTH, MAIN_DUDE_QUAD_HEIGHT)
+    , _quad(TextureType::MAIN_DUDE, Renderer::EntityType::MODEL_VIEW_SPACE, MAIN_DUDE_QUAD_WIDTH, MAIN_DUDE_QUAD_HEIGHT)
 {
     _states.current = &_states.standing;
     _states.current->enter(*this);

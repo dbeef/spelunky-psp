@@ -9,7 +9,7 @@ class CopyrightsSign : public GameObject
 public:
 
     CopyrightsSign(float pos_x_center, float pos_y_center)
-            :_quad(TextureType::MAIN_MENU, COPYRIGHTS_QUAD_WIDTH, COPYRIGHTS_QUAD_HEIGHT)
+            :_quad(TextureType::MAIN_MENU, Renderer::EntityType::MODEL_VIEW_SPACE, COPYRIGHTS_QUAD_WIDTH, COPYRIGHTS_QUAD_HEIGHT)
             , _position {pos_x_center, pos_y_center}
     {
         _quad.frame_changed<MainMenuSpritesheetFrames>(MainMenuSpritesheetFrames::COPYRIGHTS);

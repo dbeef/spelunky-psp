@@ -12,58 +12,50 @@ class Renderer
 {
 public:
 
+    enum class EntityType
+    {
+        SCREEN_SPACE = 0,
+        MODEL_VIEW_SPACE,
+        _SIZE
+    };
+
     static const RenderEntityID INVALID_ENTITY = 0;
 
     static Renderer& instance();
     static void init();
     static void dispose();
 
-    void render() const;
+    void render(EntityType type) const;
     void update();
 
-    RenderEntityID add_entity(Mesh& mesh, TextureID texture)
+    RenderEntityID add_entity(Mesh& mesh, TextureID texture, EntityType type)
     {
         RenderEntity entity;
         entity.indices_count = mesh.indices.size();
         entity.indices = mesh.indices.data();
         entity.vertices = mesh.vertices.data();
         entity.texture = texture;
-        return add_entity(entity);
+        return add_entity(entity, type);
     }
 
-    RenderEntityID add_entity(RenderEntity e)
+    RenderEntityID add_entity(RenderEntity e, EntityType type)
     {
         static RenderEntityID unique_id_pool = std::numeric_limits<RenderEntityID>::max();
 
         e.id = --unique_id_pool;
-        _render_entities.emplace_back(e);
+        _render_entities[static_cast<std::size_t>(type)].emplace_back(e);
         return unique_id_pool;
     }
 
-    RenderEntity* get_entity(RenderEntityID id)
+    void mark_for_removal(RenderEntityID id, EntityType type)
     {
-        const auto it = std::find_if(_render_entities.begin(), _render_entities.end(), [&id](const RenderEntity& e)
-        {
-            return e.id == id;
-        });
-
-        if (it != _render_entities.end())
-        {
-            return &*it;
-        }
-
-        return nullptr;
-    }
-
-    void mark_for_removal(RenderEntityID id)
-    {
-        _for_removal.push_back(id);
+        _for_removal[static_cast<std::size_t>(type)].push_back(id);
     }
 
 private:
 
-    std::vector<RenderEntity> _render_entities;
-    std::vector<RenderEntityID> _for_removal;
+    std::vector<RenderEntity> _render_entities[static_cast<std::size_t>(EntityType::_SIZE)];
+    std::vector<RenderEntityID> _for_removal[static_cast<std::size_t>(EntityType::_SIZE)];
 
     static Renderer* _level_renderer;
 };

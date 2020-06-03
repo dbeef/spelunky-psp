@@ -24,11 +24,11 @@ void GameLoopStartedState::enter(GameLoop& game_loop)
 
     // Need to be done only once in whole game lifespan:
 
-    TextureBank::instance().load_textures();
-    TextureBank::instance().load_texture_regions();
-
     game_loop._cameras.model_view.calculate_coefficients();
     game_loop._cameras.screen_space.calculate_coefficients();
+
+    TextureBank::instance().load_textures();
+    TextureBank::instance().load_texture_regions();
 
     LevelGenerator::instance().getLevel().clean_map_layout();
     LevelGenerator::instance().getLevel().generate_cave_background();
