@@ -25,7 +25,7 @@ ModelViewCamera::ModelViewCamera()
     , _bounding_y_half(_bounding_y / 2)
 { }
 
-void ModelViewCamera::update_gl_modelview_matrix()
+void ModelViewCamera::update_gl_modelview_matrix() const
 {
     graphics_utils::look_at(_x, _y);
 }
