@@ -13,7 +13,11 @@ void ScreenSpaceCamera::update_gl_modelview_matrix()
 void ScreenSpaceCamera::update_gl_projection_matrix() const
 {
     const auto& video = Video::instance();
-    DebugGlCall(glViewport(0, 0, (GLsizei) (video.get_window_width()), (GLsizei) (video.get_window_height())));
+    // Moving viewport, so the 0.0 position of passed UV's would start in the left-bottom corner:
+    DebugGlCall(glViewport(-video.get_window_width() / 2,
+                           -video.get_window_height() / 2,
+                            static_cast<GLsizei>(video.get_window_width()),
+                            static_cast<GLsizei>(video.get_window_height())));
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
 
@@ -33,4 +37,5 @@ void ScreenSpaceCamera::calculate_coefficients()
     const auto& video = Video::instance();
     _projection_coefficient = (Video::instance().get_window_width() / video.get_aspect()) / 2.0f;
 }
+
 
