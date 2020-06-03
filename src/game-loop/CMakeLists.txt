@@ -36,7 +36,9 @@ add_library(GameLoop STATIC
         include/game-objects/ScoresSign.hpp
         include/game-objects/TutorialSign.hpp
         include/game-objects/CopyrightsSign.hpp
+        include/game-objects/HUD.hpp
         include/game-objects/MainMenuSpritesheetFrames.hpp
+        include/game-objects/HUDSpritesheetFrames.hpp
         include/components/PhysicsComponent.hpp
         include/components/QuadComponent.hpp
         include/components/AnimationComponent.hpp
@@ -75,4 +77,5 @@ target_link_libraries(GameLoop
         GraphicsUtils
         Renderer
         Collisions
+        Video
 )

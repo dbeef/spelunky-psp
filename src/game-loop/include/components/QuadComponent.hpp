@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstdint>
-#include <Renderer.hpp>
 
+#include "Renderer.hpp"
 #include "RenderEntity.hpp"
 #include "TextureType.hpp"
 #include "Quad.hpp"
@@ -15,6 +15,7 @@ class StartSign;
 class ScoresSign;
 class TutorialSign;
 class CopyrightsSign;
+class HUD;
 
 class QuadComponent
 {
@@ -30,6 +31,7 @@ public:
     void update(ScoresSign&, uint32_t delta_time_ms);
     void update(TutorialSign&, uint32_t delta_time_ms);
     void update(CopyrightsSign&, uint32_t delta_time_ms);
+    void update(HUD&, uint32_t delta_time_ms);
 
     template <class T>
     void frame_changed(T frame_index) { _frame_index = static_cast<std::size_t>(frame_index);_frame_changed = true; }
