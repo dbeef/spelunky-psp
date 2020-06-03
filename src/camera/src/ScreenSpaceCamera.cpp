@@ -1,23 +1,29 @@
 #include <glad/glad.h>
 
+#include "ScreenSpaceCamera.hpp"
 #include "video/Context.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
-#include "ScreenSpaceCamera.hpp"
+#include "graphics_utils/LookAt.hpp"
 
 void ScreenSpaceCamera::update_gl_modelview_matrix()
 {
-    DebugGlCall(glMatrixMode(GL_MODELVIEW));
-    DebugGlCall(glLoadIdentity());
+    const auto& video = Video::instance();
+
+    // Moving camera, so the [0,0] position would be on the left-lower corner of the screen:
+
+    const float screen_center_x = video.get_window_width() / 2.0f;
+    const float screen_center_y = video.get_window_height() / 2.0f;
+
+    const float screen_center_camera_space_x = screen_center_x / 2.0f;
+    const float screen_center_camera_space_y = screen_center_y / 2.0f;
+
+    graphics_utils::look_at(screen_center_camera_space_x, -screen_center_camera_space_y);
 }
 
 void ScreenSpaceCamera::update_gl_projection_matrix() const
 {
     const auto& video = Video::instance();
-    // Moving viewport, so the 0.0 position of passed UV's would start in the left-bottom corner:
-    DebugGlCall(glViewport(-video.get_window_width() / 2,
-                           -video.get_window_height() / 2,
-                            static_cast<GLsizei>(video.get_window_width()),
-                            static_cast<GLsizei>(video.get_window_height())));
+    DebugGlCall(glViewport(0, 0, (GLsizei) (video.get_window_width()), (GLsizei) (video.get_window_height())));
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
 
