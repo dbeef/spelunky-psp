@@ -13,8 +13,8 @@
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
-    auto &model_view_camera = ModelViewCamera::instance();
-    auto &screen_space_camera = ScreenSpaceCamera::instance();
+    auto &model_view_camera = game_loop._cameras.model_view;
+    auto &screen_space_camera = game_loop._cameras.screen_space;
     auto &level_renderer = Renderer::instance();
     auto& game_objects = game_loop._game_objects;
 

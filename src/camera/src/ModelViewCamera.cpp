@@ -1,6 +1,3 @@
-#include <cassert>
-#include <ModelViewCamera.hpp>
-
 #include "graphics_utils/DebugGlCall.hpp"
 #include "video/Context.hpp"
 #include "glad/glad.h"
@@ -21,33 +18,12 @@ namespace
 
 }
 
-ModelViewCamera *ModelViewCamera::_camera = nullptr;
-
 ModelViewCamera::ModelViewCamera()
     : _bounding_x(2.f)
     , _bounding_y(1.3f)
     , _bounding_x_half(_bounding_x / 2)
     , _bounding_y_half(_bounding_y / 2)
 { }
-
-ModelViewCamera &ModelViewCamera::instance()
-{
-    assert(_camera);
-    return *_camera;
-}
-
-void ModelViewCamera::init()
-{
-    assert(!_camera);
-    _camera = new ModelViewCamera();
-}
-
-void ModelViewCamera::dispose()
-{
-    assert(_camera);
-    delete _camera;
-    _camera = nullptr;
-}
 
 void ModelViewCamera::update_gl_modelview_matrix()
 {
