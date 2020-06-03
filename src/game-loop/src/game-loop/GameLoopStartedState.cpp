@@ -18,7 +18,7 @@ GameLoopBaseState *GameLoopStartedState::update(GameLoop& game_loop, uint32_t de
     }
 }
 
-void GameLoopStartedState::enter(GameLoop &)
+void GameLoopStartedState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopStartedState");
 
@@ -27,8 +27,8 @@ void GameLoopStartedState::enter(GameLoop &)
     TextureBank::instance().load_textures();
     TextureBank::instance().load_texture_regions();
 
-    ModelViewCamera::instance().calculate_coefficients();
-    ScreenSpaceCamera::instance().calculate_coefficients();
+    game_loop._cameras.model_view.calculate_coefficients();
+    game_loop._cameras.screen_space.calculate_coefficients();
 
     LevelGenerator::instance().getLevel().clean_map_layout();
     LevelGenerator::instance().getLevel().generate_cave_background();

@@ -12,8 +12,6 @@
 
 void init_singletons()
 {
-    ModelViewCamera::init();
-    ScreenSpaceCamera::init(); // FIXME: Does not need to be a singleton anymore.
     LevelGenerator::init();
     Renderer::init();
     TextureBank::init();
@@ -24,8 +22,6 @@ void init_singletons()
 void dispose_singletons()
 {
     Video::dispose();
-    ScreenSpaceCamera::init();
-    ModelViewCamera::dispose();
     LevelGenerator::dispose();
     TextureBank::dispose();
     Renderer::dispose();

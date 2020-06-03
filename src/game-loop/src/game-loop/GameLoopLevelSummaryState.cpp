@@ -16,8 +16,8 @@
 
 GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
-    auto &model_view_camera = ModelViewCamera::instance();
-    auto &screen_space_camera = ScreenSpaceCamera::instance();
+    auto &model_view_camera = game_loop._cameras.model_view;
+    auto &screen_space_camera = game_loop._cameras.screen_space;
     auto &level_renderer = Renderer::instance();
     auto& game_objects = game_loop._game_objects;
 
@@ -71,9 +71,9 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     LevelGenerator::instance().getLevel().generate_cave_background();
     LevelGenerator::instance().getLevel().batch_vertices();
 
-    auto &camera = ModelViewCamera::instance();
-    camera.set_x_not_rounded(5.0f);
-    camera.set_y_not_rounded(7.0f);
+    auto &model_view_camera = game_loop._cameras.model_view;
+    model_view_camera.set_x_not_rounded(5.0f);
+    model_view_camera.set_y_not_rounded(7.0f);
 
     game_loop._main_dude = std::make_shared<MainDude>(0, 0);
     game_loop._game_objects.push_back(game_loop._main_dude);

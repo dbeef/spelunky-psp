@@ -4,13 +4,10 @@ class ModelViewCamera
 {
 public:
 
+    ModelViewCamera();
+
     void update_gl_modelview_matrix();
     void update_gl_projection_matrix() const;
-    ModelViewCamera(ModelViewCamera&) = delete;
-    ModelViewCamera(ModelViewCamera&&) = delete;
-    static ModelViewCamera& instance();
-    static void init();
-    static void dispose();
 
     inline float get_x() const { return _x; }
     inline float get_y() const { return _y; }
@@ -27,7 +24,6 @@ public:
     void calculate_coefficients();
 
 private:
-    explicit ModelViewCamera();
 
     void round_position_x();
     void round_position_y();
@@ -43,6 +39,4 @@ private:
     float _projection_coefficient;
     float _screen_width_tiles;
     float _screen_height_tiles;
-
-    static ModelViewCamera* _camera;
 };

@@ -4,6 +4,9 @@
 #include <memory>
 #include <vector>
 
+#include "ModelViewCamera.hpp"
+#include "ScreenSpaceCamera.hpp"
+
 #include "GameLoopBaseState.hpp"
 #include "GameLoopLevelSummaryState.hpp"
 #include "GameLoopMainMenuState.hpp"
@@ -34,6 +37,12 @@ private:
         GameLoopLevelSummaryState level_summary;
         GameLoopBaseState* current;
     } _states;
+
+    struct
+    {
+        ModelViewCamera model_view;
+        ScreenSpaceCamera screen_space;
+    } _cameras;
 
     std::shared_ptr<MainDude> _main_dude;
     std::vector<std::shared_ptr<GameObject>> _game_objects;
