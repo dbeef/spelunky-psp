@@ -1,17 +1,19 @@
 #include "video/Context.hpp"
 #include "logger/log.h"
-#include "Camera.hpp"
+#include "ModelViewCamera.hpp"
 #include "LevelGenerator.hpp"
 #include "Renderer.hpp"
 #include "Input.hpp"
 #include "GameLoop.hpp"
 #include "TextureBank.hpp"
+#include "ScreenSpaceCamera.hpp"
 
 #include <cstdlib>
 
 void init_singletons()
 {
-    Camera::init();
+    ModelViewCamera::init();
+    ScreenSpaceCamera::init(); // FIXME: Does not need to be a singleton anymore.
     LevelGenerator::init();
     Renderer::init();
     TextureBank::init();
@@ -22,7 +24,8 @@ void init_singletons()
 void dispose_singletons()
 {
     Video::dispose();
-    Camera::dispose();
+    ScreenSpaceCamera::init();
+    ModelViewCamera::dispose();
     LevelGenerator::dispose();
     TextureBank::dispose();
     Renderer::dispose();

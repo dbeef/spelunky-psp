@@ -1,7 +1,8 @@
 #include "LevelGenerator.hpp"
 #include "logger/log.h"
 #include "GameLoopStartedState.hpp"
-#include "Camera.hpp"
+#include "ModelViewCamera.hpp"
+#include "ScreenSpaceCamera.hpp"
 #include "TextureBank.hpp"
 #include "GameLoop.hpp"
 
@@ -26,8 +27,8 @@ void GameLoopStartedState::enter(GameLoop &)
     TextureBank::instance().load_textures();
     TextureBank::instance().load_texture_regions();
 
-    Camera::instance().calculate_coefficients();
-    Camera::instance().update_gl_projection_matrix();
+    ModelViewCamera::instance().calculate_coefficients();
+    ScreenSpaceCamera::instance().calculate_coefficients();
 
     LevelGenerator::instance().getLevel().clean_map_layout();
     LevelGenerator::instance().getLevel().generate_cave_background();

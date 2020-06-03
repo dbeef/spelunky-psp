@@ -5,26 +5,34 @@
 #include "Renderer.hpp"
 #include "GameLoop.hpp"
 #include "Input.hpp"
-#include "Camera.hpp"
+#include "ModelViewCamera.hpp"
+#include "ScreenSpaceCamera.hpp"
 #include "GameLoopPlayingState.hpp"
 #include "game-objects/GameObject.hpp"
 #include "main-dude/MainDude.hpp"
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
-    auto &camera = Camera::instance();
+    auto &model_view_camera = ModelViewCamera::instance();
+    auto &screen_space_camera = ScreenSpaceCamera::instance();
     auto &level_renderer = Renderer::instance();
     auto& game_objects = game_loop._game_objects;
 
     auto x = game_loop._main_dude->get_x_pos_center();
     auto y = game_loop._main_dude->get_y_pos_center();
-    camera.adjust_to_bounding_box(x, y);
-    camera.adjust_to_level_boundaries(Consts::MAP_GAME_WIDTH_TILES, Consts::MAP_GAME_HEIGHT_TILES);
+    model_view_camera.adjust_to_bounding_box(x, y);
+    model_view_camera.adjust_to_level_boundaries(Consts::MAP_GAME_WIDTH_TILES, Consts::MAP_GAME_HEIGHT_TILES);
 
-    camera.update_gl_modelview_matrix();
+    model_view_camera.update_gl_modelview_matrix();
+    model_view_camera.update_gl_projection_matrix();
 
     level_renderer.render();
     level_renderer.update();
+
+    screen_space_camera.update_gl_modelview_matrix();
+    screen_space_camera.update_gl_projection_matrix();
+
+    // TODO: Render HUD
 
     // Update game objects:
 
