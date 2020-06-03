@@ -16,10 +16,16 @@
 
 GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
-    auto &model_view_camera = game_loop._cameras.model_view;
-    auto &screen_space_camera = game_loop._cameras.screen_space;
-    auto &renderer = Renderer::instance();
+    auto& model_view_camera = game_loop._cameras.model_view;
+    auto& screen_space_camera = game_loop._cameras.screen_space;
+    auto& renderer = Renderer::instance();
     auto& game_objects = game_loop._game_objects;
+
+    // Remove render entities marked for disposal:
+
+    renderer.update();
+
+    // Render:
 
     model_view_camera.update_gl_modelview_matrix();
     model_view_camera.update_gl_projection_matrix();
@@ -30,10 +36,6 @@ GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32
     screen_space_camera.update_gl_projection_matrix();
 
     renderer.render(Renderer::EntityType::SCREEN_SPACE);
-
-    // Remove render entities marked for disposal:
-
-    renderer.update();
 
     // Update game objects:
 

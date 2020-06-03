@@ -15,18 +15,27 @@
 
 GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
-    auto &model_view_camera = game_loop._cameras.model_view;
-    auto &renderer = Renderer::instance();
+    auto& screen_space_camera = game_loop._cameras.screen_space;
+    auto& model_view_camera = game_loop._cameras.model_view;
     auto& game_objects = game_loop._game_objects;
+    auto& renderer = Renderer::instance();
+
+    // Remove render entities marked for disposal:
+
+    renderer.update();
+
+    // Render:
 
     model_view_camera.update_gl_modelview_matrix();
     model_view_camera.update_gl_projection_matrix();
 
     renderer.render(Renderer::EntityType::MODEL_VIEW_SPACE);
 
-    // Remove render entities marked for disposal:
+    screen_space_camera.update_gl_modelview_matrix();
+    screen_space_camera.update_gl_projection_matrix();
 
-    renderer.update();
+    renderer.render(Renderer::EntityType::SCREEN_SPACE);
+
 
     // Update game objects:
 
@@ -72,11 +81,11 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     model_view_camera.set_y_not_rounded(7.0f);
 
     game_loop._game_objects.emplace_back(std::make_shared<MainLogo>(9.7f, 13.5f));
-    game_loop._game_objects.emplace_back(std::make_shared<QuitSign>(16.0f, 9.5f));
     game_loop._game_objects.emplace_back(std::make_shared<StartSign>(5.5f, 17.0f));
     game_loop._game_objects.emplace_back(std::make_shared<ScoresSign>(9.5f, 17.0f));
     game_loop._game_objects.emplace_back(std::make_shared<TutorialSign>(1.0f, 16.5f));
     game_loop._game_objects.emplace_back(std::make_shared<CopyrightsSign>(10.0f, 18.75f));
+    game_loop._game_objects.emplace_back(std::make_shared<QuitSign>(16.0f, 9.5f));
 
     game_loop._main_dude = std::make_shared<MainDude>(17.45f, 8.5f);
     game_loop._game_objects.push_back(game_loop._main_dude);
