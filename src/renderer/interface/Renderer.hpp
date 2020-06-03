@@ -57,5 +57,5 @@ private:
     std::vector<RenderEntity> _render_entities[static_cast<std::size_t>(EntityType::_SIZE)];
     std::vector<RenderEntityID> _for_removal[static_cast<std::size_t>(EntityType::_SIZE)];
 
-    static Renderer* _level_renderer;
+    static Renderer* _renderer;
 };

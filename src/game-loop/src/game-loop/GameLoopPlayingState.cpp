@@ -13,9 +13,9 @@
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
-    auto &model_view_camera = game_loop._cameras.model_view;
-    auto &screen_space_camera = game_loop._cameras.screen_space;
-    auto &renderer = Renderer::instance();
+    auto& model_view_camera = game_loop._cameras.model_view;
+    auto& screen_space_camera = game_loop._cameras.screen_space;
+    auto& renderer = Renderer::instance();
     auto& game_objects = game_loop._game_objects;
 
     // Adjust camera to follow main dude:
@@ -24,6 +24,12 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     auto y = game_loop._main_dude->get_y_pos_center();
     model_view_camera.adjust_to_bounding_box(x, y);
     model_view_camera.adjust_to_level_boundaries(Consts::MAP_GAME_WIDTH_TILES, Consts::MAP_GAME_HEIGHT_TILES);
+
+    // Remove render entities marked for disposal:
+
+    renderer.update();
+
+    // Render:
 
     model_view_camera.update_gl_modelview_matrix();
     model_view_camera.update_gl_projection_matrix();
@@ -34,10 +40,6 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     screen_space_camera.update_gl_projection_matrix();
 
     renderer.render(Renderer::EntityType::SCREEN_SPACE);
-
-    // Remove render entities marked for disposal:
-
-    renderer.update();
 
     // Update game objects:
 

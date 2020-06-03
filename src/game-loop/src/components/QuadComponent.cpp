@@ -1,3 +1,4 @@
+#include <logger/log.h>
 #include "main-dude/MainDude.hpp"
 #include "Renderer.hpp"
 #include "TextureBank.hpp"
@@ -42,7 +43,7 @@ QuadComponent::QuadComponent(TextureType texture_type, Renderer::EntityType enti
     entity.indices = _quad.get_indices();
     entity.indices_count = Quad::get_indices_count();
     entity.texture = TextureBank::instance().get_texture(_texture_type);
-    _render_entity_id = Renderer::instance().add_entity(entity, Renderer::EntityType::MODEL_VIEW_SPACE);
+    _render_entity_id = Renderer::instance().add_entity(entity, entity_type);
     assert(_render_entity_id != Renderer::INVALID_ENTITY);
 }
 

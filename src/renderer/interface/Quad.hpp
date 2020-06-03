@@ -31,7 +31,7 @@ private:
         float y = 0.0f;
     } _scale;
 
-    Vertex _transformed_vertices[4];
-    Vertex _base_vertices[4];
-    IndexType _indices[6];
+    Vertex _transformed_vertices[4] = {0.0f};
+    Vertex _base_vertices[4] = {0.0f};
+    IndexType _indices[6] = {0};
 };

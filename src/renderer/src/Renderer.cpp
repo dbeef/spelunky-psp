@@ -14,25 +14,25 @@
 #include <string>
 #include <cstring>
 
-Renderer *Renderer::_level_renderer = nullptr;
+Renderer *Renderer::_renderer = nullptr;
 
 Renderer &Renderer::instance()
 {
-    assert(_level_renderer);
-    return *_level_renderer;
+    assert(_renderer);
+    return *_renderer;
 }
 
 void Renderer::init()
 {
-    assert(!_level_renderer);
-    _level_renderer = new Renderer();
+    assert(!_renderer);
+    _renderer = new Renderer();
 }
 
 void Renderer::dispose()
 {
-    assert(_level_renderer);
-    delete _level_renderer;
-    _level_renderer = nullptr;
+    assert(_renderer);
+    delete _renderer;
+    _renderer = nullptr;
 }
 
 void Renderer::render(EntityType type) const
@@ -42,6 +42,8 @@ void Renderer::render(EntityType type) const
         // Interleaving vertex attributes instead of separate buffers for small performance boost from data locality:
         const auto *vertices = reinterpret_cast<const char *>(entity.vertices);
         const auto *uvs = vertices + 2 * sizeof(float);
+
+        assert(vertices);
 
         // Tightly packed Vertex type:
         const size_t stride = sizeof(Vertex);
