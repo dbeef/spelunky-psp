@@ -1,15 +1,15 @@
 #pragma once
 
-#include "MainMenuSpritesheetFrames.hpp"
 #include "components/QuadComponent.hpp"
 #include "GameObject.hpp"
 #include "HUDSpritesheetFrames.hpp"
+#include "Point2D.hpp"
 
 class HUD : public GameObject
 {
 public:
 
-    HUD(float pos_x_center, float pos_y_center)
+    HUD(float pos_x, float pos_y)
             :_heart_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, HUD_ICON_WIDTH_PIXELS, HUD_ICON_HEIGHT_PIXELS)
             , _dollar_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, HUD_ICON_WIDTH_PIXELS, HUD_ICON_HEIGHT_PIXELS)
             , _ropes_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, HUD_ICON_WIDTH_PIXELS, HUD_ICON_HEIGHT_PIXELS)
@@ -22,23 +22,23 @@ public:
 
         const float icons_offset_pixels = Video::instance().get_window_width() * 0.1f;
 
-        _heart_position.x_center = pos_x_center + (icons_offset_pixels * 0);
-        _dollar_position.x_center = pos_x_center + (icons_offset_pixels * 1);
-        _ropes_position.x_center = pos_x_center + (icons_offset_pixels * 2);
-        _bombs_position.x_center = pos_x_center + (icons_offset_pixels * 3);
+        _heart_center.x = pos_x + (icons_offset_pixels * 0);
+        _dollar_center.x = pos_x + (icons_offset_pixels * 1);
+        _ropes_center.x = pos_x + (icons_offset_pixels * 2);
+        _bombs_center.x = pos_x + (icons_offset_pixels * 3);
 
-        _heart_position.y_center = pos_y_center;
-        _dollar_position.y_center = pos_y_center;
-        _ropes_position.y_center = pos_y_center;
-        _bombs_position.y_center = pos_y_center;
+        _heart_center.y = pos_y;
+        _dollar_center.y = pos_y;
+        _ropes_center.y = pos_y;
+        _bombs_center.y = pos_y;
     }
 
     void update(uint32_t delta_time_ms) override
     {
-        _heart_quad.update(_heart_position.x_center, _heart_position.y_center);
-        _dollar_quad.update(_dollar_position.x_center, _dollar_position.y_center);
-        _ropes_quad.update(_ropes_position.x_center, _ropes_position.y_center);
-        _bombs_quad.update(_bombs_position.x_center, _bombs_position.y_center);
+        _heart_quad.update(_heart_center.x, _heart_center.y);
+        _dollar_quad.update(_dollar_center.x, _dollar_center.y);
+        _ropes_quad.update(_ropes_center.x, _ropes_center.y);
+        _bombs_quad.update(_bombs_center.x, _bombs_center.y);
     }
 
 private:
@@ -46,19 +46,10 @@ private:
     const float HUD_ICON_WIDTH_PIXELS = 16;
     const float HUD_ICON_HEIGHT_PIXELS = 16;
 
-    // TODO: Introduce point/vec2d structure everywhere.
-    struct Position
-    {
-        float x_center;
-        float y_center;
-    };
-
-    Position _heart_position;
-    Position _dollar_position;
-    Position _ropes_position;
-    Position _bombs_position;
-
-    friend class QuadComponent;
+    Point2D _heart_center;
+    Point2D _dollar_center;
+    Point2D _ropes_center;
+    Point2D _bombs_center;
 
     QuadComponent _heart_quad;
     QuadComponent _dollar_quad;
