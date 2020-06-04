@@ -22,6 +22,8 @@ add_library(GameLoop STATIC
         src/components/PhysicsComponent.cpp
         src/components/QuadComponent.cpp
         src/components/AnimationComponent.cpp
+        src/game-objects/HUD.cpp
+        src/game-objects/TextBuffer.cpp
         interface/GameLoop.hpp
         interface/GameLoopBaseState.hpp
         interface/GameLoopMainMenuState.hpp
