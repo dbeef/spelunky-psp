@@ -48,7 +48,7 @@ public:
         _dollar_quad.update(_dollar_center.x, _dollar_center.y);
         _ropes_quad.update(_ropes_center.x, _ropes_center.y);
         _bombs_quad.update(_bombs_center.x, _bombs_center.y);
-        _hold_item_quad.update(_bombs_center.x, _bombs_center.y);
+        _hold_item_quad.update(_hold_item_center.x, _hold_item_center.y);
     }
 
     void set_text_buffer(const std::shared_ptr<TextBuffer>& text_buffer)
