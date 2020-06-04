@@ -9,6 +9,7 @@ add_library(TextureBank STATIC
         interface/spritesheet-frames/HUDSpritesheetFrames.hpp
         interface/spritesheet-frames/MainMenuSpritesheetFrames.hpp
         interface/spritesheet-frames/MainDudeSpritesheetFrames.hpp
+        interface/spritesheet-frames/FontSpritesheetFrames.hpp
         )
 
 target_include_directories(TextureBank
