@@ -2,7 +2,7 @@
 
 #include "components/QuadComponent.hpp"
 #include "GameObject.hpp"
-#include "HUDSpritesheetFrames.hpp"
+#include "spritesheet-frames/HUDSpritesheetFrames.hpp"
 #include "Point2D.hpp"
 
 class HUD : public GameObject
@@ -10,10 +10,10 @@ class HUD : public GameObject
 public:
 
     HUD(float pos_x, float pos_y)
-            :_heart_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, HUD_ICON_WIDTH_PIXELS, HUD_ICON_HEIGHT_PIXELS)
-            , _dollar_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, HUD_ICON_WIDTH_PIXELS, HUD_ICON_HEIGHT_PIXELS)
-            , _ropes_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, HUD_ICON_WIDTH_PIXELS, HUD_ICON_HEIGHT_PIXELS)
-            , _bombs_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, HUD_ICON_WIDTH_PIXELS, HUD_ICON_HEIGHT_PIXELS)
+            :_heart_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
+            , _dollar_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
+            , _ropes_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
+            , _bombs_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
     {
         _heart_quad.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HEART);
         _dollar_quad.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::DOLLAR_SIGN);
@@ -43,8 +43,8 @@ public:
 
 private:
 
-    const float HUD_ICON_WIDTH_PIXELS = 16;
-    const float HUD_ICON_HEIGHT_PIXELS = 16;
+    const float ICON_WIDTH_PIXELS = 16;
+    const float ICON_HEIGHT_PIXELS = 16;
 
     Point2D _heart_center;
     Point2D _dollar_center;

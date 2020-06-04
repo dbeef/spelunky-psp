@@ -2,7 +2,7 @@
 
 #include "RenderEntity.hpp"
 #include "game-objects/GameObject.hpp"
-#include "MainDudeSpritesheetFrames.hpp"
+#include "spritesheet-frames/MainDudeSpritesheetFrames.hpp"
 
 #include "components/PhysicsComponent.hpp"
 #include "components/QuadComponent.hpp"

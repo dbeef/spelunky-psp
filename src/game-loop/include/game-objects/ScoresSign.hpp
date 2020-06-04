@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MainMenuSpritesheetFrames.hpp"
+#include "spritesheet-frames/MainMenuSpritesheetFrames.hpp"
 #include "components/QuadComponent.hpp"
 #include "GameObject.hpp"
 #include "Point2D.hpp"
@@ -10,7 +10,7 @@ class ScoresSign : public GameObject
 public:
 
     ScoresSign(float pos_x_center, float pos_y_center)
-            :_quad(TextureType::MAIN_MENU, Renderer::EntityType::MODEL_VIEW_SPACE, SCORES_SIGN_QUAD_WIDTH, SCORES_SIGN_QUAD_HEIGHT)
+            :_quad(TextureType::MAIN_MENU, Renderer::EntityType::MODEL_VIEW_SPACE, QUAD_WIDTH_WORLD_UNITS, QUAD_HEIGHT_WORLD_UNITS)
             , _center {pos_x_center, pos_y_center}
     {
         _quad.frame_changed<MainMenuSpritesheetFrames>(MainMenuSpritesheetFrames::SCORES);
@@ -23,8 +23,8 @@ public:
 
 private:
 
-    const float SCORES_SIGN_QUAD_WIDTH = 3;
-    const float SCORES_SIGN_QUAD_HEIGHT = 2;
+    const float QUAD_WIDTH_WORLD_UNITS = 3;
+    const float QUAD_HEIGHT_WORLD_UNITS = 2;
     Point2D _center;
     QuadComponent _quad;
 };
