@@ -24,9 +24,8 @@ public:
         _end = SDL_GetTicks();
     }
 
-    void delay() const;
-
-    inline std::uint64_t get_delta_ms() const { return _end - _start;  };
+	// Returns time spent on delay in milliseconds.
+    Uint32 delay();
 
 private:
 

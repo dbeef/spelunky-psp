@@ -58,8 +58,6 @@ void Video::run_loop(const std::function<void(uint32_t delta_time_ms)> &loop_cal
 
     auto& input = Input::instance();
 
-    static uint32_t last_delta_ms = 0;
-
     while (!input.isExit()) {
 
         _timestep.mark_start();
@@ -67,7 +65,7 @@ void Video::run_loop(const std::function<void(uint32_t delta_time_ms)> &loop_cal
 #ifndef NDEBUG
         DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
 #endif
-        loop_callback(last_delta_ms);
+        loop_callback(_last_delta_time);
         // Force GPU to render commands queued in the callback:
         DebugGlCall(glFlush());
         // Now CPU-consuming calls for the rest of the frame:
@@ -77,8 +75,7 @@ void Video::run_loop(const std::function<void(uint32_t delta_time_ms)> &loop_cal
         swap_buffers();
 
         _timestep.mark_end();
-        _timestep.delay();
-        last_delta_ms = _timestep.get_delta_ms();
+        _last_delta_time = _timestep.delay();
     }
 }
 

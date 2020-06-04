@@ -28,7 +28,7 @@ public:
 
     bool setup_gl();
 
-    inline uint32_t get_delta_time() const { return _timestep.get_delta_ms(); }
+    inline uint32_t get_delta_time() const { return _last_delta_time; }
 
     void tear_down_gl();
 
@@ -38,6 +38,7 @@ public:
 
 private:
 
+    uint32_t _last_delta_time = 0;
     uint16_t _width = 0;
     uint16_t _height = 0;
     float _aspect = 0;
