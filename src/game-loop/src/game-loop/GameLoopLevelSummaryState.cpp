@@ -94,4 +94,5 @@ void GameLoopLevelSummaryState::exit(GameLoop& game_loop)
 {
     game_loop._game_objects = {};
     game_loop._main_dude = {};
+    game_loop._text_buffer = {};
 }
