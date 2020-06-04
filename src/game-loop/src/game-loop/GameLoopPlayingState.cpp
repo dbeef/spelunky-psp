@@ -11,6 +11,7 @@
 #include "game-objects/GameObject.hpp"
 #include "game-objects/HUD.hpp"
 #include "main-dude/MainDude.hpp"
+#include "game-objects/TextBuffer.hpp"
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -82,22 +83,35 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     LevelGenerator::instance().getLevel().generate_cave_background();
     LevelGenerator::instance().getLevel().batch_vertices();
 
+    // Create main dude:
+
     game_loop._main_dude = std::make_shared<MainDude>(0, 0);
     game_loop._game_objects.push_back(game_loop._main_dude);
-
-    const auto heart_pos_x = static_cast<float>(Video::instance().get_window_width() * 0.05f);
-    const auto heart_pos_y = static_cast<float>(Video::instance().get_window_height() * 0.05f);
-
-    game_loop._game_objects.push_back(std::make_shared<HUD>(heart_pos_x, heart_pos_y));
 
     MapTile* entrance = nullptr;
     LevelGenerator::instance().getLevel().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
     assert(entrance);
     game_loop._main_dude->set_position_on_tile(entrance);
+
+    // Create hud:
+
+    const auto hud_pos_x = static_cast<float>(Video::instance().get_window_width() * 0.05f);
+    const auto hud_pos_y = static_cast<float>(Video::instance().get_window_height() * 0.05f);
+
+    game_loop._game_objects.push_back(std::make_shared<HUD>(hud_pos_x, hud_pos_y));
+
+    // Create text renderer:
+
+    game_loop._text_buffer = std::make_shared<TextBuffer>();
+    game_loop._game_objects.push_back(game_loop._text_buffer);
+
+    auto id = game_loop._text_buffer->create_text(4);
+    game_loop._text_buffer->update_text(id, {100, 100}, "DUPA", 4);
 }
 
 void GameLoopPlayingState::exit(GameLoop& game_loop)
 {
     game_loop._game_objects = {};
     game_loop._main_dude = {};
+    game_loop._text_buffer = {};
 }

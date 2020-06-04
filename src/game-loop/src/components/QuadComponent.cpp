@@ -1,3 +1,4 @@
+#include <components/QuadComponent.hpp>
 #include "main-dude/MainDude.hpp"
 #include "Renderer.hpp"
 #include "TextureBank.hpp"

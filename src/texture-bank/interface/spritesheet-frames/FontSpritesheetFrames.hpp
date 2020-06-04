@@ -3,8 +3,11 @@
 #include <cstdint>
 
 // Symbols are in the same order as in the ASCII table, with an offset of -32.
+// Only UPPER case letters are included.
 
-enum class FontSpritesheetFrames : uint16_t
+const std::int8_t FONT_ASCII_OFFSET = -32;
+
+enum class FontSpritesheetFrames : int16_t
 {
     SPACE = 0,
     EXCLAMATION_MARK,
@@ -64,5 +67,6 @@ enum class FontSpritesheetFrames : uint16_t
     W,
     X,
     Y,
-    Z
+    Z,
+    _SIZE
 };

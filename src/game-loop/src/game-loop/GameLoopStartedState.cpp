@@ -38,7 +38,9 @@ void GameLoopStartedState::enter(GameLoop& game_loop)
     _game_initialized = true;
 }
 
-void GameLoopStartedState::exit(GameLoop &)
+void GameLoopStartedState::exit(GameLoop& game_loop)
 {
-
+    game_loop._game_objects = {};
+    game_loop._main_dude = {};
+    game_loop._text_buffer = {};
 }
