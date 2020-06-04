@@ -14,7 +14,7 @@ MainDudeBaseState *MainDudeThrowingState::update(MainDude& main_dude, uint32_t d
     // Update components:
 
     main_dude._physics.update(main_dude, delta_time_ms);
-    main_dude._quad.update(main_dude, delta_time_ms);
+    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
     main_dude._animation.update(main_dude, delta_time_ms);
 
     // Other:

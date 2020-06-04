@@ -8,15 +8,6 @@
 #include "Quad.hpp"
 #include "MapTile.hpp"
 
-class MainDude;
-class MainLogo;
-class QuitSign;
-class StartSign;
-class ScoresSign;
-class TutorialSign;
-class CopyrightsSign;
-class HUD;
-
 class QuadComponent
 {
 public:
@@ -24,14 +15,7 @@ public:
     explicit QuadComponent(TextureType, Renderer::EntityType, float quad_width, float quad_height);
     ~QuadComponent();
 
-    void update(MainDude&, uint32_t delta_time_ms);
-    void update(MainLogo&, uint32_t delta_time_ms);
-    void update(QuitSign&, uint32_t delta_time_ms);
-    void update(StartSign&, uint32_t delta_time_ms);
-    void update(ScoresSign&, uint32_t delta_time_ms);
-    void update(TutorialSign&, uint32_t delta_time_ms);
-    void update(CopyrightsSign&, uint32_t delta_time_ms);
-    void update(HUD&, uint32_t delta_time_ms);
+    void update(float pos_x_center, float pos_y_center, bool vertical_flip = false);
 
     template <class T>
     void frame_changed(T frame_index) { _frame_index = static_cast<std::size_t>(frame_index);_frame_changed = true; }

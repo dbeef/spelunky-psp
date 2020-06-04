@@ -17,7 +17,7 @@ public:
 
     void update(uint32_t delta_time_ms) override
     {
-        _quad.update(*this, delta_time_ms);
+        _quad.update(_position.x_center, _position.y_center);
     }
 
 private:

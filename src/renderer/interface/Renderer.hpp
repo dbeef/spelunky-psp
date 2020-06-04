@@ -38,6 +38,16 @@ public:
         return add_entity(entity, type);
     }
 
+    RenderEntityID add_entity(Quad& quad, TextureID texture, EntityType type)
+    {
+        RenderEntity entity;
+        entity.indices_count = Quad::get_indices_count();
+        entity.indices = quad.get_indices();
+        entity.vertices = quad.get_vertices_transformed();
+        entity.texture = texture;
+        return add_entity(entity, type);
+    }
+
     RenderEntityID add_entity(RenderEntity e, EntityType type)
     {
         static RenderEntityID unique_id_pool = std::numeric_limits<RenderEntityID>::max();
