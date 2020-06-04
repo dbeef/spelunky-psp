@@ -9,7 +9,16 @@ QuadComponent::QuadComponent(TextureType texture_type, Renderer::EntityType enti
     , _texture_type(texture_type)
     , _entity_type(entity_type)
 {
-    _render_entity_id = Renderer::instance().add_entity(_quad, TextureBank::instance().get_texture(_texture_type), entity_type);
+    _render_entity_id = Renderer::instance().add_entity(_quad, TextureBank::instance().get_texture(_texture_type), _entity_type);
+    assert(_render_entity_id != Renderer::INVALID_ENTITY);
+}
+
+QuadComponent::QuadComponent(const QuadComponent& other)
+        : _quad_dimensions {other._quad_dimensions.width, other._quad_dimensions.height}
+        , _texture_type(other._texture_type)
+        , _entity_type(other._entity_type)
+{
+    _render_entity_id = Renderer::instance().add_entity(_quad, TextureBank::instance().get_texture(_texture_type), _entity_type);
     assert(_render_entity_id != Renderer::INVALID_ENTITY);
 }
 

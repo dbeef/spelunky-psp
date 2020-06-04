@@ -88,7 +88,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     game_loop._main_dude = std::make_shared<MainDude>(0, 0);
     game_loop._game_objects.push_back(game_loop._main_dude);
 
-    MapTile* entrance = nullptr;
+    MapTile *entrance = nullptr;
     LevelGenerator::instance().getLevel().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
     assert(entrance);
     game_loop._main_dude->set_position_on_tile(entrance);
@@ -98,15 +98,21 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     const auto hud_pos_x = static_cast<float>(Video::instance().get_window_width() * 0.05f);
     const auto hud_pos_y = static_cast<float>(Video::instance().get_window_height() * 0.05f);
 
-    game_loop._game_objects.push_back(std::make_shared<HUD>(hud_pos_x, hud_pos_y));
+    auto hud = std::make_shared<HUD>(hud_pos_x, hud_pos_y);
+    game_loop._game_objects.push_back(hud);
 
     // Create text renderer:
 
     game_loop._text_buffer = std::make_shared<TextBuffer>();
     game_loop._game_objects.push_back(game_loop._text_buffer);
 
-    auto id = game_loop._text_buffer->create_text(4);
-    game_loop._text_buffer->update_text(id, {100, 100}, "DUPA", 4);
+    // Pass it to HUD:
+
+    hud->set_text_buffer(game_loop._text_buffer);
+    hud->set_bombs_count(4);
+    hud->set_dollars_count(0);
+    hud->set_hearts_count(4);
+    hud->set_ropes_count(4);
 }
 
 void GameLoopPlayingState::exit(GameLoop& game_loop)
