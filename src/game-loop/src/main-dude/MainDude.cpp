@@ -7,7 +7,7 @@
 #include "MapTileType.hpp"
 #include "Renderer.hpp"
 #include "Input.hpp"
-#include "main-dude/MainDudeSpritesheetFrames.hpp"
+#include "spritesheet-frames/MainDudeSpritesheetFrames.hpp"
 #include "main-dude/states/MainDudeRunningState.hpp"
 #include "main-dude/states/MainDudeStandingState.hpp"
 

@@ -37,12 +37,9 @@ add_library(GameLoop STATIC
         include/game-objects/TutorialSign.hpp
         include/game-objects/CopyrightsSign.hpp
         include/game-objects/HUD.hpp
-        include/game-objects/MainMenuSpritesheetFrames.hpp
-        include/game-objects/HUDSpritesheetFrames.hpp
         include/components/PhysicsComponent.hpp
         include/components/QuadComponent.hpp
         include/components/AnimationComponent.hpp
-        include/main-dude/MainDudeSpritesheetFrames.hpp
         include/main-dude/states/MainDudeBaseState.hpp
         include/main-dude/states/MainDudeClimbingLadderState.hpp
         include/main-dude/states/MainDudeLevelSummaryState.hpp
