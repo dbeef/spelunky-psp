@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <sstream>
+#include <string>
 
 #include "components/QuadComponent.hpp"
 #include "GameObject.hpp"
@@ -63,49 +64,41 @@ public:
 
     void set_hearts_count(uint32_t hearts)
     {
-        // std::to_string missing in PSP's libc++.
-
-        std::stringstream ss;
-        ss << hearts;
-
+        const auto hearts_s = to_string(hearts);
         _text_buffer->update_text(_text_entity_ids.hearts, {_heart_center.x + (icons_offset_pixels / 2.0f), _heart_center.y},
-                                  ss.str().c_str(), ss.str().size());
+                                  hearts_s.c_str(), hearts_s.size());
     }
 
     void set_ropes_count(uint32_t ropes)
     {
-        // std::to_string missing in PSP's libc++.
-
-        std::stringstream ss;
-        ss << ropes;
-
+        const auto ropes_s = to_string(ropes);
         _text_buffer->update_text(_text_entity_ids.ropes, {_ropes_center.x + (icons_offset_pixels / 2.0f), _ropes_center.y},
-                                  ss.str().c_str(), ss.str().size());
+                                  ropes_s.c_str(), ropes_s.size());
     }
 
     void set_bombs_count(uint32_t bombs)
     {
-        // std::to_string missing in PSP's libc++.
-
-        std::stringstream ss;
-        ss << bombs;
-
+        const auto bombs_s = to_string(bombs);
         _text_buffer->update_text(_text_entity_ids.bombs, {_bombs_center.x + (icons_offset_pixels / 2.0f), _bombs_center.y},
-                                  ss.str().c_str(), ss.str().size());
+                                  bombs_s.c_str(), bombs_s.size());
     }
 
     void set_dollars_count(uint32_t dollars)
     {
-        // std::to_string missing in PSP's libc++.
-
-        std::stringstream ss;
-        ss << dollars;
-
+        const auto dollars_s = to_string(dollars);
         _text_buffer->update_text(_text_entity_ids.dollars, {_dollar_center.x + (icons_offset_pixels / 2.0f), _dollar_center.y},
-                                  ss.str().c_str(), ss.str().size());
+                                  dollars_s.c_str(), dollars_s.size());
     }
 
 private:
+
+    // std::to_string missing in PSP's libc++.
+    std::string to_string(uint32_t value)
+    {
+        std::stringstream ss;
+        ss << value;
+        return ss.str();
+    }
 
     const float ICON_WIDTH_PIXELS = 16;
     const float ICON_HEIGHT_PIXELS = 16;
