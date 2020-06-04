@@ -48,7 +48,6 @@ private:
     MapTile* is_overlaping_tile(MapTileType) const;
 
     friend class PhysicsComponent;
-    friend class QuadComponent;
     friend class AnimationComponent;
     PhysicsComponent _physics;
     QuadComponent _quad;
