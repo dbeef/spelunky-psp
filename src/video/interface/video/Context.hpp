@@ -19,6 +19,7 @@ public:
 
     bool setup_gl();
 
+    inline uint32_t get_delta_time() const { return _last_delta_time; }
     void tear_down_gl();
 
     void run_loop(const std::function<void(uint32_t delta_time_ms)> &loop_callback);
@@ -31,5 +32,6 @@ private:
     Timestep _timestep;
 
     std::shared_ptr<Viewport> _viewport;
+    uint32_t _last_delta_time = 0;
 
 };
