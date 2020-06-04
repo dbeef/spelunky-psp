@@ -14,6 +14,8 @@ class TextBuffer : public GameObject
 {
 public:
 
+    static const TextEntityID INVALID_ENTITY = 0;
+
     void update(uint32_t delta_time_ms) override
     {
         for (const auto &id : _for_removal)
@@ -27,13 +29,11 @@ public:
         }
     }
 
-    TextEntityID create_text(std::size_t length)
+    TextEntityID create_text()
     {
         static TextEntityID unique_id_pool = std::numeric_limits<TextEntityID>::max();
-
         TextEntity e;
         e.id = --unique_id_pool;
-
         _text_entries.emplace_back(e);
         return unique_id_pool;
     }
@@ -48,17 +48,28 @@ public:
         auto it = std::find_if(_text_entries.begin(), _text_entries.end(), [id](const TextEntity& e) { return e.id == id; });
         if (it != _text_entries.end())
         {
+            // Resize text if it won't fit full length of new contents:
+            while (it->quads.size() < length)
+            {
+                it->quads.emplace_back(TextureType::FONT, Renderer::EntityType::SCREEN_SPACE, FONT_WIDTH_PIXELS, FONT_HEIGHT_PIXELS);
+            }
+
             for (std::size_t index = 0; index < it->quads.size(); index++)
             {
                 char sign = 0;
 
-                if (index > length)
+                if (index >= length)
                 {
                     sign = ' ';
                 }
                 else
                 {
                     sign = contents[index];
+                }
+
+                if (sign == 0)
+                {
+                    sign = ' ';
                 }
 
                 auto& quad = it->quads[index];

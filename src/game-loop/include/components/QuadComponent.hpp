@@ -12,7 +12,8 @@ class QuadComponent
 {
 public:
 
-    explicit QuadComponent(TextureType, Renderer::EntityType, float quad_width, float quad_height);
+    QuadComponent(TextureType, Renderer::EntityType, float quad_width, float quad_height);
+    QuadComponent(const QuadComponent&);
     ~QuadComponent();
 
     void update(float pos_x_center, float pos_y_center, bool vertical_flip = false);
