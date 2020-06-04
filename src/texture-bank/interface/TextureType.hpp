@@ -6,4 +6,5 @@ enum class TextureType
     MAIN_DUDE,
     MAIN_MENU,
     HUD,
+    FONT,
 };
