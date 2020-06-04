@@ -53,6 +53,16 @@ namespace
         #include "generated/hud.json.hpp"
     }
 
+    namespace font_png
+    {
+        #include "generated/font.png.hpp"
+    }
+
+    namespace font_json
+    {
+        #include "generated/font.json.hpp"
+    }
+
     struct TextureInput
     {
         const char *data;
@@ -73,6 +83,7 @@ namespace
         out.push_back({main_dude_png::data, sizeof(main_dude_png::data), TextureType::MAIN_DUDE});
         out.push_back({main_menu_png::data, sizeof(main_menu_png::data), TextureType::MAIN_MENU});
         out.push_back({hud_png::data, sizeof(hud_png::data), TextureType::HUD});
+        out.push_back({font_png::data, sizeof(font_json::data), TextureType::FONT});
         return out;
     }
 
@@ -83,6 +94,7 @@ namespace
         out.push_back({main_dude_json::data, TextureType::MAIN_DUDE});
         out.push_back({main_menu_json::data, TextureType::MAIN_MENU});
         out.push_back({hud_json::data, TextureType::HUD});
+        out.push_back({font_json::data, TextureType::FONT});
         return out;
     }
 }
