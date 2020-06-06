@@ -20,6 +20,10 @@ target_include_directories(TextureBank
 set_target_properties(TextureBank PROPERTIES
         CXX_STANDARD
         14
+        COMPILE_FLAGS
+        # FIXME: Suppressing silly warning from resource-compiled assets.
+        #        Changing outputted type to std::int8_t should fix it.
+        "-Wno-error=narrowing"
         )
 
 target_link_libraries(TextureBank
