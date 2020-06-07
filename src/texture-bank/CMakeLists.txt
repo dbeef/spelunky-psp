@@ -20,11 +20,16 @@ target_include_directories(TextureBank
 set_target_properties(TextureBank PROPERTIES
         CXX_STANDARD
         14
+        )
+
+if (NOT SPELUNKY_PSP_PLATFORM_WINDOWS)
+set_target_properties(TextureBank PROPERTIES
         COMPILE_FLAGS
         # FIXME: Suppressing silly warning from resource-compiled assets.
         #        Changing outputted type to std::int8_t should fix it.
         "-Wno-error=narrowing"
         )
+endif()
 
 target_link_libraries(TextureBank
     PUBLIC
