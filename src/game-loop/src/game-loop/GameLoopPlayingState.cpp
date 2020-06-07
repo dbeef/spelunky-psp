@@ -76,6 +76,8 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopPlayingState");
 
+    std::srand(std::rand() + Video::instance().get_delta_time());
+
     LevelGenerator::instance().getLevel().clean_map_layout();
     LevelGenerator::instance().getLevel().generate_new_level_layout();
     LevelGenerator::instance().getLevel().initialise_tiles_from_room_layout();
