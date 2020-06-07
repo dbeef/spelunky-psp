@@ -3,6 +3,7 @@
 //
 
 #include <cmath>
+#include <random>
 #include <cstdlib>
 #include <cstring>
 #include <algorithm>
@@ -25,6 +26,17 @@
 
 using namespace Consts;
 
+namespace
+{
+    int get_random_number()
+    {
+        static std::random_device random_device;
+        std::default_random_engine engine(random_device());
+        std::uniform_int_distribution<int> uniform_dist(1, 6);
+        return uniform_dist(engine);
+    }
+}
+
 /**
  * Used in the process of placing rooms.
  * !\relates generate_new_rooms
@@ -38,7 +50,7 @@ void obtain_new_direction(int curr_x, Direction &direction) {
         direction = Direction::LEFT;
     else
         //we're in the middle, so make a guess where should we gow now
-        direction = static_cast<Direction>(rand() % 2); //left or right
+        direction = static_cast<Direction>(get_random_number() % 2); //left or right
 }
 
 void Level::generate_new_level_layout() 
@@ -56,7 +68,7 @@ void Level::generate_new_level_layout()
 //    srand(timerElapsed(1));
 
     //set starting position to the random room in the most upper row
-    int curr_x = rand() % 3;
+    int curr_x = get_random_number() % 3;
     int curr_y = ROOMS_Y - 1;
     //direction represents where the generator will go in the next loop iteration
     Direction direction;
@@ -84,14 +96,14 @@ void Level::generate_new_level_layout()
                     //same, if right side
                     curr_x++;
 
-                if (curr_y == 0 && !exit_placed && rand() % 2 == 0) {
+                if (curr_y == 0 && !exit_placed && get_random_number() % 2 == 0) {
                     //we're on the most bottom floor, we didn't plant an exit yet and we've guessed that's the place
                     exit_placed = true;
                     level.layout[curr_x][curr_y] = RoomType::R_EXIT;
                 } else
                     level.layout[curr_x][curr_y] = RoomType::R_LEFT_RIGHT;
 
-                if (rand() % 3 == 2)
+                if (get_random_number() % 3 == 2)
                     //random chance that we change our direction to go down in the next iteration
                     direction = Direction::DOWN;
             }
@@ -104,7 +116,7 @@ void Level::generate_new_level_layout()
                 curr_y--;
                 level.layout[curr_x][curr_y] = RoomType::R_LEFT_RIGHT_UP;
 
-                if (curr_y == 0 && !exit_placed && rand() % 2 == 0) {
+                if (curr_y == 0 && !exit_placed && get_random_number() % 2 == 0) {
                     //if we're on the very bottom floor, no exit planted yet and a guess tells us so, place an exit
                     exit_placed = true;
                     level.layout[curr_x][curr_y] = RoomType::R_EXIT;
@@ -175,7 +187,7 @@ void Level::place_a_shop() {
                     if (level.layout[a - 1][b] != RoomType::R_CLOSED &&
                         level.layout[a + 1][b] != RoomType::R_CLOSED) {
 
-                        if (rand() % 2 == 0)
+                        if (get_random_number() % 2 == 0)
                             level.layout[a][b] = RoomType::R_SHOP_LEFT;
                         else
                             level.layout[a][b] = RoomType::R_SHOP_RIGHT;
@@ -307,7 +319,7 @@ void Level::initialise_tiles_from_room_layout() {
             //basing on the room type, randomly select a variation of this room
             //and copy it to the temporary tab[10][10] array
             int room_type = layout[room_x][room_y];
-            r = rand() % 6;
+            r = get_random_number() % 6;
             layout_room_ids[room_x][room_y] = r; //-1 if completely disabling NPC's in this room
 
             //copying specific room variation
@@ -472,7 +484,7 @@ void Level::add_render_entity()
 
 void Level::generate_cave_background()
 {
-    int random_offset = std::rand();
+    int random_offset = get_random_number();
 
     for (int x = 0; x < 32; x++)
     {
@@ -482,7 +494,7 @@ void Level::generate_cave_background()
             {
                 if (x % 4)
                 {
-                    random_offset = std::rand();
+                    random_offset = get_random_number();
                 }
 
                 int type_index = x + y + random_offset;
