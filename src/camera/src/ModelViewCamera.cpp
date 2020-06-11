@@ -1,5 +1,5 @@
 #include "graphics_utils/DebugGlCall.hpp"
-#include "video/Context.hpp"
+#include "viewport/Viewport.hpp"
 #include "glad/glad.h"
 #include "graphics_utils/LookAt.hpp"
 #include "ModelViewCamera.hpp"
@@ -10,16 +10,16 @@ namespace
 
     // Returns coefficient to glOrtho of such value,
     // so screen with dimensions of screen_width_tiles would entirely fit on the screen.
-    float calculate_coefficient(std::size_t screen_width_tiles)
+    float calculate_coefficient(float aspect, std::size_t screen_width_tiles)
     {
-        const auto& video = Video::instance();
-        return (screen_width_tiles / video.get_aspect()) / 2.0f;
+        return (screen_width_tiles / aspect) / 2.0f;
     }
 
 }
 
-ModelViewCamera::ModelViewCamera()
-    : _bounding_x(2.f)
+ModelViewCamera::ModelViewCamera(std::shared_ptr<Viewport> viewport)
+    : _viewport(std::move(viewport))
+    , _bounding_x(2.f)
     , _bounding_y(1.3f)
     , _bounding_x_half(_bounding_x / 2)
     , _bounding_y_half(_bounding_y / 2)
@@ -32,16 +32,15 @@ void ModelViewCamera::update_gl_modelview_matrix() const
 
 void ModelViewCamera::update_gl_projection_matrix() const
 {
-    const auto& video = Video::instance();
-    DebugGlCall(glViewport(0, 0, (GLsizei) (video.get_window_width()), (GLsizei) (video.get_window_height())));
+    DebugGlCall(glViewport(0, 0, (GLsizei) (_viewport->get_window_width()), (GLsizei) (_viewport->get_window_height())));
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
 
     static const GLdouble near = -100;
     static const GLdouble far = 100;
 
-    DebugGlCall(glOrtho(-1 * _projection_coefficient * video.get_aspect(), // How much tiles will fit on half of the screen width.
-                         1 * _projection_coefficient * video.get_aspect(),
+    DebugGlCall(glOrtho(-1 * _projection_coefficient * _viewport->get_aspect(), // How much tiles will fit on half of the screen width.
+                         1 * _projection_coefficient * _viewport->get_aspect(),
                          1 * _projection_coefficient, // How much tiles will fit on half of the screen height.
                         -1 * _projection_coefficient,
                          near,
@@ -103,7 +102,7 @@ void ModelViewCamera::adjust_to_level_boundaries(float level_width, float level_
 
 void ModelViewCamera::calculate_coefficients()
 {
-    _projection_coefficient = calculate_coefficient(SCREEN_WIDTH_IN_TILES);
+    _projection_coefficient = calculate_coefficient(_viewport->get_aspect(), SCREEN_WIDTH_IN_TILES);
     _screen_width_tiles = SCREEN_WIDTH_IN_TILES;
     _screen_height_tiles = _projection_coefficient * 2.0f;
 }

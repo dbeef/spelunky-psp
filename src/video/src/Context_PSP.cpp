@@ -1,20 +1,17 @@
 //
 // Created by dbeef on 7/7/19.
 //
-
-#include <SDL/SDL.h>
-#include <cassert>
-
 #include "video/Context.hpp"
+
 #include "glad/glad.h"
 #include "graphics_utils/DebugGlCall.hpp"
 #include "logger/log.h"
 
+#include <SDL/SDL.h>
+
 bool Video::setup_gl()
 {
-    _width = 480;
-    _height = 272;
-    _aspect = static_cast<float>(_width) / _height;
+    _viewport = std::make_shared<Viewport>(480, 272);
 
     log_info("Entered Video::setupGL");
 
@@ -42,8 +39,8 @@ bool Video::setup_gl()
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
     //  Create a window
-    auto surface = SDL_SetVideoMode(get_window_width(),
-                                    get_window_height(),
+    auto surface = SDL_SetVideoMode(_viewport->get_window_width(),
+                                    _viewport->get_window_height(),
                                     0, // current display's bpp
                                     SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE);
 

@@ -1,7 +1,6 @@
 #include <sstream>
 #include <string>
 
-#include "video/Context.hpp"
 #include "game-objects/HUD.hpp"
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
 
@@ -63,13 +62,14 @@ void HUD::set_dollars_count(uint32_t dollars)
                               dollars_s.c_str(), dollars_s.size());
 }
 
-HUD::HUD(float pos_x, float pos_y)
-        : _heart_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
-        , _dollar_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
-        , _ropes_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
-        , _bombs_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
-        , _hold_item_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
-        , _text_buffer(nullptr)
+HUD::HUD(std::shared_ptr<Viewport> viewport)
+    : _heart_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
+    , _dollar_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
+    , _ropes_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
+    , _bombs_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
+    , _hold_item_quad(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_WIDTH_PIXELS, ICON_HEIGHT_PIXELS)
+    , _text_buffer(nullptr)
+    , _viewport(std::move(viewport))
 {
     _heart_quad.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HEART);
     _dollar_quad.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::DOLLAR_SIGN);
@@ -77,8 +77,11 @@ HUD::HUD(float pos_x, float pos_y)
     _bombs_quad.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::BOMB_ICON);
     _hold_item_quad.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HOLD_ITEM_ICON);
 
-    icons_offset_pixels = Video::instance().get_window_width() * 0.1f;
-
+    icons_offset_pixels = _viewport->get_window_width() * 0.1f;
+    
+    const auto pos_x = static_cast<float>(_viewport->get_window_width() * 0.05f);
+    const auto pos_y = static_cast<float>(_viewport->get_window_height() * 0.05f);
+    
     _heart_center.x = pos_x + (icons_offset_pixels * 0);
     _bombs_center.x = pos_x + (icons_offset_pixels * 1);
     _ropes_center.x = pos_x + (icons_offset_pixels * 2);

@@ -1,13 +1,13 @@
 //
 // Created by dbeef on 7/7/19.
 //
-
-#include <SDL/SDL.h>
+#include "video/Context.hpp"
 
 #include "graphics_utils/DebugGlCall.hpp"
-#include "video/Context.hpp"
 #include "glad/glad.h"
 #include "logger/log.h"
+
+#include <SDL/SDL.h>
 
 bool Video::setup_gl()
 {
@@ -65,9 +65,7 @@ bool Video::setup_gl()
         return false;
     }
 
-    _width = surface->w;
-    _height = surface->h;
-    _aspect = static_cast<float>(_width) / _height;
+    _viewport = std::make_shared<Viewport>(surface->w, surface->h);
 
     DebugGlCall(glEnable(GL_TEXTURE_2D));
     DebugGlCall(glShadeModel(GL_SMOOTH));

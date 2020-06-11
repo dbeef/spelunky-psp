@@ -6,12 +6,13 @@
 #include "components/QuadComponent.hpp"
 #include "Point2D.hpp"
 #include "TextBuffer.hpp"
+#include "viewport/Viewport.hpp"
 
 class HUD : public GameObject
 {
 public:
 
-    HUD(float pos_x, float pos_y);
+    HUD(std::shared_ptr<Viewport>);
     ~HUD() override;
 
     void update(uint32_t delta_time_ms) override;
@@ -41,6 +42,7 @@ private:
     QuadComponent _hold_item_quad;
 
     std::shared_ptr<TextBuffer> _text_buffer;
+    std::shared_ptr<Viewport> _viewport;
     struct
     {
         TextEntityID hearts = TextBuffer::INVALID_ENTITY;

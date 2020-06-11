@@ -8,6 +8,7 @@
 #include "Renderer.hpp"
 #include "game-objects/GameObject.hpp"
 #include "main-dude/MainDude.hpp"
+#include "viewport/Viewport.hpp"
 
 #include <algorithm>
 
@@ -16,7 +17,9 @@ std::function<void(uint32_t delta_time_ms)>& GameLoop::get()
     return _loop;
 }
 
-GameLoop::GameLoop()
+GameLoop::GameLoop(std::shared_ptr<Viewport> viewport)
+    : _viewport(std::move(viewport))
+    , _cameras{{_viewport}, {_viewport}}
 {
     _states.current = &_states.started;
     _states.current->enter(*this);

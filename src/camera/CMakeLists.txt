@@ -1,20 +1,27 @@
 project(Camera)
 
 add_library(Camera STATIC
-        src/ModelViewCamera.cpp
-        src/ScreenSpaceCamera.cpp
-        interface/ModelViewCamera.hpp
-        interface/ScreenSpaceCamera.hpp
+    src/ModelViewCamera.cpp
+    src/ScreenSpaceCamera.cpp
+    interface/ModelViewCamera.hpp
+    interface/ScreenSpaceCamera.hpp
 )
 
 target_include_directories(Camera
-        PRIVATE include interface
-        INTERFACE interface
+    PRIVATE include interface
+    INTERFACE interface
 )
 
 set_target_properties(Camera PROPERTIES
-        CXX_STANDARD
-        14
+    CXX_STANDARD
+    14
 )
 
-target_link_libraries(Camera PRIVATE glad GraphicsUtils Logger Video)
+target_link_libraries(Camera
+    PUBLIC
+        Viewport
+    PRIVATE
+        glad
+        GraphicsUtils
+        Logger
+    )

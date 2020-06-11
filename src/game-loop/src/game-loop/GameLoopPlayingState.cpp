@@ -1,4 +1,3 @@
-#include "video/Context.hpp"
 #include "LevelGenerator.hpp"
 #include "Level.hpp"
 #include "logger/log.h"
@@ -12,6 +11,8 @@
 #include "game-objects/HUD.hpp"
 #include "main-dude/MainDude.hpp"
 #include "game-objects/TextBuffer.hpp"
+
+#include <ctime>
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -76,7 +77,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopPlayingState");
 
-    std::srand(std::rand() + Video::instance().get_delta_time());
+    std::srand(std::time(0));
 
     LevelGenerator::instance().getLevel().clean_map_layout();
     LevelGenerator::instance().getLevel().generate_new_level_layout();
@@ -97,10 +98,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
     // Create hud:
 
-    const auto hud_pos_x = static_cast<float>(Video::instance().get_window_width() * 0.05f);
-    const auto hud_pos_y = static_cast<float>(Video::instance().get_window_height() * 0.05f);
-
-    auto hud = std::make_shared<HUD>(hud_pos_x, hud_pos_y);
+    auto hud = std::make_shared<HUD>(game_loop._viewport);
     game_loop._game_objects.push_back(hud);
 
     // Create text renderer:

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 // Note: For both cameras coordinate system goes as following:
 //
 //   ------ +x
@@ -8,11 +9,13 @@
 //   +y
 //
 
+class Viewport;
+
 class ModelViewCamera
 {
 public:
 
-    ModelViewCamera();
+    ModelViewCamera(std::shared_ptr<Viewport>);
 
     void update_gl_modelview_matrix() const;
     void update_gl_projection_matrix() const;
@@ -35,6 +38,8 @@ private:
 
     void round_position_x();
     void round_position_y();
+    
+    std::shared_ptr<Viewport> _viewport;
 
     float _x = 0;
     float _y = 0;

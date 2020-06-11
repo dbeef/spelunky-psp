@@ -27,7 +27,6 @@ target_link_libraries(Renderer
         TextureBank
     PRIVATE
         Logger
-        Video
         GraphicsUtils
         cjson
         )
