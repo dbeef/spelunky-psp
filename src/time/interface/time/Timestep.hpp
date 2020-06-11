@@ -24,9 +24,7 @@ public:
         _end = SDL_GetTicks();
     }
 
-    void delay() const;
-
-    inline std::uint64_t get_delta_ms() const { return _end - _start;  };
+    Timestamp delay() const;
 
 private:
 

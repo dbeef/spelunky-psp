@@ -20,6 +20,7 @@ set_target_properties(Video PROPERTIES
 target_link_libraries(Video
     PUBLIC
         Time
+        Viewport
     PRIVATE
         Logger
         glad

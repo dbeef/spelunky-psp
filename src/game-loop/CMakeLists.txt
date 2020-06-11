@@ -71,6 +71,7 @@ set_target_properties(GameLoop PROPERTIES
 target_link_libraries(GameLoop
     PUBLIC
         Camera
+        Viewport
     PRIVATE
         glad
         Logger
@@ -78,6 +79,5 @@ target_link_libraries(GameLoop
         GraphicsUtils
         Renderer
         Collisions
-        Video
         LevelGenerator
 )

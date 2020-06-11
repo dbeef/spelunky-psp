@@ -1,7 +1,6 @@
 #include "graphics_utils/DebugGlCall.hpp"
 #include "graphics_utils/CreateTexture.hpp"
 
-#include "glad/glad.h"
 #include "logger/log.h"
 #include "stb/image.h"
 

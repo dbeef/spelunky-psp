@@ -17,6 +17,7 @@ set(ASSETS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/assets)
 add_executable(Spelunky_PSP src/Main.cpp)
 
 add_subdirectory(vendor)
+add_subdirectory(src/viewport)
 add_subdirectory(src/video)
 add_subdirectory(src/level-generator)
 add_subdirectory(src/renderer)

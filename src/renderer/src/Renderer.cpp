@@ -1,7 +1,6 @@
 #include "Renderer.hpp"
 #include "TextureBank.hpp"
 #include "TextureType.hpp"
-#include "video/Context.hpp"
 #include "glad/glad.h"
 #include "logger/log.h"
 #include "cJSON.h"

@@ -10,42 +10,11 @@
 
 #include <SDL/SDL_video.h>
 #include <SDL/SDL.h>
-#include <cassert>
 
-Video *Video::_instance = nullptr;
-
-void Video::init()
-{
-    assert(!_instance);
-    _instance = new Video();
-}
-
-void Video::dispose()
-{
-    assert(_instance);
-    delete _instance;
-    _instance = nullptr;
-}
-
-Video &Video::instance()
-{
-    assert(_instance);
-    return *_instance;
-}
 
 void Video::tear_down_gl()
 {
     SDL_Quit();
-}
-
-uint16_t Video::get_window_width() const
-{
-    return _width;
-}
-
-uint16_t Video::get_window_height() const
-{
-    return _height;
 }
 
 void Video::swap_buffers() const
@@ -77,12 +46,6 @@ void Video::run_loop(const std::function<void(uint32_t delta_time_ms)> &loop_cal
         swap_buffers();
 
         _timestep.mark_end();
-        _timestep.delay();
-        last_delta_ms = _timestep.get_delta_ms();
+        last_delta_ms = _timestep.delay();
     }
-}
-
-float Video::get_aspect() const
-{
-    return _aspect;
 }

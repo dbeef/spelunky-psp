@@ -14,12 +14,10 @@ void init_singletons()
     Renderer::init();
     TextureBank::init();
     Input::init();
-    Video::init();
 }
 
 void dispose_singletons()
 {
-    Video::dispose();
     LevelGenerator::dispose();
     TextureBank::dispose();
     Renderer::dispose();
@@ -30,18 +28,20 @@ int start()
     log_info("Started.");
     init_singletons();
 
-    if (!Video::instance().setup_gl())
+    Video video;
+
+    if (!video.setup_gl())
     {
         log_error("Failed to setup OpenGL.");
         return EXIT_FAILURE;
     }
 
     {
-        GameLoop loop;
-        Video::instance().run_loop(loop.get());
+        GameLoop loop(video.get_viewport());
+        video.run_loop(loop.get());
     }
 
-    Video::instance().tear_down_gl();
+    video.tear_down_gl();
 
     dispose_singletons();
     log_info("Exiting peacefully.");
