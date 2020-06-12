@@ -31,7 +31,6 @@ add_subdirectory(src/collisions)
 target_link_libraries(Spelunky_PSP PRIVATE
         Logger
         Video
-        Camera
         LevelGenerator
         Renderer
         Input

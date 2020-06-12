@@ -1,12 +1,10 @@
 #include "video/Context.hpp"
 #include "logger/log.h"
-#include "ModelViewCamera.hpp"
 #include "LevelGenerator.hpp"
 #include "Renderer.hpp"
 #include "Input.hpp"
 #include "GameLoop.hpp"
 #include "TextureBank.hpp"
-#include "ScreenSpaceCamera.hpp"
 
 #include <cstdlib>
 

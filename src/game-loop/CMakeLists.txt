@@ -69,10 +69,11 @@ set_target_properties(GameLoop PROPERTIES
 )
 
 target_link_libraries(GameLoop
+    PUBLIC
+        Camera
     PRIVATE
         glad
         Logger
-        Camera
         Input
         GraphicsUtils
         Renderer
