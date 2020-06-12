@@ -39,8 +39,8 @@ bool Video::setup_gl()
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
     //  Create a window
-    auto surface = SDL_SetVideoMode(_viewport->get_window_width(),
-                                    _viewport->get_window_height(),
+    auto surface = SDL_SetVideoMode(_viewport->get_width(),
+                                    _viewport->get_height(),
                                     0, // current display's bpp
                                     SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE);
 

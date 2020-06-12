@@ -14,8 +14,8 @@ void ScreenSpaceCamera::update_gl_modelview_matrix() const
 {
     // Moving camera, so the [0,0] position would be on the left-lower corner of the screen:
 
-    const float screen_center_x = _viewport->get_window_width() / 2.0f;
-    const float screen_center_y = _viewport->get_window_height() / 2.0f;
+    const float screen_center_x = _viewport->get_width() / 2.0f;
+    const float screen_center_y = _viewport->get_height() / 2.0f;
 
     const float screen_center_camera_space_x = screen_center_x / 2.0f;
     const float screen_center_camera_space_y = screen_center_y / 2.0f;
@@ -25,7 +25,7 @@ void ScreenSpaceCamera::update_gl_modelview_matrix() const
 
 void ScreenSpaceCamera::update_gl_projection_matrix() const
 {
-    DebugGlCall(glViewport(0, 0, (GLsizei) (_viewport->get_window_width()), (GLsizei) (_viewport->get_window_height())));
+    DebugGlCall(glViewport(0, 0, (GLsizei) (_viewport->get_width()), (GLsizei) (_viewport->get_height())));
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
 
@@ -42,5 +42,5 @@ void ScreenSpaceCamera::update_gl_projection_matrix() const
 
 void ScreenSpaceCamera::calculate_coefficients()
 {
-    _projection_coefficient = (_viewport->get_window_width() / _viewport->get_aspect()) / 2.0f;
+    _projection_coefficient = (_viewport->get_width() / _viewport->get_aspect()) / 2.0f;
 }

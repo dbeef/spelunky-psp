@@ -32,7 +32,7 @@ void ModelViewCamera::update_gl_modelview_matrix() const
 
 void ModelViewCamera::update_gl_projection_matrix() const
 {
-    DebugGlCall(glViewport(0, 0, (GLsizei) (_viewport->get_window_width()), (GLsizei) (_viewport->get_window_height())));
+    DebugGlCall(glViewport(0, 0, (GLsizei) (_viewport->get_width()), (GLsizei) (_viewport->get_height())));
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
 
