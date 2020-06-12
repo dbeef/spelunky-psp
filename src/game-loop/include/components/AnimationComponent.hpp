@@ -4,7 +4,6 @@
 
 #include "TextureType.hpp"
 #include "Quad.hpp"
-#include "MapTile.hpp"
 
 class MainDude;
 

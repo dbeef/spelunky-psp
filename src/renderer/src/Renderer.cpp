@@ -1,5 +1,4 @@
 #include "Renderer.hpp"
-#include "LevelGenerator.hpp"
 #include "TextureBank.hpp"
 #include "TextureType.hpp"
 #include "video/Context.hpp"
