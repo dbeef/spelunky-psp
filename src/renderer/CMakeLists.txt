@@ -25,7 +25,6 @@ set_target_properties(Renderer PROPERTIES
 target_link_libraries(Renderer
     PUBLIC
         TextureBank
-        LevelGenerator
     PRIVATE
         Logger
         Video

@@ -6,7 +6,6 @@
 #include "RenderEntity.hpp"
 #include "TextureType.hpp"
 #include "Quad.hpp"
-#include "MapTile.hpp"
 
 class QuadComponent
 {

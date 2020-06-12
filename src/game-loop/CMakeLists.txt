@@ -78,4 +78,5 @@ target_link_libraries(GameLoop
         Renderer
         Collisions
         Video
+        LevelGenerator
 )

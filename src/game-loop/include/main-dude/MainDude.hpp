@@ -8,6 +8,9 @@
 #include "components/QuadComponent.hpp"
 #include "components/AnimationComponent.hpp"
 
+#include "MapTile.hpp"
+#include "MapTileType.hpp"
+
 #include "main-dude/states/MainDudeRunningState.hpp"
 #include "main-dude/states/MainDudeClimbingLadderState.hpp"
 #include "main-dude/states/MainDudeExitingState.hpp"
