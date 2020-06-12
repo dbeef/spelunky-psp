@@ -34,7 +34,7 @@ endif()
 target_link_libraries(TextureBank
     PUBLIC
         glad
-        Renderer
+        RenderingUtils
     PRIVATE
         Logger
         GraphicsUtils

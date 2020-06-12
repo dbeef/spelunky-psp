@@ -5,13 +5,16 @@
 #ifndef RESOURCE_COMPILER_TEXTUREREGION_HPP
 #define RESOURCE_COMPILER_TEXTUREREGION_HPP
 
+#include "IndexType.hpp"
+
 #include "glad/glad.h"
-#include "Mesh.hpp"
-#include "Quad.hpp"
 
 #include <cstdint>
 #include <string>
 #include <vector>
+
+struct Vertex;
+class Quad;
 
 struct TextureRegion
 {

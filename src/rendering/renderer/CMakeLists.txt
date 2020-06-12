@@ -2,18 +2,12 @@ project(Renderer)
 
 add_library(Renderer STATIC
         src/Renderer.cpp
-        src/Quad.cpp
         interface/Renderer.hpp
-        interface/Point2D.hpp
         interface/RenderEntity.hpp
-        interface/Mesh.hpp
-        interface/Quad.hpp
-        interface/Vertex.hpp
-        interface/IndexType.hpp
         )
 
 target_include_directories(Renderer
-        PRIVATE include interface
+        PRIVATE interface
         INTERFACE interface
 )
 
@@ -26,6 +20,7 @@ target_link_libraries(Renderer
     PUBLIC
         TextureBank
         LevelGenerator
+        RenderingUtils
     PRIVATE
         Logger
         Video

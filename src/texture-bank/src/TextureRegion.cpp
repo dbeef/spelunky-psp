@@ -3,6 +3,8 @@
 //
 
 #include "TextureRegion.hpp"
+#include "Quad.hpp"
+#include "Vertex.hpp"
 #include "logger/log.h"
 #include "cJSON.h"
 

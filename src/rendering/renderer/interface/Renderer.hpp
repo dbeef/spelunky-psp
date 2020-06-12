@@ -3,6 +3,7 @@
 #include "MapTileType.hpp"
 #include "RenderEntity.hpp"
 #include "Mesh.hpp"
+#include "Quad.hpp"
 
 #include <limits>
 #include <algorithm>
