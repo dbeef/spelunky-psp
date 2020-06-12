@@ -12,11 +12,9 @@ public:
         , _aspect(static_cast<float>(_width) / _height)
     { }
 
+    uint16_t get_width() const { return _width; }
+    uint16_t get_height() const { return _height; }
     float get_aspect() const { return _aspect; }
-
-    uint16_t get_window_width() const { return _width; }
-
-    uint16_t get_window_height() const { return _height; }
 
 private:
 

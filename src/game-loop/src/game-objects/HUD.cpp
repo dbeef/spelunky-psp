@@ -77,10 +77,10 @@ HUD::HUD(std::shared_ptr<Viewport> viewport)
     _bombs_quad.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::BOMB_ICON);
     _hold_item_quad.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HOLD_ITEM_ICON);
 
-    icons_offset_pixels = _viewport->get_window_width() * 0.1f;
+    icons_offset_pixels = _viewport->get_width() * 0.1f;
     
-    const auto pos_x = static_cast<float>(_viewport->get_window_width() * 0.05f);
-    const auto pos_y = static_cast<float>(_viewport->get_window_height() * 0.05f);
+    const auto pos_x = static_cast<float>(_viewport->get_width() * 0.05f);
+    const auto pos_y = static_cast<float>(_viewport->get_height() * 0.05f);
     
     _heart_center.x = pos_x + (icons_offset_pixels * 0);
     _bombs_center.x = pos_x + (icons_offset_pixels * 1);
