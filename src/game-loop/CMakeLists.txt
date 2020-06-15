@@ -73,10 +73,8 @@ target_link_libraries(GameLoop
         Camera
         Viewport
     PRIVATE
-        glad
         Logger
         Input
-        GraphicsUtils
         Renderer
         Collisions
         LevelGenerator

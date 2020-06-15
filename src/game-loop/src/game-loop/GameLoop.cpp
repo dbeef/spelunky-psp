@@ -1,16 +1,7 @@
-#include "LevelGenerator.hpp"
-#include "SplashScreenType.hpp"
-#include "ModelViewCamera.hpp"
-#include "Input.hpp"
 #include "GameLoop.hpp"
-#include "glad/glad.h"
-#include "graphics_utils/DebugGlCall.hpp"
-#include "Renderer.hpp"
-#include "game-objects/GameObject.hpp"
-#include "main-dude/MainDude.hpp"
-#include "viewport/Viewport.hpp"
 
 #include <algorithm>
+#include <cassert>
 
 std::function<void(uint32_t delta_time_ms)>& GameLoop::get()
 {
