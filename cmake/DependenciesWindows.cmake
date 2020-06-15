@@ -8,7 +8,6 @@ macro(add_windows_dependencies)
     target_link_libraries(SDL_1_XX INTERFACE ${SDL_LIBRARY})
 
     add_library(Dependencies INTERFACE)
-    target_link_libraries(Dependencies INTERFACE SDL_1_XX)
 
     target_compile_definitions(Dependencies INTERFACE
             SPELUNKY_PSP_PLATFORM_WINDOWS
