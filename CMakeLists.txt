@@ -35,7 +35,6 @@ target_link_libraries(Spelunky_PSP PRIVATE
         LevelGenerator
         Renderer
         Input
-        GraphicsUtils
         GameLoop
         TextureBank
         Dependencies
