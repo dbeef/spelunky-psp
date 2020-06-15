@@ -3,13 +3,12 @@
 #include "TextureType.hpp"
 #include "TextureRegion.hpp"
 
-#include <glad/glad.h>
 #include <unordered_map>
 #include <vector>
 #include <cassert>
 #include <cstdint>
 
-using TextureID = GLuint;
+using TextureID = unsigned int;
 const TextureID INVALID_TEXTURE = 0;
 const TextureRegion INVALID_REGION = {};
 

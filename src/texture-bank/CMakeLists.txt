@@ -33,7 +33,6 @@ endif()
 
 target_link_libraries(TextureBank
     PUBLIC
-        glad
         Renderer
     PRIVATE
         Logger

@@ -21,7 +21,6 @@ target_link_libraries(Camera
     PUBLIC
         Viewport
     PRIVATE
-        glad
         GraphicsUtils
         Logger
     )
