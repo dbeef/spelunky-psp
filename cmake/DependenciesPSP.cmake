@@ -9,7 +9,6 @@ macro(add_psp_dependencies)
     add_library(Dependencies INTERFACE)
     target_link_libraries(Dependencies INTERFACE
             -L${PSPDEV}/psp/lib
-            SDL_1_XX
             -lg
             -lstdc++
             -lc

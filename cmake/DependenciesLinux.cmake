@@ -6,7 +6,6 @@ macro(add_linux_dependencies)
 
     add_library(Dependencies INTERFACE)
     target_link_libraries(Dependencies INTERFACE
-            SDL_1_XX
             -lGL
             -lX11
             -ldl
