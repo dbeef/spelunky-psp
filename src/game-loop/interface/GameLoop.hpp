@@ -23,7 +23,7 @@ class Viewport;
 class GameLoop
 {
 public:
-    GameLoop(std::shared_ptr<Viewport>);
+    GameLoop(const std::shared_ptr<Viewport>&);
     std::function<void(uint32_t delta_time_ms)>& get();
 private:
 

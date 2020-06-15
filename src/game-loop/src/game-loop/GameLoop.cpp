@@ -17,9 +17,9 @@ std::function<void(uint32_t delta_time_ms)>& GameLoop::get()
     return _loop;
 }
 
-GameLoop::GameLoop(std::shared_ptr<Viewport> viewport)
-    : _viewport(std::move(viewport))
-    , _cameras{{_viewport}, {_viewport}}
+GameLoop::GameLoop(const std::shared_ptr<Viewport>& viewport)
+    : _viewport(viewport)
+    , _cameras{{viewport}, {viewport}}
 {
     _states.current = &_states.started;
     _states.current->enter(*this);
