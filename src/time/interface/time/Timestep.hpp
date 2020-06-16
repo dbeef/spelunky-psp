@@ -24,7 +24,6 @@ public:
         _end = SDL_GetTicks();
     }
 
-    // Returns time spent on delay in milliseconds.
     Timestamp delay() const;
 
 private:
