@@ -4,15 +4,16 @@
 #include <thread>
 
 using Timestamp = Uint32;
-using Frequency = Uint32;
+using Timediff = Uint32;
 
 class Timestep {
 
 public:
 
-    explicit Timestep(float fps = 60) : _fps(fps), _frequency(1000.0f * (1.0f / fps))
-    {
-    }
+    explicit Timestep(float fps = 60.f)
+        : _fps(fps)
+        , _min_delay_ms(1000.0f * (1.0f / fps))
+    { }
 
     inline void mark_start()
     {
@@ -30,6 +31,6 @@ private:
 
     Timestamp _start;
     Timestamp _end;
-    const Frequency _frequency;
     const float _fps;
+    const Timediff _min_delay_ms;
 };
