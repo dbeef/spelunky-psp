@@ -12,7 +12,7 @@ public:
 
     explicit Timestep(float fps = 60.f)
         : _fps(fps)
-        , _min_delay_ms(1000.0f * (1.0f / fps))
+        , _min_delay_ms(static_cast<Timediff>(1000.0f / fps))
     { }
 
     inline void mark_start()
