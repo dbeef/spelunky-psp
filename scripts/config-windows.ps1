@@ -13,7 +13,7 @@ $ErrorActionPreference = "Stop"
 
 $ROOT = $(Get-Location)
 $INSTALL_PATH = "$ROOT/tmp/install-windows"
-$DEPS_PATH = "$ROOT/$DepsDirectory/SDL"
+$DEPS_PATH = "$ROOT/$DepsDirectory/SDL2"
 
 if (Test-Path "$ROOT/tmp/build-windows")
 {

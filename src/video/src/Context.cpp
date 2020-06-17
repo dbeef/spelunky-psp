@@ -8,18 +8,20 @@
 #include "graphics_utils/DebugGlCall.hpp"
 #include "time/Timestep.hpp"
 
-#include <SDL/SDL_video.h>
-#include <SDL/SDL.h>
+#include <SDL_opengl.h>
+#include <SDL_video.h>
+#include <SDL.h>
 
 
 void Video::tear_down_gl()
 {
+    SDL_GL_DeleteContext(glContext);
     SDL_Quit();
 }
 
 void Video::swap_buffers() const
 {
-    SDL_GL_SwapBuffers();
+    SDL_GL_SwapWindow(window);
 }
 
 void Video::run_loop(const std::function<void(uint32_t delta_time_ms)> &loop_callback)

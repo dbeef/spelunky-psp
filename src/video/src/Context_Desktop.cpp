@@ -7,7 +7,8 @@
 #include "glad/glad.h"
 #include "logger/log.h"
 
-#include <SDL/SDL.h>
+#include <SDL_video.h>
+#include <SDL.h>
 
 bool Video::setup_gl()
 {
@@ -39,22 +40,32 @@ bool Video::setup_gl()
     //  Create a window
 
 #ifdef NDEBUG
-    auto surface = SDL_SetVideoMode(0,
-                                    0,
-                                    0, // current display's bpp
-                                    SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE | SDL_FULLSCREEN);
+    window = SDL_CreateWindow("Spelunky",
+                              SDL_WINDOWPOS_UNDEFINED,
+                              SDL_WINDOWPOS_UNDEFINED,
+                              0, 0,
+                              SDL_GL_DOUBLEBUFFER | SDL_WINDOW_OPENGL | SDL_SWSURFACE | SDL_WINDOW_FULLSCREEN_DESKTOP);
 #else
-    auto surface = SDL_SetVideoMode(480,
-                                    272,
-                                    0, // current display's bpp
-                                    SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE);
+    window = SDL_CreateWindow("Spelunky",
+                              SDL_WINDOWPOS_CENTERED,
+                              SDL_WINDOWPOS_CENTERED,
+                              480, 272,
+                              SDL_GL_DOUBLEBUFFER | SDL_WINDOW_OPENGL);
+    SDL_SetWindowFullscreen(window, 0);
 #endif
+    if (!window)
+    {
+        log_error("SDL_CreateWindow Error: %s", SDL_GetError());
+        SDL_ClearError();
+        return false;
+    }
 
-
+    glContext = SDL_GL_CreateContext(window);
+    auto surface = SDL_GetWindowSurface(window);
 
     if (!surface)
     {
-        log_error("SDL_SetVideoMode Error: %s", SDL_GetError());
+        log_error("SDL_CreateWindow Error: %s", SDL_GetError());
         SDL_ClearError();
         return false;
     }

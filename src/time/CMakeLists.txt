@@ -12,7 +12,7 @@ target_include_directories(Time
 
 target_link_libraries(Time
     PUBLIC
-        SDL_1_XX)
+        SDL2::Core)
 
 set_target_properties(Time PROPERTIES
         CXX_STANDARD

@@ -11,6 +11,8 @@
 #include <memory>
 #include <cassert>
 
+struct SDL_Window;
+
 class Video {
 
 public:
@@ -30,7 +32,8 @@ public:
 
 private:
     Timestep _timestep;
-
+    SDL_Window* window;
+    void* glContext;
     std::shared_ptr<Viewport> _viewport;
     uint32_t _last_delta_time = 0;
 

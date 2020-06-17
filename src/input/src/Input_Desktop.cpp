@@ -1,6 +1,7 @@
 #include "Input.hpp"
 
-#include <SDL/SDL_events.h>
+#include <SDL_keyboard.h>
+#include <SDL_events.h>
 #include <cstdlib>
 
 void Input::poll()
@@ -18,7 +19,7 @@ void Input::poll()
 
         if (event.type == SDL_EventType::SDL_KEYDOWN || event.type == SDL_EventType::SDL_KEYUP)
         {
-            const SDLKey& key = event.key.keysym.sym;
+            const auto key = event.key.keysym.sym;
             const bool v = event.type == SDL_EventType::SDL_KEYDOWN;
 
             if (key == SDLK_LEFT)

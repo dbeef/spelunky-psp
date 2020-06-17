@@ -7,7 +7,7 @@
 #include "graphics_utils/DebugGlCall.hpp"
 #include "logger/log.h"
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 bool Video::setup_gl()
 {

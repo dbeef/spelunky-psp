@@ -19,5 +19,5 @@ set_target_properties(Input PROPERTIES
 
 target_link_libraries(Input
     PRIVATE 
-        $<$<BOOL:${SPELUNKY_PSP_PLATFORM_DESKTOP}>:SDL_1_XX>
+        $<$<BOOL:${SPELUNKY_PSP_PLATFORM_DESKTOP}>:SDL2::Core>
         )
