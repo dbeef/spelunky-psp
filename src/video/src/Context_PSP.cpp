@@ -8,6 +8,7 @@
 #include "logger/log.h"
 
 #include <SDL.h>
+#include <SDL_opengles.h>
 
 bool Video::setup_gl()
 {
@@ -39,10 +40,22 @@ bool Video::setup_gl()
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
     //  Create a window
-    auto surface = SDL_SetVideoMode(_viewport->get_width(),
-                                    _viewport->get_height(),
-                                    0, // current display's bpp
-                                    SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE);
+
+    window = SDL_CreateWindow("Spelunky",
+                              SDL_WINDOWPOS_CENTERED,
+                              SDL_WINDOWPOS_CENTERED,
+                              _viewport->get_width(), _viewport->get_height(),
+                              SDL_GL_DOUBLEBUFFER | SDL_WINDOW_OPENGL | SDL_SWSURFACE);    
+
+    if (!window)
+    {
+        log_error("SDL_CreateWindow Error: %s", SDL_GetError());
+        SDL_ClearError();
+        return false;
+    }
+
+    glContext = SDL_GL_CreateContext(window);
+    auto surface = SDL_GetWindowSurface(window);
 
     if (!surface) {
         log_error("SDL_SetVideoMode Error: %s", SDL_GetError());

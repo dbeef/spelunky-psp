@@ -50,7 +50,7 @@ bool Video::setup_gl()
                               SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED,
                               480, 272,
-                              SDL_GL_DOUBLEBUFFER | SDL_WINDOW_OPENGL);
+                              SDL_GL_DOUBLEBUFFER | SDL_WINDOW_OPENGL | SDL_SWSURFACE);
     SDL_SetWindowFullscreen(window, 0);
 #endif
     if (!window)

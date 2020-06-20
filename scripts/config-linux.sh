@@ -4,13 +4,12 @@
 # Builds SpelunkyPSP natively on Linux, using following dependencies:
 # * SDL2 as a vendor of creating window, retrieving OpenGL context, controls and sounds.
 
-INSTALL_PATH=`pwd`/tmp/install-linux
+ROOT_PATH=`pwd`
+INSTALL_PATH=$ROOT_PATH/tmp/install-linux
 
-rm -rf tmp/build-linux
-mkdir -p tmp/build-linux
-cd tmp/build-linux
-
-cmake ../../ \
+(cd tmp/build-linux && cmake ../../ \
 -G "Unix Makefiles" \
 -DCMAKE_BUILD_TYPE=Release \
--DCMAKE_INSTALL_PREFIX=$INSTALL_PATH
+-DCMAKE_INSTALL_PREFIX=$INSTALL_PATH \
+-DCMAKE_MODULE_PATH=$ROOT_PATH/vendor/sdl2-cmake-modules \
+-DCMAKE_FIND_DEBUG_MODE=ON)
