@@ -11,7 +11,7 @@ param (
 
 $ErrorActionPreference = "Stop"
 
-$ROOT = $(Get-Location)
+$ROOT = $(Get-Location) -replace '[\\]','\\/'
 $INSTALL_PATH = "$ROOT/tmp/install-windows"
 $DEPS_PATH = "$ROOT/$DepsDirectory/SDL2"
 
@@ -24,4 +24,5 @@ New-Item -Path "$ROOT/tmp/build-windows" -ItemType "Directory"
 cmake $ROOT `
     -B"$ROOT/tmp/build-windows" `
     -DCMAKE_INSTALL_PREFIX="$INSTALL_PATH" `
-    -DCMAKE_PREFIX_PATH="$DEPS_PATH"
+    -DCMAKE_PREFIX_PATH="$DEPS_PATH" `
+    -DCMAKE_MODULE_PATH="$ROOT/vendor/sdl2-cmake-modules"

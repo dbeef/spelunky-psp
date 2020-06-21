@@ -1,5 +1,8 @@
 macro(add_linux_dependencies)
     include(FindSDL2)
+    add_library(SDL_2_XX INTERFACE)
+    target_link_libraries(SDL_2_XX INTERFACE SDL2::Core)
+
     add_library(Dependencies INTERFACE)
     target_link_libraries(Dependencies INTERFACE
             -lGL

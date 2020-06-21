@@ -26,5 +26,5 @@ target_link_libraries(Video
         glad
         Input
         GraphicsUtils
-        SDL2::Core
-	)
+        SDL_2_XX
+        )
