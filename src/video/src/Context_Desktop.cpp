@@ -61,8 +61,14 @@ bool Video::setup_gl()
     }
 
     glContext = SDL_GL_CreateContext(window);
-    auto surface = SDL_GetWindowSurface(window);
+    if (!glContext)
+    {
+        log_error("SDL_GL_CreateContext Error: %s", SDL_GetError());
+        SDL_ClearError();
+        return false;
+    }
 
+    auto surface = SDL_GetWindowSurface(window);
     if (!surface)
     {
         log_error("SDL_CreateWindow Error: %s", SDL_GetError());

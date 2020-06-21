@@ -16,6 +16,7 @@
 void Video::tear_down_gl()
 {
     SDL_GL_DeleteContext(glContext);
+    SDL_DestroyWindow(window);
     SDL_Quit();
 }
 
