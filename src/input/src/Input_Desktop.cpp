@@ -3,19 +3,17 @@
 #include <SDL/SDL_events.h>
 #include <cstdlib>
 
+const char *Input::get_controls_msg()
+{
+    return "ESC-RETURN F1-DIE F10-QUIT";
+}
+
 void Input::poll()
 {
     SDL_Event event{};
 
     while (SDL_PollEvent(&event))
     {
-        _paused = event.type == SDL_QUIT || (event.type == SDL_EventType::SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE);
-        if (_paused)
-        {
-            // FIXME: Better exit handling
-            std::exit(0);
-        }
-
         if (event.type == SDL_EventType::SDL_KEYDOWN || event.type == SDL_EventType::SDL_KEYUP)
         {
             const SDLKey& key = event.key.keysym.sym;
@@ -52,6 +50,18 @@ void Input::poll()
             else if (key == SDLK_q)
             {
                 _throwing = v;
+            }
+            else if (key == SDLK_ESCAPE)
+            {
+                _paused = v;
+            }
+            else if (key == SDLK_F1)
+            {
+                _death_requested = v;
+            }
+            else if (key == SDLK_F10)
+            {
+                _quit_requested = v;
             }
         }
     }

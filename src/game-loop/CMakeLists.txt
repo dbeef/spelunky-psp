@@ -25,6 +25,7 @@ add_library(GameLoop STATIC
         src/components/QuadComponent.cpp
         src/components/AnimationComponent.cpp
         src/game-objects/HUD.cpp
+        src/game-objects/PausePlayingGame.cpp
         src/game-objects/TextBuffer.cpp
         interface/GameLoop.hpp
         interface/GameLoopBaseState.hpp
@@ -42,6 +43,7 @@ add_library(GameLoop STATIC
         include/game-objects/CopyrightsSign.hpp
         include/game-objects/TextBuffer.hpp
         include/game-objects/HUD.hpp
+        include/game-objects/PausePlayingGame.hpp
         include/components/PhysicsComponent.hpp
         include/components/QuadComponent.hpp
         include/components/AnimationComponent.hpp

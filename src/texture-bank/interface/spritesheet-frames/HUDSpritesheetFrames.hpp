@@ -20,4 +20,5 @@ enum class HUDSpritesheetFrames : uint16_t
     SPIKE_SHOES_ICON,
     SPRING_SHOES_ICON,
     STICKY_BOMB_ICON,
+    HALF_OPAQUE_TILE,
 };

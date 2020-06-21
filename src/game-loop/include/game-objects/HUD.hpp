@@ -12,7 +12,7 @@ class HUD : public GameObject
 {
 public:
 
-    HUD(std::shared_ptr<Viewport>);
+    explicit HUD(std::shared_ptr<Viewport>);
     ~HUD() override;
 
     void update(uint32_t delta_time_ms) override;

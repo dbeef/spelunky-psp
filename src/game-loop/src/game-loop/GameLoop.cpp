@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cassert>
 
-std::function<void(uint32_t delta_time_ms)>& GameLoop::get()
+std::function<bool(uint32_t delta_time_ms)>& GameLoop::get()
 {
     return _loop;
 }
@@ -26,5 +26,7 @@ GameLoop::GameLoop(const std::shared_ptr<Viewport>& viewport)
             new_state->enter(*this);
             _states.current = new_state;
         }
+
+        return _exit;
     };
 }

@@ -32,6 +32,7 @@ private:
     std::vector<TextEntityID > _for_removal;
     std::vector<TextEntity> _text_entries;
 
+    // FIXME: Expose in the public interface.
     const float FONT_WIDTH_PIXELS = 16;
     const float FONT_HEIGHT_PIXELS = 16;
     const float OFFSET_PIXELS = 16;
