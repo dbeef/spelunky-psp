@@ -38,19 +38,10 @@ bool Video::setup_gl()
 
     //  Create a window
 
-#ifdef NDEBUG
     auto surface = SDL_SetVideoMode(0,
                                     0,
                                     0, // current display's bpp
                                     SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE | SDL_FULLSCREEN);
-#else
-    auto surface = SDL_SetVideoMode(480,
-                                    272,
-                                    0, // current display's bpp
-                                    SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE);
-#endif
-
-
 
     if (!surface)
     {

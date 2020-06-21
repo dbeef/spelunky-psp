@@ -2,6 +2,12 @@
 
 #include <pspctrl.h>
 
+
+const char *Input::get_controls_msg()
+{
+    return "SELECT-RETURN L-DIE R-QUIT";
+}
+
 void Input::poll()
 {
     static bool set_up = false;
@@ -23,7 +29,9 @@ void Input::poll()
 
     _jumping = pad.Buttons & PSP_CTRL_CROSS;
     _ducking = pad.Buttons & PSP_CTRL_CIRCLE;
-
+    _death_requested = pad.Buttons & PSP_CTRL_LTRIGGER;
+    _quit_requested = pad.Buttons & PSP_CTRL_RTRIGGER;
     _running_fast = pad.Buttons & PSP_CTRL_LTRIGGER;
     _throwing = pad.Buttons & PSP_CTRL_RTRIGGER;
+    _paused = pad.Buttons & PSP_CTRL_SELECT;
 }

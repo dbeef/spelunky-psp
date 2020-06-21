@@ -11,6 +11,7 @@
 #include "game-objects/HUD.hpp"
 #include "main-dude/MainDude.hpp"
 #include "game-objects/TextBuffer.hpp"
+#include "game-objects/PausePlayingGame.hpp"
 
 #include <ctime>
 
@@ -46,9 +47,28 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
 
     // Update game objects:
 
-    for (auto& game_object : game_objects)
+    if (_pause->is_paused())
     {
-        game_object->update(delta_time_ms);
+        if (_pause->is_death_requested())
+        {
+            log_info("Death requested.");
+            // TODO: Kill the main dude.
+            _pause->unpause();
+        }
+        else if (_pause->is_quit_requested())
+        {
+            log_info("Quit requested.");
+            _pause->unpause();
+            game_loop._exit = true;
+        }
+        _pause->update(delta_time_ms);
+    }
+    else
+    {
+        for (auto &game_object : game_objects)
+        {
+            game_object->update(delta_time_ms);
+        }
     }
 
     // Remove game objects marked for disposal:
@@ -96,23 +116,27 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     assert(entrance);
     game_loop._main_dude->set_position_on_tile(entrance);
 
-    // Create hud:
-
-    auto hud = std::make_shared<HUD>(game_loop._viewport);
-    game_loop._game_objects.push_back(hud);
-
     // Create text renderer:
 
     game_loop._text_buffer = std::make_shared<TextBuffer>();
     game_loop._game_objects.push_back(game_loop._text_buffer);
 
-    // Pass it to HUD:
+    // Create HUD:
+
+    auto hud = std::make_shared<HUD>(game_loop._viewport);
+    game_loop._game_objects.push_back(hud);
 
     hud->set_text_buffer(game_loop._text_buffer);
     hud->set_bombs_count(4);
     hud->set_dollars_count(0);
     hud->set_hearts_count(4);
     hud->set_ropes_count(4);
+
+    // Create Pause:
+
+    _pause = std::make_shared<PausePlayingGame>(game_loop._viewport);
+    _pause->set_text_buffer(game_loop._text_buffer);
+    game_loop._game_objects.push_back(_pause);
 }
 
 void GameLoopPlayingState::exit(GameLoop& game_loop)

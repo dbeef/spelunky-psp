@@ -22,7 +22,7 @@ public:
     inline uint32_t get_delta_time() const { return _last_delta_time; }
     void tear_down_gl();
 
-    void run_loop(const std::function<void(uint32_t delta_time_ms)> &loop_callback);
+    void run_loop(const std::function<bool(uint32_t delta_time_ms)> &loop_callback);
 
     std::shared_ptr<Viewport> get_viewport() const { assert(_viewport); return _viewport; }
 
