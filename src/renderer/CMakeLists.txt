@@ -28,7 +28,6 @@ target_link_libraries(Renderer
     PRIVATE
         Logger
         GraphicsUtils
-        cjson
         )
 
 if (SPELUNKY_PSP_PLATFORM_LINUX)

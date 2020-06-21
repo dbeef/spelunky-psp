@@ -3,7 +3,6 @@
 #include "TextureType.hpp"
 #include "glad/glad.h"
 #include "logger/log.h"
-#include "cJSON.h"
 
 #include "graphics_utils/LookAt.hpp"
 #include "graphics_utils/CreateTexture.hpp"
