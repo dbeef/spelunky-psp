@@ -2,7 +2,9 @@
 macro(add_psp_dependencies)
     add_library(SDL_2_XX INTERFACE)
     target_link_libraries(SDL_2_XX
-        -lSDL2)
+        INTERFACE
+            -lSDL2
+        )
 
     add_library(Dependencies INTERFACE)
     target_link_libraries(Dependencies INTERFACE

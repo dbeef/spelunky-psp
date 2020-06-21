@@ -7,6 +7,9 @@
 ROOT_PATH=`pwd`
 INSTALL_PATH=$ROOT_PATH/tmp/install-linux
 
+rm -rf tmp/build-linux
+mkdir -p tmp/build-linux
+
 (cd tmp/build-linux && cmake ../../ \
 -G "Unix Makefiles" \
 -DCMAKE_BUILD_TYPE=Release \
