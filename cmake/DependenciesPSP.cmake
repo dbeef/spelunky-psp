@@ -44,7 +44,7 @@ macro(add_psp_dependencies)
 
     target_compile_definitions(Dependencies INTERFACE
             SPELUNKY_PSP_PLATFORM_PSP
-            -Dmain=SDL2_main
+            -Dmain=SDL_main
             )
 
 endmacro()
