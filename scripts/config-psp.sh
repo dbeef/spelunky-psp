@@ -9,11 +9,11 @@ mkdir -p $INSTALL_PATH
 rm -rf $BUILD_PATH
 mkdir -p $BUILD_PATH
 
-cd $BUILD_PATH
-
 # psp-cmake is guaranteed to be in path after successful pspdev/psptoolchain installation;
 # it's a shell script calling host's vanilla cmake with cmake toolchain file already passed.
 
-psp-cmake $ROOT_PATH \
--DCMAKE_BUILD_TYPE=Release \
--DCMAKE_INSTALL_PREFIX=$INSTALL_PATH
+(cd $BUILD_PATH && psp-cmake $ROOT_PATH \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH \
+    -DCMAKE_PREFIX_PATH=$PSPDEV/psp \
+    -DCMAKE_MODULE_PATH=$ROOT_PATH/vendor/sdl2-cmake-modules)

@@ -1,9 +1,11 @@
 # FIXME: This macro probably defines target that links to more libraries than actually needed.
 macro(add_psp_dependencies)
+    find_package(SDL2 REQUIRED)
     add_library(SDL_2_XX INTERFACE)
     target_link_libraries(SDL_2_XX
         INTERFACE
-            -lSDL2
+            SDL2::Core
+            SDL2::Main
         )
 
     add_library(Dependencies INTERFACE)
@@ -36,6 +38,8 @@ macro(add_psp_dependencies)
             -lpspnet_inet
             -lc
             -lpspuser
+            -lpspvram
+            -lpspvalloc
             )
 
     target_compile_definitions(Dependencies INTERFACE

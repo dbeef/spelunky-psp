@@ -8,7 +8,6 @@
 #include "logger/log.h"
 
 #include <SDL.h>
-#include <SDL_opengles.h>
 
 bool Video::setup_gl()
 {
