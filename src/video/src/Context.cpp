@@ -8,7 +8,6 @@
 #include "graphics_utils/DebugGlCall.hpp"
 #include "time/Timestep.hpp"
 
-#include <SDL/SDL_video.h>
 #include <SDL/SDL.h>
 
 
