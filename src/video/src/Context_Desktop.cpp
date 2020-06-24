@@ -14,7 +14,7 @@ bool Video::setup_gl()
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        log_error("SDL_Init Error: %s");
+        log_error("SDL_Init Error: %s", SDL_GetError());
         SDL_ClearError();
         return false;
     }

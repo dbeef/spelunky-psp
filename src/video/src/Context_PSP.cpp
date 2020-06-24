@@ -55,7 +55,6 @@ bool Video::setup_gl()
         return false;
     }
 
-    SDL_GL_LoadLibrary(nullptr);
     SDL_ClearError();
 
     DebugGlCall(glEnable(GL_TEXTURE_2D));
