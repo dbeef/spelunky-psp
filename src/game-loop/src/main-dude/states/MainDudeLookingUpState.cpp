@@ -39,11 +39,19 @@ MainDudeBaseState *MainDudeLookingUpState::handle_input(MainDude& main_dude, con
     if (input.left())
     {
         main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
+        if (input.up())
+        {
+            return this;
+        }
         return &main_dude._states.running;
     }
     if (input.right())
     {
         main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
+        if (input.up())
+        {
+            return this;
+        }
         return &main_dude._states.running;
     }
     if (input.circle())

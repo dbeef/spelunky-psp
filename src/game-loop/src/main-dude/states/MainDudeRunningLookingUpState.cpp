@@ -1,16 +1,16 @@
-#include "main-dude/states/MainDudeRunningState.hpp"
+#include "main-dude/states/MainDudeRunningLookingUpState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 
-void MainDudeRunningState::enter(MainDude &main_dude)
+void MainDudeRunningLookingUpState::enter(MainDude &main_dude)
 {
     main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
-    main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST),
-                               static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_5_LAST),
+    main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUNNING_LOOKING_UP_0_FIRST),
+                               static_cast<std::size_t>(MainDudeSpritesheetFrames::RUNNING_LOOKING_UP_5_LAST),
                                75, true);
 }
 
-MainDudeBaseState *MainDudeRunningState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState *MainDudeRunningLookingUpState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
     // Update components:
 
@@ -37,7 +37,7 @@ MainDudeBaseState *MainDudeRunningState::update(MainDude& main_dude, uint32_t de
     return this;
 }
 
-MainDudeBaseState *MainDudeRunningState::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeRunningLookingUpState::handle_input(MainDude& main_dude, const Input &input)
 {
     if (input.left())
     {
@@ -97,9 +97,8 @@ MainDudeBaseState *MainDudeRunningState::handle_input(MainDude& main_dude, const
 
             return &main_dude._states.climbing;
         }
-
-        return &main_dude._states.running_looking_up;
+        return this;
     }
 
-    return this;
+    return &main_dude._states.running;
 }
