@@ -99,6 +99,8 @@ MainDudeBaseState *MainDudeStandingState::handle_input(MainDude& main_dude, cons
 
             return &main_dude._states.climbing;
         }
+
+        return &main_dude._states.looking_up;
     }
 
     return this;

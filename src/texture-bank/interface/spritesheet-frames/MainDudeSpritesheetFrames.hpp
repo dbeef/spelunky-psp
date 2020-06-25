@@ -82,4 +82,6 @@ enum class MainDudeSpritesheetFrames : uint16_t
     CLIMBING_ROPE_9,
     CLIMBING_ROPE_10,
     CLIMBING_ROPE_11_LAST,
+
+    STANDING_LOOKING_UP,
 };

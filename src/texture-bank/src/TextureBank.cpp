@@ -172,7 +172,7 @@ void TextureBank::load_texture_regions()
                 TextureRegion region = TextureRegion::fromJson(index, document_root);
                 if (!region.ok)
                 {
-                    break;
+                    break; // TODO some error indication?
                 }
                 log_info("Parsed tile: %i", index);
                 region.normalize(image_width, image_height);
