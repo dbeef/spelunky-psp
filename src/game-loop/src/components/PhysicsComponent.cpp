@@ -74,57 +74,46 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
 
         if (!initial_check_done)
         {
+            MapTile *neighbours[9] = {nullptr};
+            collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), _position.x, _position.y, neighbours);
+            const auto *overlapping_tile = collisions::overlaps_strict(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
+            if (overlapping_tile)
             {
-                MapTile *neighbours[9] = {nullptr};
-                collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), _position.x, _position.y, neighbours);
-                const auto *overlapping_tile = collisions::overlaps_strict(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
-                if (overlapping_tile)
+                if (_velocity.x < 0.0f)
                 {
-                    if (_velocity.x < 0.0f)
-                    {
-                        _collisions.left = true;
-                    }
-                    else if (_velocity.x > 0.0f)
-                    {
-                        _collisions.right = true;
-                    }
-                    else
-                    {
-                        _collisions.right = false;
-                        _collisions.left = false;
-                    }
+                    _collisions.left = true;
+                }
+                else if (_velocity.x > 0.0f)
+                {
+                    _collisions.right = true;
                 }
                 else
                 {
                     _collisions.right = false;
                     _collisions.left = false;
                 }
+
+                if (_velocity.y < 0.0f)
+                {
+                    _collisions.upper = true;
+                }
+                else if (_velocity.y > 0.f)
+                {
+                    _collisions.bottom = true;
+                }
+            }
+            else
+            {
+                _collisions.right = false;
+                _collisions.left = false;
+
+                _collisions.upper = false;
+                _collisions.bottom = false;
             }
 
-            {
-                MapTile *neighbours[9] = {nullptr};
-                collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), _position.x, _position.y, neighbours);
-                const auto *overlapping_tile = collisions::overlaps_strict(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
-                if (overlapping_tile)
-                {
-                    if (_velocity.y < 0.0f)
-                    {
-                        _collisions.upper = true;
-                    }
-                    else if (_velocity.y > 0.f)
-                    {
-                        _collisions.bottom = true;
-                    }
-                }
-                else
-                {
-                    _collisions.upper = false;
-                    _collisions.bottom = false;
-                }
-            }
+            initial_check_done = true;
         }
 
-        initial_check_done = true;
 
         // Step by step:
 
