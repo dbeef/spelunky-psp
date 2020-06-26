@@ -84,9 +84,14 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                     {
                         _collisions.left = true;
                     }
-                    else
+                    else if (_velocity.x > 0.0f)
                     {
                         _collisions.right = true;
+                    }
+                    else
+                    {
+                        _collisions.right = false;
+                        _collisions.left = false;
                     }
                 }
                 else
@@ -106,7 +111,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                     {
                         _collisions.upper = true;
                     }
-                    else
+                    else if (_velocity.y > 0.f)
                     {
                         _collisions.bottom = true;
                     }
