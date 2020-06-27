@@ -31,7 +31,7 @@ MainDudeBaseState *MainDudeRunningLookingUpState::update(MainDude& main_dude, ui
     
     if (main_dude._physics.get_x_velocity() == 0.0f)
     {
-        return &main_dude._states.standing;
+        return &main_dude._states.looking_up;
     }
 
     if (main_dude._physics.get_y_velocity() > 0.0f)

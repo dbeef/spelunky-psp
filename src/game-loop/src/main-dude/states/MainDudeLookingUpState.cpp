@@ -1,3 +1,4 @@
+
 #include "main-dude/states/MainDudeLookingUpState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
@@ -19,7 +20,7 @@ MainDudeBaseState* MainDudeLookingUpState::update(MainDude& main_dude, uint32_t 
 
     if (main_dude._physics.get_x_velocity() != 0.0f)
     {
-        return &main_dude._states.running;
+        return &main_dude._states.running_looking_up;
     }
 
     if (main_dude._physics.get_y_velocity() > 0.0f)
@@ -39,20 +40,10 @@ MainDudeBaseState *MainDudeLookingUpState::handle_input(MainDude& main_dude, con
     if (input.left())
     {
         main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
-        if (input.up())
-        {
-            return this;
-        }
-        return &main_dude._states.running;
     }
     if (input.right())
     {
         main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
-        if (input.up())
-        {
-            return this;
-        }
-        return &main_dude._states.running;
     }
     if (input.circle())
     {
