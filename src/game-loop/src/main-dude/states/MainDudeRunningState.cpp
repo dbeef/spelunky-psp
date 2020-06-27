@@ -5,9 +5,17 @@
 void MainDudeRunningState::enter(MainDude &main_dude)
 {
     main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
-    main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST),
-                               static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_5_LAST),
-                               75, true);
+    if (main_dude._states.current == &main_dude._states.running_looking_up)
+    {
+        main_dude._animation.resume(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST),
+                                    static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_5_LAST));
+    }
+    else
+    {
+        main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST),
+                                   static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_5_LAST),
+                                   75, true);
+    }
 }
 
 MainDudeBaseState *MainDudeRunningState::update(MainDude& main_dude, uint32_t delta_time_ms)

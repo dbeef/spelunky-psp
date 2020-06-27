@@ -47,3 +47,14 @@ void AnimationComponent::start(std::size_t start_frame, std::size_t end_frame, u
     _running = true;
     _finished = false;
 }
+
+void AnimationComponent::resume(std::size_t start_frame, std::size_t end_frame)
+{
+    auto frame_offset = _end_frame_index - _current_frame_index;
+    _current_frame_index = start_frame + frame_offset;
+    _start_frame_index = start_frame;
+    _end_frame_index = end_frame;
+
+    _running = true;
+    _finished = false;
+}

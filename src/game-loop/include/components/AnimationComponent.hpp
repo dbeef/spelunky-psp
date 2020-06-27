@@ -13,6 +13,7 @@ public:
 
     void update(MainDude&, uint32_t delta_time_ms);
     void start(std::size_t start_frame, std::size_t end_frame, uint32_t time_per_frame_ms, bool loop);
+    void resume(std::size_t start_frame, std::size_t end_frame);
     void stop() { _running = false; }
     bool is_finished() const { return _finished; }
     void set_time_per_frame_ms(float value_ms) { _time_per_frame_ms = value_ms; };
