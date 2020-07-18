@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "viewport/Viewport.hpp"
 #include "spritesheet-frames/FontSpritesheetFrames.hpp"
 #include "components/QuadComponent.hpp"
 #include "GameObject.hpp"
@@ -15,6 +16,9 @@ class TextBuffer : public GameObject
 public:
 
     static const TextEntityID INVALID_ENTITY = 0;
+    static WorldUnit_t get_font_width() { return 0.5f; }
+    static WorldUnit_t get_font_height() { return 0.5f; }
+    static WorldUnit_t get_font_offset() { return 0.5f; }
 
     void update(uint32_t delta_time_ms) override;
     TextEntityID create_text();
@@ -31,9 +35,4 @@ private:
 
     std::vector<TextEntityID > _for_removal;
     std::vector<TextEntity> _text_entries;
-
-    // FIXME: Expose in the public interface.
-    const float FONT_WIDTH_PIXELS = 16;
-    const float FONT_HEIGHT_PIXELS = 16;
-    const float OFFSET_PIXELS = 16;
 };

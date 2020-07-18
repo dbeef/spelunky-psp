@@ -10,7 +10,7 @@ std::function<bool(uint32_t delta_time_ms)>& GameLoop::get()
 
 GameLoop::GameLoop(const std::shared_ptr<Viewport>& viewport)
     : _viewport(viewport)
-    , _cameras{{viewport}, {viewport}}
+    , _cameras{{viewport}, {viewport, ScreenSpaceCamera::CoordinateType::WORLD_UNITS}}
 {
     _states.current = &_states.started;
     _states.current->enter(*this);

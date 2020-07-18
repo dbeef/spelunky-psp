@@ -14,8 +14,14 @@ class Viewport;
 class ScreenSpaceCamera
 {
 public:
-    
-    ScreenSpaceCamera(std::shared_ptr<Viewport>);
+
+    enum class CoordinateType
+    {
+        WORLD_UNITS,
+        PIXELS
+    };
+
+    ScreenSpaceCamera(std::shared_ptr<Viewport>, CoordinateType);
 
     void update_gl_modelview_matrix() const;
     void update_gl_projection_matrix() const;
@@ -25,6 +31,6 @@ public:
 private:
     
     std::shared_ptr<Viewport> _viewport;
-    
+    CoordinateType _coordinate_type;
     float _projection_coefficient;
 };

@@ -4,19 +4,6 @@
 #include "graphics_utils/LookAt.hpp"
 #include "ModelViewCamera.hpp"
 
-namespace
-{
-    const std::size_t SCREEN_WIDTH_IN_TILES = 20;
-
-    // Returns coefficient to glOrtho of such value,
-    // so screen with dimensions of screen_width_tiles would entirely fit on the screen.
-    float calculate_coefficient(float aspect, std::size_t screen_width_tiles)
-    {
-        return (screen_width_tiles / aspect) / 2.0f;
-    }
-
-}
-
 ModelViewCamera::ModelViewCamera(std::shared_ptr<Viewport> viewport)
     : _viewport(std::move(viewport))
     , _bounding_x(2.f)
@@ -32,7 +19,7 @@ void ModelViewCamera::update_gl_modelview_matrix() const
 
 void ModelViewCamera::update_gl_projection_matrix() const
 {
-    DebugGlCall(glViewport(0, 0, (GLsizei) (_viewport->get_width()), (GLsizei) (_viewport->get_height())));
+    DebugGlCall(glViewport(0, 0, (GLsizei) (_viewport->get_width_pixels()), (GLsizei) (_viewport->get_height_pixels())));
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
 
@@ -47,6 +34,20 @@ void ModelViewCamera::update_gl_projection_matrix() const
                          far));
 }
 
+void ModelViewCamera::calculate_coefficients()
+{
+    _projection_coefficient = _viewport->calculate_coefficient_world_units();
+    _screen_width_tiles = _viewport->get_width_world_units();
+    _screen_height_tiles = _viewport->get_height_world_units();
+}
+
+// rounding the values to 1 decimal point
+// to avoid vertical screen-tearing like artifacts
+void ModelViewCamera::round_position_x() { _x = ((10.f * _x + 0.5f) / 10); }
+void ModelViewCamera::round_position_y() { _y = ((10.f * _y + 0.5f) / 10); }
+
+// FIXME: These methods should not be in competence of the camera implementation - move them out.
+
 void ModelViewCamera::adjust_to_bounding_box(float x, float y)
 {
     auto dx = (x / 2) - _x;
@@ -57,7 +58,7 @@ void ModelViewCamera::adjust_to_bounding_box(float x, float y)
         _x += dx + (dx > 0.f ? -_bounding_x_half : _bounding_x_half);
         round_position_x();
     }
-    
+
     if (std::abs(dy) > _bounding_y_half)
     {
         _y += dy + (dy > 0.f ? -_bounding_y_half : _bounding_y_half);
@@ -99,15 +100,3 @@ void ModelViewCamera::adjust_to_level_boundaries(float level_width, float level_
         _y = y_camera_space;
     }
 }
-
-void ModelViewCamera::calculate_coefficients()
-{
-    _projection_coefficient = calculate_coefficient(_viewport->get_aspect(), SCREEN_WIDTH_IN_TILES);
-    _screen_width_tiles = SCREEN_WIDTH_IN_TILES;
-    _screen_height_tiles = _projection_coefficient * 2.0f;
-}
-
-// rounding the values to 1 decimal point
-// to avoid vertical screen-tearing like artifacts
-void ModelViewCamera::round_position_x() { _x = ((10.f * _x + 0.5f) / 10); }
-void ModelViewCamera::round_position_y() { _y = ((10.f * _y + 0.5f) / 10); }

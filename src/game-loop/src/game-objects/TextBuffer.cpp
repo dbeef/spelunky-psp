@@ -30,7 +30,8 @@ void TextBuffer::update_text(TextEntityID id, Point2D position, const char *cont
         // Resize text if it won't fit full length of new contents:
         while (it->quads.size() < length)
         {
-            it->quads.emplace_back(TextureType::FONT, Renderer::EntityType::SCREEN_SPACE, FONT_WIDTH_PIXELS, FONT_HEIGHT_PIXELS);
+            it->quads.emplace_back(TextureType::FONT, Renderer::EntityType::SCREEN_SPACE,
+                                   TextBuffer::get_font_width(), TextBuffer::get_font_height());
         }
 
         for (std::size_t index = 0; index < it->quads.size(); index++)
@@ -69,7 +70,7 @@ void TextBuffer::update_text(TextEntityID id, Point2D position, const char *cont
 
             // Update position:
 
-            quad.update(position.x + (index * OFFSET_PIXELS), position.y);
+            quad.update(position.x + (index * TextBuffer::get_font_offset()), position.y);
         }
     }
     else
