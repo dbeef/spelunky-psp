@@ -24,11 +24,6 @@ public:
 
 private:
 
-    // TODO: Scale depending on screen resolution.
-    const float ICON_WIDTH_PIXELS = 16;
-    const float ICON_HEIGHT_PIXELS = 16;
-    float icons_offset_pixels = 0.0f;
-
     Point2D _heart_center;
     Point2D _dollar_center;
     Point2D _ropes_center;

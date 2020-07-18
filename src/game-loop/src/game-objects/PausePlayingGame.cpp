@@ -30,27 +30,28 @@ void PausePlayingGame::update(uint32_t delta_time_ms)
             _half_opaque_quad = std::make_shared<QuadComponent>(
                     TextureType::HUD,
                     Renderer::EntityType::SCREEN_SPACE,
-                    _viewport->get_width(),
-                    _viewport->get_height());
+                    _viewport->get_width_world_units(),
+                    _viewport->get_height_world_units());
 
             _half_opaque_quad->frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HALF_OPAQUE_TILE);
-            _half_opaque_quad->update(_viewport->get_width() / 2.0f, _viewport->get_height() / 2.0f);
+            _half_opaque_quad->update(_viewport->get_width_world_units() / 2.0f, _viewport->get_height_world_units() / 2.0f);
 
             _text_entity_ids.paused = _text_buffer->create_text();
             _text_entity_ids.controls = _text_buffer->create_text();
 
             {
-                const float text_width = std::strlen(PAUSED_MSG) * 16.0f;
-                const float text_center_x = (_viewport->get_width() / 2.0f) - (text_width / 2.0f) + (16.0f / 2);
-                const float text_center_y = _viewport->get_height() * 0.8f;
+                const float text_width = std::strlen(PAUSED_MSG) * TextBuffer::get_font_width();
+                const float text_center_x = (_viewport->get_width_world_units() / 2.0f) - (text_width / 2.0f) + (TextBuffer::get_font_width() / 2.0f);
+                const float text_center_y = _viewport->get_height_world_units() * 0.8f;
 
                 _text_buffer->update_text(_text_entity_ids.paused, {text_center_x, text_center_y}, PAUSED_MSG, std::strlen(PAUSED_MSG));
             }
 
             {
-                const float text_width = std::strlen(Input::get_controls_msg()) * 16.0f;
-                const float text_center_x = (_viewport->get_width() / 2.0f) - (text_width / 2.0f) + (16.0f / 2);
-                const float text_center_y = _viewport->get_height() * 0.9f;
+                const float text_width = std::strlen(Input::get_controls_msg()) *
+                        TextBuffer::get_font_width();
+                const float text_center_x = (_viewport->get_width_world_units() / 2.0f) - (text_width / 2.0f) + (TextBuffer::get_font_width() / 2.0f);
+                const float text_center_y = _viewport->get_height_world_units() * 0.9f;
 
                 _text_buffer->update_text(_text_entity_ids.controls, {text_center_x, text_center_y}, Input::get_controls_msg(), std::strlen(Input::get_controls_msg()));
             }
