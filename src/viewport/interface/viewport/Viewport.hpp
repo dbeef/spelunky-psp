@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstdlib>
 
 using WorldUnit_t = float;
 using Pixel_t = uint16_t;
