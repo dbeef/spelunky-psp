@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include "GameObject.hpp"
 #include "components/QuadComponent.hpp"
@@ -8,12 +9,18 @@
 #include "TextBuffer.hpp"
 #include "viewport/Viewport.hpp"
 
-class PausePlayingGame : public GameObject
+class PauseScreen : public GameObject
 {
 public:
 
-    explicit PausePlayingGame(std::shared_ptr<Viewport>);
-    ~PausePlayingGame() override;
+    enum class Type
+    {
+        MAIN_MENU,
+        PLAYING
+    };
+
+    PauseScreen(std::shared_ptr<Viewport>, Type);
+    ~PauseScreen() override;
 
     void unpause();
     void update(uint32_t delta_time_ms) override;
@@ -24,6 +31,8 @@ public:
     bool is_death_requested() const { return _death_requested; }
 
 private:
+
+    std::string get_available_controls_msg() const;
 
     std::shared_ptr<QuadComponent> _half_opaque_quad;
     std::shared_ptr<TextBuffer> _text_buffer;
@@ -39,4 +48,6 @@ private:
     bool _paused = false;
     bool _quit_requested = false;
     bool _death_requested = false;
+
+    const Type _type;
 };

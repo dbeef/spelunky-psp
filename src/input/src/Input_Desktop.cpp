@@ -3,9 +3,19 @@
 #include <SDL/SDL_events.h>
 #include <cstdlib>
 
-const char *Input::get_controls_msg()
+const char* Input::get_pause_binding_msg()
 {
-    return "ESC-RETURN F1-DIE F10-QUIT";
+    return "ESC";
+}
+
+const char* Input::get_death_request_binding_msg()
+{
+    return "F1";
+}
+
+const char* Input::get_quit_request_binding_msg()
+{
+    return "F10";
 }
 
 void Input::poll()

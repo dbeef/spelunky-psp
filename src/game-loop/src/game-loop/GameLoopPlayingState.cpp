@@ -11,7 +11,7 @@
 #include "game-objects/HUD.hpp"
 #include "main-dude/MainDude.hpp"
 #include "game-objects/TextBuffer.hpp"
-#include "game-objects/PausePlayingGame.hpp"
+#include "game-objects/PauseScreen.hpp"
 
 #include <ctime>
 
@@ -134,7 +134,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
     // Create Pause:
 
-    _pause = std::make_shared<PausePlayingGame>(game_loop._viewport);
+    _pause = std::make_shared<PauseScreen>(game_loop._viewport, PauseScreen::Type::PLAYING);
     _pause->set_text_buffer(game_loop._text_buffer);
     game_loop._game_objects.push_back(_pause);
 }
