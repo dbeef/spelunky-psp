@@ -1,9 +1,10 @@
 #pragma once
 
+#include <memory>
 #include "GameLoopBaseState.hpp"
 
 class GameLoop;
-class PausePlayingGame;
+class PauseScreen;
 
 class GameLoopPlayingState : public GameLoopBaseState
 {
@@ -12,6 +13,6 @@ public:
     void enter(GameLoop&) override;
     void exit(GameLoop&) override;
 private:
-    std::shared_ptr<PausePlayingGame> _pause = nullptr;
+    std::shared_ptr<PauseScreen> _pause = nullptr;
 };
 

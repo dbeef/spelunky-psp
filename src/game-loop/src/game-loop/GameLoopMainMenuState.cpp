@@ -7,6 +7,7 @@
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 #include "game-objects/MainLogo.hpp"
+#include "game-objects/PauseScreen.hpp"
 #include "game-objects/QuitSign.hpp"
 #include "game-objects/StartSign.hpp"
 #include "game-objects/ScoresSign.hpp"
@@ -36,12 +37,24 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
 
     renderer.render(Renderer::EntityType::SCREEN_SPACE);
 
-
     // Update game objects:
 
-    for (auto& game_object : game_objects)
+    if (_pause->is_paused())
     {
-        game_object->update(delta_time_ms);
+        if (_pause->is_quit_requested())
+        {
+            log_info("Quit requested.");
+            _pause->unpause();
+            game_loop._exit = true;
+        }
+        _pause->update(delta_time_ms);
+    }
+    else
+    {
+        for (auto &game_object : game_objects)
+        {
+            game_object->update(delta_time_ms);
+        }
     }
 
     // Remove game objects marked for disposal:
@@ -89,6 +102,17 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
 
     game_loop._main_dude = std::make_shared<MainDude>(17.45f, 8.5f);
     game_loop._game_objects.push_back(game_loop._main_dude);
+
+    // Create text renderer:
+
+    game_loop._text_buffer = std::make_shared<TextBuffer>();
+    game_loop._game_objects.push_back(game_loop._text_buffer);
+
+    // Create Pause:
+
+    _pause = std::make_shared<PauseScreen>(game_loop._viewport, PauseScreen::Type::MAIN_MENU);
+    _pause->set_text_buffer(game_loop._text_buffer);
+    game_loop._game_objects.push_back(_pause);
 
     // TODO: Implement a mechanism for sprite rendering priority, so the main logo would be always rendered
     //       behind other sprites. Some RenderingPriority enum representing depth (Z axis) would be sufficient.

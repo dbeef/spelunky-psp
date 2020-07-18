@@ -2,10 +2,19 @@
 
 #include <pspctrl.h>
 
-
-const char *Input::get_controls_msg()
+const char* Input::get_pause_binding_msg()
 {
-    return "SELECT-RETURN L-DIE R-QUIT";
+    return "SELECT";
+}
+
+const char* Input::get_death_request_binding_msg()
+{
+    return "L";
+}
+
+const char* Input::get_quit_request_binding_msg()
+{
+    return "R";
 }
 
 void Input::poll()

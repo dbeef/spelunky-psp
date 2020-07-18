@@ -7,7 +7,10 @@ public:
     static Input& instance();
     static void init();
     static void dispose();
-    static const char* get_controls_msg();
+
+    static const char* get_pause_binding_msg();
+    static const char* get_death_request_binding_msg();
+    static const char* get_quit_request_binding_msg();
 
     void poll();
 
