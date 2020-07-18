@@ -9,8 +9,8 @@ void Input::poll()
 
     while (SDL_PollEvent(&event))
     {
-        _exit = event.type == SDL_QUIT || (event.type == SDL_EventType::SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE);
-        if (_exit)
+        _paused = event.type == SDL_QUIT || (event.type == SDL_EventType::SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE);
+        if (_paused)
         {
             // FIXME: Better exit handling
             std::exit(0);
@@ -37,29 +37,21 @@ void Input::poll()
             {
                 _down = v;
             }
-            else if (key == SDLK_w)
-            {
-                _triangle = v;
-            }
-            else if (key == SDLK_a)
-            {
-                _square = v;
-            }
             else if (key == SDLK_d)
             {
-                _circle = v;
+                _jumping = v;
             }
             else if (key == SDLK_s)
             {
-                _cross = v;
+                _ducking = v;
             }
             else if (key == SDLK_LSHIFT)
             {
-                _bumper_l = v;
+                _running_fast = v;
             }
             else if (key == SDLK_q)
             {
-                _bumper_r = v;
+                _throwing = v;
             }
         }
     }

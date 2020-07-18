@@ -58,12 +58,12 @@ MainDudeBaseState *MainDudeThrowingState::handle_input(MainDude& main_dude, cons
     {
         main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
-    if (input.triangle() && main_dude._physics.is_bottom_collision())
+    if (input.jumping() && main_dude._physics.is_bottom_collision())
     {
         main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
     }
 
-    if (input.bumper_l())
+    if (input.running_fast())
     {
         main_dude._physics.set_max_x_velocity(MainDude::MAX_RUNNING_VELOCITY_X);
     }

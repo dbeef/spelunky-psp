@@ -26,7 +26,7 @@ void Video::run_loop(const std::function<void(uint32_t delta_time_ms)> &loop_cal
 
     auto& input = Input::instance();
 
-    while (!input.isExit()) {
+    while (!input.paused()) {
 
         _timestep.mark_start();
 
