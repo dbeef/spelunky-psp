@@ -21,11 +21,9 @@ void Input::poll()
     _left = pad.Buttons & PSP_CTRL_LEFT;
     _right = pad.Buttons & PSP_CTRL_RIGHT;
 
-    _triangle = pad.Buttons & PSP_CTRL_TRIANGLE;
-    _cross = pad.Buttons & PSP_CTRL_CROSS;
-    _square = pad.Buttons & PSP_CTRL_SQUARE;
-    _circle = pad.Buttons & PSP_CTRL_CIRCLE;
+    _jumping = pad.Buttons & PSP_CTRL_CROSS;
+    _ducking = pad.Buttons & PSP_CTRL_CIRCLE;
 
-    _bumper_l = pad.Buttons & PSP_CTRL_LTRIGGER;
-    _bumper_r = pad.Buttons & PSP_CTRL_RTRIGGER;
+    _running_fast = pad.Buttons & PSP_CTRL_LTRIGGER;
+    _throwing = pad.Buttons & PSP_CTRL_RTRIGGER;
 }

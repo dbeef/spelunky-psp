@@ -99,7 +99,7 @@ MainDudeBaseState *MainDudeJumpingState::handle_input(MainDude& main_dude, const
         }
     }
 
-    if (input.bumper_l())
+    if (input.running_fast())
     {
         main_dude._physics.set_max_x_velocity(MainDude::MAX_RUNNING_VELOCITY_X);
         main_dude._animation.set_time_per_frame_ms(50);
@@ -110,7 +110,7 @@ MainDudeBaseState *MainDudeJumpingState::handle_input(MainDude& main_dude, const
         main_dude._animation.set_time_per_frame_ms(75);
     }
 
-    if (input.bumper_r())
+    if (input.throwing())
     {
         return &main_dude._states.throwing;
     }

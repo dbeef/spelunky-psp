@@ -21,7 +21,7 @@ MainDudeBaseState* MainDudeCliffHangingState::update(MainDude& main_dude, uint32
 
 MainDudeBaseState *MainDudeCliffHangingState::handle_input(MainDude& main_dude, const Input &input)
 {
-    if (input.circle())
+    if (input.jumping())
     {
         main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
         main_dude._physics.enable_gravity();

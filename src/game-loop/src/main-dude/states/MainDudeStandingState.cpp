@@ -61,16 +61,16 @@ MainDudeBaseState *MainDudeStandingState::handle_input(MainDude& main_dude, cons
     {
         main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
-    if (input.circle())
+    if (input.jumping())
     {
         main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;
     }
-    if (input.cross())
+    if (input.ducking())
     {
         return &main_dude._states.ducking;
     }
-    if (input.bumper_r())
+    if (input.throwing())
     {
         return &main_dude._states.throwing;
     }

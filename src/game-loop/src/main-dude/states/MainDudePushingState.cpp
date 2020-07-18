@@ -54,17 +54,17 @@ MainDudeBaseState *MainDudePushingState::handle_input(MainDude& main_dude, const
         return &main_dude._states.running;
     }
 
-    if (input.circle())
+    if (input.jumping())
     {
         main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;
     }
-    if (input.cross())
+    if (input.ducking())
     {
         return &main_dude._states.ducking;
     }
 
-    if (input.bumper_r())
+    if (input.throwing())
     {
         return &main_dude._states.throwing;
     }
