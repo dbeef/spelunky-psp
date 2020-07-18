@@ -90,4 +90,7 @@ enum class MainDudeSpritesheetFrames : uint16_t
     RUNNING_LOOKING_UP_3,
     RUNNING_LOOKING_UP_4,
     RUNNING_LOOKING_UP_5_LAST,
+
+    DEAD,
+    DEAD_FALLING
 };
