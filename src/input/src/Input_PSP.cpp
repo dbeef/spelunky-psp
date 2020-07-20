@@ -17,6 +17,11 @@ const char* Input::get_quit_request_binding_msg()
     return "R";
 }
 
+const char* Input::get_main_menu_request_binding_msg()
+{
+    return "X";
+}
+
 void Input::poll()
 {
     static bool set_up = false;

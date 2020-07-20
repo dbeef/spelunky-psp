@@ -3,7 +3,7 @@
 #include <cassert>
 
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
-#include "game-objects/PauseScreen.hpp"
+#include "game-objects/PauseOverlay.hpp"
 #include "Input.hpp"
 
 namespace
@@ -11,13 +11,13 @@ namespace
     const char* PAUSED_MSG = "PAUSED";
 }
 
-void PauseScreen::set_text_buffer(const std::shared_ptr<TextBuffer> &text_buffer)
+void PauseOverlay::set_text_buffer(const std::shared_ptr<TextBuffer> &text_buffer)
 {
     assert(text_buffer != nullptr);
     _text_buffer = text_buffer;
 }
 
-void PauseScreen::update(uint32_t delta_time_ms)
+void PauseOverlay::update(uint32_t delta_time_ms)
 {
     const auto& input = Input::instance();
 
@@ -79,24 +79,24 @@ void PauseScreen::update(uint32_t delta_time_ms)
     }
 }
 
-PauseScreen::PauseScreen(std::shared_ptr<Viewport> viewport, Type pause_screen_type)
+PauseOverlay::PauseOverlay(std::shared_ptr<Viewport> viewport, Type pause_screen_type)
     : _viewport(std::move(viewport))
     , _type(pause_screen_type)
 {
 }
 
-PauseScreen::~PauseScreen()
+PauseOverlay::~PauseOverlay()
 {
     _text_buffer->remove_text(_text_entity_ids.paused);
     _text_buffer->remove_text(_text_entity_ids.controls);
 }
 
-void PauseScreen::unpause()
+void PauseOverlay::unpause()
 {
     _paused = false;
 }
 
-std::string PauseScreen::get_available_controls_msg() const
+std::string PauseOverlay::get_available_controls_msg() const
 {
     std::stringstream out;
 

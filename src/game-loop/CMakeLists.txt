@@ -22,11 +22,13 @@ add_library(GameLoop STATIC
         src/main-dude/states/MainDudeJumpingState.cpp
         src/main-dude/states/MainDudeLookingUpState.cpp
         src/main-dude/states/MainDudeRunningLookingUpState.cpp
+        src/main-dude/states/MainDudeDeadState.cpp
         src/components/PhysicsComponent.cpp
         src/components/QuadComponent.cpp
         src/components/AnimationComponent.cpp
         src/game-objects/HUD.cpp
-        src/game-objects/PauseScreen.cpp
+        src/game-objects/PauseOverlay.cpp
+        src/game-objects/DeathOverlay.cpp
         src/game-objects/TextBuffer.cpp
         interface/GameLoop.hpp
         interface/GameLoopBaseState.hpp
@@ -46,7 +48,8 @@ add_library(GameLoop STATIC
         include/game-objects/CopyrightsSign.hpp
         include/game-objects/TextBuffer.hpp
         include/game-objects/HUD.hpp
-        include/game-objects/PauseScreen.hpp
+        include/game-objects/PauseOverlay.hpp
+        include/game-objects/DeathOverlay.hpp
         include/components/PhysicsComponent.hpp
         include/components/QuadComponent.hpp
         include/components/AnimationComponent.hpp
@@ -65,6 +68,7 @@ add_library(GameLoop STATIC
         include/main-dude/states/MainDudeCliffHangingState.hpp
         include/main-dude/states/MainDudeLookingUpState.hpp
         include/main-dude/states/MainDudeRunningLookingUpState.hpp
+        include/main-dude/states/MainDudeDeadState.hpp
 )
 
 target_include_directories(GameLoop

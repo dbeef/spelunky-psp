@@ -9,9 +9,10 @@
 #include "GameLoopPlayingState.hpp"
 #include "game-objects/GameObject.hpp"
 #include "game-objects/HUD.hpp"
-#include "main-dude/MainDude.hpp"
 #include "game-objects/TextBuffer.hpp"
-#include "game-objects/PauseScreen.hpp"
+#include "game-objects/PauseOverlay.hpp"
+#include "game-objects/DeathOverlay.hpp"
+#include "main-dude/MainDude.hpp"
 
 #include <ctime>
 
@@ -47,21 +48,25 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
 
     // Update game objects:
 
-    if (_pause->is_paused())
+    if (_pause_overlay->is_paused())
     {
-        if (_pause->is_death_requested())
+        if (_pause_overlay->is_death_requested())
         {
             log_info("Death requested.");
-            // TODO: Kill the main dude.
-            _pause->unpause();
+            game_loop._main_dude->enter_dead_state();
+            _death_overlay->launch();
+            _death_overlay->enable();
+            _pause_overlay->reset();
+            _pause_overlay->disable();
         }
-        else if (_pause->is_quit_requested())
+        else if (_pause_overlay->is_quit_requested())
         {
             log_info("Quit requested.");
-            _pause->unpause();
+            _pause_overlay->reset();
             game_loop._exit = true;
         }
-        _pause->update(delta_time_ms);
+
+        _pause_overlay->update(delta_time_ms);
     }
     else
     {
@@ -88,6 +93,11 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     if (game_loop._main_dude->entered_door())
     {
         return &game_loop._states.level_summary;
+    }
+
+    if (_death_overlay->is_main_menu_requested())
+    {
+        return &game_loop._states.main_menu;
     }
 
     return this;
@@ -129,15 +139,25 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     hud->set_hearts_count(4);
     hud->set_ropes_count(4);
 
-    // Create Pause:
+    // Create pause overlay:
 
-    _pause = std::make_shared<PauseScreen>(game_loop._viewport, PauseScreen::Type::PLAYING);
-    _pause->set_text_buffer(game_loop._text_buffer);
-    game_loop._game_objects.push_back(_pause);
+    _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::PLAYING);
+    _pause_overlay->set_text_buffer(game_loop._text_buffer);
+    game_loop._game_objects.push_back(_pause_overlay);
+    
+    // Create death overlay:
+
+    _death_overlay = std::make_shared<DeathOverlay>(game_loop._viewport);
+    _death_overlay->set_text_buffer(game_loop._text_buffer);
+    _death_overlay->disable();
+    game_loop._game_objects.push_back(_death_overlay);
 }
 
 void GameLoopPlayingState::exit(GameLoop& game_loop)
 {
+    _death_overlay = nullptr;
+    _pause_overlay = nullptr;
+
     game_loop._game_objects = {};
     game_loop._main_dude = {};
     game_loop._text_buffer = {};

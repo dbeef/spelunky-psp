@@ -9,7 +9,7 @@
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 #include "game-objects/MainLogo.hpp"
-#include "game-objects/PauseScreen.hpp"
+#include "game-objects/PauseOverlay.hpp"
 #include "game-objects/QuitSign.hpp"
 #include "game-objects/StartSign.hpp"
 #include "game-objects/ScoresSign.hpp"
@@ -53,7 +53,7 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
         if (_pause->is_quit_requested())
         {
             log_info("Quit requested.");
-            _pause->unpause();
+            _pause->reset();
             game_loop._exit = true;
         }
         _pause->update(delta_time_ms);
@@ -132,7 +132,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
 
     // Create Pause:
 
-    _pause = std::make_shared<PauseScreen>(game_loop._viewport, PauseScreen::Type::MAIN_MENU);
+    _pause = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::MAIN_MENU);
     _pause->set_text_buffer(game_loop._text_buffer);
     game_loop._game_objects.push_back(_pause);
 

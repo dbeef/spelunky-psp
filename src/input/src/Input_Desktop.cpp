@@ -18,6 +18,11 @@ const char* Input::get_quit_request_binding_msg()
     return "F10";
 }
 
+const char* Input::get_main_menu_request_binding_msg()
+{
+    return "D";
+}
+
 void Input::poll()
 {
     // As this input implementation relies on key events, to not end up with 'changed' being true until
