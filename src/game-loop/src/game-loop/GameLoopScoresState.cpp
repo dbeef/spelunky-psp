@@ -1,29 +1,15 @@
-#include <cmath>
-
 #include "logger/log.h"
 #include "ModelViewCamera.hpp"
 #include "Renderer.hpp"
-#include "GameLoopMainMenuState.hpp"
+#include "GameLoopScoresState.hpp"
 #include "GameLoop.hpp"
 #include "LevelGenerator.hpp"
 #include "main-dude/MainDude.hpp"
-#include "Input.hpp"
-#include "game-objects/MainLogo.hpp"
+#include "game-objects/ResetSign.hpp"
 #include "game-objects/PauseScreen.hpp"
-#include "game-objects/QuitSign.hpp"
-#include "game-objects/StartSign.hpp"
-#include "game-objects/ScoresSign.hpp"
-#include "game-objects/TutorialSign.hpp"
-#include "game-objects/CopyrightsSign.hpp"
+#include "Input.hpp"
 
-namespace
-{
-    const Point2D PLAY_COORDS = {5, 17};
-    const Point2D SCORES_COORDS = {9, 17};
-    const Point2D TUTORIAL_COORDS = {1, 17};
-}
-
-GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t delta_time_ms)
+GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
     auto& screen_space_camera = game_loop._cameras.screen_space;
     auto& model_view_camera = game_loop._cameras.model_view;
@@ -82,32 +68,19 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
 
     if (game_loop._main_dude->entered_door())
     {
-        const Point2D pos_in_tiles = {std::floor(game_loop._main_dude->get_x_pos_center()),
-                                      std::floor(game_loop._main_dude->get_y_pos_center())};
-        if (pos_in_tiles == PLAY_COORDS)
-        {
-            return &game_loop._states.playing;
-        }
-        else if (pos_in_tiles == SCORES_COORDS)
-        {
-            return &game_loop._states.scores;
-        }
-        else
-        {
-            assert(false);
-        }
+        return &game_loop._states.main_menu;
     }
 
     return this;
 }
 
-void GameLoopMainMenuState::enter(GameLoop& game_loop)
+void GameLoopScoresState::enter(GameLoop& game_loop)
 {
-    log_info("Entered GameLoopMainMenuState");
+    log_info("Entered GameLoopScoresState");
 
     LevelGenerator::instance().getLevel().clean_map_layout();
     LevelGenerator::instance().getLevel().generate_frame();
-    LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU);
+    LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::SCORES);
     LevelGenerator::instance().getLevel().generate_cave_background();
     LevelGenerator::instance().getLevel().batch_vertices();
 
@@ -115,14 +88,12 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     model_view_camera.set_x_not_rounded(5.0f);
     model_view_camera.set_y_not_rounded(7.0f);
 
-    game_loop._game_objects.emplace_back(std::make_shared<MainLogo>(9.7f, 13.5f));
-    game_loop._game_objects.emplace_back(std::make_shared<StartSign>(5.5f, 17.0f));
-    game_loop._game_objects.emplace_back(std::make_shared<ScoresSign>(9.5f, 17.0f));
-    game_loop._game_objects.emplace_back(std::make_shared<TutorialSign>(1.0f, 16.5f));
-    game_loop._game_objects.emplace_back(std::make_shared<CopyrightsSign>(10.0f, 18.75f));
-    game_loop._game_objects.emplace_back(std::make_shared<QuitSign>(16.0f, 9.5f));
+    MapTile* entrance = nullptr;
+    LevelGenerator::instance().getLevel().get_first_tile_of_given_type(MapTileType::EXIT, entrance);
+    assert(entrance);
 
-    game_loop._main_dude = std::make_shared<MainDude>(17.45f, 8.5f);
+    // TODO: Single point of tile width/height definition to not hardcode offset by magic values.
+    game_loop._main_dude = std::make_shared<MainDude>(entrance->x + 0.5f, entrance->y + 0.5f);
     game_loop._game_objects.push_back(game_loop._main_dude);
 
     // Create text renderer:
@@ -132,16 +103,16 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
 
     // Create Pause:
 
-    _pause = std::make_shared<PauseScreen>(game_loop._viewport, PauseScreen::Type::MAIN_MENU);
+    _pause = std::make_shared<PauseScreen>(game_loop._viewport, PauseScreen::Type::SCORES);
     _pause->set_text_buffer(game_loop._text_buffer);
     game_loop._game_objects.push_back(_pause);
 
-    // TODO: Implement a mechanism for sprite rendering priority, so the main logo would be always rendered
-    //       behind other sprites. Some RenderingPriority enum representing depth (Z axis) would be sufficient.
-    //       Right now stacking logo and signs before the main dude handles the problem.
+    // Create reset sign:
+
+     game_loop._game_objects.emplace_back(std::make_shared<ResetSign>(16.5f, 18.5f));
 }
 
-void GameLoopMainMenuState::exit(GameLoop& game_loop)
+void GameLoopScoresState::exit(GameLoop& game_loop)
 {
     game_loop._game_objects = {};
     game_loop._main_dude = {};

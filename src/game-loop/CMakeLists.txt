@@ -6,6 +6,7 @@ add_library(GameLoop STATIC
         src/game-loop/GameLoopPlayingState.cpp
         src/game-loop/GameLoopStartedState.cpp
         src/game-loop/GameLoopLevelSummaryState.cpp
+        src/game-loop/GameLoopScoresState.cpp
         src/main-dude/MainDude.cpp
         src/main-dude/states/MainDudeStandingState.cpp
         src/main-dude/states/MainDudeCliffHangingState.cpp
@@ -33,10 +34,12 @@ add_library(GameLoop STATIC
         interface/GameLoopPlayingState.hpp
         interface/GameLoopStartedState.hpp
         interface/GameLoopLevelSummaryState.hpp
+        interface/GameLoopScoresState.hpp
         include/main-dude/MainDude.hpp
         include/game-objects/GameObject.hpp
         include/game-objects/MainLogo.hpp
         include/game-objects/QuitSign.hpp
+        include/game-objects/ResetSign.hpp
         include/game-objects/StartSign.hpp
         include/game-objects/ScoresSign.hpp
         include/game-objects/TutorialSign.hpp

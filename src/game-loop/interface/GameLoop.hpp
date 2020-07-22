@@ -14,6 +14,7 @@
 #include "GameLoopMainMenuState.hpp"
 #include "GameLoopPlayingState.hpp"
 #include "GameLoopStartedState.hpp"
+#include "GameLoopScoresState.hpp"
 
 class GameObject;
 class MainDude;
@@ -32,6 +33,7 @@ private:
     friend class GameLoopPlayingState;
     friend class GameLoopStartedState;
     friend class GameLoopLevelSummaryState;
+    friend class GameLoopScoresState;
 
     struct
     {
@@ -39,6 +41,7 @@ private:
         GameLoopPlayingState playing;
         GameLoopStartedState started;
         GameLoopLevelSummaryState level_summary;
+        GameLoopScoresState scores;
         GameLoopBaseState* current;
     } _states;
     

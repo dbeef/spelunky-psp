@@ -10,4 +10,5 @@ enum class MainMenuSpritesheetFrames : uint16_t
     MAIN_LOGO,
     START,
     COPYRIGHTS,
+    RESET,
 };
