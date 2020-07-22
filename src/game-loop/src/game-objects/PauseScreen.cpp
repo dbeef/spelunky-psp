@@ -104,6 +104,7 @@ std::string PauseScreen::get_available_controls_msg() const
 
     switch(_type)
     {
+        case Type::SCORES:
         case Type::MAIN_MENU:
         {
             out << Input::get_pause_binding_msg() << "-RETURN ";

@@ -16,6 +16,7 @@ public:
     enum class Type
     {
         MAIN_MENU,
+        SCORES,
         PLAYING
     };
 
