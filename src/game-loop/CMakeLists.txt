@@ -39,6 +39,7 @@ add_library(GameLoop STATIC
         include/game-objects/GameObject.hpp
         include/game-objects/MainLogo.hpp
         include/game-objects/QuitSign.hpp
+        include/game-objects/ResetSign.hpp
         include/game-objects/StartSign.hpp
         include/game-objects/ScoresSign.hpp
         include/game-objects/TutorialSign.hpp

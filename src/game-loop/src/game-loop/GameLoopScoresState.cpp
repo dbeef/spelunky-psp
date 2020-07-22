@@ -5,6 +5,7 @@
 #include "GameLoop.hpp"
 #include "LevelGenerator.hpp"
 #include "main-dude/MainDude.hpp"
+#include "game-objects/ResetSign.hpp"
 #include "game-objects/PauseScreen.hpp"
 #include "Input.hpp"
 
@@ -105,6 +106,10 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
     _pause = std::make_shared<PauseScreen>(game_loop._viewport, PauseScreen::Type::SCORES);
     _pause->set_text_buffer(game_loop._text_buffer);
     game_loop._game_objects.push_back(_pause);
+
+    // Create reset sign:
+
+     game_loop._game_objects.emplace_back(std::make_shared<ResetSign>(16.5f, 18.5f));
 }
 
 void GameLoopScoresState::exit(GameLoop& game_loop)
