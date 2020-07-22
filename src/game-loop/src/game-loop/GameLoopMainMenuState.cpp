@@ -1,5 +1,5 @@
 #include <cmath>
-#include <GameLoop.hpp>
+
 #include "logger/log.h"
 #include "ModelViewCamera.hpp"
 #include "Renderer.hpp"
@@ -82,7 +82,8 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
 
     if (game_loop._main_dude->entered_door())
     {
-        const Point2D pos_in_tiles = {std::floor(game_loop._main_dude->get_x_pos_center()), std::floor(game_loop._main_dude->get_y_pos_center())};
+        const Point2D pos_in_tiles = {std::floor(game_loop._main_dude->get_x_pos_center()),
+                                      std::floor(game_loop._main_dude->get_y_pos_center())};
         if (pos_in_tiles == PLAY_COORDS)
         {
             return &game_loop._states.playing;

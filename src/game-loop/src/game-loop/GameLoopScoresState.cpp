@@ -1,4 +1,3 @@
-#include <GameLoop.hpp>
 #include "logger/log.h"
 #include "ModelViewCamera.hpp"
 #include "Renderer.hpp"
