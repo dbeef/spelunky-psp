@@ -15,6 +15,10 @@ public:
             _value = value;
             _changed = true;
         }
+        else
+        {
+            _changed = false;
+        }
 
         return _changed;
     }
@@ -26,6 +30,10 @@ public:
     bool changed() const { return _changed; };
 
 private:
+
+    friend class Input;
+    void reset_changed() { _changed = false; }
+
     bool _value = false;
     bool _changed = false;
 };

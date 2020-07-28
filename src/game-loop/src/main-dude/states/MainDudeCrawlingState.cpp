@@ -39,30 +39,30 @@ MainDudeBaseState* MainDudeCrawlingState::update(MainDude& main_dude, uint32_t d
 
 MainDudeBaseState *MainDudeCrawlingState::handle_input(MainDude& main_dude, const Input &input)
 {
-    if (input.left())
+    if (input.left().value())
     {
         main_dude._physics.add_velocity(-MainDude::CRAWLING_DELTA_X, 0.0f);
     }
-    if (input.right())
+    if (input.right().value())
     {
         main_dude._physics.add_velocity(MainDude::CRAWLING_DELTA_X, 0.0f);
     }
-    if (input.jumping())
+    if (input.jumping().changed() && input.jumping().value())
     {
         main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;
     }
-    if (!input.ducking())
+    if (!input.ducking().value())
     {
         return &main_dude._states.running;
     }
 
-    if (input.throwing())
+    if (input.throwing().changed() && input.throwing().value())
     {
         return &main_dude._states.throwing;
     }
 
-    if (input.up())
+    if (input.up().value())
     {
         const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
         if (exit_tile)

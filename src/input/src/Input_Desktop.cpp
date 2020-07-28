@@ -20,6 +20,20 @@ const char* Input::get_quit_request_binding_msg()
 
 void Input::poll()
 {
+    // As this input implementation relies on key events, to not end up with 'changed' being true until
+    // the next event, reset the property on every input poll:
+    _toggles.paused.reset_changed();
+    _toggles.death_requested.reset_changed();
+    _toggles.quit_requested.reset_changed();
+    _toggles.left.reset_changed();
+    _toggles.right.reset_changed();
+    _toggles.up.reset_changed();
+    _toggles.down.reset_changed();
+    _toggles.jumping.reset_changed();
+    _toggles.ducking.reset_changed();
+    _toggles.running_fast.reset_changed();
+    _toggles.throwing.reset_changed();
+
     SDL_Event event{};
 
     while (SDL_PollEvent(&event))
@@ -31,47 +45,47 @@ void Input::poll()
 
             if (key == SDLK_LEFT)
             {
-                _left = v;
+                _toggles.left.feed(v);
             }
             else if (key == SDLK_RIGHT)
             {
-                _right = v;
+                _toggles.right.feed(v);
             }
             else if (key == SDLK_UP)
             {
-                _up = v;
+                _toggles.up.feed(v);
             }
             else if (key == SDLK_DOWN)
             {
-                _down = v;
+                _toggles.down.feed(v);
             }
             else if (key == SDLK_d)
             {
-                _jumping = v;
+                _toggles.jumping.feed(v);
             }
             else if (key == SDLK_s)
             {
-                _ducking = v;
+                _toggles.ducking.feed(v);
             }
             else if (key == SDLK_LSHIFT)
             {
-                _running_fast = v;
+                _toggles.running_fast.feed(v);
             }
             else if (key == SDLK_q)
             {
-                _throwing = v;
+                _toggles.throwing.feed(v);
             }
             else if (key == SDLK_ESCAPE)
             {
-                _paused = v;
+                _toggles.paused.feed(v);
             }
             else if (key == SDLK_F1)
             {
-                _death_requested = v;
+                _toggles.death_requested.feed(v);
             }
             else if (key == SDLK_F10)
             {
-                _quit_requested = v;
+                _toggles.quit_requested.feed(v);
             }
         }
     }
