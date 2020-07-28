@@ -23,6 +23,20 @@ MainDudeBaseState *MainDudeCliffHangingState::handle_input(MainDude& main_dude, 
 {
     if (input.jumping())
     {
+        // In the original game, when jumped from a cliff, main dude was moved one pixel opposite of the faced side.
+        // I assume this is to not have a collision and enter cliff-hanging-state immediately after exiting it,
+        // as it actually helps Spelunky-PSP's implementation this way.
+
+        float offset = 1.0f / 16.0f;
+
+        if (main_dude._other.facing_left)
+        {
+            main_dude._physics.add_position(offset, 0.0f);
+        } else
+        {
+            main_dude._physics.add_position(-offset, 0.0f);
+        }
+
         main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
         main_dude._physics.enable_gravity();
         return &main_dude._states.jumping;
