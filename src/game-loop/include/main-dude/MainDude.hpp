@@ -52,6 +52,10 @@ private:
     void handle_input(const Input& input);
     MapTile* is_overlaping_tile(MapTileType) const;
 
+    // Returns true on successful request.
+    bool hang_off_cliff_left();
+    bool hang_off_cliff_right();
+
     friend class PhysicsComponent;
     friend class AnimationComponent;
     PhysicsComponent _physics;

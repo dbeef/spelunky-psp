@@ -1,6 +1,6 @@
-#include <main-dude/MainDude.hpp>
 #include <cmath>
-#include <logger/log.h>
+
+#include "logger/log.h"
 #include "LevelGenerator.hpp"
 #include "Collisions.hpp"
 #include "main-dude/MainDude.hpp"
@@ -108,4 +108,64 @@ void MainDude::enter_level_summary_state()
 {
     _states.current = &_states.level_summary;
     _states.current->enter(*this);
+}
+
+bool MainDude::hang_off_cliff_right()
+{
+    if (_physics.is_right_collision())
+    {
+        MapTile *neighbours[9] = {nullptr};
+
+        collisions::get_neighbouring_tiles(
+                LevelGenerator::instance().getLevel(),
+                get_x_pos_center(),
+                get_y_pos_center(),
+                neighbours);
+
+        auto* right_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::CENTER)];
+        auto* right_upper_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::UP_MIDDLE)];
+
+        if (right_tile && right_tile->exists && right_tile->collidable &&
+            (!right_upper_tile || !right_upper_tile->exists || !right_upper_tile->collidable) &&
+                (get_y_pos_center() >= right_tile->y + 0.25f)
+            )
+        {
+            _physics.set_position(
+                    right_tile->x - (_physics.get_width() / 2.0f),
+                    right_tile->y + 0.5f);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool MainDude::hang_off_cliff_left()
+{
+    if (_physics.is_left_collision())
+    {
+        MapTile *neighbours[9] = {nullptr};
+      
+        collisions::get_neighbouring_tiles(
+                LevelGenerator::instance().getLevel(),
+                get_x_pos_center(),
+                get_y_pos_center(),
+                neighbours);
+      
+        auto* left_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::LEFT_MIDDLE)];
+        auto* left_upper_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::LEFT_UP)];
+      
+        if (left_tile && left_tile->exists && left_tile->collidable &&
+            (!left_upper_tile || !left_upper_tile->exists || !left_upper_tile->collidable) &&
+                (get_y_pos_center() >= left_tile->y + 0.25f)
+            )
+        {
+            _physics.set_position(
+                    left_tile->x + 1.0f + (_physics.get_width() / 2.0f),
+                    left_tile->y + 0.5f);
+            return true;
+        }
+    }
+
+    return false;
 }
