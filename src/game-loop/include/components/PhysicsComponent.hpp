@@ -20,6 +20,7 @@ public:
 
     void set_velocity(float x, float y) { _velocity.x = x; _velocity.y = y; }
     void add_velocity(float x, float y) { _velocity.x += x; _velocity.y += y; }
+    void add_position(float x, float y) { _position.x += x; _position.y += y; }
     float get_x_velocity() const { return _velocity.x; }
     float get_y_velocity() const { return _velocity.y; }
     void set_max_x_velocity(float x) { _velocity.max_x = x;}
