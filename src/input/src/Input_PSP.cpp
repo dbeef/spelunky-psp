@@ -31,16 +31,15 @@ void Input::poll()
     SceCtrlData pad{};
     sceCtrlReadBufferPositive(&pad, 1);
 
-    _up = pad.Buttons & PSP_CTRL_UP;
-    _down = pad.Buttons & PSP_CTRL_DOWN;
-    _left = pad.Buttons & PSP_CTRL_LEFT;
-    _right = pad.Buttons & PSP_CTRL_RIGHT;
-
-    _jumping = pad.Buttons & PSP_CTRL_CROSS;
-    _ducking = pad.Buttons & PSP_CTRL_CIRCLE;
-    _death_requested = pad.Buttons & PSP_CTRL_LTRIGGER;
-    _quit_requested = pad.Buttons & PSP_CTRL_RTRIGGER;
-    _running_fast = pad.Buttons & PSP_CTRL_LTRIGGER;
-    _throwing = pad.Buttons & PSP_CTRL_RTRIGGER;
-    _paused = pad.Buttons & PSP_CTRL_SELECT;
+    _toggles.up.feed(pad.Buttons & PSP_CTRL_UP);
+    _toggles.down.feed(pad.Buttons & PSP_CTRL_DOWN);
+    _toggles.left.feed(pad.Buttons & PSP_CTRL_LEFT);
+    _toggles.right.feed(pad.Buttons & PSP_CTRL_RIGHT);
+    _toggles.jumping.feed(pad.Buttons & PSP_CTRL_CROSS);
+    _toggles.ducking.feed(pad.Buttons & PSP_CTRL_CIRCLE);
+    _toggles.death_requested.feed(pad.Buttons & PSP_CTRL_LTRIGGER);
+    _toggles.quit_requested.feed(pad.Buttons & PSP_CTRL_RTRIGGER);
+    _toggles.running_fast.feed(pad.Buttons & PSP_CTRL_LTRIGGER);
+    _toggles.throwing.feed(pad.Buttons & PSP_CTRL_RTRIGGER);
+    _toggles.paused.feed(pad.Buttons & PSP_CTRL_SELECT);
 }

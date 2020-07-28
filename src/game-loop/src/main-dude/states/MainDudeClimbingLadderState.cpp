@@ -45,7 +45,7 @@ MainDudeBaseState* MainDudeClimbingLadderState::update(MainDude& main_dude, uint
 
 MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude, const Input &input)
 {
-    if (input.jumping())
+    if (input.jumping().changed() && input.jumping().value())
     {
         main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
         main_dude._physics.enable_gravity();
@@ -57,11 +57,11 @@ MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude
 
     if (ladder_tile || ladder_deck_tile)
     {
-        if (input.up())
+        if (input.up().value())
         {
             main_dude._physics.set_velocity(0.0f, -0.025f);
         }
-        else if (input.down())
+        else if (input.down().value())
         {
             main_dude._physics.set_velocity(0.0f, 0.025f);
 

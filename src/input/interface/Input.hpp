@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Toggle.hpp"
+
 class Input
 {
 public:
@@ -14,37 +16,34 @@ public:
 
     void poll();
 
-    inline bool paused() const { return _paused; }
-    inline bool death_requested() const { return _death_requested; }
-    inline bool quit_requested() const { return _quit_requested; }
-
-    inline bool left() const { return _left; }
-    inline bool right() const { return _right; }
-    inline bool up() const { return _up; }
-    inline bool down() const { return _down; }
-
-    inline bool jumping() const { return _jumping; }
-    inline bool ducking() const { return _ducking; }
-
-    inline bool running_fast() const { return _running_fast; }
-    inline bool throwing() const { return _throwing; }
+    inline const Toggle& paused() const { return _toggles.paused; }
+    inline const Toggle& death_requested() const { return _toggles.death_requested; }
+    inline const Toggle& quit_requested() const { return _toggles.quit_requested; }
+    inline const Toggle& left() const { return _toggles.left; }
+    inline const Toggle& right() const { return _toggles.right; }
+    inline const Toggle& up() const { return _toggles.up; }
+    inline const Toggle& down() const { return _toggles.down; }
+    inline const Toggle& jumping() const { return _toggles.jumping; }
+    inline const Toggle& ducking() const { return _toggles.ducking; }
+    inline const Toggle& running_fast() const { return _toggles.running_fast; }
+    inline const Toggle& throwing() const { return _toggles.throwing; }
 
 private:
 
-    bool _paused = false;
-    bool _death_requested = false;
-    bool _quit_requested = false;
-
-    bool _left = false;
-    bool _right = false;
-    bool _up = false;
-    bool _down = false;
-
-    bool _jumping = false;
-    bool _ducking = false;
-
-    bool _running_fast = false;
-    bool _throwing = false;
+    struct
+    {
+        Toggle paused{false};
+        Toggle death_requested{false};
+        Toggle quit_requested{false};
+        Toggle left{false};
+        Toggle right{false};
+        Toggle up{false};
+        Toggle down{false};
+        Toggle jumping{false};
+        Toggle ducking{false};
+        Toggle running_fast{false};
+        Toggle throwing{false};
+    } _toggles;
 
     static Input* _input;
 };

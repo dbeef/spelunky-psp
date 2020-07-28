@@ -48,25 +48,25 @@ MainDudeBaseState *MainDudeRunningLookingUpState::update(MainDude& main_dude, ui
 
 MainDudeBaseState *MainDudeRunningLookingUpState::handle_input(MainDude& main_dude, const Input &input)
 {
-    if (input.left())
+    if (input.left().value())
     {
         main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
     }
-    if (input.right())
+    if (input.right().value())
     {
         main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
-    if (input.jumping())
+    if (input.jumping().changed() && input.jumping().value())
     {
         main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;
     }
-    if (input.ducking())
+    if (input.ducking().value())
     {
         return &main_dude._states.crawling;
     }
 
-    if (input.running_fast())
+    if (input.running_fast().value())
     {
         main_dude._physics.set_max_x_velocity(MainDude::MAX_RUNNING_VELOCITY_X);
         main_dude._animation.set_time_per_frame_ms(50);
@@ -77,12 +77,12 @@ MainDudeBaseState *MainDudeRunningLookingUpState::handle_input(MainDude& main_du
         main_dude._animation.set_time_per_frame_ms(75);
     }
 
-    if (input.throwing())
+    if (input.throwing().changed() && input.throwing().value())
     {
         return &main_dude._states.throwing;
     }
 
-    if (input.up())
+    if (input.up().value())
     {
         const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
         if (exit_tile)

@@ -3,6 +3,7 @@ project(Input)
 add_library(Input STATIC
         src/Input.cpp
         interface/Input.hpp
+        interface/Toggle.hpp
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,src/Input_PSP.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DESKTOP}>,src/Input_Desktop.cpp,>
 )

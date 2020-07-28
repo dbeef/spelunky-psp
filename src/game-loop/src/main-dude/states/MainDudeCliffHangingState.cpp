@@ -21,7 +21,7 @@ MainDudeBaseState* MainDudeCliffHangingState::update(MainDude& main_dude, uint32
 
 MainDudeBaseState *MainDudeCliffHangingState::handle_input(MainDude& main_dude, const Input &input)
 {
-    if (input.jumping())
+    if (input.jumping().changed() && input.jumping().value())
     {
         // In the original game, when jumped from a cliff, main dude was moved one pixel opposite of the faced side.
         // I assume this is to not have a collision and enter cliff-hanging-state immediately after exiting it,

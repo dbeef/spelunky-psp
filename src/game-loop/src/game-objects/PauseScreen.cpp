@@ -21,11 +21,9 @@ void PauseScreen::update(uint32_t delta_time_ms)
 {
     const auto& input = Input::instance();
 
-    if (_last_pause_check != input.paused())
+    if (input.paused().changed() && input.paused().value())
     {
-        _last_pause_check = input.paused();
-
-        if (!_paused && _last_pause_check)
+        if (!_paused)
         {
             // Just paused
             _paused = true;
@@ -61,7 +59,7 @@ void PauseScreen::update(uint32_t delta_time_ms)
                 _text_buffer->update_text(_text_entity_ids.controls, {text_center_x, text_center_y}, available_controls_cstr, std::strlen(available_controls_cstr));
             }
         }
-        else if (_paused && _last_pause_check)
+        else
         {
             // Just unpaused
             _paused = false;
@@ -72,11 +70,12 @@ void PauseScreen::update(uint32_t delta_time_ms)
             _text_entity_ids.controls = TextBuffer::INVALID_ENTITY;
         }
     }
-    else if (_paused)
+
+    if (_paused)
     {
         // Currently in pause
-        _quit_requested = input.quit_requested();
-        _death_requested = input.death_requested();
+        _quit_requested = input.quit_requested().value();
+        _death_requested = input.death_requested().value();
     }
 }
 
@@ -95,7 +94,6 @@ PauseScreen::~PauseScreen()
 void PauseScreen::unpause()
 {
     _paused = false;
-    _last_pause_check = false;
 }
 
 std::string PauseScreen::get_available_controls_msg() const

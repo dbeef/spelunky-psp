@@ -1,7 +1,3 @@
-#include <main-dude/MainDude.hpp>
-#include <Collisions.hpp>
-#include <LevelGenerator.hpp>
-#include <logger/log.h>
 #include "main-dude/states/MainDudeJumpingState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
@@ -40,7 +36,7 @@ MainDudeBaseState* MainDudeJumpingState::update(MainDude& main_dude, uint32_t de
 
 MainDudeBaseState *MainDudeJumpingState::handle_input(MainDude& main_dude, const Input &input)
 {
-    if (input.left())
+    if (input.left().value())
     {
         main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
         if (main_dude.hang_off_cliff_left())
@@ -48,7 +44,7 @@ MainDudeBaseState *MainDudeJumpingState::handle_input(MainDude& main_dude, const
             return &main_dude._states.cliff_hanging;
         }
     }
-    if (input.right())
+    if (input.right().value())
     {
         main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
         if (main_dude.hang_off_cliff_right())
@@ -57,7 +53,7 @@ MainDudeBaseState *MainDudeJumpingState::handle_input(MainDude& main_dude, const
         }
     }
 
-    if (input.running_fast())
+    if (input.running_fast().value())
     {
         main_dude._physics.set_max_x_velocity(MainDude::MAX_RUNNING_VELOCITY_X);
         main_dude._animation.set_time_per_frame_ms(50);
@@ -68,12 +64,12 @@ MainDudeBaseState *MainDudeJumpingState::handle_input(MainDude& main_dude, const
         main_dude._animation.set_time_per_frame_ms(75);
     }
 
-    if (input.throwing())
+    if (input.throwing().changed() && input.throwing().value())
     {
         return &main_dude._states.throwing;
     }
 
-    if (input.up())
+    if (input.up().value())
     {
         const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
         if (exit_tile)

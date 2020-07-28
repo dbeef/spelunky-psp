@@ -45,7 +45,6 @@ private:
         TextEntityID controls = TextBuffer::INVALID_ENTITY;
     } _text_entity_ids;
 
-    bool _last_pause_check = false;
     bool _paused = false;
     bool _quit_requested = false;
     bool _death_requested = false;

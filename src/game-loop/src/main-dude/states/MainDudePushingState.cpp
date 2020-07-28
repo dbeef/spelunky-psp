@@ -36,7 +36,7 @@ MainDudeBaseState* MainDudePushingState::update(MainDude& main_dude, uint32_t de
 
 MainDudeBaseState *MainDudePushingState::handle_input(MainDude& main_dude, const Input &input)
 {
-    if (input.left())
+    if (input.left().value())
     {
         main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
     }
@@ -45,7 +45,7 @@ MainDudeBaseState *MainDudePushingState::handle_input(MainDude& main_dude, const
         return &main_dude._states.running;
     }
 
-    if (input.right())
+    if (input.right().value())
     {
         main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
@@ -54,17 +54,18 @@ MainDudeBaseState *MainDudePushingState::handle_input(MainDude& main_dude, const
         return &main_dude._states.running;
     }
 
-    if (input.jumping())
+    if (input.jumping().changed() && input.jumping().value())
     {
         main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;
     }
-    if (input.ducking())
+
+    if (input.ducking().value())
     {
         return &main_dude._states.ducking;
     }
 
-    if (input.throwing())
+    if (input.throwing().changed() && input.throwing().value())
     {
         return &main_dude._states.throwing;
     }
