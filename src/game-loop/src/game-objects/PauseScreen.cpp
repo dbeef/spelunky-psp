@@ -1,7 +1,6 @@
 #include <cstring>
 #include <sstream>
 #include <cassert>
-#include <logger/log.h>
 
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
 #include "game-objects/PauseScreen.hpp"
