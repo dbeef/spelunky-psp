@@ -1,6 +1,6 @@
-project(LevelGenerator)
+project(Level)
 
-add_library(LevelGenerator STATIC
+add_library(Level STATIC
         src/Level.cpp
         src/MapTile.cpp
         src/TileBatch.cpp
@@ -9,21 +9,20 @@ add_library(LevelGenerator STATIC
         interface/MapTileType.hpp
         interface/SplashScreenType.hpp
         interface/TileOrientation.hpp
-        interface/Direction.hpp
         interface/TileBatch.hpp
         )
 
-target_include_directories(LevelGenerator
+target_include_directories(Level
         PRIVATE include interface
         INTERFACE interface
         )
 
-set_target_properties(LevelGenerator PROPERTIES
+set_target_properties(Level PROPERTIES
         CXX_STANDARD
         14
         )
 
-target_link_libraries(LevelGenerator
+target_link_libraries(Level
         PUBLIC
             Renderer
         PRIVATE
