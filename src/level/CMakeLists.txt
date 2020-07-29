@@ -18,7 +18,6 @@ add_library(Level STATIC
         include/LeftRightRooms.hpp
         include/LeftRightUpRooms.hpp
         include/ShopRooms.hpp
-        include/SnakeWellRoom.hpp
         include/SplashScreenRooms.hpp
         )
 
