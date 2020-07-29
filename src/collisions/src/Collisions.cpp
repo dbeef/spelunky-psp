@@ -12,7 +12,7 @@
 // Rendering dimensions are same as physical dimensions, in other words,
 // a quad made of 1x1 vertices will have a collision box of 1x1.
 
-void collisions::get_neighbouring_tiles(const Level &level, float x, float y, MapTile *out_neighboring_tiles[9])
+void collisions::get_neighbouring_tiles(const TileBatch &level, float x, float y, MapTile *out_neighboring_tiles[9])
 {
     const float width = 1.0f;
     const float height = 1.0f;

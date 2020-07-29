@@ -1,6 +1,6 @@
 #include "video/Context.hpp"
 #include "logger/log.h"
-#include "LevelGenerator.hpp"
+#include "Level.hpp"
 #include "Renderer.hpp"
 #include "Input.hpp"
 #include "GameLoop.hpp"
@@ -10,7 +10,7 @@
 
 void init_singletons()
 {
-    LevelGenerator::init();
+    Level::init();
     Renderer::init();
     TextureBank::init();
     Input::init();
@@ -18,7 +18,7 @@ void init_singletons()
 
 void dispose_singletons()
 {
-    LevelGenerator::dispose();
+    Level::dispose();
     TextureBank::dispose();
     Renderer::dispose();
 }

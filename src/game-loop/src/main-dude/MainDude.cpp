@@ -1,7 +1,7 @@
 #include <cmath>
 
 #include "logger/log.h"
-#include "LevelGenerator.hpp"
+#include "Level.hpp"
 #include "Collisions.hpp"
 #include "main-dude/MainDude.hpp"
 #include "MapTileType.hpp"
@@ -79,7 +79,7 @@ void MainDude::handle_input(const Input &input)
 MapTile* MainDude::is_overlaping_tile(MapTileType type) const
 {
     MapTile* neighbours[9] = {nullptr};
-    collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), _physics.get_x_position(), _physics.get_y_position(), neighbours);
+    collisions::get_neighbouring_tiles(Level::instance().get_tile_batch(), _physics.get_x_position(), _physics.get_y_position(), neighbours);
 
     for (const auto neighbour : neighbours)
     {
@@ -117,7 +117,7 @@ bool MainDude::hang_off_cliff_right()
         MapTile *neighbours[9] = {nullptr};
 
         collisions::get_neighbouring_tiles(
-                LevelGenerator::instance().getLevel(),
+                Level::instance().get_tile_batch(),
                 get_x_pos_center(),
                 get_y_pos_center(),
                 neighbours);
@@ -148,7 +148,7 @@ bool MainDude::hang_off_cliff_left()
         MapTile *neighbours[9] = {nullptr};
       
         collisions::get_neighbouring_tiles(
-                LevelGenerator::instance().getLevel(),
+                Level::instance().get_tile_batch(),
                 get_x_pos_center(),
                 get_y_pos_center(),
                 neighbours);

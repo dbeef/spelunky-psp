@@ -1,4 +1,4 @@
-#include "LevelGenerator.hpp"
+#include "Level.hpp"
 #include "main-dude/MainDude.hpp"
 #include "main-dude/states/MainDudeCliffHangingState.hpp"
 #include "Input.hpp"

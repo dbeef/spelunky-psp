@@ -5,7 +5,7 @@
 #include "Renderer.hpp"
 #include "GameLoopMainMenuState.hpp"
 #include "GameLoop.hpp"
-#include "LevelGenerator.hpp"
+#include "Level.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 #include "game-objects/MainLogo.hpp"
@@ -105,11 +105,11 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopMainMenuState");
 
-    LevelGenerator::instance().getLevel().clean_map_layout();
-    LevelGenerator::instance().getLevel().generate_frame();
-    LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU);
-    LevelGenerator::instance().getLevel().generate_cave_background();
-    LevelGenerator::instance().getLevel().batch_vertices();
+    Level::instance().get_tile_batch().clean_map_layout();
+    Level::instance().get_tile_batch().generate_frame();
+    Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU);
+    Level::instance().get_tile_batch().generate_cave_background();
+    Level::instance().get_tile_batch().batch_vertices();
 
     auto &model_view_camera = game_loop._cameras.model_view;
     model_view_camera.set_x_not_rounded(5.0f);

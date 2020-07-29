@@ -4,7 +4,7 @@
 #include "Renderer.hpp"
 #include "GameLoopLevelSummaryState.hpp"
 #include "GameLoop.hpp"
-#include "LevelGenerator.hpp"
+#include "Level.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 #include "game-objects/MainLogo.hpp"
@@ -70,11 +70,11 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopLevelSummaryState");
 
-    LevelGenerator::instance().getLevel().clean_map_layout();
-    LevelGenerator::instance().getLevel().generate_frame();
-    LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::LEVEL_SUMMARY);
-    LevelGenerator::instance().getLevel().generate_cave_background();
-    LevelGenerator::instance().getLevel().batch_vertices();
+    Level::instance().get_tile_batch().clean_map_layout();
+    Level::instance().get_tile_batch().generate_frame();
+    Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::LEVEL_SUMMARY);
+    Level::instance().get_tile_batch().generate_cave_background();
+    Level::instance().get_tile_batch().batch_vertices();
 
     auto &model_view_camera = game_loop._cameras.model_view;
     model_view_camera.set_x_not_rounded(5.0f);
@@ -84,7 +84,7 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     game_loop._game_objects.push_back(game_loop._main_dude);
 
     MapTile* entrance = nullptr;
-    LevelGenerator::instance().getLevel().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
+    Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
     assert(entrance);
     game_loop._main_dude->set_position_on_tile(entrance);
     game_loop._main_dude->enter_level_summary_state();

@@ -1,4 +1,4 @@
-#include "LevelGenerator.hpp"
+#include "Level.hpp"
 #include "main-dude/MainDude.hpp"
 #include "main-dude/states/MainDudeClimbingLadderState.hpp"
 #include "Input.hpp"
@@ -9,7 +9,7 @@ namespace
     {
         if (tile->y - 1 >= 0)
         {
-            auto* tile_above = LevelGenerator::instance().getLevel().map_tiles[tile->x][tile->y - 1];
+            auto* tile_above = Level::instance().get_tile_batch().map_tiles[tile->x][tile->y - 1];
             return tile_above->mapTileType != MapTileType::LADDER && tile_above->mapTileType != MapTileType::LADDER_DECK;
         }
         else

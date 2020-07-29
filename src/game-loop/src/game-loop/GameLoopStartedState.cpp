@@ -1,4 +1,4 @@
-#include "LevelGenerator.hpp"
+#include "Level.hpp"
 #include "logger/log.h"
 #include "GameLoopStartedState.hpp"
 #include "ModelViewCamera.hpp"
@@ -30,10 +30,10 @@ void GameLoopStartedState::enter(GameLoop& game_loop)
     TextureBank::instance().load_textures();
     TextureBank::instance().load_texture_regions();
 
-    LevelGenerator::instance().getLevel().clean_map_layout();
-    LevelGenerator::instance().getLevel().generate_cave_background();
-    LevelGenerator::instance().getLevel().batch_vertices();
-    LevelGenerator::instance().getLevel().add_render_entity();
+    Level::instance().get_tile_batch().clean_map_layout();
+    Level::instance().get_tile_batch().generate_cave_background();
+    Level::instance().get_tile_batch().batch_vertices();
+    Level::instance().get_tile_batch().add_render_entity();
 
     _game_initialized = true;
 }
