@@ -2,21 +2,20 @@
 // Created by xdbeef on 10.03.18.
 //
 
-#include <cmath>
 #include "MapTile.hpp"
 
-/**
- * Set tile properties, like:
- * -> byte
- * -> can it be collided with main dude and AI's
- * -> can it be destroyed (by a bomb for example)
- * based on the given MapTileType.
- */
-void MapTile::match_tile(MapTileType type) {
-    // minus one since tile type 'NOTHING' is at the first place
+void MapTile::match_tile(MapTileType type)
+{
     map_tile_type = type;
 
-    switch (type) {
+    switch (type)
+    {
+        default:
+            // Most of the tiles are destroyable and collidable,
+            // if it happens to be otherwise, set it in a specific switch-case.
+            destroyable = true;
+            collidable = true;
+            break;
         case MapTileType::LADDER:
             collidable = false;
             destroyable = false;
@@ -146,12 +145,6 @@ void MapTile::match_tile(MapTileType type) {
         case MapTileType::CAVE_BG_4:
             collidable = false;
             destroyable = false;
-            break;
-        default:
-            // most of the tiles are destroyable and collidable,
-            // if happens to be otherwise, set it in a specific switch-case
-            destroyable = true;
-            collidable = true;
             break;
     }
 }

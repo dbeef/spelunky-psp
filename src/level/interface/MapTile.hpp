@@ -18,6 +18,7 @@ struct MapTile
     bool exists;
     MapTileType map_tile_type;
 
+    // Sets tile's properties (i.e whether it is collidable or destroyable) to be of exact tile type.
     void match_tile(MapTileType type);
 };
 
