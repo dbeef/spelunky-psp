@@ -14,25 +14,20 @@
 
 namespace Consts
 {
-    const int ROOMS_WIDTH = 3;
-    const int ROOMS_HEIGHT = 3;
+    const int ROOMS_COUNT_WIDTH = 3;
+    const int ROOMS_COUNT_HEIGHT = 3;
 
-    const int SPLASH_SCREEN_WIDTH = 20;
-    const int SPLASH_SCREEN_HEIGHT = 12;
+    const int SPLASH_SCREEN_WIDTH_TILES = 20;
+    const int SPLASH_SCREEN_HEIGHT_TILES = 12;
 
-    const int ROOM_TILE_WIDTH_SPLASH_SCREEN = 20;
-    const int ROOM_TILE_HEIGHT_SPLASH_SCREEN = 12;
+    const int ROOM_WIDTH_TILES = 10;
+    const int ROOM_HEIGHT_TILES = 10;
 
-    const int ROOM_TILE_WIDTH_GAME = 10;
-    const int ROOM_TILE_HEIGHT_GAME = 10;
-
-    const int LEVEL_HEIGHT_TILES = 32;
-    const int LEVEL_WIDTH_TILES = 32;
-
-    const int LINE_WIDTH = 64;
-    const int OFFSET_X = 2; //Offset of 2 tiles, 8 px each
-    const int OFFSET_Y = 128; //Offset of 128 tiles, 8px  each (2 lines, 64 each)
+    const int LEVEL_HEIGHT_TILES = (ROOMS_COUNT_WIDTH * ROOM_WIDTH_TILES) + 1 + 1; // 1 tile margin around the map
+    const int LEVEL_WIDTH_TILES = (ROOMS_COUNT_HEIGHT * ROOM_HEIGHT_TILES) + 1 + 1; // 1 tile margin around the map
 }
+
+// TODO: Dimensions should be parametrized, consts should go upwards in the architectural scope.
 
 class TileBatch {
 
@@ -46,12 +41,12 @@ public:
     MapTile *map_tiles[Consts::LEVEL_WIDTH_TILES][Consts::LEVEL_HEIGHT_TILES]{};
 
     //holds information on what room type is at specific array index
-    RoomType layout[Consts::ROOMS_WIDTH][Consts::ROOMS_HEIGHT]{};
+    RoomType layout[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
 
     //holds information on specific variation of room type, that is given from 'layout' array
     //i.e, we have 6 possible 'closed' rooms declared in the closed_rooms.hpp,
     //so this array lets us know, that we have a 'closed' room number 3 (for example) at some place.
-    int layout_room_ids[Consts::ROOMS_WIDTH][Consts::ROOMS_HEIGHT]{};
+    int layout_room_ids[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
 
     //sets all tiles to !existing
     void clean_map_layout();
