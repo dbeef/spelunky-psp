@@ -20,10 +20,8 @@ void collisions::get_neighbouring_tiles(const TileBatch &level, float x, float y
     std::uint16_t x_tiles = std::floor(x + (width / 2));
     std::uint16_t y_tiles = std::floor(y + (height / 2));
 
-    if (x_tiles >= 32 || y_tiles >= 32)
-    {
-        return;
-    }
+    assert(x_tiles < Consts::LEVEL_WIDTH_TILES);
+    assert(y_tiles < Consts::LEVEL_HEIGHT_TILES);
 
     const auto& tiles = level.map_tiles;
 

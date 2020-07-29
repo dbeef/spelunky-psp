@@ -23,8 +23,8 @@ namespace Consts
     const int ROOM_WIDTH_TILES = 10;
     const int ROOM_HEIGHT_TILES = 10;
 
-    const int LEVEL_HEIGHT_TILES = (ROOMS_COUNT_WIDTH * ROOM_WIDTH_TILES) + 1 + 1; // 1 tile margin around the map
-    const int LEVEL_WIDTH_TILES = (ROOMS_COUNT_HEIGHT * ROOM_HEIGHT_TILES) + 1 + 1; // 1 tile margin around the map
+    const int LEVEL_HEIGHT_TILES = (ROOMS_COUNT_HEIGHT * ROOM_WIDTH_TILES) + 1 + 1; // 1 tile margin around the map
+    const int LEVEL_WIDTH_TILES = (ROOMS_COUNT_WIDTH * ROOM_HEIGHT_TILES) + 1 + 1; // 1 tile margin around the map
 }
 
 // TODO: Dimensions should be parametrized, consts should go upwards in the architectural scope.
