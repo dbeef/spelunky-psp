@@ -11,7 +11,7 @@
  * There's a division between lower-screen splash screen and upper-screen splash screen,
  * as they may be composed of different tiles.
  */
-enum SplashScreenType
+enum class SplashScreenType
 {
     LEVEL_SUMMARY,
     SCORES,

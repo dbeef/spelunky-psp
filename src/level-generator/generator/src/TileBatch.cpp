@@ -22,7 +22,6 @@
 #include "AltarRoom.hpp"
 #include "RoomType.hpp"
 #include "ShopRooms.hpp"
-#include "Direction.hpp"
 
 using namespace Consts;
 
@@ -35,6 +34,13 @@ namespace
         std::uniform_int_distribution<int> uniform_dist(1, 6);
         return uniform_dist(engine);
     }
+
+    enum Direction
+    {
+        LEFT,
+        RIGHT,
+        DOWN
+    };
 }
 
 /**
@@ -62,7 +68,7 @@ void TileBatch::generate_new_level_layout()
     for (auto &room_type : level.layout)
         for (RoomType &b : room_type)
             //not visited rooms are of CLOSED type by default
-            b = RoomType::R_CLOSED;
+            b = RoomType::CLOSED;
 
     //generate new seed for the random number generator
 //    srand(timerElapsed(1));
@@ -77,7 +83,7 @@ void TileBatch::generate_new_level_layout()
     bool exit_placed = false;
 
     //set the starting room as an entrance room
-    level.layout[curr_x][curr_y] = RoomType::R_ENTRANCE;
+    level.layout[curr_x][curr_y] = RoomType::ENTRANCE;
 
     //while we're on the very bottom floor or higher, do
     while (curr_y >= 0) {
@@ -99,9 +105,9 @@ void TileBatch::generate_new_level_layout()
                 if (curr_y == 0 && !exit_placed && get_random_number() % 2 == 0) {
                     //we're on the most bottom floor, we didn't plant an exit yet and we've guessed that's the place
                     exit_placed = true;
-                    level.layout[curr_x][curr_y] = RoomType::R_EXIT;
+                    level.layout[curr_x][curr_y] = RoomType::EXIT;
                 } else
-                    level.layout[curr_x][curr_y] = RoomType::R_LEFT_RIGHT;
+                    level.layout[curr_x][curr_y] = RoomType::LEFT_RIGHT;
 
                 if (get_random_number() % 3 == 2)
                     //random chance that we change our direction to go down in the next iteration
@@ -112,14 +118,14 @@ void TileBatch::generate_new_level_layout()
 
             if (curr_y > 0) {
 
-                level.layout[curr_x][curr_y] = RoomType::R_LEFT_RIGHT_DOWN;
+                level.layout[curr_x][curr_y] = RoomType::LEFT_RIGHT_DOWN;
                 curr_y--;
-                level.layout[curr_x][curr_y] = RoomType::R_LEFT_RIGHT_UP;
+                level.layout[curr_x][curr_y] = RoomType::LEFT_RIGHT_UP;
 
                 if (curr_y == 0 && !exit_placed && get_random_number() % 2 == 0) {
                     //if we're on the very bottom floor, no exit planted yet and a guess tells us so, place an exit
                     exit_placed = true;
-                    level.layout[curr_x][curr_y] = RoomType::R_EXIT;
+                    level.layout[curr_x][curr_y] = RoomType::EXIT;
                 }
 
                 obtain_new_direction(curr_x, direction);
@@ -128,7 +134,7 @@ void TileBatch::generate_new_level_layout()
                 if (!exit_placed)
                     //we're on the very bottom floor, didn't plant an exit yet and we're
                     //done with iterating through map, so plant an exit
-                    level.layout[curr_x][curr_y] = RoomType::R_EXIT;
+                    level.layout[curr_x][curr_y] = RoomType::EXIT;
 
                 break;
             }
@@ -145,8 +151,8 @@ void TileBatch::place_an_altar() {
     auto& level = Level::instance().get_tile_batch();
     for (int a = 0; a < ROOMS_X; a++) {
         for (int b = 0; b < ROOMS_Y; b++) {
-            if (level.layout[a][b] == RoomType::R_CLOSED) {
-                level.layout[a][b] = RoomType::R_ALTAR;
+            if (level.layout[a][b] == RoomType::CLOSED) {
+                level.layout[a][b] = RoomType::ALTAR;
                 return;
             }
         }
@@ -164,33 +170,33 @@ void TileBatch::place_a_shop() {
 
     for (int a = 0; a < ROOMS_X; a++) {
         for (int b = 0; b < ROOMS_Y; b++) {
-            if (level.layout[a][b] == RoomType::R_CLOSED) {
+            if (level.layout[a][b] == RoomType::CLOSED) {
                 if (a == 0) {
-                    if (level.layout[a + 1][b] != RoomType::R_CLOSED) {
+                    if (level.layout[a + 1][b] != RoomType::CLOSED) {
 //                        if (GameState::instance().robbed_or_killed_shopkeeper)
                         if (false)
-                            level.layout[a][b] = RoomType::R_SHOP_RIGHT_MUGSHOT;
+                            level.layout[a][b] = RoomType::SHOP_RIGHT_MUGSHOT;
                         else
-                            level.layout[a][b] = RoomType::R_SHOP_RIGHT;
+                            level.layout[a][b] = RoomType::SHOP_RIGHT;
                         return;
                     }
                 } else if (a == 2) {
-                    if (level.layout[a - 1][b] != RoomType::R_CLOSED) {
+                    if (level.layout[a - 1][b] != RoomType::CLOSED) {
 //                        if (GameState::instance().robbed_or_killed_shopkeeper)
                         if (false)
-                            level.layout[a][b] = RoomType::R_SHOP_LEFT_MUGSHOT;
+                            level.layout[a][b] = RoomType::SHOP_LEFT_MUGSHOT;
                         else
-                            level.layout[a][b] = RoomType::R_SHOP_LEFT;
+                            level.layout[a][b] = RoomType::SHOP_LEFT;
                         return;
                     }
                 } else if (a == 1) {
-                    if (level.layout[a - 1][b] != RoomType::R_CLOSED &&
-                        level.layout[a + 1][b] != RoomType::R_CLOSED) {
+                    if (level.layout[a - 1][b] != RoomType::CLOSED &&
+                        level.layout[a + 1][b] != RoomType::CLOSED) {
 
                         if (get_random_number() % 2 == 0)
-                            level.layout[a][b] = RoomType::R_SHOP_LEFT;
+                            level.layout[a][b] = RoomType::SHOP_LEFT;
                         else
-                            level.layout[a][b] = RoomType::R_SHOP_RIGHT;
+                            level.layout[a][b] = RoomType::SHOP_RIGHT;
 
                         return;
                     }
@@ -258,14 +264,14 @@ void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type
     int tab[SPLASH_SCREEN_HEIGHT][SPLASH_SCREEN_WIDTH];
     bool offset_on_upper_screen = false;
 
-    if (splash_type == LEVEL_SUMMARY || splash_type == SCORES || splash_type == MAIN_MENU) {
+    if (splash_type == SplashScreenType::LEVEL_SUMMARY || splash_type == SplashScreenType::SCORES || splash_type == SplashScreenType::MAIN_MENU) {
         offset_on_upper_screen = true;
 
-        if (splash_type == MAIN_MENU)
+        if (splash_type == SplashScreenType::MAIN_MENU)
             memcpy(tab, main_menu, sizeof(main_menu));
-        else if (splash_type == LEVEL_SUMMARY)
+        else if (splash_type == SplashScreenType::LEVEL_SUMMARY)
             memcpy(tab, level_summary, sizeof(level_summary));
-        else if (splash_type == SCORES)
+        else if (splash_type == SplashScreenType::SCORES)
             memcpy(tab, scores, sizeof(scores));
     }
 
@@ -318,43 +324,42 @@ void TileBatch::initialise_tiles_from_room_layout() {
 
             //basing on the room type, randomly select a variation of this room
             //and copy it to the temporary tab[10][10] array
-            int room_type = layout[room_x][room_y];
             r = get_random_number() % 6;
             layout_room_ids[room_x][room_y] = r; //-1 if completely disabling NPC's in this room
 
             //copying specific room variation
-            switch (room_type) {
-                case R_CLOSED:
+            switch (layout[room_x][room_y]) {
+                case RoomType::CLOSED:
                     memcpy(tab, closed_rooms[r], sizeof(closed_rooms[r]));
                     break;
-                case R_LEFT_RIGHT:
+                case RoomType::LEFT_RIGHT:
                     memcpy(tab, left_right_rooms[r], sizeof(left_right_rooms[r]));
                     break;
-                case R_LEFT_RIGHT_DOWN:
+                case RoomType::LEFT_RIGHT_DOWN:
                     memcpy(tab, left_right_down_rooms[r], sizeof(left_right_down_rooms[r]));
                     break;
-                case R_LEFT_RIGHT_UP:
+                case RoomType::LEFT_RIGHT_UP:
                     memcpy(tab, left_right_up_rooms[r], sizeof(left_right_up_rooms[r]));
                     break;
-                case R_ENTRANCE:
+                case RoomType::ENTRANCE:
                     memcpy(tab, entrance_room[r], sizeof(entrance_room[r]));
                     break;
-                case R_EXIT:
+                case RoomType::EXIT:
                     memcpy(tab, exit_room[r], sizeof(exit_room[r]));
                     break;
-                case R_SHOP_LEFT:
+                case RoomType::SHOP_LEFT:
                     memcpy(tab, shops[0], sizeof(shops[0]));
                     break;
-                case R_SHOP_RIGHT:
+                case RoomType::SHOP_RIGHT:
                     memcpy(tab, shops[1], sizeof(shops[1]));
                     break;
-                case R_SHOP_LEFT_MUGSHOT:
+                case RoomType::SHOP_LEFT_MUGSHOT:
                     memcpy(tab, shops_mugshots[0], sizeof(shops_mugshots[0]));
                     break;
-                case R_SHOP_RIGHT_MUGSHOT:
+                case RoomType::SHOP_RIGHT_MUGSHOT:
                     memcpy(tab, shops_mugshots[1], sizeof(shops_mugshots[1]));
                     break;
-                case R_ALTAR:
+                case RoomType::ALTAR:
                     memcpy(tab, altar_room[0], sizeof(altar_room[1]));
                     break;
                 default:

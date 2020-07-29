@@ -19,7 +19,7 @@
  *
  * Tile number 5 is the CENTER tile in this 9 element neighboring tiles array.
  */
-enum TileOrientation {
+enum class TileOrientation {
     LEFT_MIDDLE, //0
     RIGHT_MIDDLE,//1
     UP_MIDDLE,   //2

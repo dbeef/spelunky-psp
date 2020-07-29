@@ -6,7 +6,6 @@
 #define SPELUNKYDS_LEVELGENERATOR_H
 
 #include "MapTile.hpp"
-#include "Direction.hpp"
 #include "SplashScreenType.hpp"
 #include "RoomType.hpp"
 #include "RenderEntity.hpp"
