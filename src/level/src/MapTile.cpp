@@ -14,7 +14,7 @@
  */
 void MapTile::match_tile(MapTileType type) {
     // minus one since tile type 'NOTHING' is at the first place
-    mapTileType = type;
+    map_tile_type = type;
 
     switch (type) {
         case MapTileType::LADDER:

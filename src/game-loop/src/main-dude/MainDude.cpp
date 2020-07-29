@@ -83,7 +83,7 @@ MapTile* MainDude::is_overlaping_tile(MapTileType type) const
 
     for (const auto neighbour : neighbours)
     {
-        if (neighbour == nullptr || neighbour->mapTileType != type)
+        if (neighbour == nullptr || neighbour->map_tile_type != type)
         {
             continue;
         }

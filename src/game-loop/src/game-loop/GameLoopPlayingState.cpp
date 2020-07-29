@@ -27,7 +27,7 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     auto x = game_loop._main_dude->get_x_pos_center();
     auto y = game_loop._main_dude->get_y_pos_center();
     model_view_camera.adjust_to_bounding_box(x, y);
-    model_view_camera.adjust_to_level_boundaries(Consts::MAP_GAME_WIDTH_TILES, Consts::MAP_GAME_HEIGHT_TILES);
+    model_view_camera.adjust_to_level_boundaries(Consts::LEVEL_WIDTH_TILES, Consts::LEVEL_HEIGHT_TILES);
 
     // Remove render entities marked for disposal:
 

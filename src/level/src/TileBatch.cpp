@@ -47,7 +47,8 @@ namespace
  * Used in the process of placing rooms.
  * !\relates generate_new_rooms
  */
-void obtain_new_direction(int curr_x, Direction &direction) {
+void obtain_new_direction(int curr_x, Direction &direction)
+{
     if (curr_x == 0)
         //we're on the left side of the map, so go right
         direction = Direction::RIGHT;
@@ -59,10 +60,10 @@ void obtain_new_direction(int curr_x, Direction &direction) {
         direction = static_cast<Direction>(get_random_number() % 2); //left or right
 }
 
-void TileBatch::generate_new_level_layout() 
+void TileBatch::generate_new_level_layout()
 {
-    auto& level = Level::instance().get_tile_batch();
-    
+    auto &level = Level::instance().get_tile_batch();
+
     //clean current layout
     level.clean_map_layout();
     for (auto &room_type : level.layout)
@@ -75,7 +76,7 @@ void TileBatch::generate_new_level_layout()
 
     //set starting position to the random room in the most upper row
     int curr_x = get_random_number() % 3;
-    int curr_y = ROOMS_Y - 1;
+    int curr_y = ROOMS_HEIGHT - 1;
     //direction represents where the generator will go in the next loop iteration
     Direction direction;
     obtain_new_direction(curr_x, direction);
@@ -86,14 +87,18 @@ void TileBatch::generate_new_level_layout()
     level.layout[curr_x][curr_y] = RoomType::ENTRANCE;
 
     //while we're on the very bottom floor or higher, do
-    while (curr_y >= 0) {
+    while (curr_y >= 0)
+    {
 
-        if (direction == Direction::LEFT || direction == Direction::RIGHT) {
+        if (direction == Direction::LEFT || direction == Direction::RIGHT)
+        {
 
-            if ((direction == Direction::LEFT && curr_x == 0) || (direction == Direction::RIGHT && curr_x == 2)) {
+            if ((direction == Direction::LEFT && curr_x == 0) || (direction == Direction::RIGHT && curr_x == 2))
+            {
                 //our direction is to go left, but we're already on the left side of the map, so go down
                 direction = Direction::DOWN;
-            } else {
+            } else
+            {
 
                 if (direction == Direction::LEFT)
                     //our direction is to go left, and we're not on the left side of the map yet
@@ -102,7 +107,8 @@ void TileBatch::generate_new_level_layout()
                     //same, if right side
                     curr_x++;
 
-                if (curr_y == 0 && !exit_placed && get_random_number() % 2 == 0) {
+                if (curr_y == 0 && !exit_placed && get_random_number() % 2 == 0)
+                {
                     //we're on the most bottom floor, we didn't plant an exit yet and we've guessed that's the place
                     exit_placed = true;
                     level.layout[curr_x][curr_y] = RoomType::EXIT;
@@ -114,22 +120,26 @@ void TileBatch::generate_new_level_layout()
                     direction = Direction::DOWN;
             }
 
-        } else if (direction == Direction::DOWN) {
+        } else if (direction == Direction::DOWN)
+        {
 
-            if (curr_y > 0) {
+            if (curr_y > 0)
+            {
 
                 level.layout[curr_x][curr_y] = RoomType::LEFT_RIGHT_DOWN;
                 curr_y--;
                 level.layout[curr_x][curr_y] = RoomType::LEFT_RIGHT_UP;
 
-                if (curr_y == 0 && !exit_placed && get_random_number() % 2 == 0) {
+                if (curr_y == 0 && !exit_placed && get_random_number() % 2 == 0)
+                {
                     //if we're on the very bottom floor, no exit planted yet and a guess tells us so, place an exit
                     exit_placed = true;
                     level.layout[curr_x][curr_y] = RoomType::EXIT;
                 }
 
                 obtain_new_direction(curr_x, direction);
-            } else {
+            } else
+            {
 
                 if (!exit_placed)
                     //we're on the very bottom floor, didn't plant an exit yet and we're
@@ -147,57 +157,75 @@ void TileBatch::generate_new_level_layout()
     place_a_shop();
 }
 
-void TileBatch::place_an_altar() {
-    auto& level = Level::instance().get_tile_batch();
-    for (int a = 0; a < ROOMS_X; a++) {
-        for (int b = 0; b < ROOMS_Y; b++) {
-            if (level.layout[a][b] == RoomType::CLOSED) {
-                level.layout[a][b] = RoomType::ALTAR;
+void TileBatch::place_an_altar()
+{
+    auto &level = Level::instance().get_tile_batch();
+    for (int x = 0; x < ROOMS_WIDTH; x++)
+    {
+        for (int y = 0; y < ROOMS_HEIGHT; y++)
+        {
+            if (level.layout[x][y] == RoomType::CLOSED)
+            {
+                level.layout[x][y] = RoomType::ALTAR;
                 return;
             }
         }
     }
 }
 
+void TileBatch::place_a_shop()
+{
+    auto &level = Level::instance().get_tile_batch();
 
-/**
- * Finds a closed room that is not blocked from left or right side by other closed room,
- * and plants a shop there that is oriented to the not-blocked side.
- * !\relates generate_new_rooms
- */
-void TileBatch::place_a_shop() {
-    auto& level = Level::instance().get_tile_batch();
-
-    for (int a = 0; a < ROOMS_X; a++) {
-        for (int b = 0; b < ROOMS_Y; b++) {
-            if (level.layout[a][b] == RoomType::CLOSED) {
-                if (a == 0) {
-                    if (level.layout[a + 1][b] != RoomType::CLOSED) {
+    for (int x = 0; x < ROOMS_WIDTH; x++)
+    {
+        for (int y = 0; y < ROOMS_HEIGHT; y++)
+        {
+            if (level.layout[x][y] == RoomType::CLOSED)
+            {
+                if (x == 0)
+                {
+                    if (level.layout[x + 1][y] != RoomType::CLOSED)
+                    {
+//                        TODO: Uncomment once shopkeeper is implemented.
 //                        if (GameState::instance().robbed_or_killed_shopkeeper)
-                        if (false)
-                            level.layout[a][b] = RoomType::SHOP_RIGHT_MUGSHOT;
-                        else
-                            level.layout[a][b] = RoomType::SHOP_RIGHT;
+//                        if (false)
+//                            level.layout[a][b] = RoomType::SHOP_RIGHT_MUGSHOT;
+//                        else
+                        level.layout[x][y] = RoomType::SHOP_RIGHT;
                         return;
                     }
-                } else if (a == 2) {
-                    if (level.layout[a - 1][b] != RoomType::CLOSED) {
+                }
+                else if (x == 2)
+                {
+                    if (level.layout[x - 1][y] != RoomType::CLOSED)
+                    {
+//                        TODO: Uncomment once shopkeeper is implemented.
 //                        if (GameState::instance().robbed_or_killed_shopkeeper)
-                        if (false)
-                            level.layout[a][b] = RoomType::SHOP_LEFT_MUGSHOT;
-                        else
-                            level.layout[a][b] = RoomType::SHOP_LEFT;
+//                        if (false)
+//                            level.layout[a][b] = RoomType::SHOP_LEFT_MUGSHOT;
+//                        else
+
+                        // Placed a shop, can return.
+                        level.layout[x][y] = RoomType::SHOP_LEFT;
                         return;
                     }
-                } else if (a == 1) {
-                    if (level.layout[a - 1][b] != RoomType::CLOSED &&
-                        level.layout[a + 1][b] != RoomType::CLOSED) {
+                }
+                else if (x == 1)
+                {
+                    if (level.layout[x - 1][y] != RoomType::CLOSED &&
+                        level.layout[x + 1][y] != RoomType::CLOSED)
+                    {
 
                         if (get_random_number() % 2 == 0)
-                            level.layout[a][b] = RoomType::SHOP_LEFT;
-                        else
-                            level.layout[a][b] = RoomType::SHOP_RIGHT;
+                        {
+                            level.layout[x][y] = RoomType::SHOP_LEFT;
+                        } else
+                        {
+                            level.layout[x][y] = RoomType::SHOP_RIGHT;
+                        }
 
+                        // Placed a shop, can return.
                         return;
                     }
                 }
@@ -206,50 +234,46 @@ void TileBatch::place_a_shop() {
     }
 }
 
-void TileBatch::generate_frame() {
-
-    //upper row
-    for (int a = 0; a < MAP_GAME_HEIGHT_TILES; a++) {
-//        delete (map_tiles[a][0]);
-//        auto *t = new MapTile();
-        map_tiles[a][0]->match_tile(MapTileType::CAVE_REGULAR);
-        map_tiles[a][0]->destroyable = false; //make it non-destroyable explicitly
-        map_tiles[a][0]->x = a;
-        map_tiles[a][0]->y = 0;
-        map_tiles[a][0]->exists = true;
+void TileBatch::generate_frame()
+{
+    // Upper row
+    for (int x = 0; x < LEVEL_WIDTH_TILES; x++)
+    {
+        map_tiles[x][0]->match_tile(MapTileType::CAVE_REGULAR);
+        map_tiles[x][0]->destroyable = false;
+        map_tiles[x][0]->x = x;
+        map_tiles[x][0]->y = 0;
+        map_tiles[x][0]->exists = true;
     }
 
-    //bottom row
-    for (int a = 0; a < MAP_GAME_WIDTH_TILES; a++) {
-//        delete (map_tiles[31][a]);
-//        auto *t = new MapTile();
-        map_tiles[31][a]->match_tile(MapTileType::CAVE_REGULAR);
-        map_tiles[31][a]->destroyable = false; //make it non-destroyable explicitly
-        map_tiles[31][a]->x = 31;
-        map_tiles[31][a]->y = a;
-        map_tiles[31][a]->exists = true;
+    // Left row
+    for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
+    {
+        map_tiles[0][y]->match_tile(MapTileType::CAVE_REGULAR);
+        map_tiles[0][y]->destroyable = false;
+        map_tiles[0][y]->x = 0;
+        map_tiles[0][y]->y = y;
+        map_tiles[0][y]->exists = true;
     }
 
-    //right row
-    for (int a = 0; a < MAP_GAME_HEIGHT_TILES; a++) {
-//        delete (map_tiles[31][a]);
-//        auto *t = new MapTile();
-        map_tiles[a][31]->match_tile(MapTileType::CAVE_REGULAR);
-        map_tiles[a][31]->destroyable = false; //make it non-destroyable explicitly
-        map_tiles[a][31]->x = a;
-        map_tiles[a][31]->y = 31;
-        map_tiles[a][31]->exists = true;
+    // Bottom row
+    for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
+    {
+        map_tiles[LEVEL_WIDTH_TILES - 1][y]->match_tile(MapTileType::CAVE_REGULAR);
+        map_tiles[LEVEL_WIDTH_TILES - 1][y]->destroyable = false;
+        map_tiles[LEVEL_WIDTH_TILES - 1][y]->x = LEVEL_WIDTH_TILES - 1;
+        map_tiles[LEVEL_WIDTH_TILES - 1][y]->y = y;
+        map_tiles[LEVEL_WIDTH_TILES - 1][y]->exists = true;
     }
 
-    //left row
-    for (int a = 0; a < MAP_GAME_WIDTH_TILES; a++) {
-//        delete (map_tiles[0][a]);
-//        auto *t = new MapTile();
-        map_tiles[0][a]->match_tile(MapTileType::CAVE_REGULAR);
-        map_tiles[0][a]->destroyable = false; //make it non-destroyable explicitly
-        map_tiles[0][a]->x = 0;
-        map_tiles[0][a]->y = a;
-        map_tiles[0][a]->exists = true;
+    // Right row
+    for (int x = 0; x < LEVEL_WIDTH_TILES; x++)
+    {
+        map_tiles[x][LEVEL_HEIGHT_TILES - 1]->match_tile(MapTileType::CAVE_REGULAR);
+        map_tiles[x][LEVEL_HEIGHT_TILES - 1]->destroyable = false;
+        map_tiles[x][LEVEL_HEIGHT_TILES - 1]->x = x;
+        map_tiles[x][LEVEL_HEIGHT_TILES - 1]->y = LEVEL_HEIGHT_TILES - 1;
+        map_tiles[x][LEVEL_HEIGHT_TILES - 1]->exists = true;
     }
 }
 
@@ -259,12 +283,15 @@ void TileBatch::generate_frame() {
  * It utilizes given splash screen type, to know if any tile should be planted on the place it iterates,
  * and what MapTileType it should have.
  */
-void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type) {
+void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type)
+{
 
     int tab[SPLASH_SCREEN_HEIGHT][SPLASH_SCREEN_WIDTH];
     bool offset_on_upper_screen = false;
 
-    if (splash_type == SplashScreenType::LEVEL_SUMMARY || splash_type == SplashScreenType::SCORES || splash_type == SplashScreenType::MAIN_MENU) {
+    if (splash_type == SplashScreenType::LEVEL_SUMMARY || splash_type == SplashScreenType::SCORES ||
+        splash_type == SplashScreenType::MAIN_MENU)
+    {
         offset_on_upper_screen = true;
 
         if (splash_type == SplashScreenType::MAIN_MENU)
@@ -276,8 +303,10 @@ void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type
     }
 
     //Now we initialise every tile in the splash screen and give it a map_index, which describes its location
-    for (int tab_y = 0; tab_y < SPLASH_SCREEN_HEIGHT; tab_y++) {
-        for (int tab_x = 0; tab_x < SPLASH_SCREEN_WIDTH; tab_x++) {
+    for (int tab_y = 0; tab_y < SPLASH_SCREEN_HEIGHT; tab_y++)
+    {
+        for (int tab_x = 0; tab_x < SPLASH_SCREEN_WIDTH; tab_x++)
+        {
 
 //            if (tab[tab_y][tab_x] != 0) {
 
@@ -285,13 +314,13 @@ void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type
             int room_offset =
                     static_cast<int>(
                             2 * ROOM_TILE_HEIGHT_SPLASH_SCREEN *
-                            LINE_WIDTH * ((ROOMS_Y - offset_on_upper_screen) - 1) - 4 * OFFSET_Y);
+                            LINE_WIDTH * ((ROOMS_HEIGHT - offset_on_upper_screen) - 1) - 4 * OFFSET_Y);
             //pos x and y in pixels of the tile in the current room
             int pos_x = static_cast<int>((tab_x * 2) / 2);
             //NDS engine has different coordinate system than our room layout map,
             //so we invert the Y axis by ((ROOMS_Y - offset_on_upper_screen) - 1)
             int pos_y = static_cast<int>(
-                    tab_y + ROOM_TILE_HEIGHT_SPLASH_SCREEN * ((ROOMS_Y - offset_on_upper_screen) - 1) - 4);
+                    tab_y + ROOM_TILE_HEIGHT_SPLASH_SCREEN * ((ROOMS_HEIGHT - offset_on_upper_screen) - 1) - 4);
 
             map_tiles[pos_x][pos_y]->match_tile(static_cast<MapTileType>(tab[tab_y][tab_x]));
             room_offset + (tab_x * 2) + (LINE_WIDTH + (tab_y * LINE_WIDTH * 2)) + 1;
@@ -312,15 +341,17 @@ void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type
  * and what MapTileType it should have.
  */
 
-void TileBatch::initialise_tiles_from_room_layout() {
-
+void TileBatch::initialise_tiles_from_room_layout()
+{
     //a room, 10x10 tiles
     int tab[10][10];
     int r;
 
     //iterate through every room we have
-    for (int room_y = ROOMS_Y - 1; room_y >= 0; room_y--) {
-        for (int room_x = 0; room_x < ROOMS_X; room_x++) {
+    for (int room_y = ROOMS_HEIGHT - 1; room_y >= 0; room_y--)
+    {
+        for (int room_x = 0; room_x < ROOMS_WIDTH; room_x++)
+        {
 
             //basing on the room type, randomly select a variation of this room
             //and copy it to the temporary tab[10][10] array
@@ -328,7 +359,8 @@ void TileBatch::initialise_tiles_from_room_layout() {
             layout_room_ids[room_x][room_y] = r; //-1 if completely disabling NPC's in this room
 
             //copying specific room variation
-            switch (layout[room_x][room_y]) {
+            switch (layout[room_x][room_y])
+            {
                 case RoomType::CLOSED:
                     memcpy(tab, closed_rooms[r], sizeof(closed_rooms[r]));
                     break;
@@ -367,8 +399,10 @@ void TileBatch::initialise_tiles_from_room_layout() {
             }
 
             //Now we initialise every tile in map and give it a map_index, which describes its location
-            for (int tab_y = 0; tab_y < ROOM_TILE_HEIGHT_GAME; tab_y++) {
-                for (int tab_x = 0; tab_x < ROOM_TILE_WIDTH_GAME; tab_x++) {
+            for (int tab_y = 0; tab_y < ROOM_TILE_HEIGHT_GAME; tab_y++)
+            {
+                for (int tab_x = 0; tab_x < ROOM_TILE_WIDTH_GAME; tab_x++)
+                {
 
 
                     //pos x and y in pixels of the tile in the current room
@@ -376,7 +410,7 @@ void TileBatch::initialise_tiles_from_room_layout() {
                     //NDS engine has different coordinate system than our room layout map,
                     //so we invert the Y axis by ((ROOMS_Y - room_y) - 1))
                     int pos_y = static_cast<int>(
-                            (OFFSET_X + tab_y * 2 + 2 * ROOM_TILE_HEIGHT_GAME * ((ROOMS_Y - room_y) - 1)) / 2);
+                            (OFFSET_X + tab_y * 2 + 2 * ROOM_TILE_HEIGHT_GAME * ((ROOMS_HEIGHT - room_y) - 1)) / 2);
 
                     map_tiles[pos_x][pos_y]->match_tile(static_cast<MapTileType>(tab[tab_y][tab_x]));
 
@@ -391,50 +425,53 @@ void TileBatch::initialise_tiles_from_room_layout() {
     }
 }
 
-/**
- * Sets given MapTile to the first tile on map that matches given MapTileType.
- * Searching begins on the upper-left corner of the map and goes right-down.
- * https://stackoverflow.com/questions/416162/assignment-inside-function-that-is-passed-as-pointer
- * @param mapTileType
- * @param m
- */
-void TileBatch::get_first_tile_of_given_type(MapTileType mapTileType, MapTile *&m) const {
-    for (int a = 0; a < MAP_GAME_WIDTH_TILES; a++) {
-        for (int b = 0; b < MAP_GAME_HEIGHT_TILES; b++) {
-            if (map_tiles[a][b]->exists && map_tiles[a][b]->mapTileType == mapTileType) {
-                m = map_tiles[a][b];
-                break;
+void TileBatch::get_first_tile_of_given_type(MapTileType map_tile_type, MapTile *&out) const
+{
+    for (int x = 0; x < LEVEL_WIDTH_TILES; x++)
+    {
+        for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
+        {
+            if (map_tiles[x][y]->exists && map_tiles[x][y]->map_tile_type == map_tile_type)
+            {
+                out = map_tiles[x][y];
+                return;
             }
         }
     }
 }
 
-void TileBatch::clean_map_layout() {
-    //clean current layout
+void TileBatch::clean_map_layout()
+{
     for (int x = 0; x < 32; x++)
-        for (int y = 0; y < 32; y++) {
+    {
+        for (int y = 0; y < 32; y++)
+        {
             map_tiles[x][y]->exists = false;
-            map_tiles[x][y]->destroyable = true; //tiles are destroyable by default
+            map_tiles[x][y]->destroyable = true;
         }
+    }
 }
 
 TileBatch::TileBatch()
 {
-    for (int a = 0; a < 32; a++)
-        for (int b = 0; b < 32; b++) {
-            map_tiles[a][b] = new MapTile();
-            map_tiles[a][b]->x = a;
-            map_tiles[a][b]->y = b;
+    for (int x = 0; x < 32; x++)
+    {
+        for (int y = 0; y < 32; y++)
+        {
+            map_tiles[x][y] = new MapTile();
+            map_tiles[x][y]->x = x;
+            map_tiles[x][y]->y = y;
         }
+    }
 }
 
 TileBatch::~TileBatch()
 {
-    for (int a = 0; a < 32; a++)
+    for (int x = 0; x < 32; x++)
     {
-        for (int b = 0; b < 32; b++)
+        for (int y = 0; y < 32; y++)
         {
-            delete map_tiles[a][b];
+            delete map_tiles[x][y];
         }
     }
 
@@ -452,9 +489,9 @@ void TileBatch::batch_vertices()
     std::size_t tile_counter = 0;
     // FIXME: Rewrite level generator for more sane convention of storing tiles.
     // iterating from left-lower corner of the room to the right-upper (spelunky-ds convention)
-    for (int x = 0; x < Consts::MAP_GAME_WIDTH_TILES; x++)
+    for (int x = 0; x < Consts::LEVEL_WIDTH_TILES; x++)
     {
-        for (int y = 0; y < Consts::MAP_GAME_HEIGHT_TILES; y++)
+        for (int y = 0; y < Consts::LEVEL_HEIGHT_TILES; y++)
         {
 
             MapTile *t = map_tiles[x][y];
@@ -463,7 +500,7 @@ void TileBatch::batch_vertices()
             assert(map_tiles[x][y]->x == x);
             assert(map_tiles[x][y]->y == y);
 
-            auto tile_type = static_cast<int>(t->mapTileType);
+            auto tile_type = static_cast<int>(t->map_tile_type);
             const auto &tile = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, tile_type);
 
             const auto mesh = tile.get_quad_vertices(x, y);
@@ -479,7 +516,7 @@ void TileBatch::batch_vertices()
 
 void TileBatch::add_render_entity()
 {
-    auto& renderer = Renderer::instance();
+    auto &renderer = Renderer::instance();
     _render_entity.vertices = _mesh.data();
     _render_entity.indices = _indices.data();
     _render_entity.indices_count = _indices.size();
@@ -495,7 +532,7 @@ void TileBatch::generate_cave_background()
     {
         for (int y = 0; y < 32; y++)
         {
-            if (map_tiles[x][y]->mapTileType == MapTileType::NOTHING)
+            if (map_tiles[x][y]->map_tile_type == MapTileType::NOTHING)
             {
                 if (x % 4)
                 {
@@ -506,7 +543,7 @@ void TileBatch::generate_cave_background()
                 type_index = type_index % 4;
 
                 const auto type = static_cast<MapTileType>(type_index + static_cast<int>(MapTileType::CAVE_BG_1));
-                map_tiles[x][y]->mapTileType = type;
+                map_tiles[x][y]->map_tile_type = type;
                 map_tiles[x][y]->match_tile(type);
             }
         }

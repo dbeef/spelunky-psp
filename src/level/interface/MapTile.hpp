@@ -7,21 +7,16 @@
 
 #include "MapTileType.hpp"
 
-class MapTile {
+struct MapTile
+{
+    MapTile() : x(0), y(0), collidable(false), destroyable(false), exists(false), map_tile_type(MapTileType::NOTHING) {}
 
-public:
-
-    MapTile() : x(0), y(0), collidable(false), destroyable(false), exists(false), mapTileType(MapTileType::NOTHING)
-    {
-
-    }
-
-    int x; // int tiles
+    int x; // in tiles
     int y; // in tiles
     bool collidable;
     bool destroyable;
     bool exists;
-    MapTileType mapTileType;
+    MapTileType map_tile_type;
 
     void match_tile(MapTileType type);
 };

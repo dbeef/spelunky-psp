@@ -10,7 +10,7 @@ namespace
         if (tile->y - 1 >= 0)
         {
             auto* tile_above = Level::instance().get_tile_batch().map_tiles[tile->x][tile->y - 1];
-            return tile_above->mapTileType != MapTileType::LADDER && tile_above->mapTileType != MapTileType::LADDER_DECK;
+            return tile_above->map_tile_type != MapTileType::LADDER && tile_above->map_tile_type != MapTileType::LADDER_DECK;
         }
         else
         {
