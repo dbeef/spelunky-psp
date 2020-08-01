@@ -13,4 +13,5 @@ enum class NeighbouringTiles : std::uint16_t
     RIGHT_UP = 6,
     LEFT_DOWN = 7,
     RIGHT_DOWN = 8,
+    _SIZE = 9
 };

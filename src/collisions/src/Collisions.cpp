@@ -1,4 +1,5 @@
 #include "Collisions.hpp"
+#include "NeighbouringTiles.hpp"
 
 #include <cstdint>
 #include <cmath>
@@ -14,33 +15,28 @@
 
 MapTile *collisions::overlaps_strict(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height, bool collidable)
 {
-    bool condition_x;
-    bool condition_y;
-
-    const float half_w = width / 2;
-    const float half_h = height / 2;
+    const float half_w = width / 2.0f;
+    const float half_h = height / 2.0f;
 
     const float tile_w = 1.0f;
     const float tile_h = 1.0f;
 
-    for (int a = 0; a < 9; a++) {
+    for (int i = 0; i < static_cast<int>(NeighbouringTiles::_SIZE); i++) {
 
-        if (neighboring_tiles[a] == nullptr)
+        if (neighboring_tiles[i] == nullptr)
         {
             continue;
         }
 
-        if (neighboring_tiles[a]->collidable != collidable)
+        if (neighboring_tiles[i]->collidable != collidable)
         {
             continue;
         }
 
-        condition_x = x_center + half_w >= neighboring_tiles[a]->x && x_center - half_w <= neighboring_tiles[a]->x + tile_w;
-        condition_y = y_center + half_h >= neighboring_tiles[a]->y && y_center - half_h <= neighboring_tiles[a]->y + tile_h;
-
-        if (condition_x && condition_y)
+        if (x_center + half_w >= neighboring_tiles[i]->x && x_center - half_w <= neighboring_tiles[i]->x + tile_w &&
+            y_center + half_h >= neighboring_tiles[i]->y && y_center - half_h <= neighboring_tiles[i]->y + tile_h)
         {
-            return neighboring_tiles[a];
+            return neighboring_tiles[i];
         }
     }
 
@@ -49,22 +45,22 @@ MapTile *collisions::overlaps_strict(MapTile **neighboring_tiles, float x_center
 
 MapTile *collisions::overlaps(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height, bool collidable)
 {
-    for (int a = 0; a < 9; a++)
+    for (int i = 0; i < static_cast<int>(NeighbouringTiles::_SIZE); i++)
     {
 
-        if (neighboring_tiles[a] == nullptr)
+        if (neighboring_tiles[i] == nullptr)
         {
             continue;
         }
 
-        if (neighboring_tiles[a]->collidable != collidable)
+        if (neighboring_tiles[i]->collidable != collidable)
         {
             continue;
         }
 
-        if (overlaps(neighboring_tiles[a], x_center, y_center, width, height))
+        if (overlaps(neighboring_tiles[i], x_center, y_center, width, height))
         {
-            return neighboring_tiles[a];
+            return neighboring_tiles[i];
         }
     }
 
@@ -73,17 +69,12 @@ MapTile *collisions::overlaps(MapTile **neighboring_tiles, float x_center, float
 
 bool collisions::overlaps(MapTile *tile, float x_center, float y_center, float width, float height)
 {
-    bool condition_x;
-    bool condition_y;
-
-    const float half_w = width / 2;
-    const float half_h = height / 2;
+    const float half_w = width / 2.0f;
+    const float half_h = height / 2.0f;
 
     const float tile_w = 1.0f;
     const float tile_h = 1.0f;
 
-    condition_x = x_center + half_w > tile->x && x_center - half_w < tile->x + tile_w;
-    condition_y = y_center + half_h > tile->y && y_center - half_h < tile->y + tile_h;
-
-    return condition_x && condition_y;
+    return x_center + half_w > tile->x && x_center - half_w < tile->x + tile_w &&
+           y_center + half_h > tile->y && y_center - half_h < tile->y + tile_h;
 }
