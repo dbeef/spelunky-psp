@@ -12,50 +12,6 @@
 // Rendering dimensions are same as physical dimensions, in other words,
 // a quad made of 1x1 vertices will have a collision box of 1x1.
 
-void collisions::get_neighbouring_tiles(const TileBatch &level, float x, float y, MapTile *out_neighboring_tiles[9])
-{
-    const float width = 1.0f;
-    const float height = 1.0f;
-
-    std::uint16_t x_tiles = std::floor(x + (width / 2));
-    std::uint16_t y_tiles = std::floor(y + (height / 2));
-
-    assert(x_tiles < Consts::LEVEL_WIDTH_TILES);
-    assert(y_tiles < Consts::LEVEL_HEIGHT_TILES);
-
-    const auto& tiles = level.map_tiles;
-
-    MapTile *left_middle = nullptr,
-            *right_middle = nullptr,
-            *up_middle = nullptr,
-            *down_middle = nullptr,
-            *center = nullptr,
-            *left_up = nullptr,
-            *right_up = nullptr,
-            *left_down = nullptr,
-            *right_down = nullptr;
-
-    left_middle = x_tiles - 1 >= 0 && tiles[x_tiles - 1][y_tiles]->exists ? tiles[x_tiles - 1][y_tiles] : nullptr;
-    right_middle = x_tiles + 1 <= 31 && tiles[x_tiles + 1][y_tiles]->exists ? tiles[x_tiles + 1][y_tiles] : nullptr;
-    up_middle = y_tiles - 1 >= 0 && tiles[x_tiles][y_tiles - 1]->exists ? tiles[x_tiles][y_tiles - 1] : nullptr;
-    down_middle = y_tiles + 1 <= 31 && tiles[x_tiles][y_tiles + 1]->exists ? tiles[x_tiles][y_tiles + 1] : nullptr;
-    center = tiles[x_tiles][y_tiles]->exists ? tiles[x_tiles][y_tiles] : nullptr;
-    left_up = x_tiles - 1 >= 0 && y_tiles - 1 >= 0 && tiles[x_tiles - 1][y_tiles - 1]->exists ? tiles[x_tiles - 1][y_tiles - 1] : nullptr;
-    right_up = x_tiles + 1 <= 31 && y_tiles - 1 >= 0 && tiles[x_tiles + 1][y_tiles - 1]->exists ? tiles[x_tiles + 1][y_tiles - 1] : nullptr;
-    left_down = x_tiles - 1 >= 0 && y_tiles + 1 <= 31 && tiles[x_tiles - 1][y_tiles + 1]->exists ? tiles[x_tiles - 1][y_tiles + 1] : nullptr;
-    right_down = x_tiles + 1 <= 31 && y_tiles + 1 <= 31 && tiles[x_tiles + 1][y_tiles + 1]->exists ? tiles[x_tiles + 1][y_tiles + 1] : nullptr;
-
-    out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::LEFT_MIDDLE)] = left_middle;
-    out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::RIGHT_MIDDLE)] = right_middle;
-    out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::UP_MIDDLE)] = up_middle;
-    out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::DOWN_MIDDLE)] = down_middle;
-    out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::CENTER)] = center;
-    out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::LEFT_UP)] = left_up;
-    out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::RIGHT_UP)] = right_up;
-    out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::LEFT_DOWN)] = left_down;
-    out_neighboring_tiles[static_cast<uint16_t>(NeighbouringTiles::RIGHT_DOWN)] = right_down;
-}
-
 MapTile *collisions::overlaps_strict(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height, bool collidable)
 {
     bool condition_x;

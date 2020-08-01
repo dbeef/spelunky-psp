@@ -1,5 +1,6 @@
 #include <cmath>
 
+#include "NeighbouringTiles.hpp"
 #include "logger/log.h"
 #include "Level.hpp"
 #include "Collisions.hpp"
@@ -79,7 +80,7 @@ void MainDude::handle_input(const Input &input)
 MapTile* MainDude::is_overlaping_tile(MapTileType type) const
 {
     MapTile* neighbours[9] = {nullptr};
-    collisions::get_neighbouring_tiles(Level::instance().get_tile_batch(), _physics.get_x_position(), _physics.get_y_position(), neighbours);
+    Level::instance().get_tile_batch().get_neighbouring_tiles(_physics.get_x_position(), _physics.get_y_position(), neighbours);
 
     for (const auto neighbour : neighbours)
     {
@@ -116,14 +117,13 @@ bool MainDude::hang_off_cliff_right()
     {
         MapTile *neighbours[9] = {nullptr};
 
-        collisions::get_neighbouring_tiles(
-                Level::instance().get_tile_batch(),
+        Level::instance().get_tile_batch().get_neighbouring_tiles(
                 get_x_pos_center(),
                 get_y_pos_center(),
                 neighbours);
 
-        auto* right_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::CENTER)];
-        auto* right_upper_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::UP_MIDDLE)];
+        auto* right_tile = neighbours[static_cast<int>(NeighbouringTiles::CENTER)];
+        auto* right_upper_tile = neighbours[static_cast<int>(NeighbouringTiles::UP_MIDDLE)];
 
         if (right_tile && right_tile->exists && right_tile->collidable &&
             (!right_upper_tile || !right_upper_tile->exists || !right_upper_tile->collidable) &&
@@ -146,15 +146,14 @@ bool MainDude::hang_off_cliff_left()
     if (_physics.is_left_collision())
     {
         MapTile *neighbours[9] = {nullptr};
-      
-        collisions::get_neighbouring_tiles(
-                Level::instance().get_tile_batch(),
+
+        Level::instance().get_tile_batch().get_neighbouring_tiles(
                 get_x_pos_center(),
                 get_y_pos_center(),
                 neighbours);
       
-        auto* left_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::LEFT_MIDDLE)];
-        auto* left_upper_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::LEFT_UP)];
+        auto* left_tile = neighbours[static_cast<int>(NeighbouringTiles::LEFT_MIDDLE)];
+        auto* left_upper_tile = neighbours[static_cast<int>(NeighbouringTiles::LEFT_UP)];
       
         if (left_tile && left_tile->exists && left_tile->collidable &&
             (!left_upper_tile || !left_upper_tile->exists || !left_upper_tile->collidable) &&

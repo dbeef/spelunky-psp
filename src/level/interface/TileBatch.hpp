@@ -67,6 +67,8 @@ public:
 
     void add_render_entity();
 
+    void get_neighbouring_tiles(float x, float y, MapTile *out_neighboring_tiles[9]) const;
+
 private:
 
     // Any encountered closed room will be turned into an altar.

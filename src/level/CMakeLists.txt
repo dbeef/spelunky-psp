@@ -8,6 +8,7 @@ add_library(Level STATIC
         interface/MapTile.hpp
         interface/MapTileType.hpp
         interface/SplashScreenType.hpp
+        interface/NeighbouringTiles.hpp
         interface/TileBatch.hpp
         include/AltarRoom.hpp
         include/ClosedRooms.hpp

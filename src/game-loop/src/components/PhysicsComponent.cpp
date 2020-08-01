@@ -75,7 +75,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
         if (!initial_check_done)
         {
             MapTile *neighbours[9] = {nullptr};
-            collisions::get_neighbouring_tiles(Level::instance().get_tile_batch(), _position.x, _position.y, neighbours);
+            Level::instance().get_tile_batch().get_neighbouring_tiles(_position.x, _position.y, neighbours);
             const auto *overlapping_tile = collisions::overlaps_strict(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
             if (overlapping_tile)
             {
@@ -129,7 +129,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 // Step on X axis
 
                 _position.x += copysign(smallest_position_step, temp_velocity_x);
-                collisions::get_neighbouring_tiles(Level::instance().get_tile_batch(), _position.x, _position.y, neighbours);
+                Level::instance().get_tile_batch().get_neighbouring_tiles(_position.x, _position.y, neighbours);
                 const auto* overlapping_tile = collisions::overlaps(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
                 if (overlapping_tile)
                 {
@@ -161,7 +161,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 // Step on Y axis
 
                 _position.y += copysign(smallest_position_step, temp_velocity_y);
-                collisions::get_neighbouring_tiles(Level::instance().get_tile_batch(), _position.x,  _position.y, neighbours);
+                Level::instance().get_tile_batch().get_neighbouring_tiles(_position.x,  _position.y, neighbours);
                 const auto* overlapping_tile = collisions::overlaps(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
                 if (overlapping_tile)
                 {
@@ -207,4 +207,3 @@ PhysicsComponent::PhysicsComponent(float width, float height) : _dimensions{widt
 {
 
 }
-
