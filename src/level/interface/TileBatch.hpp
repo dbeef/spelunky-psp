@@ -27,8 +27,6 @@ namespace Consts
     const int LEVEL_WIDTH_TILES = (ROOMS_COUNT_WIDTH * ROOM_HEIGHT_TILES) + 1 + 1; // 1 tile margin around the map
 }
 
-// TODO: Dimensions should be parametrized, consts should go upwards in the architectural scope.
-
 class TileBatch {
 
 public:
