@@ -280,15 +280,14 @@ void TileBatch::generate_frame()
  */
 void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type)
 {
-
-    int tab[SPLASH_SCREEN_HEIGHT_TILES][SPLASH_SCREEN_WIDTH_TILES];
+    int temp[SPLASH_SCREEN_HEIGHT_TILES][SPLASH_SCREEN_WIDTH_TILES];
 
     switch(splash_type)
     {
-        case SplashScreenType::LEVEL_SUMMARY: memcpy(tab, level_summary, sizeof(level_summary)); break;
-        case SplashScreenType::SCORES: memcpy(tab, scores, sizeof(scores)); break;
-        case SplashScreenType::MAIN_MENU: memcpy(tab, main_menu, sizeof(main_menu)); break;
-        default: assert(false);
+        case SplashScreenType::LEVEL_SUMMARY: memcpy(temp, level_summary, sizeof(level_summary)); break;
+        case SplashScreenType::SCORES: memcpy(temp, scores, sizeof(scores)); break;
+        case SplashScreenType::MAIN_MENU: memcpy(temp, main_menu, sizeof(main_menu)); break;
+        default: assert(false); break;
     }
 
     // Now copy the specific splash screen 2D layout into the tile batch:
@@ -296,7 +295,7 @@ void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type
     {
         for (int tab_x = 0; tab_x < SPLASH_SCREEN_WIDTH_TILES; tab_x++)
         {
-            map_tiles[tab_x][tab_y]->match_tile(static_cast<MapTileType>(tab[tab_y][tab_x]));
+            map_tiles[tab_x][tab_y]->match_tile(static_cast<MapTileType>(temp[tab_y][tab_x]));
             map_tiles[tab_x][tab_y]->x = tab_x;
             map_tiles[tab_x][tab_y]->y = tab_y;
         }
@@ -312,76 +311,83 @@ void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type
 
 void TileBatch::initialise_tiles_from_room_layout()
 {
-    int tab[ROOM_WIDTH_TILES][ROOM_HEIGHT_TILES];
-    int r;
+    int temp[ROOM_WIDTH_TILES][ROOM_HEIGHT_TILES];
 
-    //iterate through every room we have
+    // Iterate through every room there is:
     for (int room_y = ROOMS_COUNT_HEIGHT - 1; room_y >= 0; room_y--)
     {
         for (int room_x = 0; room_x < ROOMS_COUNT_WIDTH; room_x++)
         {
-
-            //basing on the room type, randomly select a variation of this room
-            //and copy it to the temporary tab[10][10] array
-            r = get_random_number() % 6;
-            layout_room_ids[room_x][room_y] = r; //-1 if completely disabling NPC's in this room
-
-            //copying specific room variation
             switch (layout[room_x][room_y])
             {
+                // Basing on the room type, randomly select a variation of this room
+                // and copy it to the temporary array:
                 case RoomType::CLOSED:
-                    memcpy(tab, closed_rooms[r], sizeof(closed_rooms[r]));
+                {
+                    const int possible_variations = std::extent<decltype(closed_rooms)>::value;
+                    const int room_index = get_random_number() % possible_variations;
+                    layout_room_ids[room_x][room_y] = room_index;
+                    memcpy(temp, closed_rooms[room_index], sizeof(closed_rooms[room_index]));
                     break;
+                }
                 case RoomType::LEFT_RIGHT:
-                    memcpy(tab, left_right_rooms[r], sizeof(left_right_rooms[r]));
+                {
+                    const int possible_variations = std::extent<decltype(left_right_rooms)>::value;
+                    const int room_index = get_random_number() % possible_variations;
+                    layout_room_ids[room_x][room_y] = room_index;
+                    memcpy(temp, left_right_rooms[room_index], sizeof(left_right_rooms[room_index]));
                     break;
+                }
                 case RoomType::LEFT_RIGHT_DOWN:
-                    memcpy(tab, left_right_down_rooms[r], sizeof(left_right_down_rooms[r]));
+                {
+                    const int possible_variations = std::extent<decltype(left_right_down_rooms)>::value;
+                    const int room_index = get_random_number() % possible_variations;
+                    layout_room_ids[room_x][room_y] = room_index;
+                    memcpy(temp, left_right_down_rooms[room_index], sizeof(left_right_down_rooms[room_index]));
                     break;
+                }
                 case RoomType::LEFT_RIGHT_UP:
-                    memcpy(tab, left_right_up_rooms[r], sizeof(left_right_up_rooms[r]));
+                {
+                    const int possible_variations = std::extent<decltype(left_right_up_rooms)>::value;
+                    const int room_index = get_random_number() % possible_variations;
+                    layout_room_ids[room_x][room_y] = room_index;
+                    memcpy(temp, left_right_up_rooms[room_index], sizeof(left_right_up_rooms[room_index]));
                     break;
+                }
                 case RoomType::ENTRANCE:
-                    memcpy(tab, entrance_room[r], sizeof(entrance_room[r]));
+                {
+                    const int possible_variations = std::extent<decltype(entrance_room)>::value;
+                    const int room_index = get_random_number() % possible_variations;
+                    layout_room_ids[room_x][room_y] = room_index;
+                    memcpy(temp, entrance_room[room_index], sizeof(entrance_room[room_index]));
                     break;
+                }
                 case RoomType::EXIT:
-                    memcpy(tab, exit_room[r], sizeof(exit_room[r]));
+                {
+                    const int possible_variations = std::extent<decltype(exit_room)>::value;
+                    const int room_index = get_random_number() % possible_variations;
+                    layout_room_ids[room_x][room_y] = room_index;
+                    memcpy(temp, exit_room[room_index], sizeof(exit_room[room_index]));
                     break;
-                case RoomType::SHOP_LEFT:
-                    memcpy(tab, shops[0], sizeof(shops[0]));
-                    break;
-                case RoomType::SHOP_RIGHT:
-                    memcpy(tab, shops[1], sizeof(shops[1]));
-                    break;
-                case RoomType::SHOP_LEFT_MUGSHOT:
-                    memcpy(tab, shops_mugshots[0], sizeof(shops_mugshots[0]));
-                    break;
-                case RoomType::SHOP_RIGHT_MUGSHOT:
-                    memcpy(tab, shops_mugshots[1], sizeof(shops_mugshots[1]));
-                    break;
-                case RoomType::ALTAR:
-                    memcpy(tab, altar_room[0], sizeof(altar_room[1]));
-                    break;
-                default:
-                    break;
+                }
+                // There are no room variations for the rooms below:
+                case RoomType::SHOP_LEFT: memcpy(temp, shops[0], sizeof(shops[0])); break;
+                case RoomType::SHOP_RIGHT: memcpy(temp, shops[1], sizeof(shops[1])); break;
+                case RoomType::SHOP_LEFT_MUGSHOT: memcpy(temp, shops_mugshots[0], sizeof(shops_mugshots[0])); break;
+                case RoomType::SHOP_RIGHT_MUGSHOT: memcpy(temp, shops_mugshots[1], sizeof(shops_mugshots[1])); break;
+                case RoomType::ALTAR: memcpy(temp, altar_room[0], sizeof(altar_room[1])); break;
+                default: assert(false); break;
             }
 
-            //Now we initialise every tile in map and give it a map_index, which describes its location
             for (int tab_y = 0; tab_y < ROOM_HEIGHT_TILES; tab_y++)
             {
                 for (int tab_x = 0; tab_x < ROOM_WIDTH_TILES; tab_x++)
                 {
-                    const int OFFSET_X = 2; //Offset of 2 tiles, 8 px each
+                    // Offset accounting for the undestroyable tiles around the map and XY distance for the specific room:
+                    int pos_x = static_cast<int>((2 + tab_x * 2 + 2 * ROOM_WIDTH_TILES * room_x) / 2);
+                    int pos_y = static_cast<int>((2 + tab_y * 2 + 2 * ROOM_HEIGHT_TILES * ((ROOMS_COUNT_HEIGHT - room_y) - 1)) / 2);
 
-                    //pos x and y in pixels of the tile in the current room
-                    int pos_x = static_cast<int>((OFFSET_X + tab_x * 2 + 2 * ROOM_WIDTH_TILES * room_x) / 2);
-                    //NDS engine has different coordinate system than our room layout map,
-                    //so we invert the Y axis by ((ROOMS_Y - room_y) - 1))
-                    int pos_y = static_cast<int>(
-                            (OFFSET_X + tab_y * 2 + 2 * ROOM_HEIGHT_TILES * ((ROOMS_COUNT_HEIGHT - room_y) - 1)) / 2);
-
-                    map_tiles[pos_x][pos_y]->match_tile(static_cast<MapTileType>(tab[tab_y][tab_x]));
-
+                    map_tiles[pos_x][pos_y]->match_tile(static_cast<MapTileType>(temp[tab_y][tab_x]));
                     map_tiles[pos_x][pos_y]->x = pos_x;
                     map_tiles[pos_x][pos_y]->y = pos_y;
                 }
