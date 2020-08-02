@@ -18,9 +18,9 @@
 
 namespace
 {
-    const Point2D PLAY_COORDS = {5, 17};
-    const Point2D SCORES_COORDS = {9, 17};
-    const Point2D TUTORIAL_COORDS = {1, 17};
+    const Point2D PLAY_COORDS = {5, 9};
+    const Point2D SCORES_COORDS = {9, 9};
+    const Point2D TUTORIAL_COORDS = {1, 9};
 }
 
 GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t delta_time_ms)
@@ -111,16 +111,17 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     Level::instance().get_tile_batch().generate_cave_background();
     Level::instance().get_tile_batch().batch_vertices();
 
+    // Splash screens are copied into the [0, 0] position (left-upper corner), center on them:
     auto &model_view_camera = game_loop._cameras.model_view;
-    model_view_camera.set_x_not_rounded(5.0f);
-    model_view_camera.set_y_not_rounded(7.0f);
+    model_view_camera.set_x_not_rounded(game_loop._viewport->get_width_world_units() / 4.0f);
+    model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
 
-    game_loop._game_objects.emplace_back(std::make_shared<MainLogo>(9.7f, 13.5f));
-    game_loop._game_objects.emplace_back(std::make_shared<StartSign>(5.5f, 17.0f));
-    game_loop._game_objects.emplace_back(std::make_shared<ScoresSign>(9.5f, 17.0f));
-    game_loop._game_objects.emplace_back(std::make_shared<TutorialSign>(1.0f, 16.5f));
-    game_loop._game_objects.emplace_back(std::make_shared<CopyrightsSign>(10.0f, 18.75f));
-    game_loop._game_objects.emplace_back(std::make_shared<QuitSign>(16.0f, 9.5f));
+    game_loop._game_objects.emplace_back(std::make_shared<MainLogo>(9.7f, 5.5f));
+    game_loop._game_objects.emplace_back(std::make_shared<StartSign>(5.5f, 9.0f));
+    game_loop._game_objects.emplace_back(std::make_shared<ScoresSign>(9.5f, 9.0f));
+    game_loop._game_objects.emplace_back(std::make_shared<TutorialSign>(1.0f, 8.5f));
+    game_loop._game_objects.emplace_back(std::make_shared<CopyrightsSign>(10.0f, 10.75f));
+    game_loop._game_objects.emplace_back(std::make_shared<QuitSign>(16.0f, 1.5f));
 
     game_loop._main_dude = std::make_shared<MainDude>(17.45f, 8.5f);
     game_loop._game_objects.push_back(game_loop._main_dude);

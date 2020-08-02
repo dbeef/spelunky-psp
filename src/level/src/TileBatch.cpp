@@ -282,41 +282,23 @@ void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type
 {
 
     int tab[SPLASH_SCREEN_HEIGHT_TILES][SPLASH_SCREEN_WIDTH_TILES];
-    bool offset_on_upper_screen = false;
 
-    if (splash_type == SplashScreenType::LEVEL_SUMMARY || splash_type == SplashScreenType::SCORES ||
-        splash_type == SplashScreenType::MAIN_MENU)
+    switch(splash_type)
     {
-        offset_on_upper_screen = true;
-
-        if (splash_type == SplashScreenType::MAIN_MENU)
-            memcpy(tab, main_menu, sizeof(main_menu));
-        else if (splash_type == SplashScreenType::LEVEL_SUMMARY)
-            memcpy(tab, level_summary, sizeof(level_summary));
-        else if (splash_type == SplashScreenType::SCORES)
-            memcpy(tab, scores, sizeof(scores));
+        case SplashScreenType::LEVEL_SUMMARY: memcpy(tab, level_summary, sizeof(level_summary)); break;
+        case SplashScreenType::SCORES: memcpy(tab, scores, sizeof(scores)); break;
+        case SplashScreenType::MAIN_MENU: memcpy(tab, main_menu, sizeof(main_menu)); break;
+        default: assert(false);
     }
 
-    //Now we initialise every tile in the splash screen and give it a map_index, which describes its location
+    // Now copy the specific splash screen 2D layout into the tile batch:
     for (int tab_y = 0; tab_y < SPLASH_SCREEN_HEIGHT_TILES; tab_y++)
     {
         for (int tab_x = 0; tab_x < SPLASH_SCREEN_WIDTH_TILES; tab_x++)
         {
-
-//            if (tab[tab_y][tab_x] != 0) {
-
-            //offset to the position in current room
-            //pos x and y in pixels of the tile in the current room
-            int pos_x = static_cast<int>((tab_x * 2) / 2);
-            //NDS engine has different coordinate system than our room layout map,
-            //so we invert the Y axis by ((ROOMS_Y - offset_on_upper_screen) - 1)
-            int pos_y = static_cast<int>(
-                    tab_y + SPLASH_SCREEN_HEIGHT_TILES * ((ROOMS_COUNT_HEIGHT - offset_on_upper_screen) - 1) - 4);
-
-            map_tiles[pos_x][pos_y]->match_tile(static_cast<MapTileType>(tab[tab_y][tab_x]));
-            map_tiles[pos_x][pos_y]->x = pos_x;
-            map_tiles[pos_x][pos_y]->y = pos_y;
-//            }
+            map_tiles[tab_x][tab_y]->match_tile(static_cast<MapTileType>(tab[tab_y][tab_x]));
+            map_tiles[tab_x][tab_y]->x = tab_x;
+            map_tiles[tab_x][tab_y]->y = tab_y;
         }
     }
 }

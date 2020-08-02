@@ -76,9 +76,10 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     Level::instance().get_tile_batch().generate_cave_background();
     Level::instance().get_tile_batch().batch_vertices();
 
+    // Splash screens are copied into the [0, 0] position (left-upper corner), center on them:
     auto &model_view_camera = game_loop._cameras.model_view;
-    model_view_camera.set_x_not_rounded(5.0f);
-    model_view_camera.set_y_not_rounded(7.0f);
+    model_view_camera.set_x_not_rounded(game_loop._viewport->get_width_world_units() / 4.0f);
+    model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
 
     game_loop._main_dude = std::make_shared<MainDude>(0, 0);
     game_loop._game_objects.push_back(game_loop._main_dude);
