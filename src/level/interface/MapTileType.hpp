@@ -5,7 +5,6 @@
 #pragma once
 
 #include <cstdint>
-#include <cassert>
 
 enum class MapTileType : std::uint32_t {
     NOTHING = 0,                    // 0 NON_COLLIDABLE

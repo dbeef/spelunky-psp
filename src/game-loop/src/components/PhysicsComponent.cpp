@@ -1,6 +1,6 @@
 #include "components/PhysicsComponent.hpp"
 #include "main-dude/MainDude.hpp"
-#include "LevelGenerator.hpp"
+#include "Level.hpp"
 #include "Collisions.hpp"
 
 // Using C-style <math.h> instead of <cmath> because of some symbols (namely std::copysign)
@@ -75,7 +75,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
         if (!initial_check_done)
         {
             MapTile *neighbours[9] = {nullptr};
-            collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), _position.x, _position.y, neighbours);
+            Level::instance().get_tile_batch().get_neighbouring_tiles(_position.x, _position.y, neighbours);
             const auto *overlapping_tile = collisions::overlaps_strict(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
             if (overlapping_tile)
             {
@@ -129,7 +129,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 // Step on X axis
 
                 _position.x += copysign(smallest_position_step, temp_velocity_x);
-                collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), _position.x, _position.y, neighbours);
+                Level::instance().get_tile_batch().get_neighbouring_tiles(_position.x, _position.y, neighbours);
                 const auto* overlapping_tile = collisions::overlaps(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
                 if (overlapping_tile)
                 {
@@ -137,7 +137,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                     if (_velocity.x < 0.0f)
                     {
                         _collisions.left = true;
-                        _position.x = overlapping_tile->x + 1.0f + (get_width() / 2.0f);
+                        _position.x = overlapping_tile->x + MapTile::PHYSICAL_WIDTH + (get_width() / 2.0f);
                     }
                     else
                     {
@@ -161,7 +161,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 // Step on Y axis
 
                 _position.y += copysign(smallest_position_step, temp_velocity_y);
-                collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), _position.x,  _position.y, neighbours);
+                Level::instance().get_tile_batch().get_neighbouring_tiles(_position.x,  _position.y, neighbours);
                 const auto* overlapping_tile = collisions::overlaps(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
                 if (overlapping_tile)
                 {
@@ -170,12 +170,12 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                     if (_velocity.y < 0.0f)
                     {
                         _collisions.upper = true;
-                        _position.y = overlapping_tile->y + 1.0f + (get_height() / 2);
+                        _position.y = overlapping_tile->y + MapTile::PHYSICAL_HEIGHT + (get_height() / 2);
                     }
                     else
                     {
                         _collisions.bottom = true;
-                        _position.y = overlapping_tile->y - 1.0f + (get_height() / 2);
+                        _position.y = overlapping_tile->y - MapTile::PHYSICAL_HEIGHT + (get_height() / 2);
                     }
 
                     _velocity.y = 0.0f;
@@ -207,4 +207,3 @@ PhysicsComponent::PhysicsComponent(float width, float height) : _dimensions{widt
 {
 
 }
-

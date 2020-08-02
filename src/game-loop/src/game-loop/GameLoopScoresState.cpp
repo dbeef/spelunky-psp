@@ -3,7 +3,7 @@
 #include "Renderer.hpp"
 #include "GameLoopScoresState.hpp"
 #include "GameLoop.hpp"
-#include "LevelGenerator.hpp"
+#include "Level.hpp"
 #include "main-dude/MainDude.hpp"
 #include "game-objects/ResetSign.hpp"
 #include "game-objects/PauseScreen.hpp"
@@ -78,18 +78,18 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopScoresState");
 
-    LevelGenerator::instance().getLevel().clean_map_layout();
-    LevelGenerator::instance().getLevel().generate_frame();
-    LevelGenerator::instance().getLevel().initialise_tiles_from_splash_screen(SplashScreenType::SCORES);
-    LevelGenerator::instance().getLevel().generate_cave_background();
-    LevelGenerator::instance().getLevel().batch_vertices();
+    Level::instance().get_tile_batch().generate_frame();
+    Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::SCORES);
+    Level::instance().get_tile_batch().generate_cave_background();
+    Level::instance().get_tile_batch().batch_vertices();
 
+    // Splash screens are copied into the [0, 0] position (left-upper corner), center on them:
     auto &model_view_camera = game_loop._cameras.model_view;
-    model_view_camera.set_x_not_rounded(5.0f);
-    model_view_camera.set_y_not_rounded(7.0f);
+    model_view_camera.set_x_not_rounded(game_loop._viewport->get_width_world_units() / 4.0f);
+    model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
 
     MapTile* entrance = nullptr;
-    LevelGenerator::instance().getLevel().get_first_tile_of_given_type(MapTileType::EXIT, entrance);
+    Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::EXIT, entrance);
     assert(entrance);
 
     // TODO: Single point of tile width/height definition to not hardcode offset by magic values.

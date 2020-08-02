@@ -1,5 +1,5 @@
-#include "LevelGenerator.hpp"
 #include "Level.hpp"
+#include "TileBatch.hpp"
 #include "logger/log.h"
 #include "Renderer.hpp"
 #include "GameLoop.hpp"
@@ -27,7 +27,7 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     auto x = game_loop._main_dude->get_x_pos_center();
     auto y = game_loop._main_dude->get_y_pos_center();
     model_view_camera.adjust_to_bounding_box(x, y);
-    model_view_camera.adjust_to_level_boundaries(Consts::MAP_GAME_WIDTH_TILES, Consts::MAP_GAME_HEIGHT_TILES);
+    model_view_camera.adjust_to_level_boundaries(Consts::LEVEL_WIDTH_TILES, Consts::LEVEL_HEIGHT_TILES);
 
     // Remove render entities marked for disposal:
 
@@ -97,14 +97,11 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopPlayingState");
 
-    std::srand(std::time(0));
-
-    LevelGenerator::instance().getLevel().clean_map_layout();
-    LevelGenerator::instance().getLevel().generate_new_level_layout();
-    LevelGenerator::instance().getLevel().initialise_tiles_from_room_layout();
-    LevelGenerator::instance().getLevel().generate_frame();
-    LevelGenerator::instance().getLevel().generate_cave_background();
-    LevelGenerator::instance().getLevel().batch_vertices();
+    Level::instance().get_tile_batch().generate_new_level_layout();
+    Level::instance().get_tile_batch().initialise_tiles_from_room_layout();
+    Level::instance().get_tile_batch().generate_frame();
+    Level::instance().get_tile_batch().generate_cave_background();
+    Level::instance().get_tile_batch().batch_vertices();
 
     // Create main dude:
 
@@ -112,7 +109,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     game_loop._game_objects.push_back(game_loop._main_dude);
 
     MapTile *entrance = nullptr;
-    LevelGenerator::instance().getLevel().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
+    Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
     assert(entrance);
     game_loop._main_dude->set_position_on_tile(entrance);
 

@@ -86,5 +86,5 @@ target_link_libraries(GameLoop
         Input
         Renderer
         Collisions
-        LevelGenerator
+        Level
 )

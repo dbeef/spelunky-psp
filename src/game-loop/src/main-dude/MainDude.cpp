@@ -1,7 +1,8 @@
 #include <cmath>
 
+#include "NeighbouringTiles.hpp"
 #include "logger/log.h"
-#include "LevelGenerator.hpp"
+#include "Level.hpp"
 #include "Collisions.hpp"
 #include "main-dude/MainDude.hpp"
 #include "MapTileType.hpp"
@@ -79,11 +80,11 @@ void MainDude::handle_input(const Input &input)
 MapTile* MainDude::is_overlaping_tile(MapTileType type) const
 {
     MapTile* neighbours[9] = {nullptr};
-    collisions::get_neighbouring_tiles(LevelGenerator::instance().getLevel(), _physics.get_x_position(), _physics.get_y_position(), neighbours);
+    Level::instance().get_tile_batch().get_neighbouring_tiles(_physics.get_x_position(), _physics.get_y_position(), neighbours);
 
     for (const auto neighbour : neighbours)
     {
-        if (neighbour == nullptr || neighbour->mapTileType != type)
+        if (neighbour == nullptr || neighbour->map_tile_type != type)
         {
             continue;
         }
@@ -116,17 +117,16 @@ bool MainDude::hang_off_cliff_right()
     {
         MapTile *neighbours[9] = {nullptr};
 
-        collisions::get_neighbouring_tiles(
-                LevelGenerator::instance().getLevel(),
+        Level::instance().get_tile_batch().get_neighbouring_tiles(
                 get_x_pos_center(),
                 get_y_pos_center(),
                 neighbours);
 
-        auto* right_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::CENTER)];
-        auto* right_upper_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::UP_MIDDLE)];
+        auto* right_tile = neighbours[static_cast<int>(NeighbouringTiles::CENTER)];
+        auto* right_upper_tile = neighbours[static_cast<int>(NeighbouringTiles::UP_MIDDLE)];
 
-        if (right_tile && right_tile->exists && right_tile->collidable &&
-            (!right_upper_tile || !right_upper_tile->exists || !right_upper_tile->collidable) &&
+        if (right_tile && right_tile->collidable &&
+            (!right_upper_tile || !right_upper_tile->collidable) &&
                 // Main dude's center must be in margin of a quarter of a tile from its beginning:
                 (get_y_pos_center() >= right_tile->y + 0.25f)
             )
@@ -146,25 +146,24 @@ bool MainDude::hang_off_cliff_left()
     if (_physics.is_left_collision())
     {
         MapTile *neighbours[9] = {nullptr};
-      
-        collisions::get_neighbouring_tiles(
-                LevelGenerator::instance().getLevel(),
+
+        Level::instance().get_tile_batch().get_neighbouring_tiles(
                 get_x_pos_center(),
                 get_y_pos_center(),
                 neighbours);
       
-        auto* left_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::LEFT_MIDDLE)];
-        auto* left_upper_tile = neighbours[static_cast<int>(collisions::NeighbouringTiles::LEFT_UP)];
+        auto* left_tile = neighbours[static_cast<int>(NeighbouringTiles::LEFT_MIDDLE)];
+        auto* left_upper_tile = neighbours[static_cast<int>(NeighbouringTiles::LEFT_UP)];
       
-        if (left_tile && left_tile->exists && left_tile->collidable &&
-            (!left_upper_tile || !left_upper_tile->exists || !left_upper_tile->collidable) &&
+        if (left_tile && left_tile->collidable &&
+            (!left_upper_tile || !left_upper_tile->collidable) &&
                 // Main dude's center must be in margin of a quarter of a tile from its beginning:
                 (get_y_pos_center() >= left_tile->y + 0.25f)
             )
         {
             _physics.set_position(
-                    left_tile->x + 1.0f + (_physics.get_width() / 2.0f),
-                    left_tile->y + 0.5f);
+                    left_tile->x + MapTile::PHYSICAL_WIDTH + (_physics.get_width() / 2.0f),
+                    left_tile->y + (MapTile::PHYSICAL_HEIGHT / 2.0f));
             return true;
         }
     }
