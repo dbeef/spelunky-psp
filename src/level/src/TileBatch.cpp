@@ -477,16 +477,13 @@ void TileBatch::batch_vertices()
     _indices.clear();
 
     std::size_t tile_counter = 0;
-    // FIXME: Rewrite level generator for more sane convention of storing tiles.
-    // iterating from left-lower corner of the room to the right-upper (spelunky-ds convention)
+
     for (int x = 0; x < LEVEL_WIDTH_TILES; x++)
     {
         for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
         {
-
             MapTile *t = map_tiles[x][y];
 
-            // FIXME: Remove x/y fields from MapTile, as they are redundant.
             assert(map_tiles[x][y]->x == x);
             assert(map_tiles[x][y]->y == y);
 
