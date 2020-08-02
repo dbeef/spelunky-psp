@@ -272,12 +272,6 @@ void TileBatch::generate_frame()
     }
 }
 
-/**
- * Initialises every MapTile in the map_tiles[][] array with its position on the map,
- * so it could be allowed to call LevelGenerator::tiles_to_map.
- * It utilizes given splash screen type, to know if any tile should be planted on the place it iterates,
- * and what MapTileType it should have.
- */
 void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type)
 {
     int temp[SPLASH_SCREEN_HEIGHT_TILES][SPLASH_SCREEN_WIDTH_TILES];
@@ -301,13 +295,6 @@ void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type
         }
     }
 }
-
-/**
- * Initialises every MapTile in the map_tiles[][] array with its position on the map,
- * so it could be allowed to call LevelGenerator::tiles_to_map.
- * It utilizes current room layout, to know if any tile should be planted on the place it iterates,
- * and what MapTileType it should have.
- */
 
 void TileBatch::initialise_tiles_from_room_layout()
 {
