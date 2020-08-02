@@ -125,8 +125,8 @@ bool MainDude::hang_off_cliff_right()
         auto* right_tile = neighbours[static_cast<int>(NeighbouringTiles::CENTER)];
         auto* right_upper_tile = neighbours[static_cast<int>(NeighbouringTiles::UP_MIDDLE)];
 
-        if (right_tile && right_tile->exists && right_tile->collidable &&
-            (!right_upper_tile || !right_upper_tile->exists || !right_upper_tile->collidable) &&
+        if (right_tile && right_tile->collidable &&
+            (!right_upper_tile || !right_upper_tile->collidable) &&
                 // Main dude's center must be in margin of a quarter of a tile from its beginning:
                 (get_y_pos_center() >= right_tile->y + 0.25f)
             )
@@ -155,8 +155,8 @@ bool MainDude::hang_off_cliff_left()
         auto* left_tile = neighbours[static_cast<int>(NeighbouringTiles::LEFT_MIDDLE)];
         auto* left_upper_tile = neighbours[static_cast<int>(NeighbouringTiles::LEFT_UP)];
       
-        if (left_tile && left_tile->exists && left_tile->collidable &&
-            (!left_upper_tile || !left_upper_tile->exists || !left_upper_tile->collidable) &&
+        if (left_tile && left_tile->collidable &&
+            (!left_upper_tile || !left_upper_tile->collidable) &&
                 // Main dude's center must be in margin of a quarter of a tile from its beginning:
                 (get_y_pos_center() >= left_tile->y + 0.25f)
             )

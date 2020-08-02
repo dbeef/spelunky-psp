@@ -242,7 +242,6 @@ void TileBatch::generate_frame()
         map_tiles[x][0]->destroyable = false;
         map_tiles[x][0]->x = x;
         map_tiles[x][0]->y = 0;
-        map_tiles[x][0]->exists = true;
     }
 
     // Left row
@@ -252,7 +251,6 @@ void TileBatch::generate_frame()
         map_tiles[0][y]->destroyable = false;
         map_tiles[0][y]->x = 0;
         map_tiles[0][y]->y = y;
-        map_tiles[0][y]->exists = true;
     }
 
     // Bottom row
@@ -262,7 +260,6 @@ void TileBatch::generate_frame()
         map_tiles[LEVEL_WIDTH_TILES - 1][y]->destroyable = false;
         map_tiles[LEVEL_WIDTH_TILES - 1][y]->x = LEVEL_WIDTH_TILES - 1;
         map_tiles[LEVEL_WIDTH_TILES - 1][y]->y = y;
-        map_tiles[LEVEL_WIDTH_TILES - 1][y]->exists = true;
     }
 
     // Right row
@@ -272,7 +269,6 @@ void TileBatch::generate_frame()
         map_tiles[x][LEVEL_HEIGHT_TILES - 1]->destroyable = false;
         map_tiles[x][LEVEL_HEIGHT_TILES - 1]->x = x;
         map_tiles[x][LEVEL_HEIGHT_TILES - 1]->y = LEVEL_HEIGHT_TILES - 1;
-        map_tiles[x][LEVEL_HEIGHT_TILES - 1]->exists = true;
     }
 }
 
@@ -320,9 +316,6 @@ void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type
             map_tiles[pos_x][pos_y]->match_tile(static_cast<MapTileType>(tab[tab_y][tab_x]));
             map_tiles[pos_x][pos_y]->x = pos_x;
             map_tiles[pos_x][pos_y]->y = pos_y;
-
-            if (tab[tab_y][tab_x] != 0)
-                map_tiles[pos_x][pos_y]->exists = true;
 //            }
         }
     }
@@ -409,9 +402,6 @@ void TileBatch::initialise_tiles_from_room_layout()
 
                     map_tiles[pos_x][pos_y]->x = pos_x;
                     map_tiles[pos_x][pos_y]->y = pos_y;
-                    if (tab[tab_y][tab_x] != 0)
-                        map_tiles[pos_x][pos_y]->exists = true;
-
                 }
             }
         }
@@ -424,7 +414,7 @@ void TileBatch::get_first_tile_of_given_type(MapTileType map_tile_type, MapTile 
     {
         for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
         {
-            if (map_tiles[x][y]->exists && map_tiles[x][y]->map_tile_type == map_tile_type)
+            if (map_tiles[x][y]->map_tile_type == map_tile_type)
             {
                 out = map_tiles[x][y];
                 return;
@@ -439,7 +429,6 @@ void TileBatch::clean_map_layout()
     {
         for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
         {
-            map_tiles[x][y]->exists = false;
             map_tiles[x][y]->destroyable = true;
         }
     }
@@ -569,15 +558,15 @@ void TileBatch::get_neighbouring_tiles(float x, float y, MapTile *out_neighborin
             *left_down,
             *right_down;
 
-    left_middle = x_tiles - 1 >= 0 && map_tiles[x_tiles - 1][y_tiles]->exists ? map_tiles[x_tiles - 1][y_tiles] : nullptr;
-    right_middle = x_tiles + 1 <= Consts::LEVEL_WIDTH_TILES && map_tiles[x_tiles + 1][y_tiles]->exists ? map_tiles[x_tiles + 1][y_tiles] : nullptr;
-    up_middle = y_tiles - 1 >= 0 && map_tiles[x_tiles][y_tiles - 1]->exists ? map_tiles[x_tiles][y_tiles - 1] : nullptr;
-    down_middle = y_tiles + 1 <= Consts::LEVEL_HEIGHT_TILES && map_tiles[x_tiles][y_tiles + 1]->exists ? map_tiles[x_tiles][y_tiles + 1] : nullptr;
-    center = map_tiles[x_tiles][y_tiles]->exists ? map_tiles[x_tiles][y_tiles] : nullptr;
-    left_up = x_tiles - 1 >= 0 && y_tiles - 1 >= 0 && map_tiles[x_tiles - 1][y_tiles - 1]->exists ? map_tiles[x_tiles - 1][y_tiles - 1] : nullptr;
-    right_up = x_tiles + 1 <= Consts::LEVEL_WIDTH_TILES && y_tiles - 1 >= 0 && map_tiles[x_tiles + 1][y_tiles - 1]->exists ? map_tiles[x_tiles + 1][y_tiles - 1] : nullptr;
-    left_down = x_tiles - 1 >= 0 && y_tiles + 1 <= Consts::LEVEL_HEIGHT_TILES  && map_tiles[x_tiles - 1][y_tiles + 1]->exists ? map_tiles[x_tiles - 1][y_tiles + 1] : nullptr;
-    right_down = x_tiles + 1 <= Consts::LEVEL_WIDTH_TILES && y_tiles + 1 <= Consts::LEVEL_HEIGHT_TILES && map_tiles[x_tiles + 1][y_tiles + 1]->exists ? map_tiles[x_tiles + 1][y_tiles + 1] : nullptr;
+    left_middle = x_tiles - 1 >= 0 ? map_tiles[x_tiles - 1][y_tiles] : nullptr;
+    right_middle = x_tiles + 1 < Consts::LEVEL_WIDTH_TILES ? map_tiles[x_tiles + 1][y_tiles] : nullptr;
+    up_middle = y_tiles - 1 >= 0 ? map_tiles[x_tiles][y_tiles - 1] : nullptr;
+    down_middle = y_tiles + 1 < Consts::LEVEL_HEIGHT_TILES ? map_tiles[x_tiles][y_tiles + 1] : nullptr;
+    center = map_tiles[x_tiles][y_tiles];
+    left_up = x_tiles - 1 >= 0 && y_tiles - 1 >= 0 ? map_tiles[x_tiles - 1][y_tiles - 1] : nullptr;
+    right_up = x_tiles + 1 < Consts::LEVEL_WIDTH_TILES && y_tiles - 1 >= 0 ? map_tiles[x_tiles + 1][y_tiles - 1] : nullptr;
+    left_down = x_tiles - 1 >= 0 && y_tiles + 1 < Consts::LEVEL_HEIGHT_TILES ? map_tiles[x_tiles - 1][y_tiles + 1] : nullptr;
+    right_down = x_tiles + 1 < Consts::LEVEL_WIDTH_TILES && y_tiles + 1 < Consts::LEVEL_HEIGHT_TILES ? map_tiles[x_tiles + 1][y_tiles + 1] : nullptr;
 
     out_neighboring_tiles[static_cast<std::uint16_t>(NeighbouringTiles::LEFT_MIDDLE)] = left_middle;
     out_neighboring_tiles[static_cast<std::uint16_t>(NeighbouringTiles::RIGHT_MIDDLE)] = right_middle;
