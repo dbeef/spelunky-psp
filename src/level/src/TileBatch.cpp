@@ -70,7 +70,7 @@ void TileBatch::generate_new_level_layout()
     {
         for (int y = 0; y < ROOMS_COUNT_HEIGHT; y++)
         {
-            layout[x][y] = RoomType::CLOSED;
+            _layout[x][y] = RoomType::CLOSED;
         }
     }
 
@@ -85,7 +85,7 @@ void TileBatch::generate_new_level_layout()
     bool exit_placed = false;
 
     // Set the starting room as an entrance room
-    layout[curr_x][curr_y] = RoomType::ENTRANCE;
+    _layout[curr_x][curr_y] = RoomType::ENTRANCE;
 
     // While we're on the very bottom floor or higher, do:
     while (curr_y >= 0)
@@ -114,11 +114,11 @@ void TileBatch::generate_new_level_layout()
                 {
                     // We're on the most bottom floor, we didn't plant an exit yet and we've guessed that's the place:
                     exit_placed = true;
-                    layout[curr_x][curr_y] = RoomType::EXIT;
+                    _layout[curr_x][curr_y] = RoomType::EXIT;
                 }
                 else
                 {
-                    layout[curr_x][curr_y] = RoomType::LEFT_RIGHT;
+                    _layout[curr_x][curr_y] = RoomType::LEFT_RIGHT;
                 }
 
                 if (get_random_number() % 3 == 2)
@@ -132,15 +132,15 @@ void TileBatch::generate_new_level_layout()
         {
             if (curr_y > 0)
             {
-                layout[curr_x][curr_y] = RoomType::LEFT_RIGHT_DOWN;
+                _layout[curr_x][curr_y] = RoomType::LEFT_RIGHT_DOWN;
                 curr_y--;
-                layout[curr_x][curr_y] = RoomType::LEFT_RIGHT_UP;
+                _layout[curr_x][curr_y] = RoomType::LEFT_RIGHT_UP;
 
                 if (curr_y == 0 && !exit_placed && get_random_number() % 2 == 0)
                 {
                     // If we're on the very bottom floor, no exit planted yet and a guess tells us so, place an exit:
                     exit_placed = true;
-                    layout[curr_x][curr_y] = RoomType::EXIT;
+                    _layout[curr_x][curr_y] = RoomType::EXIT;
                 }
 
                 obtain_new_direction(curr_x, direction);
@@ -151,7 +151,7 @@ void TileBatch::generate_new_level_layout()
                 {
                     // We're on the very bottom floor, didn't plant an exit yet and we're
                     // done with iterating through map, so plant an exit:
-                    layout[curr_x][curr_y] = RoomType::EXIT;
+                    _layout[curr_x][curr_y] = RoomType::EXIT;
                 }
                 break;
             }
@@ -170,9 +170,9 @@ void TileBatch::place_an_altar()
     {
         for (int y = 0; y < ROOMS_COUNT_HEIGHT; y++)
         {
-            if (level.layout[x][y] == RoomType::CLOSED)
+            if (level._layout[x][y] == RoomType::CLOSED)
             {
-                level.layout[x][y] = RoomType::ALTAR;
+                level._layout[x][y] = RoomType::ALTAR;
                 return;
             }
         }
@@ -187,24 +187,24 @@ void TileBatch::place_a_shop()
     {
         for (int y = 0; y < ROOMS_COUNT_HEIGHT; y++)
         {
-            if (level.layout[x][y] == RoomType::CLOSED)
+            if (level._layout[x][y] == RoomType::CLOSED)
             {
                 if (x == 0)
                 {
-                    if (level.layout[x + 1][y] != RoomType::CLOSED)
+                    if (level._layout[x + 1][y] != RoomType::CLOSED)
                     {
 //                        TODO: Uncomment once shopkeeper is implemented.
 //                        if (GameState::instance().robbed_or_killed_shopkeeper)
 //                        if (false)
 //                            level.layout[a][b] = RoomType::SHOP_RIGHT_MUGSHOT;
 //                        else
-                        level.layout[x][y] = RoomType::SHOP_RIGHT;
+                        level._layout[x][y] = RoomType::SHOP_RIGHT;
                         return;
                     }
                 }
                 else if (x == 2)
                 {
-                    if (level.layout[x - 1][y] != RoomType::CLOSED)
+                    if (level._layout[x - 1][y] != RoomType::CLOSED)
                     {
 //                        TODO: Uncomment once shopkeeper is implemented.
 //                        if (GameState::instance().robbed_or_killed_shopkeeper)
@@ -213,22 +213,22 @@ void TileBatch::place_a_shop()
 //                        else
 
                         // Placed a shop, can return.
-                        level.layout[x][y] = RoomType::SHOP_LEFT;
+                        level._layout[x][y] = RoomType::SHOP_LEFT;
                         return;
                     }
                 }
                 else if (x == 1)
                 {
-                    if (level.layout[x - 1][y] != RoomType::CLOSED &&
-                        level.layout[x + 1][y] != RoomType::CLOSED)
+                    if (level._layout[x - 1][y] != RoomType::CLOSED &&
+                        level._layout[x + 1][y] != RoomType::CLOSED)
                     {
 
                         if (get_random_number() % 2 == 0)
                         {
-                            level.layout[x][y] = RoomType::SHOP_LEFT;
+                            level._layout[x][y] = RoomType::SHOP_LEFT;
                         } else
                         {
-                            level.layout[x][y] = RoomType::SHOP_RIGHT;
+                            level._layout[x][y] = RoomType::SHOP_RIGHT;
                         }
 
                         // Placed a shop, can return.
@@ -312,7 +312,7 @@ void TileBatch::initialise_tiles_from_room_layout()
     {
         for (int room_x = 0; room_x < ROOMS_COUNT_WIDTH; room_x++)
         {
-            switch (layout[room_x][room_y])
+            switch (_layout[room_x][room_y])
             {
                 // Basing on the room type, randomly select a variation of this room
                 // and copy it to the temporary array:
@@ -320,7 +320,7 @@ void TileBatch::initialise_tiles_from_room_layout()
                 {
                     const int possible_variations = std::extent<decltype(closed_rooms)>::value;
                     const int room_index = get_random_number() % possible_variations;
-                    layout_room_ids[room_x][room_y] = room_index;
+                    _layout_room_ids[room_x][room_y] = room_index;
                     memcpy(temp, closed_rooms[room_index], sizeof(closed_rooms[room_index]));
                     break;
                 }
@@ -328,7 +328,7 @@ void TileBatch::initialise_tiles_from_room_layout()
                 {
                     const int possible_variations = std::extent<decltype(left_right_rooms)>::value;
                     const int room_index = get_random_number() % possible_variations;
-                    layout_room_ids[room_x][room_y] = room_index;
+                    _layout_room_ids[room_x][room_y] = room_index;
                     memcpy(temp, left_right_rooms[room_index], sizeof(left_right_rooms[room_index]));
                     break;
                 }
@@ -336,7 +336,7 @@ void TileBatch::initialise_tiles_from_room_layout()
                 {
                     const int possible_variations = std::extent<decltype(left_right_down_rooms)>::value;
                     const int room_index = get_random_number() % possible_variations;
-                    layout_room_ids[room_x][room_y] = room_index;
+                    _layout_room_ids[room_x][room_y] = room_index;
                     memcpy(temp, left_right_down_rooms[room_index], sizeof(left_right_down_rooms[room_index]));
                     break;
                 }
@@ -344,7 +344,7 @@ void TileBatch::initialise_tiles_from_room_layout()
                 {
                     const int possible_variations = std::extent<decltype(left_right_up_rooms)>::value;
                     const int room_index = get_random_number() % possible_variations;
-                    layout_room_ids[room_x][room_y] = room_index;
+                    _layout_room_ids[room_x][room_y] = room_index;
                     memcpy(temp, left_right_up_rooms[room_index], sizeof(left_right_up_rooms[room_index]));
                     break;
                 }
@@ -352,7 +352,7 @@ void TileBatch::initialise_tiles_from_room_layout()
                 {
                     const int possible_variations = std::extent<decltype(entrance_room)>::value;
                     const int room_index = get_random_number() % possible_variations;
-                    layout_room_ids[room_x][room_y] = room_index;
+                    _layout_room_ids[room_x][room_y] = room_index;
                     memcpy(temp, entrance_room[room_index], sizeof(entrance_room[room_index]));
                     break;
                 }
@@ -360,7 +360,7 @@ void TileBatch::initialise_tiles_from_room_layout()
                 {
                     const int possible_variations = std::extent<decltype(exit_room)>::value;
                     const int room_index = get_random_number() % possible_variations;
-                    layout_room_ids[room_x][room_y] = room_index;
+                    _layout_room_ids[room_x][room_y] = room_index;
                     memcpy(temp, exit_room[room_index], sizeof(exit_room[room_index]));
                     break;
                 }

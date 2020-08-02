@@ -32,19 +32,8 @@ class TileBatch {
 public:
 
     TileBatch();
+
     ~TileBatch();
-
-    //I allocate these tiles on heap on game start, never delete them later. That helps memory fragmentation a lot.
-    //Before, I allocated/deallocated them on every level and It caused crashes on malloc after some time (~40 levels).
-    MapTile *map_tiles[Consts::LEVEL_WIDTH_TILES][Consts::LEVEL_HEIGHT_TILES]{};
-
-    //holds information on what room type is at specific array index
-    RoomType layout[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
-
-    //holds information on specific variation of room type, that is given from 'layout' array
-    //i.e, we have 6 possible 'closed' rooms declared in the closed_rooms.hpp,
-    //so this array lets us know, that we have a 'closed' room number 3 (for example) at some place.
-    int layout_room_ids[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
 
     void generate_new_level_layout();
 
@@ -64,6 +53,8 @@ public:
 
     void get_neighbouring_tiles(float x, float y, MapTile *out_neighboring_tiles[9]) const;
 
+    MapTile *map_tiles[Consts::LEVEL_WIDTH_TILES][Consts::LEVEL_HEIGHT_TILES]{};
+
 private:
 
     // Any encountered closed room will be turned into an altar.
@@ -76,6 +67,8 @@ private:
     std::vector<Vertex> _mesh;
     std::vector<IndexType> _indices;
     RenderEntity _render_entity;
+    RoomType _layout[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
+    int _layout_room_ids[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
 };
 
 #endif //SPELUNKYDS_LEVELGENERATOR_H
