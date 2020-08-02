@@ -70,7 +70,6 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopLevelSummaryState");
 
-    Level::instance().get_tile_batch().clean_map_layout();
     Level::instance().get_tile_batch().generate_frame();
     Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::LEVEL_SUMMARY);
     Level::instance().get_tile_batch().generate_cave_background();

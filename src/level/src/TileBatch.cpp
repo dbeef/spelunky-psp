@@ -65,7 +65,14 @@ namespace
 
 void TileBatch::generate_new_level_layout()
 {
-    clean_map_layout();
+    // Clean the previous layout:
+    for (int x = 0; x < ROOMS_COUNT_WIDTH; x++)
+    {
+        for (int y = 0; y < ROOMS_COUNT_HEIGHT; y++)
+        {
+            layout[x][y] = RoomType::CLOSED;
+        }
+    }
 
     // Set starting position to the random room in the upper-most row:
     int curr_x = get_random_number() % ROOMS_COUNT_WIDTH;
@@ -394,25 +401,6 @@ void TileBatch::get_first_tile_of_given_type(MapTileType map_tile_type, MapTile 
                 out = map_tiles[x][y];
                 return;
             }
-        }
-    }
-}
-
-void TileBatch::clean_map_layout()
-{
-    for (int x = 0; x < LEVEL_WIDTH_TILES; x++)
-    {
-        for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
-        {
-            map_tiles[x][y]->destroyable = true;
-        }
-    }
-
-    for (int x = 0; x < ROOMS_COUNT_WIDTH; x++)
-    {
-        for (int y = 0; y < ROOMS_COUNT_HEIGHT; y++)
-        {
-            layout[x][y] = RoomType::CLOSED;
         }
     }
 }

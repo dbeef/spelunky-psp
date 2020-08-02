@@ -99,7 +99,6 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
     std::srand(std::time(0));
 
-    Level::instance().get_tile_batch().clean_map_layout();
     Level::instance().get_tile_batch().generate_new_level_layout();
     Level::instance().get_tile_batch().initialise_tiles_from_room_layout();
     Level::instance().get_tile_batch().generate_frame();

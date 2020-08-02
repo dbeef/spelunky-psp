@@ -78,7 +78,6 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopScoresState");
 
-    Level::instance().get_tile_batch().clean_map_layout();
     Level::instance().get_tile_batch().generate_frame();
     Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::SCORES);
     Level::instance().get_tile_batch().generate_cave_background();

@@ -105,7 +105,6 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopMainMenuState");
 
-    Level::instance().get_tile_batch().clean_map_layout();
     Level::instance().get_tile_batch().generate_frame();
     Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU);
     Level::instance().get_tile_batch().generate_cave_background();

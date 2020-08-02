@@ -46,9 +46,6 @@ public:
     //so this array lets us know, that we have a 'closed' room number 3 (for example) at some place.
     int layout_room_ids[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
 
-    //sets all tiles to !existing
-    void clean_map_layout();
-
     void generate_new_level_layout();
 
     void generate_cave_background();

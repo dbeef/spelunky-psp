@@ -30,7 +30,6 @@ void GameLoopStartedState::enter(GameLoop& game_loop)
     TextureBank::instance().load_textures();
     TextureBank::instance().load_texture_regions();
 
-    Level::instance().get_tile_batch().clean_map_layout();
     Level::instance().get_tile_batch().generate_cave_background();
     Level::instance().get_tile_batch().batch_vertices();
     Level::instance().get_tile_batch().add_render_entity();
