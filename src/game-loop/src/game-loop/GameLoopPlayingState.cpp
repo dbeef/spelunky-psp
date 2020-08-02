@@ -97,8 +97,6 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopPlayingState");
 
-    std::srand(std::time(0));
-
     Level::instance().get_tile_batch().generate_new_level_layout();
     Level::instance().get_tile_batch().initialise_tiles_from_room_layout();
     Level::instance().get_tile_batch().generate_frame();
