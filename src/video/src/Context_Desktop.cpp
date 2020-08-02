@@ -38,10 +38,10 @@ bool Video::setup_gl()
 
     //  Create a window
 
-    auto surface = SDL_SetVideoMode(480 * 2,
-                                    272 * 2,
+    auto surface = SDL_SetVideoMode(0,
+                                    0,
                                     0, // current display's bpp
-                                    SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE);
+                                    SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE | SDL_FULLSCREEN);
 
     if (!surface)
     {
