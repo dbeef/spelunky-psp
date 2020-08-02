@@ -137,7 +137,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                     if (_velocity.x < 0.0f)
                     {
                         _collisions.left = true;
-                        _position.x = overlapping_tile->x + 1.0f + (get_width() / 2.0f);
+                        _position.x = overlapping_tile->x + MapTile::PHYSICAL_WIDTH + (get_width() / 2.0f);
                     }
                     else
                     {
@@ -170,12 +170,12 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                     if (_velocity.y < 0.0f)
                     {
                         _collisions.upper = true;
-                        _position.y = overlapping_tile->y + 1.0f + (get_height() / 2);
+                        _position.y = overlapping_tile->y + MapTile::PHYSICAL_HEIGHT + (get_height() / 2);
                     }
                     else
                     {
                         _collisions.bottom = true;
-                        _position.y = overlapping_tile->y - 1.0f + (get_height() / 2);
+                        _position.y = overlapping_tile->y - MapTile::PHYSICAL_HEIGHT + (get_height() / 2);
                     }
 
                     _velocity.y = 0.0f;

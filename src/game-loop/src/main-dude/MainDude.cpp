@@ -162,8 +162,8 @@ bool MainDude::hang_off_cliff_left()
             )
         {
             _physics.set_position(
-                    left_tile->x + 1.0f + (_physics.get_width() / 2.0f),
-                    left_tile->y + 0.5f);
+                    left_tile->x + MapTile::PHYSICAL_WIDTH + (_physics.get_width() / 2.0f),
+                    left_tile->y + (MapTile::PHYSICAL_HEIGHT / 2.0f));
             return true;
         }
     }

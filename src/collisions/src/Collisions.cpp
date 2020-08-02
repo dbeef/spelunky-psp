@@ -13,13 +13,10 @@
 // Rendering dimensions are same as physical dimensions, in other words,
 // a quad made of 1x1 vertices will have a collision box of 1x1.
 
-MapTile *collisions::overlaps_strict(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height, bool collidable)
+MapTile* collisions::overlaps_strict(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height, bool collidable)
 {
     const float half_w = width / 2.0f;
     const float half_h = height / 2.0f;
-
-    const float tile_w = 1.0f;
-    const float tile_h = 1.0f;
 
     for (int i = 0; i < static_cast<int>(NeighbouringTiles::_SIZE); i++) {
 
@@ -33,8 +30,8 @@ MapTile *collisions::overlaps_strict(MapTile **neighboring_tiles, float x_center
             continue;
         }
 
-        if (x_center + half_w >= neighboring_tiles[i]->x && x_center - half_w <= neighboring_tiles[i]->x + tile_w &&
-            y_center + half_h >= neighboring_tiles[i]->y && y_center - half_h <= neighboring_tiles[i]->y + tile_h)
+        if (x_center + half_w >= neighboring_tiles[i]->x && x_center - half_w <= neighboring_tiles[i]->x + MapTile::PHYSICAL_WIDTH &&
+            y_center + half_h >= neighboring_tiles[i]->y && y_center - half_h <= neighboring_tiles[i]->y + MapTile::PHYSICAL_HEIGHT)
         {
             return neighboring_tiles[i];
         }
@@ -43,7 +40,7 @@ MapTile *collisions::overlaps_strict(MapTile **neighboring_tiles, float x_center
     return nullptr;
 }
 
-MapTile *collisions::overlaps(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height, bool collidable)
+MapTile* collisions::overlaps(MapTile **neighboring_tiles, float x_center, float y_center, float width, float height, bool collidable)
 {
     for (int i = 0; i < static_cast<int>(NeighbouringTiles::_SIZE); i++)
     {
@@ -72,9 +69,6 @@ bool collisions::overlaps(MapTile *tile, float x_center, float y_center, float w
     const float half_w = width / 2.0f;
     const float half_h = height / 2.0f;
 
-    const float tile_w = 1.0f;
-    const float tile_h = 1.0f;
-
-    return x_center + half_w > tile->x && x_center - half_w < tile->x + tile_w &&
-           y_center + half_h > tile->y && y_center - half_h < tile->y + tile_h;
+    return x_center + half_w > tile->x && x_center - half_w < tile->x + MapTile::PHYSICAL_WIDTH &&
+           y_center + half_h > tile->y && y_center - half_h < tile->y + MapTile::PHYSICAL_HEIGHT;
 }
