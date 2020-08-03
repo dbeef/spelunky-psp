@@ -184,7 +184,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                     else
                     {
                         _collisions.bottom = true;
-                        _position.y = overlapping_tile->y - MapTile::PHYSICAL_HEIGHT + (get_height() / 2);
+                        _position.y = overlapping_tile->y - get_height() / 2;
                     }
 
                     _velocity.y = -1 * _properties.bounciness * _velocity.y;

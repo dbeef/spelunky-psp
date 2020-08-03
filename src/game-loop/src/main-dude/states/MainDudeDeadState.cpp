@@ -4,7 +4,6 @@
 
 void MainDudeDeadState::enter(MainDude& main_dude)
 {
-    // TODO: Change physical size of the main dude (about half of the height when dead).
 
     if (main_dude._physics.get_y_velocity() == 0.0f)
     {
@@ -13,8 +12,13 @@ void MainDudeDeadState::enter(MainDude& main_dude)
     }
 
     main_dude._physics.set_bounciness(0.5f);
+    main_dude._physics.set_dimensions(main_dude._physics.get_width(), main_dude._physics.get_height());
     main_dude._animation.stop();
     set_current_frame(main_dude);
+
+    // TODO: Change physical size of the main dude (about half of the height when dead).
+    //       This can be done only after convention for storing position is changed - right now physics component's
+    //       XY describes center of the body. Should be changed to describe upper-left corner.
 }
 
 MainDudeBaseState* MainDudeDeadState::update(MainDude& main_dude, uint32_t delta_time_ms)
