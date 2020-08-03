@@ -34,14 +34,14 @@ GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t del
 
     // Update game objects:
 
-    if (_pause->is_paused())
+    if (_pause_overlay->is_paused())
     {
-        if (_pause->is_quit_requested())
+        if (_pause_overlay->is_quit_requested())
         {
             log_info("Quit requested.");
             game_loop._exit = true;
         }
-        _pause->update(delta_time_ms);
+        _pause_overlay->update(delta_time_ms);
     }
     else
     {
@@ -102,9 +102,9 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
 
     // Create Pause:
 
-    _pause = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::SCORES);
-    _pause->set_text_buffer(game_loop._text_buffer);
-    game_loop._game_objects.push_back(_pause);
+    _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::SCORES);
+    _pause_overlay->set_text_buffer(game_loop._text_buffer);
+    game_loop._game_objects.push_back(_pause_overlay);
 
     // Create reset sign:
 
@@ -113,6 +113,8 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
 
 void GameLoopScoresState::exit(GameLoop& game_loop)
 {
+    _pause_overlay = nullptr;
+
     game_loop._game_objects = {};
     game_loop._main_dude = {};
     game_loop._text_buffer = {};
