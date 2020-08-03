@@ -4,6 +4,7 @@
 
 void MainDudeStunnedState::enter(MainDude &main_dude)
 {
+    // TODO: Set friction higher than normal.
     // TODO: Loop N times.
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_4_LAST),
