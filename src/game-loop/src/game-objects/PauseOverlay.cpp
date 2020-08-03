@@ -30,7 +30,7 @@ void PauseOverlay::update(uint32_t delta_time_ms)
     {
         if (!_paused)
         {
-            // Just paused
+            // Just paused:
             _paused = true;
 
             _half_opaque_quad = std::make_shared<QuadComponent>(
@@ -66,19 +66,14 @@ void PauseOverlay::update(uint32_t delta_time_ms)
         }
         else
         {
-            // Just unpaused
-            _paused = false;
-            _half_opaque_quad = nullptr;
-            _text_buffer->remove_text(_text_entity_ids.paused);
-            _text_buffer->remove_text(_text_entity_ids.controls);
-            _text_entity_ids.paused = TextBuffer::INVALID_ENTITY;
-            _text_entity_ids.controls = TextBuffer::INVALID_ENTITY;
+            // Just unpaused:
+            reset();
         }
     }
 
     if (_paused)
     {
-        // Currently in pause
+        // Currently in pause:
         _quit_requested = input.quit_requested().value();
         _death_requested = input.death_requested().value();
     }
@@ -92,8 +87,7 @@ PauseOverlay::PauseOverlay(std::shared_ptr<Viewport> viewport, Type pause_screen
 
 PauseOverlay::~PauseOverlay()
 {
-    _text_buffer->remove_text(_text_entity_ids.paused);
-    _text_buffer->remove_text(_text_entity_ids.controls);
+    reset();
 }
 
 void PauseOverlay::unpause()
@@ -107,7 +101,6 @@ void PauseOverlay::reset()
     _death_requested = false;
     _quit_requested = false;
 
-    // TODO: Move to a function.
     _half_opaque_quad = nullptr;
     _text_buffer->remove_text(_text_entity_ids.paused);
     _text_buffer->remove_text(_text_entity_ids.controls);
