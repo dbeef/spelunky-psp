@@ -14,9 +14,6 @@
 #include "game-objects/DeathOverlay.hpp"
 #include "main-dude/MainDude.hpp"
 
-#include <ctime>
-#include <GameLoop.hpp>
-
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
     auto& model_view_camera = game_loop._cameras.model_view;
