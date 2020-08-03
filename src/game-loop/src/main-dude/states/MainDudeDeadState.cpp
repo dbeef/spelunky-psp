@@ -4,10 +4,9 @@
 
 void MainDudeDeadState::enter(MainDude& main_dude)
 {
-    main_dude._animation.stop();
-    main_dude._quad.frame_changed(MainDudeSpritesheetFrames::DEAD);
     // TODO: Change physical size of the main dude (about half of the height when dead)
-    // TODO: Change animation frame depending on the bottom collision.
+    main_dude._animation.stop();
+    set_current_frame(main_dude);
 }
 
 MainDudeBaseState* MainDudeDeadState::update(MainDude& main_dude, uint32_t delta_time_ms)
@@ -16,6 +15,7 @@ MainDudeBaseState* MainDudeDeadState::update(MainDude& main_dude, uint32_t delta
 
     main_dude._physics.update(main_dude, delta_time_ms);
     main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
+    set_current_frame(main_dude);
 
     return this;
 }
@@ -23,4 +23,22 @@ MainDudeBaseState* MainDudeDeadState::update(MainDude& main_dude, uint32_t delta
 MainDudeBaseState *MainDudeDeadState::handle_input(MainDude& main_dude, const Input &input)
 {
     return this;
+}
+
+void MainDudeDeadState::set_current_frame(MainDude& main_dude)
+{
+    if (main_dude._physics.get_y_velocity() > 0.0f)
+    {
+        if (main_dude._quad.get_current_frame<MainDudeSpritesheetFrames>() != MainDudeSpritesheetFrames::DEAD_FALLING)
+        {
+            main_dude._quad.frame_changed(MainDudeSpritesheetFrames::DEAD_FALLING);
+        }
+    }
+    else
+    {
+        if (main_dude._quad.get_current_frame<MainDudeSpritesheetFrames>() != MainDudeSpritesheetFrames::DEAD)
+        {
+            main_dude._quad.frame_changed(MainDudeSpritesheetFrames::DEAD);
+        }
+    }
 }
