@@ -19,6 +19,8 @@ bool Video::setup_gl()
         return false;
     }
 
+    SDL_ShowCursor(SDL_DISABLE);
+
     SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
     SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
     SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );

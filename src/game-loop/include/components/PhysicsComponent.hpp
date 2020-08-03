@@ -18,6 +18,7 @@ public:
     float get_width() const { return _dimensions.width; }
     float get_height() const { return _dimensions.height; }
 
+    void set_dimensions(float width, float height) { _dimensions.width = width; _dimensions.height = height; }
     void set_velocity(float x, float y) { _velocity.x = x; _velocity.y = y; }
     void add_velocity(float x, float y) { _velocity.x += x; _velocity.y += y; }
     void add_position(float x, float y) { _position.x += x; _position.y += y; }
@@ -33,6 +34,8 @@ public:
     bool is_upper_collision() const { return _collisions.upper; }
     bool is_right_collision() const { return _collisions.right; }
     bool is_left_collision() const { return _collisions.left; }
+
+    void set_bounciness(float bounciness) { _properties.bounciness = bounciness; }
 
 private:
 
@@ -63,6 +66,11 @@ private:
         bool left = false;
         bool right = false;
     } _collisions;
+
+    struct
+    {
+        float bounciness = 0.0f;
+    } _properties;
 
     bool _gravity = true;
     int32_t _pos_update_delta_ms = 0;

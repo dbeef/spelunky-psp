@@ -4,7 +4,7 @@
 #include "GameLoopBaseState.hpp"
 
 class GameLoop;
-class PauseScreen;
+class PauseOverlay;
 
 class GameLoopMainMenuState : public GameLoopBaseState
 {
@@ -13,5 +13,5 @@ public:
     void enter(GameLoop&) override;
     void exit(GameLoop&) override;
 private:
-    std::shared_ptr<PauseScreen> _pause = nullptr;
+    std::shared_ptr<PauseOverlay> _pause_overlay = nullptr;
 };

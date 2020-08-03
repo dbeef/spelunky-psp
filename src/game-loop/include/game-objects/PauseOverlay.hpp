@@ -9,7 +9,7 @@
 #include "TextBuffer.hpp"
 #include "viewport/Viewport.hpp"
 
-class PauseScreen : public GameObject
+class PauseOverlay : public GameObject
 {
 public:
 
@@ -20,12 +20,18 @@ public:
         PLAYING
     };
 
-    PauseScreen(std::shared_ptr<Viewport>, Type);
-    ~PauseScreen() override;
+    PauseOverlay(std::shared_ptr<Viewport>, Type);
+    ~PauseOverlay() override;
 
-    void unpause();
     void update(uint32_t delta_time_ms) override;
     void set_text_buffer(const std::shared_ptr<TextBuffer>& text_buffer);
+
+    void reset();
+
+    void disable_input() { _disabled_input = true; }
+    void enable_input() { _disabled_input = false; }
+
+    void unpause() { _paused = false;}
 
     bool is_paused() const { return _paused; };
     bool is_quit_requested() const { return _quit_requested; }
@@ -48,6 +54,7 @@ private:
     bool _paused = false;
     bool _quit_requested = false;
     bool _death_requested = false;
+    bool _disabled_input = false;
 
     const Type _type;
 };

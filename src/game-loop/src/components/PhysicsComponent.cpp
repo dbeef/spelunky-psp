@@ -11,7 +11,8 @@
 namespace
 {
     // TODO: Should be a function of velocity
-    constexpr float smallest_position_step = 1.0f / 128.0f;
+    constexpr float smallest_position_step = 1.0f / 64.0f;
+    constexpr float bounce_epsilon = 0.05f;
 
     constexpr float default_gravity = 0.0225f;
     constexpr float default_friction = 0.005f;
@@ -31,16 +32,19 @@ namespace
             if (value - amount < 0)
             {
                 return 0;
-            } else
+            }
+            else
             {
                 return value - amount;
             }
-        } else
+        }
+        else
         {
             if (value + amount > 0)
             {
                 return 0;
-            } else
+            }
+            else
             {
                 return value + amount;
             }
@@ -130,7 +134,8 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
 
                 _position.x += copysign(smallest_position_step, temp_velocity_x);
                 Level::instance().get_tile_batch().get_neighbouring_tiles(_position.x, _position.y, neighbours);
-                const auto* overlapping_tile = collisions::overlaps(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
+                const auto* overlapping_tile = collisions::overlaps
+                        (neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
                 if (overlapping_tile)
                 {
                     // step back
@@ -145,8 +150,12 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                         _collisions.right = true;
                     }
 
-                    _velocity.x = 0.0f;
-                    temp_velocity_x = 0.0f;
+                    _velocity.x = -1 * _properties.bounciness * _velocity.x;
+                    if (std::abs(_velocity.x) < bounce_epsilon)
+                    {
+                        _velocity.x = 0.0f;
+                    }
+                    temp_velocity_x = _velocity.x;
                 }
                 else
                 {
@@ -175,11 +184,16 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                     else
                     {
                         _collisions.bottom = true;
-                        _position.y = overlapping_tile->y - MapTile::PHYSICAL_HEIGHT + (get_height() / 2);
+                        _position.y = overlapping_tile->y - get_height() / 2;
                     }
 
-                    _velocity.y = 0.0f;
-                    temp_velocity_y = 0.0f;
+                    _velocity.y = -1 * _properties.bounciness * _velocity.y;
+                    if (std::abs(_velocity.y) < bounce_epsilon)
+                    {
+                        _velocity.y = 0.0f;
+                    }
+
+                    temp_velocity_y = _velocity.y;
                 }
                 else
                 {

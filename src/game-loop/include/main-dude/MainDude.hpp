@@ -25,6 +25,7 @@
 #include "main-dude/states/MainDudeCliffHangingState.hpp"
 #include "main-dude/states/MainDudeLookingUpState.hpp"
 #include "main-dude/states/MainDudeRunningLookingUpState.hpp"
+#include "main-dude/states/MainDudeDeadState.hpp"
 
 #include <vector>
 
@@ -44,6 +45,7 @@ public:
 
     void set_position_on_tile(MapTile* map_tile);
     void enter_level_summary_state();
+    void enter_dead_state();
 
     bool entered_door() const { return _other.entered_door; }
 
@@ -77,6 +79,7 @@ private:
     friend class MainDudeCliffHangingState;
     friend class MainDudeLookingUpState;
     friend class MainDudeRunningLookingUpState;
+    friend class MainDudeDeadState;
     struct
     {
         MainDudeBaseState* current = nullptr;
@@ -94,6 +97,7 @@ private:
         MainDudeLookingUpState looking_up;
         MainDudeRunningLookingUpState running_looking_up;
         MainDudeLevelSummaryState level_summary;
+        MainDudeDeadState dead;
     } _states;
 
     struct

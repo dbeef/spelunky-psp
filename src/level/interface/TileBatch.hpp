@@ -17,6 +17,9 @@ namespace Consts
     const int ROOMS_COUNT_WIDTH = 3;
     const int ROOMS_COUNT_HEIGHT = 3;
 
+    static_assert(ROOMS_COUNT_WIDTH > 1, "Level generator will fail with current horizontal rooms count.");
+    static_assert(ROOMS_COUNT_HEIGHT > 1, "Level generator will fail with current vertical rooms count.");
+
     const int SPLASH_SCREEN_WIDTH_TILES = 20;
     const int SPLASH_SCREEN_HEIGHT_TILES = 12;
 

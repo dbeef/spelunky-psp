@@ -3,7 +3,7 @@
 #include <cassert>
 
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
-#include "game-objects/PauseScreen.hpp"
+#include "game-objects/PauseOverlay.hpp"
 #include "Input.hpp"
 
 namespace
@@ -11,21 +11,26 @@ namespace
     const char* PAUSED_MSG = "PAUSED";
 }
 
-void PauseScreen::set_text_buffer(const std::shared_ptr<TextBuffer> &text_buffer)
+void PauseOverlay::set_text_buffer(const std::shared_ptr<TextBuffer> &text_buffer)
 {
     assert(text_buffer != nullptr);
     _text_buffer = text_buffer;
 }
 
-void PauseScreen::update(uint32_t delta_time_ms)
+void PauseOverlay::update(uint32_t delta_time_ms)
 {
+    if (_disabled_input)
+    {
+        return;
+    }
+
     const auto& input = Input::instance();
 
     if (input.paused().changed() && input.paused().value())
     {
         if (!_paused)
         {
-            // Just paused
+            // Just paused:
             _paused = true;
 
             _half_opaque_quad = std::make_shared<QuadComponent>(
@@ -61,42 +66,44 @@ void PauseScreen::update(uint32_t delta_time_ms)
         }
         else
         {
-            // Just unpaused
-            _paused = false;
-            _half_opaque_quad = nullptr;
-            _text_buffer->remove_text(_text_entity_ids.paused);
-            _text_buffer->remove_text(_text_entity_ids.controls);
-            _text_entity_ids.paused = TextBuffer::INVALID_ENTITY;
-            _text_entity_ids.controls = TextBuffer::INVALID_ENTITY;
+            // Just unpaused:
+            reset();
         }
     }
 
     if (_paused)
     {
-        // Currently in pause
+        // Currently in pause:
         _quit_requested = input.quit_requested().value();
         _death_requested = input.death_requested().value();
     }
 }
 
-PauseScreen::PauseScreen(std::shared_ptr<Viewport> viewport, Type pause_screen_type)
+PauseOverlay::PauseOverlay(std::shared_ptr<Viewport> viewport, Type pause_screen_type)
     : _viewport(std::move(viewport))
     , _type(pause_screen_type)
 {
 }
 
-PauseScreen::~PauseScreen()
+PauseOverlay::~PauseOverlay()
 {
-    _text_buffer->remove_text(_text_entity_ids.paused);
-    _text_buffer->remove_text(_text_entity_ids.controls);
+    reset();
 }
 
-void PauseScreen::unpause()
+void PauseOverlay::reset()
 {
     _paused = false;
+    _death_requested = false;
+    _quit_requested = false;
+
+    _half_opaque_quad = nullptr;
+    _text_buffer->remove_text(_text_entity_ids.paused);
+    _text_buffer->remove_text(_text_entity_ids.controls);
+    _text_entity_ids.paused = TextBuffer::INVALID_ENTITY;
+    _text_entity_ids.controls = TextBuffer::INVALID_ENTITY;
 }
 
-std::string PauseScreen::get_available_controls_msg() const
+std::string PauseOverlay::get_available_controls_msg() const
 {
     std::stringstream out;
 
