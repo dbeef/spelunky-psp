@@ -4,7 +4,6 @@
 
 void MainDudeDeadState::enter(MainDude& main_dude)
 {
-
     if (main_dude._physics.get_y_velocity() == 0.0f)
     {
         // Give him a slight jump, just for entertainment:

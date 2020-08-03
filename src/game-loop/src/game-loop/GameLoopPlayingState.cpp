@@ -56,9 +56,9 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
             log_info("Death requested.");
             game_loop._main_dude->enter_dead_state();
             _death_overlay->launch();
-            _death_overlay->enable();
+            _death_overlay->enable_input();
             _pause_overlay->reset();
-            _pause_overlay->disable();
+            _pause_overlay->disable_input();
         }
         else if (_pause_overlay->is_quit_requested())
         {
@@ -150,7 +150,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
     _death_overlay = std::make_shared<DeathOverlay>(game_loop._viewport);
     _death_overlay->set_text_buffer(game_loop._text_buffer);
-    _death_overlay->disable();
+    _death_overlay->disable_input();
     game_loop._game_objects.push_back(_death_overlay);
 }
 

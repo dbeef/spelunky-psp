@@ -1,3 +1,4 @@
+#include <utility>
 #include <sstream>
 #include <cstring>
 
@@ -9,7 +10,7 @@ namespace
     const char* GAME_OVER_MSG = "GAME OVER";
 }
 
-DeathOverlay::DeathOverlay(const std::shared_ptr<Viewport>& viewport) : _viewport(viewport)
+DeathOverlay::DeathOverlay(std::shared_ptr<Viewport>  viewport) : _viewport(std::move(viewport))
 {
 }
 
@@ -48,7 +49,7 @@ void DeathOverlay::launch()
 
 void DeathOverlay::update(uint32_t delta_time_ms)
 {
-    if (_disabled)
+    if (_disabled_input)
     {
         return;
     }
@@ -75,12 +76,12 @@ std::string DeathOverlay::get_available_controls_msg() const
     return out.str();
 }
 
-void DeathOverlay::disable()
+void DeathOverlay::disable_input()
 {
-    _disabled = true;
+    _disabled_input = true;
 }
 
-void DeathOverlay::enable()
+void DeathOverlay::enable_input()
 {
-    _disabled = false;
+    _disabled_input = false;
 }

@@ -27,8 +27,11 @@ public:
     void set_text_buffer(const std::shared_ptr<TextBuffer>& text_buffer);
 
     void reset();
-    void disable();
-    void unpause();
+
+    void disable_input() { _disabled_input = true; }
+    void enable_input() { _disabled_input = false; }
+
+    void unpause() { _paused = false;}
 
     bool is_paused() const { return _paused; };
     bool is_quit_requested() const { return _quit_requested; }
@@ -51,7 +54,7 @@ private:
     bool _paused = false;
     bool _quit_requested = false;
     bool _death_requested = false;
-    bool _disabled = false;
+    bool _disabled_input = false;
 
     const Type _type;
 };

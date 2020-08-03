@@ -13,17 +13,15 @@ class DeathOverlay : public GameObject
 {
 public:
 
-    explicit DeathOverlay(const std::shared_ptr<Viewport>&);
+    explicit DeathOverlay(std::shared_ptr<Viewport>);
     ~DeathOverlay() override;
 
-    void disable();
-    void enable();
-
     void launch();
+    void disable_input();
+    void enable_input();
+
     void update(uint32_t delta_time_ms) override;
     void set_text_buffer(const std::shared_ptr<TextBuffer>& text_buffer);
-
-    bool is_launched() const { return _launched; }
     bool is_scores_requested() const { return _scores_requested; };
 
 private:
@@ -39,7 +37,7 @@ private:
         TextEntityID controls = TextBuffer::INVALID_ENTITY;
     } _text_entity_ids;
 
-    bool _disabled = false;
+    bool _disabled_input = false;
     bool _launched = false;
     bool _scores_requested = false;
 };
