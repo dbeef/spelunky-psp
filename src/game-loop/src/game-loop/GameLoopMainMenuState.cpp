@@ -53,7 +53,6 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
         if (_pause->is_quit_requested())
         {
             log_info("Quit requested.");
-            _pause->reset();
             game_loop._exit = true;
         }
         _pause->update(delta_time_ms);
