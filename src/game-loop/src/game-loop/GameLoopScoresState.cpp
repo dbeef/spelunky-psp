@@ -39,7 +39,6 @@ GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t del
         if (_pause->is_quit_requested())
         {
             log_info("Quit requested.");
-            _pause->unpause();
             game_loop._exit = true;
         }
         _pause->update(delta_time_ms);

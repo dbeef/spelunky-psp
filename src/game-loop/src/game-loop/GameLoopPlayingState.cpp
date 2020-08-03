@@ -63,7 +63,6 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
         else if (_pause_overlay->is_quit_requested())
         {
             log_info("Quit requested.");
-            _pause_overlay->reset();
             game_loop._exit = true;
         }
 
