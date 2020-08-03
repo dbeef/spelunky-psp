@@ -5,6 +5,7 @@
 void MainDudeDeadState::enter(MainDude& main_dude)
 {
     // TODO: Change physical size of the main dude (about half of the height when dead)
+    main_dude._physics.set_bounciness(0.5f);
     main_dude._animation.stop();
     set_current_frame(main_dude);
 }
