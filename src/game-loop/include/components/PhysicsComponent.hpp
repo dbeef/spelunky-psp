@@ -34,6 +34,8 @@ public:
     bool is_right_collision() const { return _collisions.right; }
     bool is_left_collision() const { return _collisions.left; }
 
+    void set_bounciness(float bounciness) { _properties.bounciness = bounciness; }
+    
 private:
 
     struct
@@ -63,6 +65,11 @@ private:
         bool left = false;
         bool right = false;
     } _collisions;
+
+    struct
+    {
+        float bounciness = 0.0f;
+    } _properties;
 
     bool _gravity = true;
     int32_t _pos_update_delta_ms = 0;
