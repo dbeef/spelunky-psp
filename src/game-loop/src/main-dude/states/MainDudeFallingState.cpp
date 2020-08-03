@@ -1,6 +1,12 @@
+#include <main-dude/MainDude.hpp>
 #include "main-dude/states/MainDudeFallingState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
+
+namespace
+{
+    const float STUNNED_SPEED = 0.26f;
+}
 
 void MainDudeFallingState::enter(MainDude& main_dude)
 {
@@ -20,7 +26,11 @@ MainDudeBaseState* MainDudeFallingState::update(MainDude& main_dude, uint32_t de
 
     if (main_dude._physics.is_bottom_collision())
     {
-        if (main_dude._physics.get_x_velocity() == 0.0f)
+        if (_last_y_speed >= STUNNED_SPEED)
+        {
+            return &main_dude._states.stunned;
+        }
+        else if (main_dude._physics.get_x_velocity() == 0.0f)
         {
             return &main_dude._states.standing;
         }
@@ -30,6 +40,7 @@ MainDudeBaseState* MainDudeFallingState::update(MainDude& main_dude, uint32_t de
         }
     }
 
+    _last_y_speed = main_dude._physics.get_y_velocity();
     return this;
 }
 

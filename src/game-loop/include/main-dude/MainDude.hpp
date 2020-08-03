@@ -26,6 +26,7 @@
 #include "main-dude/states/MainDudeLookingUpState.hpp"
 #include "main-dude/states/MainDudeRunningLookingUpState.hpp"
 #include "main-dude/states/MainDudeDeadState.hpp"
+#include "main-dude/states/MainDudeStunnedState.hpp"
 
 #include <vector>
 
@@ -80,6 +81,7 @@ private:
     friend class MainDudeLookingUpState;
     friend class MainDudeRunningLookingUpState;
     friend class MainDudeDeadState;
+    friend class MainDudeStunnedState;
     struct
     {
         MainDudeBaseState* current = nullptr;
@@ -98,6 +100,7 @@ private:
         MainDudeRunningLookingUpState running_looking_up;
         MainDudeLevelSummaryState level_summary;
         MainDudeDeadState dead;
+        MainDudeStunnedState stunned;
     } _states;
 
     struct
