@@ -24,7 +24,7 @@ public:
     void set_text_buffer(const std::shared_ptr<TextBuffer>& text_buffer);
 
     bool is_launched() const { return _launched; }
-    bool is_main_menu_requested() const { return _main_menu_requested; };
+    bool is_scores_requested() const { return _scores_requested; };
 
 private:
 
@@ -41,5 +41,5 @@ private:
 
     bool _disabled = false;
     bool _launched = false;
-    bool _main_menu_requested = false;
+    bool _scores_requested = false;
 };

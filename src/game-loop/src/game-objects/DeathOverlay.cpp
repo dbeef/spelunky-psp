@@ -54,9 +54,9 @@ void DeathOverlay::update(uint32_t delta_time_ms)
     }
 
     const auto& input = Input::instance();
-    if (input.jumping())
+    if (input.jumping().value())
     {
-        _main_menu_requested = true;
+        _scores_requested = true;
     }
 }
 
@@ -70,7 +70,7 @@ std::string DeathOverlay::get_available_controls_msg() const
 {
     std::stringstream out;
     out << "PRESS ";
-    out << Input::get_main_menu_request_binding_msg();
+    out << Input::get_scores_request_binding_msg();
     out << " FOR HIGH SCORES.";
     return out.str();
 }

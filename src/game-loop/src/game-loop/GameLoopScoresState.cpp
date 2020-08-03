@@ -6,7 +6,7 @@
 #include "Level.hpp"
 #include "main-dude/MainDude.hpp"
 #include "game-objects/ResetSign.hpp"
-#include "game-objects/PauseScreen.hpp"
+#include "game-objects/PauseOverlay.hpp"
 #include "Input.hpp"
 
 GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t delta_time_ms)
@@ -103,7 +103,7 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
 
     // Create Pause:
 
-    _pause = std::make_shared<PauseScreen>(game_loop._viewport, PauseScreen::Type::SCORES);
+    _pause = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::SCORES);
     _pause->set_text_buffer(game_loop._text_buffer);
     game_loop._game_objects.push_back(_pause);
 

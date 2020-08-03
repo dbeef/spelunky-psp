@@ -18,7 +18,7 @@ const char* Input::get_quit_request_binding_msg()
     return "F10";
 }
 
-const char* Input::get_main_menu_request_binding_msg()
+const char* Input::get_scores_request_binding_msg()
 {
     return "D";
 }

@@ -15,6 +15,7 @@
 #include "main-dude/MainDude.hpp"
 
 #include <ctime>
+#include <GameLoop.hpp>
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -95,9 +96,9 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
         return &game_loop._states.level_summary;
     }
 
-    if (_death_overlay->is_main_menu_requested())
+    if (_death_overlay->is_scores_requested())
     {
-        return &game_loop._states.main_menu;
+        return &game_loop._states.scores;
     }
 
     return this;

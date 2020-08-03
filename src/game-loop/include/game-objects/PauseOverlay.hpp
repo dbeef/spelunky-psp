@@ -23,10 +23,12 @@ public:
     PauseOverlay(std::shared_ptr<Viewport>, Type);
     ~PauseOverlay() override;
 
-    void disable();
-    void reset();
     void update(uint32_t delta_time_ms) override;
     void set_text_buffer(const std::shared_ptr<TextBuffer>& text_buffer);
+
+    void reset();
+    void disable();
+    void unpause();
 
     bool is_paused() const { return _paused; };
     bool is_quit_requested() const { return _quit_requested; }

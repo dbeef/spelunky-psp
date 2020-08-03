@@ -19,6 +19,11 @@ void PauseOverlay::set_text_buffer(const std::shared_ptr<TextBuffer> &text_buffe
 
 void PauseOverlay::update(uint32_t delta_time_ms)
 {
+    if (_disabled)
+    {
+        return;
+    }
+
     const auto& input = Input::instance();
 
     if (input.paused().changed() && input.paused().value())
@@ -94,6 +99,26 @@ PauseOverlay::~PauseOverlay()
 void PauseOverlay::unpause()
 {
     _paused = false;
+}
+
+void PauseOverlay::reset()
+{
+    _paused = false;
+    _death_requested = false;
+    _quit_requested = false;
+
+    // TODO: Move to a function.
+    _half_opaque_quad = nullptr;
+    _text_buffer->remove_text(_text_entity_ids.paused);
+    _text_buffer->remove_text(_text_entity_ids.controls);
+    _text_entity_ids.paused = TextBuffer::INVALID_ENTITY;
+    _text_entity_ids.controls = TextBuffer::INVALID_ENTITY;
+}
+
+
+void PauseOverlay::disable()
+{
+    _disabled = true;
 }
 
 std::string PauseOverlay::get_available_controls_msg() const
