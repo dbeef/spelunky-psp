@@ -34,6 +34,13 @@ void MainDudeDeadState::set_current_frame(MainDude& main_dude)
             main_dude._quad.frame_changed(MainDudeSpritesheetFrames::DEAD_FALLING);
         }
     }
+    else if (main_dude._physics.get_y_velocity() < 0.0f)
+    {
+        if (main_dude._quad.get_current_frame<MainDudeSpritesheetFrames>() != MainDudeSpritesheetFrames::DEAD_BOUNCE)
+        {
+            main_dude._quad.frame_changed(MainDudeSpritesheetFrames::DEAD_BOUNCE);
+        }
+    }
     else
     {
         if (main_dude._quad.get_current_frame<MainDudeSpritesheetFrames>() != MainDudeSpritesheetFrames::DEAD)
