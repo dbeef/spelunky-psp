@@ -12,7 +12,7 @@ namespace
 {
     constexpr float SMALLEST_POSITION_STEP = 1.0f / 64.0f; // TODO: Should be a function of velocity
     constexpr float BOUNCE_EPSILON = 0.05f;
-    constexpr float GRAVITY = 0.0225f;
+    constexpr float GRAVITY = 0.011f;
     constexpr uint16_t POS_UPDATE_DELTA_MS = 15;
 
     float move_to_zero(float value, float amount)
