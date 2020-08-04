@@ -2,13 +2,18 @@
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 
+namespace
+{
+    constexpr float STUNNED_TIME_MS = 4000;
+}
+
 void MainDudeStunnedState::enter(MainDude &main_dude)
 {
     // TODO: Set friction higher than normal.
-    // TODO: Loop N times.
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_4_LAST),
-                               50, false);
+                               75, true);
+    _stunned_timer_ms = 0;
 }
 
 MainDudeBaseState *MainDudeStunnedState::update(MainDude& main_dude, uint32_t delta_time_ms)
@@ -21,7 +26,9 @@ MainDudeBaseState *MainDudeStunnedState::update(MainDude& main_dude, uint32_t de
 
     // Other:
 
-    if (main_dude._animation.is_finished())
+    _stunned_timer_ms += delta_time_ms;
+
+    if (_stunned_timer_ms > STUNNED_TIME_MS)
     {
         if (main_dude._physics.is_bottom_collision())
         {
