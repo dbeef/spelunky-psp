@@ -61,3 +61,8 @@ MainDudeBaseState *MainDudeStunnedState::handle_input(MainDude& main_dude, const
 {
     return this;
 }
+
+void MainDudeStunnedState::exit(MainDude& main_dude)
+{
+    main_dude._physics.set_friction(PhysicsComponent::get_default_friction());
+}

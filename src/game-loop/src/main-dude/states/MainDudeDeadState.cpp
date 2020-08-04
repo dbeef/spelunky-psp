@@ -61,3 +61,8 @@ void MainDudeDeadState::set_current_frame(MainDude& main_dude)
         }
     }
 }
+
+void MainDudeDeadState::exit(MainDude& main_dude)
+{
+    main_dude._physics.set_friction(PhysicsComponent::get_default_friction());
+}

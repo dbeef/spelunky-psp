@@ -44,3 +44,8 @@ MainDudeBaseState *MainDudeCliffHangingState::handle_input(MainDude& main_dude, 
 
     return this;
 }
+
+void MainDudeCliffHangingState::exit(MainDude& main_dude)
+{
+    main_dude._physics.enable_gravity();
+}
