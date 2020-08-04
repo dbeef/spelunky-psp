@@ -60,8 +60,9 @@ void MainDude::update(uint32_t delta_time_ms)
 
     if (new_state != _states.current)
     {
-        new_state->enter(*this);
+        _states.current->exit(*this);
         _states.current = new_state;
+        _states.current->enter(*this);
     }
 }
 
@@ -107,12 +108,14 @@ void MainDude::set_position_on_tile(MapTile *map_tile)
 
 void MainDude::enter_dead_state()
 {
+    _states.current->exit(*this);
     _states.current = &_states.dead;
     _states.current->enter(*this);
 }
 
 void MainDude::enter_level_summary_state()
 {
+    _states.current->exit(*this);
     _states.current = &_states.level_summary;
     _states.current->enter(*this);
 }
