@@ -10,15 +10,10 @@
 
 namespace
 {
-    // TODO: Should be a function of velocity
-    constexpr float smallest_position_step = 1.0f / 64.0f;
-    constexpr float bounce_epsilon = 0.05f;
-
-    constexpr float default_gravity = 0.0225f;
-    constexpr float default_friction = 0.005f;
-    constexpr float default_bouncing_factor_x = 0.15f;
-    constexpr float default_bouncing_factor_y = 0.35f;
-    constexpr uint16_t default_pos_update_delta_ms = 15;
+    constexpr float SMALLEST_POSITION_STEP = 1.0f / 64.0f; // TODO: Should be a function of velocity
+    constexpr float BOUNCE_EPSILON = 0.05f;
+    constexpr float GRAVITY = 0.0225f;
+    constexpr uint16_t POS_UPDATE_DELTA_MS = 15;
 
     float move_to_zero(float value, float amount)
     {
@@ -70,9 +65,9 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
 
     bool initial_check_done = false;
 
-    while (_pos_update_delta_ms >= default_pos_update_delta_ms)
+    while (_pos_update_delta_ms >= POS_UPDATE_DELTA_MS)
     {
-        _pos_update_delta_ms -= default_pos_update_delta_ms;
+        _pos_update_delta_ms -= POS_UPDATE_DELTA_MS;
 
         // Initial check:
 
@@ -118,7 +113,6 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
             initial_check_done = true;
         }
 
-
         // Step by step:
 
         MapTile* neighbours[9] = { nullptr };
@@ -132,7 +126,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
             {
                 // Step on X axis
 
-                _position.x += copysign(smallest_position_step, temp_velocity_x);
+                _position.x += copysign(SMALLEST_POSITION_STEP, temp_velocity_x);
                 Level::instance().get_tile_batch().get_neighbouring_tiles(_position.x, _position.y, neighbours);
                 const auto* overlapping_tile = collisions::overlaps
                         (neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
@@ -151,7 +145,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                     }
 
                     _velocity.x = -1 * _properties.bounciness * _velocity.x;
-                    if (std::abs(_velocity.x) < bounce_epsilon)
+                    if (std::abs(_velocity.x) < BOUNCE_EPSILON)
                     {
                         _velocity.x = 0.0f;
                     }
@@ -161,7 +155,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 {
                     _collisions.right = false;
                     _collisions.left = false;
-                    temp_velocity_x = move_to_zero(temp_velocity_x, smallest_position_step);
+                    temp_velocity_x = move_to_zero(temp_velocity_x, SMALLEST_POSITION_STEP);
                 }
             }
 
@@ -169,7 +163,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
             {
                 // Step on Y axis
 
-                _position.y += copysign(smallest_position_step, temp_velocity_y);
+                _position.y += copysign(SMALLEST_POSITION_STEP, temp_velocity_y);
                 Level::instance().get_tile_batch().get_neighbouring_tiles(_position.x,  _position.y, neighbours);
                 const auto* overlapping_tile = collisions::overlaps(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
                 if (overlapping_tile)
@@ -188,7 +182,7 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                     }
 
                     _velocity.y = -1 * _properties.bounciness * _velocity.y;
-                    if (std::abs(_velocity.y) < bounce_epsilon)
+                    if (std::abs(_velocity.y) < BOUNCE_EPSILON)
                     {
                         _velocity.y = 0.0f;
                     }
@@ -199,20 +193,18 @@ void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
                 {
                     _collisions.upper = false;
                     _collisions.bottom = false;
-                    temp_velocity_y = move_to_zero(temp_velocity_y, smallest_position_step);
+                    temp_velocity_y = move_to_zero(temp_velocity_y, SMALLEST_POSITION_STEP);
                 }
             }
         }
 
-        if (_collisions.bottom)
+        if (_collisions.bottom) // Apply friction
         {
-            // Apply friction
-            _velocity.x = move_to_zero(_velocity.x, default_friction);
+            _velocity.x = move_to_zero(_velocity.x, _properties.friction);
         }
-        else if (_gravity)
+        else if (_gravity) // Apply gravity
         {
-            // Apply gravity
-            _velocity.y += default_gravity;
+            _velocity.y += GRAVITY;
         }
     }
 }
