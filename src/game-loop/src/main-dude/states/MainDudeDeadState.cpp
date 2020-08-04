@@ -10,6 +10,7 @@ void MainDudeDeadState::enter(MainDude& main_dude)
         main_dude._physics.add_velocity(0.0f, -0.07f);
     }
 
+    main_dude._physics.set_friction(PhysicsComponent::get_default_friction() * 1.8f);
     main_dude._physics.set_bounciness(0.5f);
     main_dude._physics.set_dimensions(main_dude._physics.get_width(), main_dude._physics.get_height());
     main_dude._animation.stop();
