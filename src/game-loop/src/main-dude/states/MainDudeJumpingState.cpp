@@ -30,6 +30,10 @@ MainDudeBaseState* MainDudeJumpingState::update(MainDude& main_dude, uint32_t de
             return &main_dude._states.running;
         }
     }
+    else if (main_dude._physics.get_y_velocity() > 0.0f)
+    {
+        return &main_dude._states.falling;
+    }
 
     return this;
 }

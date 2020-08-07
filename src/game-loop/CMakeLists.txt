@@ -23,6 +23,7 @@ add_library(GameLoop STATIC
         src/main-dude/states/MainDudeLookingUpState.cpp
         src/main-dude/states/MainDudeRunningLookingUpState.cpp
         src/main-dude/states/MainDudeDeadState.cpp
+        src/main-dude/states/MainDudeStunnedState.cpp
         src/components/PhysicsComponent.cpp
         src/components/QuadComponent.cpp
         src/components/AnimationComponent.cpp
@@ -69,6 +70,7 @@ add_library(GameLoop STATIC
         include/main-dude/states/MainDudeLookingUpState.hpp
         include/main-dude/states/MainDudeRunningLookingUpState.hpp
         include/main-dude/states/MainDudeDeadState.hpp
+        include/main-dude/states/MainDudeStunnedState.hpp
 )
 
 target_include_directories(GameLoop

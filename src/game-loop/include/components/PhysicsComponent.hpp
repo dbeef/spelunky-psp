@@ -12,16 +12,16 @@ public:
     void update(MainDude&, uint32_t delta_time_ms);
 
     void set_position(float x, float y) { _position.x = x; _position.y = y;}
+    void add_position(float x, float y) { _position.x += x; _position.y += y; }
     float get_x_position() const { return _position.x; }
     float get_y_position() const { return _position.y; }
 
+    void set_dimensions(float width, float height) { _dimensions.width = width; _dimensions.height = height; }
     float get_width() const { return _dimensions.width; }
     float get_height() const { return _dimensions.height; }
 
-    void set_dimensions(float width, float height) { _dimensions.width = width; _dimensions.height = height; }
     void set_velocity(float x, float y) { _velocity.x = x; _velocity.y = y; }
     void add_velocity(float x, float y) { _velocity.x += x; _velocity.y += y; }
-    void add_position(float x, float y) { _position.x += x; _position.y += y; }
     float get_x_velocity() const { return _velocity.x; }
     float get_y_velocity() const { return _velocity.y; }
     void set_max_x_velocity(float x) { _velocity.max_x = x;}
@@ -36,6 +36,9 @@ public:
     bool is_left_collision() const { return _collisions.left; }
 
     void set_bounciness(float bounciness) { _properties.bounciness = bounciness; }
+    void set_friction(float friction) { _properties.friction = friction; }
+
+    static float get_default_friction() { return 0.005f; }
 
 private:
 
@@ -70,6 +73,7 @@ private:
     struct
     {
         float bounciness = 0.0f;
+        float friction = PhysicsComponent::get_default_friction();
     } _properties;
 
     bool _gravity = true;

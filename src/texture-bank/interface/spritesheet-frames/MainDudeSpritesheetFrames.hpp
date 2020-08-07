@@ -93,5 +93,11 @@ enum class MainDudeSpritesheetFrames : uint16_t
 
     DEAD,
     DEAD_FALLING,
-    DEAD_BOUNCE
+    DEAD_BOUNCE,
+
+    STUNNED_0_FIRST,
+    STUNNED_1,
+    STUNNED_2,
+    STUNNED_3,
+    STUNNED_4_LAST,
 };

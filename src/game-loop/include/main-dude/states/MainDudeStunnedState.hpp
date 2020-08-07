@@ -1,15 +1,16 @@
 #pragma once
 
+#include <cstdint>
 #include "main-dude/states/MainDudeBaseState.hpp"
 
-class MainDudeDeadState : public MainDudeBaseState
+class MainDudeStunnedState : public MainDudeBaseState
 {
 public:
 
-    MainDudeBaseState* update(MainDude&, uint32_t delta_time_ms) override;
+    MainDudeBaseState* update(MainDude& main_dude, uint32_t delta_time_ms) override;
     MainDudeBaseState* handle_input(MainDude&, const Input& input) override;
     void enter(MainDude&) override;
     void exit(MainDude&) override;
 private:
-    void set_current_frame(MainDude&);
+    uint16_t _stunned_timer_ms = 0;
 };

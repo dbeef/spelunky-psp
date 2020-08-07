@@ -17,4 +17,3 @@ private:
     std::shared_ptr<PauseOverlay> _pause_overlay = nullptr;
     std::shared_ptr<DeathOverlay> _death_overlay = nullptr;
 };
-

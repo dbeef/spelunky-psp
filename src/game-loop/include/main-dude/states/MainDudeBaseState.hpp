@@ -13,4 +13,5 @@ public:
     virtual MainDudeBaseState* update(MainDude&, uint32_t delta_time_ms) = 0;
     virtual MainDudeBaseState* handle_input(MainDude&, const Input& input) = 0;
     virtual void enter(MainDude&) = 0;
+    virtual void exit(MainDude&) {}; // Default definition provided as most states don't utilize the exit function.
 };

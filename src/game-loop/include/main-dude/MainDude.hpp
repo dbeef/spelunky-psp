@@ -26,6 +26,7 @@
 #include "main-dude/states/MainDudeLookingUpState.hpp"
 #include "main-dude/states/MainDudeRunningLookingUpState.hpp"
 #include "main-dude/states/MainDudeDeadState.hpp"
+#include "main-dude/states/MainDudeStunnedState.hpp"
 
 #include <vector>
 
@@ -80,6 +81,7 @@ private:
     friend class MainDudeLookingUpState;
     friend class MainDudeRunningLookingUpState;
     friend class MainDudeDeadState;
+    friend class MainDudeStunnedState;
     struct
     {
         MainDudeBaseState* current = nullptr;
@@ -98,6 +100,7 @@ private:
         MainDudeRunningLookingUpState running_looking_up;
         MainDudeLevelSummaryState level_summary;
         MainDudeDeadState dead;
+        MainDudeStunnedState stunned;
     } _states;
 
     struct
@@ -108,11 +111,11 @@ private:
 
     static constexpr float DEFAULT_DELTA_X = 0.01f;
     static constexpr float DEFAULT_MAX_X_VELOCITY = 0.050f;
-    static constexpr float DEFAULT_MAX_Y_VELOCITY = 0.26f;
+    static constexpr float DEFAULT_MAX_Y_VELOCITY = 0.39f;
 
     static constexpr float MAX_RUNNING_VELOCITY_X = 0.15f;
     static constexpr float MAX_CRAWLING_VELOCITY_X = 0.008f;
     static constexpr float CRAWLING_DELTA_X = 0.008f;
 
-    static constexpr float JUMP_SPEED = 0.25f;
+    static constexpr float JUMP_SPEED = 0.165f;
 };
