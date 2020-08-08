@@ -3,9 +3,11 @@
 #include <cstdint>
 
 // Symbols are in the same order as in the ASCII table, with an offset of -32.
+// Add an offset of +59 to the final index for yellow characters.
 // Only UPPER case letters are included.
 
 const std::int8_t FONT_ASCII_OFFSET = -32;
+const std::int8_t FONT_ASCII_YELLOW_OFFSET = FONT_ASCII_OFFSET + 59;
 
 enum class FontSpritesheetFrames : int16_t
 {
@@ -68,5 +70,65 @@ enum class FontSpritesheetFrames : int16_t
     X,
     Y,
     Z,
+    // +59
+    YELLOW_SPACE,
+    YELLOW_EXCLAMATION_MARK,
+    YELLOW_QUOTE,
+    YELLOW_NUMBER_SIGN,
+    YELLOW_DOLLAR_SIGN,
+    YELLOW_PERCENT_SIGN,
+    YELLOW_AMPERSAND,
+    YELLOW_APOSTROPHE,
+    YELLOW_ROUND_BRACKET_LEFT,
+    YELLOW_ROUND_BRACKET_RIGHT,
+    YELLOW_STAR,
+    YELLOW_PLUS,
+    YELLOW_COMMA,
+    YELLOW_MINUS,
+    YELLOW_DOT,
+    YELLOW_STROKE,
+    YELLOW_ZERO,
+    YELLOW_ONE,
+    YELLOW_TWO,
+    YELLOW_THREE,
+    YELLOW_FOUR,
+    YELLOW_FIVE,
+    YELLOW_SIX,
+    YELLOW_SEVEN,
+    YELLOW_EIGHT,
+    YELLOW_NINE,
+    YELLOW_COLON,
+    YELLOW_SEMICOLON,
+    YELLOW_DIAMOND_BRACKET_LEFT,
+    YELLOW_EQUAL_SIGN,
+    YELLOW_DIAMOND_BRACKET_RIGHT,
+    YELLOW_QUESTION_MARK,
+    YELLOW_WEB_AT_SIGN,
+    YELLOW_A,
+    YELLOW_B,
+    YELLOW_C,
+    YELLOW_D,
+    YELLOW_E,
+    YELLOW_F,
+    YELLOW_G,
+    YELLOW_H,
+    YELLOW_I,
+    YELLOW_J,
+    YELLOW_K,
+    YELLOW_L,
+    YELLOW_M,
+    YELLOW_N,
+    YELLOW_O,
+    YELLOW_P,
+    YELLOW_Q,
+    YELLOW_R,
+    YELLOW_S,
+    YELLOW_T,
+    YELLOW_U,
+    YELLOW_V,
+    YELLOW_W,
+    YELLOW_X,
+    YELLOW_Y,
+    YELLOW_Z,
     _SIZE
 };
