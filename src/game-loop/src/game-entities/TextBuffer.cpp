@@ -22,7 +22,7 @@ TextEntityID TextBuffer::create_text()
     return unique_id_pool;
 }
 
-void TextBuffer::update_text(TextEntityID id, Point2D position, const char *contents, std::size_t length)
+void TextBuffer::update_text(TextEntityID id, Point2D position, const char *contents, std::size_t length, bool yellow)
 {
     auto it = std::find_if(_text_entries.begin(), _text_entries.end(), [id](const TextEntity& e) { return e.id == id; });
     if (it != _text_entries.end())
@@ -53,7 +53,7 @@ void TextBuffer::update_text(TextEntityID id, Point2D position, const char *cont
             }
 
             auto& quad = it->quads[index];
-            const int16_t spritesheet_frame_index = sign + FONT_ASCII_OFFSET;
+            const int16_t spritesheet_frame_index = sign + (yellow ? FONT_ASCII_YELLOW_OFFSET : FONT_ASCII_OFFSET);
 
             // Update frame with ASCII sign:
 
