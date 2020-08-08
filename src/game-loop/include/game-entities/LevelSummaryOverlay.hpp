@@ -28,6 +28,10 @@ private:
     struct
     {
         TextEntityID level_completed = TextBuffer::INVALID_ENTITY;
+        TextEntityID time = TextBuffer::INVALID_ENTITY;
+        TextEntityID loot = TextBuffer::INVALID_ENTITY;
+        TextEntityID kills = TextBuffer::INVALID_ENTITY;
+        TextEntityID money = TextBuffer::INVALID_ENTITY;
     } _text_entity_ids;
 
     bool _launched = false;
