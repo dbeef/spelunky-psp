@@ -7,7 +7,7 @@
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
 #include "GameLoopPlayingState.hpp"
-#include "game-objects/GameObject.hpp"
+#include "game-objects/GameEntity.hpp"
 #include "game-objects/HUD.hpp"
 #include "game-objects/TextBuffer.hpp"
 #include "game-objects/PauseOverlay.hpp"

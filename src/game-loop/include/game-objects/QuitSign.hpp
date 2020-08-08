@@ -2,10 +2,10 @@
 
 #include "spritesheet-frames/MainMenuSpritesheetFrames.hpp"
 #include "components/QuadComponent.hpp"
-#include "GameObject.hpp"
+#include "GameEntity.hpp"
 #include "Point2D.hpp"
 
-class QuitSign : public GameObject
+class QuitSign : public GameEntity
 {
 public:
 

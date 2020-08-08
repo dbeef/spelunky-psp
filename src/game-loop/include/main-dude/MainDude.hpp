@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RenderEntity.hpp"
-#include "game-objects/GameObject.hpp"
+#include "game-objects/GameEntity.hpp"
 #include "spritesheet-frames/MainDudeSpritesheetFrames.hpp"
 
 #include "components/PhysicsComponent.hpp"
@@ -34,7 +34,7 @@ class MainDudeBaseState;
 class Input;
 class MapTile;
 
-class MainDude : public GameObject
+class MainDude : public GameEntity
 {
 public:
 

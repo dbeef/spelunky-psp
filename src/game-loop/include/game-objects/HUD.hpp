@@ -2,13 +2,13 @@
 
 #include <memory>
 
-#include "GameObject.hpp"
+#include "GameEntity.hpp"
 #include "components/QuadComponent.hpp"
 #include "Point2D.hpp"
 #include "TextBuffer.hpp"
 #include "viewport/Viewport.hpp"
 
-class HUD : public GameObject
+class HUD : public GameEntity
 {
 public:
 

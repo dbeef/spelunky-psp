@@ -3,13 +3,13 @@
 #include <memory>
 #include <string>
 
-#include "GameObject.hpp"
+#include "GameEntity.hpp"
 #include "components/QuadComponent.hpp"
 #include "Point2D.hpp"
 #include "TextBuffer.hpp"
 #include "viewport/Viewport.hpp"
 
-class DeathOverlay : public GameObject
+class DeathOverlay : public GameEntity
 {
 public:
 
