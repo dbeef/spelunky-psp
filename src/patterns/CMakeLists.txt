@@ -1,7 +1,7 @@
 project(Patterns)
 
 add_library(Patterns STATIC
-        interface/Singleton.hpp
+        interface/patterns/Singleton.hpp
         src/Singleton.cpp
         )
 

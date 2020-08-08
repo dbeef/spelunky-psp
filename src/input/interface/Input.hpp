@@ -1,14 +1,11 @@
 #pragma once
 
+#include "patterns/Singleton.hpp"
 #include "Toggle.hpp"
 
-class Input
+class Input : public Singleton<Input>
 {
 public:
-
-    static Input& instance();
-    static void init();
-    static void dispose();
 
     static const char* get_pause_binding_msg();
     static const char* get_death_request_binding_msg();
@@ -45,6 +42,4 @@ private:
         Toggle running_fast{false};
         Toggle throwing{false};
     } _toggles;
-
-    static Input* _input;
 };

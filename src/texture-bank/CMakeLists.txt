@@ -34,6 +34,7 @@ endif()
 target_link_libraries(TextureBank
     PUBLIC
         Renderer
+        Patterns
     PRIVATE
         Logger
         GraphicsUtils
