@@ -13,7 +13,7 @@
 
 void Video::tear_down_gl()
 {
-    SDL_Quit();
+    SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
 void Video::swap_buffers() const
