@@ -1,9 +1,4 @@
-//
-// Created by xdbeef on 00.00.00.
-//
-
-#ifndef SPELUNKYDS_ALTAR_ROOM_H
-#define SPELUNKYDS_ALTAR_ROOM_H
+#pragma once
 
 static const int altar_room[1][10][10] =
         {
@@ -21,22 +16,3 @@ static const int altar_room[1][10][10] =
                         {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
                 }
         };
-
-
-static const int altar_room_npc[1][10][10] =
-        {
-                {
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 20, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                }
-        };
-
-#endif //SPELUNKYDS_ALTAR_ROOM_H
