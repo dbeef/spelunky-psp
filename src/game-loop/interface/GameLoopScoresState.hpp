@@ -5,6 +5,7 @@
 
 class GameLoop;
 class PauseOverlay;
+class ScoresOverlay;
 
 class GameLoopScoresState : public GameLoopBaseState
 {
@@ -14,4 +15,5 @@ public:
     void exit(GameLoop&) override;
 private:
     std::shared_ptr<PauseOverlay> _pause_overlay = nullptr;
+    std::shared_ptr<ScoresOverlay> _scores_overlay = nullptr;
 };
