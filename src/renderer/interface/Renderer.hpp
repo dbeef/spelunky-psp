@@ -12,6 +12,9 @@ class Renderer : public Singleton<Renderer>
 {
 public:
 
+    DELETE_COPY_MOVE_CONSTRUCTORS(Renderer)
+    FRIEND_SINGLETON
+
     enum class EntityType
     {
         SCREEN_SPACE = 0,
@@ -59,6 +62,8 @@ public:
     }
 
 private:
+
+    Renderer() = default;
 
     std::vector<RenderEntity> _render_entities[static_cast<std::size_t>(EntityType::_SIZE)];
     std::vector<RenderEntityID> _for_removal[static_cast<std::size_t>(EntityType::_SIZE)];

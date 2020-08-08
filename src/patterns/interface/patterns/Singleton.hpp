@@ -2,7 +2,13 @@
 
 #include <cassert>
 
-#define REGISTER_SINGLETON(Type) template<> Type* Singleton<Type>::_instance = nullptr;
+#define REGISTER_SINGLETON_INSTANCE(Type) template<> Type* Singleton<Type>::_instance = nullptr;
+#define DELETE_COPY_MOVE_CONSTRUCTORS(Type)     Type(Type&) = delete; \
+                                                Type(Type&&) = delete; \
+                                                Type(const Type&) = delete; \
+                                                Type(const Type&&) = delete;
+#define FRIEND_SINGLETON friend class Singleton;
+
 
 template<class T>
 class Singleton

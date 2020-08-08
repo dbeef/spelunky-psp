@@ -7,6 +7,9 @@ class Input : public Singleton<Input>
 {
 public:
 
+    DELETE_COPY_MOVE_CONSTRUCTORS(Input)
+    FRIEND_SINGLETON
+
     static const char* get_pause_binding_msg();
     static const char* get_death_request_binding_msg();
     static const char* get_quit_request_binding_msg();
@@ -27,6 +30,8 @@ public:
     inline const Toggle& throwing() const { return _toggles.throwing; }
 
 private:
+
+    Input() = default;
 
     struct
     {

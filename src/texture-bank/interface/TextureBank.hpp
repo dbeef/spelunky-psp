@@ -17,6 +17,9 @@ class TextureBank : public Singleton<TextureBank>
 {
 public:
 
+    DELETE_COPY_MOVE_CONSTRUCTORS(TextureBank)
+    FRIEND_SINGLETON
+
     void load_textures();
     void load_texture_regions();
 
@@ -42,6 +45,8 @@ public:
     }
 
 private:
+
+    TextureBank() = default;
 
     std::unordered_map<TextureType, TextureID> _texture_ids;
     std::unordered_map<TextureType, std::vector<TextureRegion>> _texture_regions;

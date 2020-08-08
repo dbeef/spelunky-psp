@@ -9,7 +9,7 @@
 #include <cassert>
 #include <stdexcept>
 
-REGISTER_SINGLETON(TextureBank)
+REGISTER_SINGLETON_INSTANCE(TextureBank)
 
 namespace
 {

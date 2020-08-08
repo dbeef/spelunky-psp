@@ -1,3 +1,3 @@
 #include "Level.hpp"
 
-REGISTER_SINGLETON(Level)
+REGISTER_SINGLETON_INSTANCE(Level)

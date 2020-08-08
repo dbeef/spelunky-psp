@@ -1,3 +1,3 @@
 #include "Input.hpp"
 
-REGISTER_SINGLETON(Input)
+REGISTER_SINGLETON_INSTANCE(Input)

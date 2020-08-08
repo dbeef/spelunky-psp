@@ -11,7 +11,7 @@
 #include <string>
 #include <cstring>
 
-REGISTER_SINGLETON(Renderer)
+REGISTER_SINGLETON_INSTANCE(Renderer)
 
 void Renderer::render(EntityType type) const
 {
