@@ -3,13 +3,13 @@
 #include <memory>
 #include <string>
 
-#include "GameObject.hpp"
+#include "GameEntity.hpp"
 #include "components/QuadComponent.hpp"
 #include "Point2D.hpp"
 #include "TextBuffer.hpp"
 #include "viewport/Viewport.hpp"
 
-class PauseOverlay : public GameObject
+class PauseOverlay : public GameEntity
 {
 public:
 

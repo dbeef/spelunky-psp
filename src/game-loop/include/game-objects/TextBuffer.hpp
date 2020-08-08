@@ -6,12 +6,12 @@
 #include "viewport/Viewport.hpp"
 #include "spritesheet-frames/FontSpritesheetFrames.hpp"
 #include "components/QuadComponent.hpp"
-#include "GameObject.hpp"
+#include "GameEntity.hpp"
 #include "Point2D.hpp"
 
 using TextEntityID = std::uint16_t;
 
-class TextBuffer : public GameObject
+class TextBuffer : public GameEntity
 {
 public:
 

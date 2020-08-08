@@ -39,7 +39,7 @@ add_library(GameLoop STATIC
         interface/GameLoopLevelSummaryState.hpp
         interface/GameLoopScoresState.hpp
         include/main-dude/MainDude.hpp
-        include/game-objects/GameObject.hpp
+        include/game-objects/GameEntity.hpp
         include/game-objects/MainLogo.hpp
         include/game-objects/QuitSign.hpp
         include/game-objects/ResetSign.hpp

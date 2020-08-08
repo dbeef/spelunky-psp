@@ -2,10 +2,10 @@
 
 #include <cstdint>
 
-class GameObject
+class GameEntity
 {
 public:
-    virtual ~GameObject() = default;
+    virtual ~GameEntity() = default;
     virtual void update(uint32_t delta_time_ms) = 0;
     bool is_marked_for_disposal() const { return _to_dispose; }
 protected:
