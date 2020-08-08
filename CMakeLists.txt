@@ -28,6 +28,7 @@ add_subdirectory(src/graphics-utils)
 add_subdirectory(src/game-loop)
 add_subdirectory(src/texture-bank)
 add_subdirectory(src/collisions)
+add_subdirectory(src/patterns)
 
 target_link_libraries(Spelunky_PSP PRIVATE
         Logger

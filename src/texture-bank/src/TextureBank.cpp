@@ -9,7 +9,7 @@
 #include <cassert>
 #include <stdexcept>
 
-TextureBank *TextureBank::_instance = nullptr;
+REGISTER_SINGLETON_INSTANCE(TextureBank)
 
 namespace
 {
@@ -108,24 +108,6 @@ void TextureBank::load_textures()
         assert(texture);
         _texture_ids.emplace(in.type, texture);
     }
-}
-
-TextureBank &TextureBank::instance()
-{
-    assert(_instance);
-    return *_instance;
-}
-
-void TextureBank::init()
-{
-    assert(!_instance);
-    _instance = new TextureBank();
-}
-
-void TextureBank::dispose()
-{
-    assert(_instance);
-    delete _instance;
 }
 
 void TextureBank::load_texture_regions()

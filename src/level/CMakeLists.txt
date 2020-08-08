@@ -34,6 +34,7 @@ set_target_properties(Level PROPERTIES
 target_link_libraries(Level
         PUBLIC
             Renderer
+            Patterns
         PRIVATE
             glad
             TextureBank

@@ -1,14 +1,14 @@
 #pragma once
 
+#include "patterns/Singleton.hpp"
 #include "Toggle.hpp"
 
-class Input
+class Input : public Singleton<Input>
 {
 public:
 
-    static Input& instance();
-    static void init();
-    static void dispose();
+    DELETE_COPY_MOVE_CONSTRUCTORS(Input)
+    FRIEND_SINGLETON(Input)
 
     static const char* get_pause_binding_msg();
     static const char* get_death_request_binding_msg();
@@ -31,6 +31,8 @@ public:
 
 private:
 
+    Input() = default;
+
     struct
     {
         Toggle paused{false};
@@ -45,6 +47,4 @@ private:
         Toggle running_fast{false};
         Toggle throwing{false};
     } _toggles;
-
-    static Input* _input;
 };

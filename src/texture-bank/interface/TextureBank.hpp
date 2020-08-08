@@ -1,5 +1,6 @@
 #pragma once
 
+#include "patterns/Singleton.hpp"
 #include "TextureType.hpp"
 #include "TextureRegion.hpp"
 
@@ -12,13 +13,12 @@ using TextureID = unsigned int;
 const TextureID INVALID_TEXTURE = 0;
 const TextureRegion INVALID_REGION = {};
 
-class TextureBank
+class TextureBank : public Singleton<TextureBank>
 {
 public:
 
-    static TextureBank &instance();
-    static void init();
-    static void dispose();
+    DELETE_COPY_MOVE_CONSTRUCTORS(TextureBank)
+    FRIEND_SINGLETON(TextureBank)
 
     void load_textures();
     void load_texture_regions();
@@ -46,7 +46,8 @@ public:
 
 private:
 
-    static TextureBank *_instance;
+    TextureBank() = default;
+
     std::unordered_map<TextureType, TextureID> _texture_ids;
     std::unordered_map<TextureType, std::vector<TextureRegion>> _texture_regions;
 };

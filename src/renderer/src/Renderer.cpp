@@ -11,26 +11,7 @@
 #include <string>
 #include <cstring>
 
-Renderer *Renderer::_renderer = nullptr;
-
-Renderer &Renderer::instance()
-{
-    assert(_renderer);
-    return *_renderer;
-}
-
-void Renderer::init()
-{
-    assert(!_renderer);
-    _renderer = new Renderer();
-}
-
-void Renderer::dispose()
-{
-    assert(_renderer);
-    delete _renderer;
-    _renderer = nullptr;
-}
+REGISTER_SINGLETON_INSTANCE(Renderer)
 
 void Renderer::render(EntityType type) const
 {

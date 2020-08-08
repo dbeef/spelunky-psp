@@ -1,5 +1,6 @@
 #pragma once
 
+#include "patterns/Singleton.hpp"
 #include "RenderEntity.hpp"
 #include "Mesh.hpp"
 
@@ -7,9 +8,12 @@
 #include <algorithm>
 #include <vector>
 
-class Renderer
+class Renderer : public Singleton<Renderer>
 {
 public:
+
+    DELETE_COPY_MOVE_CONSTRUCTORS(Renderer)
+    FRIEND_SINGLETON(Renderer)
 
     enum class EntityType
     {
@@ -19,10 +23,6 @@ public:
     };
 
     static const RenderEntityID INVALID_ENTITY = 0;
-
-    static Renderer& instance();
-    static void init();
-    static void dispose();
 
     void render(EntityType type) const;
     void update();
@@ -63,8 +63,8 @@ public:
 
 private:
 
+    Renderer() = default;
+
     std::vector<RenderEntity> _render_entities[static_cast<std::size_t>(EntityType::_SIZE)];
     std::vector<RenderEntityID> _for_removal[static_cast<std::size_t>(EntityType::_SIZE)];
-
-    static Renderer* _renderer;
 };
