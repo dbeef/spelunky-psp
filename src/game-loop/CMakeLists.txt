@@ -27,10 +27,10 @@ add_library(GameLoop STATIC
         src/components/PhysicsComponent.cpp
         src/components/QuadComponent.cpp
         src/components/AnimationComponent.cpp
-        src/game-objects/HUD.cpp
-        src/game-objects/PauseOverlay.cpp
-        src/game-objects/DeathOverlay.cpp
-        src/game-objects/TextBuffer.cpp
+        src/game-entities/HUD.cpp
+        src/game-entities/PauseOverlay.cpp
+        src/game-entities/DeathOverlay.cpp
+        src/game-entities/TextBuffer.cpp
         interface/GameLoop.hpp
         interface/GameLoopBaseState.hpp
         interface/GameLoopMainMenuState.hpp
@@ -39,18 +39,18 @@ add_library(GameLoop STATIC
         interface/GameLoopLevelSummaryState.hpp
         interface/GameLoopScoresState.hpp
         include/main-dude/MainDude.hpp
-        include/game-objects/GameEntity.hpp
-        include/game-objects/MainLogo.hpp
-        include/game-objects/QuitSign.hpp
-        include/game-objects/ResetSign.hpp
-        include/game-objects/StartSign.hpp
-        include/game-objects/ScoresSign.hpp
-        include/game-objects/TutorialSign.hpp
-        include/game-objects/CopyrightsSign.hpp
-        include/game-objects/TextBuffer.hpp
-        include/game-objects/HUD.hpp
-        include/game-objects/PauseOverlay.hpp
-        include/game-objects/DeathOverlay.hpp
+        include/game-entities/GameEntity.hpp
+        include/game-entities/MainLogo.hpp
+        include/game-entities/QuitSign.hpp
+        include/game-entities/ResetSign.hpp
+        include/game-entities/StartSign.hpp
+        include/game-entities/ScoresSign.hpp
+        include/game-entities/TutorialSign.hpp
+        include/game-entities/CopyrightsSign.hpp
+        include/game-entities/TextBuffer.hpp
+        include/game-entities/HUD.hpp
+        include/game-entities/PauseOverlay.hpp
+        include/game-entities/DeathOverlay.hpp
         include/components/PhysicsComponent.hpp
         include/components/QuadComponent.hpp
         include/components/AnimationComponent.hpp

@@ -7,12 +7,12 @@
 #include "Level.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
-#include "game-objects/MainLogo.hpp"
-#include "game-objects/QuitSign.hpp"
-#include "game-objects/StartSign.hpp"
-#include "game-objects/ScoresSign.hpp"
-#include "game-objects/TutorialSign.hpp"
-#include "game-objects/CopyrightsSign.hpp"
+#include "game-entities/MainLogo.hpp"
+#include "game-entities/QuitSign.hpp"
+#include "game-entities/StartSign.hpp"
+#include "game-entities/ScoresSign.hpp"
+#include "game-entities/TutorialSign.hpp"
+#include "game-entities/CopyrightsSign.hpp"
 
 GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {

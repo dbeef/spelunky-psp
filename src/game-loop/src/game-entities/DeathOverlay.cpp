@@ -3,7 +3,7 @@
 #include <cstring>
 
 #include "Input.hpp"
-#include "game-objects/DeathOverlay.hpp"
+#include "game-entities/DeathOverlay.hpp"
 
 namespace
 {

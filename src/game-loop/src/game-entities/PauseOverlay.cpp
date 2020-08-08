@@ -3,7 +3,7 @@
 #include <cassert>
 
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
-#include "game-objects/PauseOverlay.hpp"
+#include "game-entities/PauseOverlay.hpp"
 #include "Input.hpp"
 
 namespace

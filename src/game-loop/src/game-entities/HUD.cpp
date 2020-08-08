@@ -1,7 +1,7 @@
 #include <sstream>
 #include <string>
 
-#include "game-objects/HUD.hpp"
+#include "game-entities/HUD.hpp"
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
 
 namespace

@@ -5,8 +5,8 @@
 #include "GameLoop.hpp"
 #include "Level.hpp"
 #include "main-dude/MainDude.hpp"
-#include "game-objects/ResetSign.hpp"
-#include "game-objects/PauseOverlay.hpp"
+#include "game-entities/ResetSign.hpp"
+#include "game-entities/PauseOverlay.hpp"
 #include "Input.hpp"
 
 GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t delta_time_ms)

@@ -7,11 +7,11 @@
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
 #include "GameLoopPlayingState.hpp"
-#include "game-objects/GameEntity.hpp"
-#include "game-objects/HUD.hpp"
-#include "game-objects/TextBuffer.hpp"
-#include "game-objects/PauseOverlay.hpp"
-#include "game-objects/DeathOverlay.hpp"
+#include "game-entities/GameEntity.hpp"
+#include "game-entities/HUD.hpp"
+#include "game-entities/TextBuffer.hpp"
+#include "game-entities/PauseOverlay.hpp"
+#include "game-entities/DeathOverlay.hpp"
 #include "main-dude/MainDude.hpp"
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)

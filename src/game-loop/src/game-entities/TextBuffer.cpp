@@ -1,4 +1,4 @@
-#include "game-objects/TextBuffer.hpp"
+#include "game-entities/TextBuffer.hpp"
 
 void TextBuffer::update(uint32_t delta_time_ms)
 {
