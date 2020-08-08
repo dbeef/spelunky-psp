@@ -30,6 +30,7 @@ add_library(GameLoop STATIC
         src/game-entities/HUD.cpp
         src/game-entities/PauseOverlay.cpp
         src/game-entities/DeathOverlay.cpp
+        src/game-entities/ScoresOverlay.cpp
         src/game-entities/TextBuffer.cpp
         interface/GameLoop.hpp
         interface/GameLoopBaseState.hpp
@@ -51,6 +52,7 @@ add_library(GameLoop STATIC
         include/game-entities/HUD.hpp
         include/game-entities/PauseOverlay.hpp
         include/game-entities/DeathOverlay.hpp
+        include/game-entities/ScoresOverlay.hpp
         include/components/PhysicsComponent.hpp
         include/components/QuadComponent.hpp
         include/components/AnimationComponent.hpp
