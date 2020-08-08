@@ -13,7 +13,7 @@ class Renderer : public Singleton<Renderer>
 public:
 
     DELETE_COPY_MOVE_CONSTRUCTORS(Renderer)
-    FRIEND_SINGLETON
+    FRIEND_SINGLETON(Renderer)
 
     enum class EntityType
     {

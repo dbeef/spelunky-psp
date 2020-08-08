@@ -18,7 +18,7 @@ class TextureBank : public Singleton<TextureBank>
 public:
 
     DELETE_COPY_MOVE_CONSTRUCTORS(TextureBank)
-    FRIEND_SINGLETON
+    FRIEND_SINGLETON(TextureBank)
 
     void load_textures();
     void load_texture_regions();

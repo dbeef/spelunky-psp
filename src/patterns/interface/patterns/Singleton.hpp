@@ -7,7 +7,7 @@
                                                 Type(Type&&) = delete; \
                                                 Type(const Type&) = delete; \
                                                 Type(const Type&&) = delete;
-#define FRIEND_SINGLETON friend class Singleton;
+#define FRIEND_SINGLETON(Type) friend class Singleton<Type>;
 
 
 template<class T>

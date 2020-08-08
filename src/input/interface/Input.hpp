@@ -8,7 +8,7 @@ class Input : public Singleton<Input>
 public:
 
     DELETE_COPY_MOVE_CONSTRUCTORS(Input)
-    FRIEND_SINGLETON
+    FRIEND_SINGLETON(Input)
 
     static const char* get_pause_binding_msg();
     static const char* get_death_request_binding_msg();
