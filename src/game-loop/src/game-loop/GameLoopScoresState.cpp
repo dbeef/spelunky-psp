@@ -110,8 +110,6 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
     // Create scores overlay:
 
     _scores_overlay = std::make_shared<ScoresOverlay>(game_loop._viewport);
-    _scores_overlay->set_text_buffer(game_loop._text_buffer);
-    _scores_overlay->launch();
     game_loop._game_objects.push_back(_scores_overlay);
 
     // Create reset sign:
