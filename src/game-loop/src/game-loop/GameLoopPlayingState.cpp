@@ -9,7 +9,6 @@
 #include "GameLoopPlayingState.hpp"
 #include "game-entities/GameEntity.hpp"
 #include "game-entities/HUD.hpp"
-#include "game-entities/TextBuffer.hpp"
 #include "game-entities/PauseOverlay.hpp"
 #include "game-entities/DeathOverlay.hpp"
 #include "main-dude/MainDude.hpp"
@@ -120,17 +119,11 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     assert(entrance);
     game_loop._main_dude->set_position_on_tile(entrance);
 
-    // Create text renderer:
-
-    game_loop._text_buffer = std::make_shared<TextBuffer>();
-    game_loop._game_objects.push_back(game_loop._text_buffer);
-
     // Create HUD:
 
     auto hud = std::make_shared<HUD>(game_loop._viewport);
     game_loop._game_objects.push_back(hud);
 
-    hud->set_text_buffer(game_loop._text_buffer);
     hud->set_bombs_count(4);
     hud->set_dollars_count(0);
     hud->set_hearts_count(4);
@@ -139,13 +132,11 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     // Create pause overlay:
 
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::PLAYING);
-    _pause_overlay->set_text_buffer(game_loop._text_buffer);
     game_loop._game_objects.push_back(_pause_overlay);
     
     // Create death overlay:
 
     _death_overlay = std::make_shared<DeathOverlay>(game_loop._viewport);
-    _death_overlay->set_text_buffer(game_loop._text_buffer);
     _death_overlay->disable_input();
     game_loop._game_objects.push_back(_death_overlay);
 }
@@ -157,5 +148,4 @@ void GameLoopPlayingState::exit(GameLoop& game_loop)
 
     game_loop._game_objects = {};
     game_loop._main_dude = {};
-    game_loop._text_buffer = {};
 }

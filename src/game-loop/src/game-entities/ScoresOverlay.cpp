@@ -34,100 +34,68 @@ namespace
 
 ScoresOverlay::ScoresOverlay(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
 {
-}
-
-ScoresOverlay::~ScoresOverlay()
-{
-    _text_buffer->remove_text(_text_entity_ids.top_defilers);
-    _text_buffer->remove_text(_text_entity_ids.statistics);
-    _text_buffer->remove_text(_text_entity_ids.money);
-    _text_buffer->remove_text(_text_entity_ids.kills);
-    _text_buffer->remove_text(_text_entity_ids.saves);
-    _text_buffer->remove_text(_text_entity_ids.plays);
-    _text_buffer->remove_text(_text_entity_ids.deaths);
-    _text_buffer->remove_text(_text_entity_ids.wins);
-}
-
-void ScoresOverlay::launch()
-{
-    if (_launched)
     {
-        return;
-    }
-
-    _text_entity_ids.top_defilers = _text_buffer->create_text();
-    _text_entity_ids.statistics = _text_buffer->create_text();
-    _text_entity_ids.money = _text_buffer->create_text();
-    _text_entity_ids.kills = _text_buffer->create_text();
-    _text_entity_ids.saves = _text_buffer->create_text();
-    _text_entity_ids.plays = _text_buffer->create_text();
-    _text_entity_ids.deaths = _text_buffer->create_text();
-    _text_entity_ids.wins = _text_buffer->create_text();
-
-    {
-        const float text_width = std::strlen(TOP_DEFILERS_MSG) * TextBuffer::get_font_width();
-        const Point2D pos = {
-                (_viewport->get_width_world_units() * 0.625f) - (text_width / 2.0f) + (TextBuffer::get_font_width() / 2.0f),
+        const float text_width = std::strlen(TOP_DEFILERS_MSG) * _texts.top_defilers.get_font_width();
+        const Point2D position = {
+                (_viewport->get_width_world_units() * 0.625f) - (text_width / 2.0f) + (_texts.top_defilers.get_font_width() / 2.0f),
                 _viewport->get_height_world_units() * 0.15f
         };
-        _text_buffer->update_text(_text_entity_ids.top_defilers, pos, TOP_DEFILERS_MSG, std::strlen(TOP_DEFILERS_MSG), 1.0f, true);
+
+        _texts.top_defilers.set_position(position);
+        _texts.top_defilers.set_text(TOP_DEFILERS_MSG);
+        _texts.top_defilers.set_yellow(true);
     }
 
     {
-        const auto msg = format(MONEY_MSG, MONEY);
-        const Point2D pos = {_viewport->get_width_world_units() * 0.4f, _viewport->get_height_world_units() * 0.23f};
-        _text_buffer->update_text(_text_entity_ids.money, pos, msg.c_str(), std::strlen(msg.c_str()));
+        const Point2D position = {_viewport->get_width_world_units() * 0.4f, _viewport->get_height_world_units() * 0.23f};
+        _texts.money.set_position(position);
+        _texts.money.set_text(format(MONEY_MSG, MONEY));
     }
 
     {
-        const auto msg = format(KILLS_MSG, KILLS);
-        const Point2D pos = {_viewport->get_width_world_units() * 0.4f, _viewport->get_height_world_units() * 0.31f};
-        _text_buffer->update_text(_text_entity_ids.kills, pos, msg.c_str(), std::strlen(msg.c_str()));
+        const Point2D position = {_viewport->get_width_world_units() * 0.4f, _viewport->get_height_world_units() * 0.31f};
+        _texts.kills.set_position(position);
+        _texts.kills.set_text(format(KILLS_MSG, KILLS));
     }
 
     {
-        const auto msg = format(SAVES_MSG, SAVES);
-        const Point2D pos = {_viewport->get_width_world_units() * 0.4f, _viewport->get_height_world_units() * 0.39f};
-        _text_buffer->update_text(_text_entity_ids.saves, pos, msg.c_str(), std::strlen(msg.c_str()));
+        const Point2D position = {_viewport->get_width_world_units() * 0.4f, _viewport->get_height_world_units() * 0.39f};
+        _texts.saves.set_position(position);
+        _texts.saves.set_text(format(SAVES_MSG, SAVES));
     }
 
     {
-        const float text_width = std::strlen(STATISTICS_MSG) * TextBuffer::get_font_width();
-        const Point2D pos = {
-                (_viewport->get_width_world_units() * 0.625f) - (text_width / 2.0f) + (TextBuffer::get_font_width() / 2.0f),
+        const float text_width = std::strlen(STATISTICS_MSG) * _texts.statistics.get_font_width();
+        const Point2D position = {
+                (_viewport->get_width_world_units() * 0.625f) - (text_width / 2.0f) + (_texts.statistics.get_font_width() / 2.0f),
                 _viewport->get_height_world_units() * 0.47f
         };
-        _text_buffer->update_text(_text_entity_ids.statistics, pos, STATISTICS_MSG, std::strlen(STATISTICS_MSG), 1.0f, true);
+
+        _texts.statistics.set_position(position);
+        _texts.statistics.set_text(STATISTICS_MSG);
+        _texts.statistics.set_yellow(true);
     }
 
     {
-        const auto msg = format(PLAYS_MSG, PLAYS);
-        const Point2D pos = {_viewport->get_width_world_units() * 0.4f, _viewport->get_height_world_units() * 0.55f};
-        _text_buffer->update_text(_text_entity_ids.plays, pos, msg.c_str(), std::strlen(msg.c_str()));
+        const Point2D position = {_viewport->get_width_world_units() * 0.4f, _viewport->get_height_world_units() * 0.55f};
+        _texts.plays.set_position(position);
+        _texts.plays.set_text(format(PLAYS_MSG, PLAYS));
     }
 
     {
-        const auto msg = format(DEATHS_MSG, DEATHS);
-        const Point2D pos = {_viewport->get_width_world_units() * 0.4f, _viewport->get_height_world_units() * 0.63f};
-        _text_buffer->update_text(_text_entity_ids.deaths, pos, msg.c_str(), std::strlen(msg.c_str()));
+        const Point2D position = {_viewport->get_width_world_units() * 0.4f, _viewport->get_height_world_units() * 0.63f};
+        _texts.deaths.set_position(position);
+        _texts.deaths.set_text(format(DEATHS_MSG, DEATHS));
     }
 
     {
-        const auto msg = format(WINS_MSG, WINS);
-        const Point2D pos = {_viewport->get_width_world_units() * 0.4f, _viewport->get_height_world_units() * 0.71f};
-        _text_buffer->update_text(_text_entity_ids.wins, pos, msg.c_str(), std::strlen(msg.c_str()));
+        const Point2D position = {_viewport->get_width_world_units() * 0.4f, _viewport->get_height_world_units() * 0.71f};
+        _texts.wins.set_position(position);
+        _texts.wins.set_text(format(WINS_MSG, WINS));
     }
-
-    _launched = true;
 }
 
 void ScoresOverlay::update(uint32_t delta_time_ms)
 {
     // Nothing to update.
-}
-
-void ScoresOverlay::set_text_buffer(const std::shared_ptr<TextBuffer> &text_buffer)
-{
-    assert(text_buffer != nullptr);
-    _text_buffer = text_buffer;
 }

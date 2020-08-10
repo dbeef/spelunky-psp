@@ -27,12 +27,12 @@ add_library(GameLoop STATIC
         src/components/PhysicsComponent.cpp
         src/components/QuadComponent.cpp
         src/components/AnimationComponent.cpp
+        src/components/TextComponent.cpp
         src/game-entities/HUD.cpp
         src/game-entities/PauseOverlay.cpp
         src/game-entities/DeathOverlay.cpp
         src/game-entities/LevelSummaryOverlay.cpp
         src/game-entities/ScoresOverlay.cpp
-        src/game-entities/TextBuffer.cpp
         interface/GameLoop.hpp
         interface/GameLoopBaseState.hpp
         interface/GameLoopMainMenuState.hpp
@@ -49,7 +49,6 @@ add_library(GameLoop STATIC
         include/game-entities/ScoresSign.hpp
         include/game-entities/TutorialSign.hpp
         include/game-entities/CopyrightsSign.hpp
-        include/game-entities/TextBuffer.hpp
         include/game-entities/HUD.hpp
         include/game-entities/PauseOverlay.hpp
         include/game-entities/DeathOverlay.hpp
@@ -58,6 +57,7 @@ add_library(GameLoop STATIC
         include/components/PhysicsComponent.hpp
         include/components/QuadComponent.hpp
         include/components/AnimationComponent.hpp
+        include/components/TextComponent.hpp
         include/main-dude/states/MainDudeBaseState.hpp
         include/main-dude/states/MainDudeClimbingLadderState.hpp
         include/main-dude/states/MainDudeLevelSummaryState.hpp

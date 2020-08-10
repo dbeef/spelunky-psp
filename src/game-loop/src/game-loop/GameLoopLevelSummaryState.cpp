@@ -90,16 +90,9 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     game_loop._main_dude->set_position_on_tile(entrance);
     game_loop._main_dude->enter_level_summary_state();
 
-    // Create text renderer:
-
-    game_loop._text_buffer = std::make_shared<TextBuffer>();
-    game_loop._game_objects.push_back(game_loop._text_buffer);
-
     // Create level summary overlay:
 
     _level_summary_overlay = std::make_shared<LevelSummaryOverlay>(game_loop._viewport);
-    _level_summary_overlay->set_text_buffer(game_loop._text_buffer);
-    _level_summary_overlay->launch();
     game_loop._game_objects.push_back(_level_summary_overlay);
 
 }
@@ -110,5 +103,4 @@ void GameLoopLevelSummaryState::exit(GameLoop& game_loop)
 
     game_loop._game_objects = {};
     game_loop._main_dude = {};
-    game_loop._text_buffer = {};
 }

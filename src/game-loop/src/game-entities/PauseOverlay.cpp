@@ -11,12 +11,6 @@ namespace
     const char* PAUSED_MSG = "PAUSED";
 }
 
-void PauseOverlay::set_text_buffer(const std::shared_ptr<TextBuffer> &text_buffer)
-{
-    assert(text_buffer != nullptr);
-    _text_buffer = text_buffer;
-}
-
 void PauseOverlay::update(uint32_t delta_time_ms)
 {
     if (_disabled_input)
@@ -42,27 +36,26 @@ void PauseOverlay::update(uint32_t delta_time_ms)
             _half_opaque_quad->frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HALF_OPAQUE_TILE);
             _half_opaque_quad->update(_viewport->get_width_world_units() / 2.0f, _viewport->get_height_world_units() / 2.0f);
 
-            _text_entity_ids.paused = _text_buffer->create_text();
-            _text_entity_ids.controls = _text_buffer->create_text();
-
             {
-                const float scale = 2.0f;
-                const float text_width = std::strlen(PAUSED_MSG) * TextBuffer::get_font_width() * scale;
-                const float text_center_x = (_viewport->get_width_world_units() / 2.0f) - (text_width / 2.0f) + (TextBuffer::get_font_width() / 2.0f);
+                _texts.paused.set_scale(2.0f);
+
+                const float text_width = std::strlen(PAUSED_MSG) * _texts.paused.get_font_width();
+                const float text_center_x = (_viewport->get_width_world_units() / 2.0f) - (text_width / 2.0f) + (_texts.paused.get_font_width() / 2.0f);
                 const float text_center_y = _viewport->get_height_world_units() * 0.8f;
 
-                _text_buffer->update_text(_text_entity_ids.paused, {text_center_x, text_center_y}, PAUSED_MSG, std::strlen(PAUSED_MSG), scale);
+                _texts.paused.set_position({text_center_x, text_center_y});
+                _texts.paused.set_text(PAUSED_MSG);
             }
 
             {
                 const std::string available_controls = get_available_controls_msg();
-                const char* available_controls_cstr = available_controls.c_str();
 
-                const float text_width = std::strlen(available_controls_cstr) * TextBuffer::get_font_width();
-                const float text_center_x = (_viewport->get_width_world_units() / 2.0f) - (text_width / 2.0f) + (TextBuffer::get_font_width() / 2.0f);
+                const float text_width = available_controls.size() * _texts.controls.get_font_width();
+                const float text_center_x = (_viewport->get_width_world_units() / 2.0f) - (text_width / 2.0f) + (_texts.controls.get_font_width() / 2.0f);
                 const float text_center_y = _viewport->get_height_world_units() * 0.9f;
 
-                _text_buffer->update_text(_text_entity_ids.controls, {text_center_x, text_center_y}, available_controls_cstr, std::strlen(available_controls_cstr));
+                _texts.controls.set_position({text_center_x, text_center_y});
+                _texts.controls.set_text(available_controls);
             }
         }
         else
@@ -98,10 +91,9 @@ void PauseOverlay::reset()
     _quit_requested = false;
 
     _half_opaque_quad = nullptr;
-    _text_buffer->remove_text(_text_entity_ids.paused);
-    _text_buffer->remove_text(_text_entity_ids.controls);
-    _text_entity_ids.paused = TextBuffer::INVALID_ENTITY;
-    _text_entity_ids.controls = TextBuffer::INVALID_ENTITY;
+
+    _texts.paused = {};
+    _texts.controls = {};
 }
 
 std::string PauseOverlay::get_available_controls_msg() const

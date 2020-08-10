@@ -2,10 +2,10 @@
 
 #include <memory>
 
+#include "components/TextComponent.hpp"
 #include "GameEntity.hpp"
 #include "components/QuadComponent.hpp"
 #include "Point2D.hpp"
-#include "TextBuffer.hpp"
 #include "viewport/Viewport.hpp"
 
 class HUD : public GameEntity
@@ -13,10 +13,9 @@ class HUD : public GameEntity
 public:
 
     explicit HUD(std::shared_ptr<Viewport>);
-    ~HUD() override;
 
     void update(uint32_t delta_time_ms) override;
-    void set_text_buffer(const std::shared_ptr<TextBuffer>& text_buffer);
+
     void set_hearts_count(uint32_t hearts);
     void set_ropes_count(uint32_t ropes);
     void set_bombs_count(uint32_t bombs);
@@ -24,25 +23,25 @@ public:
 
 private:
 
-    Point2D _heart_center;
-    Point2D _dollar_center;
-    Point2D _ropes_center;
-    Point2D _bombs_center;
-    Point2D _hold_item_center;
+    static constexpr float ICONS_OFFSET_WORLD_UNITS = 1.5f;
+    static constexpr float ICON_SIZE_WORLD_UNITS = 0.5f;
 
-    QuadComponent _heart_quad;
-    QuadComponent _dollar_quad;
-    QuadComponent _ropes_quad;
-    QuadComponent _bombs_quad;
-    QuadComponent _hold_item_quad;
-
-    std::shared_ptr<TextBuffer> _text_buffer;
     std::shared_ptr<Viewport> _viewport;
+
     struct
     {
-        TextEntityID hearts = TextBuffer::INVALID_ENTITY;
-        TextEntityID ropes = TextBuffer::INVALID_ENTITY;
-        TextEntityID bombs = TextBuffer::INVALID_ENTITY;
-        TextEntityID dollars = TextBuffer::INVALID_ENTITY;
-    } _text_entity_ids;
+        QuadComponent heart = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
+        QuadComponent dollar = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
+        QuadComponent ropes = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
+        QuadComponent bombs = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
+        QuadComponent hold_item = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
+    } _quads;
+
+    struct
+    {
+        TextComponent hearts;
+        TextComponent dollars;
+        TextComponent ropes;
+        TextComponent bombs;
+    } _texts;
 };

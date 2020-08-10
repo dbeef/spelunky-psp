@@ -96,22 +96,14 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
     game_loop._main_dude = std::make_shared<MainDude>(entrance->x + 0.5f, entrance->y + 0.5f);
     game_loop._game_objects.push_back(game_loop._main_dude);
 
-    // Create text renderer:
-
-    game_loop._text_buffer = std::make_shared<TextBuffer>();
-    game_loop._game_objects.push_back(game_loop._text_buffer);
-
     // Create pause overlay:
 
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::SCORES);
-    _pause_overlay->set_text_buffer(game_loop._text_buffer);
     game_loop._game_objects.push_back(_pause_overlay);
 
     // Create scores overlay:
 
     _scores_overlay = std::make_shared<ScoresOverlay>(game_loop._viewport);
-    _scores_overlay->set_text_buffer(game_loop._text_buffer);
-    _scores_overlay->launch();
     game_loop._game_objects.push_back(_scores_overlay);
 
     // Create reset sign:
@@ -126,5 +118,4 @@ void GameLoopScoresState::exit(GameLoop& game_loop)
 
     game_loop._game_objects = {};
     game_loop._main_dude = {};
-    game_loop._text_buffer = {};
 }

@@ -124,15 +124,9 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     game_loop._main_dude = std::make_shared<MainDude>(17.45f, 8.5f);
     game_loop._game_objects.push_back(game_loop._main_dude);
 
-    // Create text renderer:
-
-    game_loop._text_buffer = std::make_shared<TextBuffer>();
-    game_loop._game_objects.push_back(game_loop._text_buffer);
-
     // Create pause overlay:
 
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::MAIN_MENU);
-    _pause_overlay->set_text_buffer(game_loop._text_buffer);
     game_loop._game_objects.push_back(_pause_overlay);
 
     // TODO: Implement a mechanism for sprite rendering priority, so the main logo would be always rendered
@@ -146,5 +140,4 @@ void GameLoopMainMenuState::exit(GameLoop& game_loop)
 
     game_loop._game_objects = {};
     game_loop._main_dude = {};
-    game_loop._text_buffer = {};
 }
