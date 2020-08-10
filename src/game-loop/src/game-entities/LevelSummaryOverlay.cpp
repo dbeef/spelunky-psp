@@ -13,65 +13,39 @@ namespace
 
 LevelSummaryOverlay::LevelSummaryOverlay(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
 {
-}
-
-LevelSummaryOverlay::~LevelSummaryOverlay()
-{
-    _text_buffer->remove_text(_text_entity_ids.level_completed);
-    _text_buffer->remove_text(_text_entity_ids.time);
-    _text_buffer->remove_text(_text_entity_ids.loot);
-    _text_buffer->remove_text(_text_entity_ids.kills);
-    _text_buffer->remove_text(_text_entity_ids.money);
-}
-
-void LevelSummaryOverlay::launch()
-{
-    if (_launched)
-    {
-        return;
-    }
-
-    _text_entity_ids.level_completed = _text_buffer->create_text();
-    _text_entity_ids.time = _text_buffer->create_text();
-    _text_entity_ids.loot = _text_buffer->create_text();
-    _text_entity_ids.kills = _text_buffer->create_text();
-    _text_entity_ids.money = _text_buffer->create_text();
-
     {
         const Point2D pos = {_viewport->get_width_world_units() * 0.16f, _viewport->get_height_world_units() * 0.155f};
-        _text_buffer->update_text(_text_entity_ids.level_completed, pos, LEVEL_COMPLETED_MSG, std::strlen(LEVEL_COMPLETED_MSG), 1.0f, true);
+        _texts.level_completed.set_yellow(true);
+        _texts.level_completed.set_text(LEVEL_COMPLETED_MSG);
+        _texts.level_completed.set_position(pos);
     }
 
     {
         const Point2D pos = {_viewport->get_width_world_units() * 0.16f, _viewport->get_height_world_units() * 0.23f};
-        _text_buffer->update_text(_text_entity_ids.time, pos, TIME_MSG, std::strlen(TIME_MSG));
+        _texts.time.set_text(TIME_MSG);
+        _texts.time.set_position(pos);
     }
 
     {
         const Point2D pos = {_viewport->get_width_world_units() * 0.16f, _viewport->get_height_world_units() * 0.305f};
-        _text_buffer->update_text(_text_entity_ids.loot, pos, LOOT_MSG, std::strlen(LOOT_MSG));
+        _texts.loot.set_text(LOOT_MSG);
+        _texts.loot.set_position(pos);
     }
 
     {
         const Point2D pos = {_viewport->get_width_world_units() * 0.16f, _viewport->get_height_world_units() * 0.38f};
-        _text_buffer->update_text(_text_entity_ids.kills, pos, KILLS_MSG, std::strlen(KILLS_MSG));
+        _texts.kills.set_text(KILLS_MSG);
+        _texts.kills.set_position(pos);
     }
 
     {
         const Point2D pos = {_viewport->get_width_world_units() * 0.16f, _viewport->get_height_world_units() * 0.455f};
-        _text_buffer->update_text(_text_entity_ids.money, pos, MONEY_MSG, std::strlen(MONEY_MSG));
+        _texts.money.set_text(MONEY_MSG);
+        _texts.money.set_position(pos);
     }
-
-    _launched = true;
 }
 
 void LevelSummaryOverlay::update(uint32_t delta_time_ms)
 {
     // Nothing to update.
-}
-
-void LevelSummaryOverlay::set_text_buffer(const std::shared_ptr<TextBuffer> &text_buffer)
-{
-    assert(text_buffer != nullptr);
-    _text_buffer = text_buffer;
 }

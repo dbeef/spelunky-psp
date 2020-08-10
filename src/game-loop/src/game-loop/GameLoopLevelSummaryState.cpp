@@ -14,6 +14,7 @@
 #include "game-entities/TutorialSign.hpp"
 #include "game-entities/CopyrightsSign.hpp"
 #include "game-entities/LevelSummaryOverlay.hpp"
+#include "game-entities/TextBuffer.hpp"
 
 GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -93,13 +94,10 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     // Create text renderer:
 
     game_loop._text_buffer = std::make_shared<TextBuffer>();
-    game_loop._game_objects.push_back(game_loop._text_buffer);
 
     // Create level summary overlay:
 
     _level_summary_overlay = std::make_shared<LevelSummaryOverlay>(game_loop._viewport);
-    _level_summary_overlay->set_text_buffer(game_loop._text_buffer);
-    _level_summary_overlay->launch();
     game_loop._game_objects.push_back(_level_summary_overlay);
 
 }
