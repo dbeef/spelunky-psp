@@ -70,7 +70,7 @@ void ScoresOverlay::launch()
                 (_viewport->get_width_world_units() * 0.625f) - (text_width / 2.0f) + (TextBuffer::get_font_width() / 2.0f),
                 _viewport->get_height_world_units() * 0.15f
         };
-        _text_buffer->update_text(_text_entity_ids.top_defilers, pos, TOP_DEFILERS_MSG, std::strlen(TOP_DEFILERS_MSG), true);
+        _text_buffer->update_text(_text_entity_ids.top_defilers, pos, TOP_DEFILERS_MSG, std::strlen(TOP_DEFILERS_MSG), 1.0f, true);
     }
 
     {
@@ -97,7 +97,7 @@ void ScoresOverlay::launch()
                 (_viewport->get_width_world_units() * 0.625f) - (text_width / 2.0f) + (TextBuffer::get_font_width() / 2.0f),
                 _viewport->get_height_world_units() * 0.47f
         };
-        _text_buffer->update_text(_text_entity_ids.statistics, pos, STATISTICS_MSG, std::strlen(STATISTICS_MSG), true);
+        _text_buffer->update_text(_text_entity_ids.statistics, pos, STATISTICS_MSG, std::strlen(STATISTICS_MSG), 1.0f, true);
     }
 
     {
