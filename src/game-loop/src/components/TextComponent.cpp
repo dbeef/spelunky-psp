@@ -1,7 +1,7 @@
 #include "spritesheet-frames/FontSpritesheetFrames.hpp"
-#include "components/FontComponent.hpp"
+#include "components/TextComponent.hpp"
 
-void FontComponent::update()
+void TextComponent::update()
 {
     // Resize text if it won't fit full length of new contents:
     while (_quads.size() < _properties.text.size())

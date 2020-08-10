@@ -7,7 +7,7 @@
 #include "QuadComponent.hpp"
 
 
-class FontComponent
+class TextComponent
 {
 public:
 
