@@ -130,7 +130,6 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     auto hud = std::make_shared<HUD>(game_loop._viewport);
     game_loop._game_objects.push_back(hud);
 
-    hud->set_text_buffer(game_loop._text_buffer);
     hud->set_bombs_count(4);
     hud->set_dollars_count(0);
     hud->set_hearts_count(4);
