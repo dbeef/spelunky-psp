@@ -4,7 +4,7 @@
 
 namespace
 {
-    constexpr float STUNNED_TIME_MS = 4000;
+    constexpr float STUNNED_TIME_MS = 3500;
 }
 
 void MainDudeStunnedState::enter(MainDude &main_dude)
