@@ -28,11 +28,12 @@ void DeathOverlay::launch()
     _text_entity_ids.controls = _text_buffer->create_text();
 
     {
-        const float text_width = std::strlen(GAME_OVER_MSG) * TextBuffer::get_font_width();
+        const float scale = 2.0f;
+        const float text_width = std::strlen(GAME_OVER_MSG) * TextBuffer::get_font_width() * scale;
         const float text_center_x = (_viewport->get_width_world_units() / 2.0f) - (text_width / 2.0f) + (TextBuffer::get_font_width() / 2.0f);
         const float text_center_y = _viewport->get_height_world_units() * 0.25f;
 
-        _text_buffer->update_text(_text_entity_ids.game_over, {text_center_x, text_center_y}, GAME_OVER_MSG, std::strlen(GAME_OVER_MSG), true);
+        _text_buffer->update_text(_text_entity_ids.game_over, {text_center_x, text_center_y}, GAME_OVER_MSG, std::strlen(GAME_OVER_MSG), scale, true);
     }
 
     {
@@ -43,7 +44,7 @@ void DeathOverlay::launch()
         const float text_center_x = (_viewport->get_width_world_units() / 2.0f) - (text_width / 2.0f) + (TextBuffer::get_font_width() / 2.0f);
         const float text_center_y = _viewport->get_height_world_units() * 0.45f;
 
-        _text_buffer->update_text(_text_entity_ids.controls, {text_center_x, text_center_y}, available_controls_cstr, std::strlen(available_controls_cstr), true);
+        _text_buffer->update_text(_text_entity_ids.controls, {text_center_x, text_center_y}, available_controls_cstr, std::strlen(available_controls_cstr), 1.0f, true);
     }
 }
 
