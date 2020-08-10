@@ -46,11 +46,12 @@ void PauseOverlay::update(uint32_t delta_time_ms)
             _text_entity_ids.controls = _text_buffer->create_text();
 
             {
-                const float text_width = std::strlen(PAUSED_MSG) * TextBuffer::get_font_width();
+                const float scale = 2.0f;
+                const float text_width = std::strlen(PAUSED_MSG) * TextBuffer::get_font_width() * scale;
                 const float text_center_x = (_viewport->get_width_world_units() / 2.0f) - (text_width / 2.0f) + (TextBuffer::get_font_width() / 2.0f);
                 const float text_center_y = _viewport->get_height_world_units() * 0.8f;
 
-                _text_buffer->update_text(_text_entity_ids.paused, {text_center_x, text_center_y}, PAUSED_MSG, std::strlen(PAUSED_MSG));
+                _text_buffer->update_text(_text_entity_ids.paused, {text_center_x, text_center_y}, PAUSED_MSG, std::strlen(PAUSED_MSG), scale);
             }
 
             {

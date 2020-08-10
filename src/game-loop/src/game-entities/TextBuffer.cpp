@@ -22,7 +22,7 @@ TextEntityID TextBuffer::create_text()
     return unique_id_pool;
 }
 
-void TextBuffer::update_text(TextEntityID id, Point2D position, const char *contents, std::size_t length, bool yellow)
+void TextBuffer::update_text(TextEntityID id, Point2D position, const char *contents, std::size_t length, float scale, bool yellow)
 {
     auto it = std::find_if(_text_entries.begin(), _text_entries.end(), [id](const TextEntity& e) { return e.id == id; });
     if (it != _text_entries.end())
@@ -31,7 +31,7 @@ void TextBuffer::update_text(TextEntityID id, Point2D position, const char *cont
         while (it->quads.size() < length)
         {
             it->quads.emplace_back(TextureType::FONT, Renderer::EntityType::SCREEN_SPACE,
-                                   TextBuffer::get_font_width(), TextBuffer::get_font_height());
+                                   TextBuffer::get_font_width() * scale, TextBuffer::get_font_height() * scale);
         }
 
         for (std::size_t index = 0; index < it->quads.size(); index++)
@@ -70,7 +70,7 @@ void TextBuffer::update_text(TextEntityID id, Point2D position, const char *cont
 
             // Update position:
 
-            quad.update(position.x + (index * TextBuffer::get_font_offset()), position.y);
+            quad.update(position.x + (index * TextBuffer::get_font_offset() * scale), position.y);
         }
     }
     else

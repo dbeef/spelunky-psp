@@ -23,7 +23,7 @@ public:
     void update(uint32_t delta_time_ms) override;
     TextEntityID create_text();
     void remove_text(TextEntityID id) { _for_removal.push_back(id); }
-    void update_text(TextEntityID id, Point2D position, const char* contents, std::size_t length, bool yellow=false);
+    void update_text(TextEntityID id, Point2D position, const char* contents, std::size_t length, float scale = 1.0f, bool yellow=false);
 
 private:
 
