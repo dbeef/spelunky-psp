@@ -144,7 +144,6 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     // Create death overlay:
 
     _death_overlay = std::make_shared<DeathOverlay>(game_loop._viewport);
-    _death_overlay->set_text_buffer(game_loop._text_buffer);
     _death_overlay->disable_input();
     game_loop._game_objects.push_back(_death_overlay);
 }
