@@ -9,10 +9,8 @@
 #include "GameLoopPlayingState.hpp"
 #include "game-entities/GameEntity.hpp"
 #include "game-entities/HUD.hpp"
-#include "game-entities/TextBuffer.hpp"
 #include "game-entities/PauseOverlay.hpp"
 #include "game-entities/DeathOverlay.hpp"
-#include "game-entities/TextBuffer.hpp"
 #include "main-dude/MainDude.hpp"
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
@@ -121,11 +119,6 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     assert(entrance);
     game_loop._main_dude->set_position_on_tile(entrance);
 
-    // Create text renderer:
-
-    game_loop._text_buffer = std::make_shared<TextBuffer>();
-    game_loop._game_objects.push_back(game_loop._text_buffer);
-
     // Create HUD:
 
     auto hud = std::make_shared<HUD>(game_loop._viewport);
@@ -155,5 +148,4 @@ void GameLoopPlayingState::exit(GameLoop& game_loop)
 
     game_loop._game_objects = {};
     game_loop._main_dude = {};
-    game_loop._text_buffer = {};
 }

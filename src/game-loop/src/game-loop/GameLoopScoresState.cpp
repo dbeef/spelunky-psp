@@ -8,7 +8,6 @@
 #include "game-entities/ResetSign.hpp"
 #include "game-entities/PauseOverlay.hpp"
 #include "game-entities/ScoresOverlay.hpp"
-#include "game-entities/TextBuffer.hpp"
 #include "Input.hpp"
 
 GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t delta_time_ms)
@@ -97,11 +96,6 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
     game_loop._main_dude = std::make_shared<MainDude>(entrance->x + 0.5f, entrance->y + 0.5f);
     game_loop._game_objects.push_back(game_loop._main_dude);
 
-    // Create text renderer:
-
-    game_loop._text_buffer = std::make_shared<TextBuffer>();
-    game_loop._game_objects.push_back(game_loop._text_buffer);
-
     // Create pause overlay:
 
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::SCORES);
@@ -124,5 +118,4 @@ void GameLoopScoresState::exit(GameLoop& game_loop)
 
     game_loop._game_objects = {};
     game_loop._main_dude = {};
-    game_loop._text_buffer = {};
 }

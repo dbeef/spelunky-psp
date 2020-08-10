@@ -33,7 +33,6 @@ add_library(GameLoop STATIC
         src/game-entities/DeathOverlay.cpp
         src/game-entities/LevelSummaryOverlay.cpp
         src/game-entities/ScoresOverlay.cpp
-        src/game-entities/TextBuffer.cpp
         interface/GameLoop.hpp
         interface/GameLoopBaseState.hpp
         interface/GameLoopMainMenuState.hpp
@@ -50,7 +49,6 @@ add_library(GameLoop STATIC
         include/game-entities/ScoresSign.hpp
         include/game-entities/TutorialSign.hpp
         include/game-entities/CopyrightsSign.hpp
-        include/game-entities/TextBuffer.hpp
         include/game-entities/HUD.hpp
         include/game-entities/PauseOverlay.hpp
         include/game-entities/DeathOverlay.hpp
