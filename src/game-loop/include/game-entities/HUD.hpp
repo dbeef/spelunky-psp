@@ -23,13 +23,19 @@ public:
 
 private:
 
-    QuadComponent _heart_quad;
-    QuadComponent _dollar_quad;
-    QuadComponent _ropes_quad;
-    QuadComponent _bombs_quad;
-    QuadComponent _hold_item_quad;
+    static constexpr float ICONS_OFFSET_WORLD_UNITS = 1.5f;
+    static constexpr float ICON_SIZE_WORLD_UNITS = 0.5f;
 
     std::shared_ptr<Viewport> _viewport;
+
+    struct
+    {
+        QuadComponent heart = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
+        QuadComponent dollar = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
+        QuadComponent ropes = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
+        QuadComponent bombs = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
+        QuadComponent hold_item = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
+    } _quads;
 
     struct
     {
