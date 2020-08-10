@@ -1,7 +1,6 @@
 #include <cstring>
 #include <sstream>
 #include <cassert>
-#include <game-entities/PauseOverlay.hpp>
 
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
 #include "game-entities/PauseOverlay.hpp"
