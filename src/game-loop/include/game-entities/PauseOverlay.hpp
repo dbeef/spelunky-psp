@@ -4,9 +4,7 @@
 #include <string>
 
 #include "GameEntity.hpp"
-#include "components/QuadComponent.hpp"
-#include "Point2D.hpp"
-#include "TextBuffer.hpp"
+#include "components/TextComponent.hpp"
 #include "viewport/Viewport.hpp"
 
 class PauseOverlay : public GameEntity
@@ -24,8 +22,6 @@ public:
     ~PauseOverlay() override;
 
     void update(uint32_t delta_time_ms) override;
-    void set_text_buffer(const std::shared_ptr<TextBuffer>& text_buffer);
-
     void reset();
 
     void disable_input() { _disabled_input = true; }
@@ -42,14 +38,13 @@ private:
     std::string get_available_controls_msg() const;
 
     std::shared_ptr<QuadComponent> _half_opaque_quad;
-    std::shared_ptr<TextBuffer> _text_buffer;
     std::shared_ptr<Viewport> _viewport;
 
     struct
     {
-        TextEntityID paused = TextBuffer::INVALID_ENTITY;
-        TextEntityID controls = TextBuffer::INVALID_ENTITY;
-    } _text_entity_ids;
+        TextComponent paused;
+        TextComponent controls;
+    } _texts;
 
     bool _paused = false;
     bool _quit_requested = false;

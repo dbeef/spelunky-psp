@@ -15,6 +15,7 @@
 #include "game-entities/ScoresSign.hpp"
 #include "game-entities/TutorialSign.hpp"
 #include "game-entities/CopyrightsSign.hpp"
+#include "game-entities/TextBuffer.hpp"
 
 namespace
 {
@@ -132,7 +133,6 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     // Create pause overlay:
 
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::MAIN_MENU);
-    _pause_overlay->set_text_buffer(game_loop._text_buffer);
     game_loop._game_objects.push_back(_pause_overlay);
 
     // TODO: Implement a mechanism for sprite rendering priority, so the main logo would be always rendered

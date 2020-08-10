@@ -12,6 +12,7 @@
 #include "game-entities/TextBuffer.hpp"
 #include "game-entities/PauseOverlay.hpp"
 #include "game-entities/DeathOverlay.hpp"
+#include "game-entities/TextBuffer.hpp"
 #include "main-dude/MainDude.hpp"
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
@@ -138,7 +139,6 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     // Create pause overlay:
 
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::PLAYING);
-    _pause_overlay->set_text_buffer(game_loop._text_buffer);
     game_loop._game_objects.push_back(_pause_overlay);
     
     // Create death overlay:
