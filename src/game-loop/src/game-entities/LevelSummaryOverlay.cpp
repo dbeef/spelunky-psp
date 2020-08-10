@@ -39,7 +39,7 @@ void LevelSummaryOverlay::launch()
 
     {
         const Point2D pos = {_viewport->get_width_world_units() * 0.16f, _viewport->get_height_world_units() * 0.155f};
-        _text_buffer->update_text(_text_entity_ids.level_completed, pos, LEVEL_COMPLETED_MSG, std::strlen(LEVEL_COMPLETED_MSG), true);
+        _text_buffer->update_text(_text_entity_ids.level_completed, pos, LEVEL_COMPLETED_MSG, std::strlen(LEVEL_COMPLETED_MSG), 1.0f, true);
     }
 
     {
