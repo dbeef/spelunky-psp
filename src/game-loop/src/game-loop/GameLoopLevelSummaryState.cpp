@@ -1,13 +1,6 @@
-#include "logger/log.h"
-#include "ModelViewCamera.hpp"
-#include "ScreenSpaceCamera.hpp"
-#include "Renderer.hpp"
 #include "GameLoopLevelSummaryState.hpp"
 #include "GameLoop.hpp"
-#include "Level.hpp"
-#include "main-dude/MainDude.hpp"
-#include "Input.hpp"
-#include "system/GameEntitySystem.hpp"
+
 #include "game-entities/MainLogo.hpp"
 #include "game-entities/QuitSign.hpp"
 #include "game-entities/StartSign.hpp"
@@ -15,6 +8,14 @@
 #include "game-entities/TutorialSign.hpp"
 #include "game-entities/CopyrightsSign.hpp"
 #include "game-entities/LevelSummaryOverlay.hpp"
+#include "system/GameEntitySystem.hpp"
+#include "main-dude/MainDude.hpp"
+
+#include "logger/log.h"
+#include "ModelViewCamera.hpp"
+#include "ScreenSpaceCamera.hpp"
+#include "Renderer.hpp"
+#include "Level.hpp"
 
 GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -64,14 +65,14 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     model_view_camera.set_x_not_rounded(game_loop._viewport->get_width_world_units() / 4.0f);
     model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
 
-    game_loop._main_dude = std::make_shared<MainDude>(0, 0);
-    game_loop._game_entity_system->add(game_loop._main_dude);
-
+    // Update main dude:
     MapTile* entrance = nullptr;
     Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
     assert(entrance);
     game_loop._main_dude->set_position_on_tile(entrance);
     game_loop._main_dude->enter_level_summary_state();
+    game_loop._main_dude->set_velocity(0, 0);
+    game_loop._game_entity_system->add(game_loop._main_dude);
 
     // Create level summary overlay:
 
@@ -83,7 +84,5 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
 void GameLoopLevelSummaryState::exit(GameLoop& game_loop)
 {
     _level_summary_overlay = nullptr;
-
     game_loop._game_entity_system->remove_all();
-    game_loop._main_dude = {};
 }

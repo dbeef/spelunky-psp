@@ -1,15 +1,6 @@
-#include <cmath>
-
-#include "audio/Audio.hpp"
-#include "logger/log.h"
-#include "ModelViewCamera.hpp"
-#include "Renderer.hpp"
 #include "GameLoopMainMenuState.hpp"
 #include "GameLoop.hpp"
-#include "Level.hpp"
-#include "main-dude/MainDude.hpp"
-#include "Input.hpp"
-#include "system/GameEntitySystem.hpp"
+
 #include "game-entities/MainLogo.hpp"
 #include "game-entities/PauseOverlay.hpp"
 #include "game-entities/QuitSign.hpp"
@@ -17,6 +8,17 @@
 #include "game-entities/ScoresSign.hpp"
 #include "game-entities/TutorialSign.hpp"
 #include "game-entities/CopyrightsSign.hpp"
+#include "system/GameEntitySystem.hpp"
+#include "main-dude/MainDude.hpp"
+
+#include "logger/log.h"
+#include "ModelViewCamera.hpp"
+#include "ScreenSpaceCamera.hpp"
+#include "Renderer.hpp"
+#include "Level.hpp"
+#include "audio/Audio.hpp"
+
+#include <cmath>
 
 namespace
 {
@@ -109,7 +111,10 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     game_loop._game_entity_system->add(std::make_shared<CopyrightsSign>(10.0f, 10.75f));
     game_loop._game_entity_system->add(std::make_shared<QuitSign>(16.0f, 1.5f));
 
-    game_loop._main_dude = std::make_shared<MainDude>(17.45f, 8.5f);
+    // Update main dude:
+    game_loop._main_dude->enter_standing_state();
+    game_loop._main_dude->set_velocity(0, 0);
+    game_loop._main_dude->set_position(17.45f, 8.5f);
     game_loop._game_entity_system->add(game_loop._main_dude);
 
     // Create pause overlay:
@@ -127,7 +132,5 @@ void GameLoopMainMenuState::exit(GameLoop& game_loop)
     Audio::instance().stop();
 
     _pause_overlay = nullptr;
-
     game_loop._game_entity_system->remove_all();
-    game_loop._main_dude = {};
 }

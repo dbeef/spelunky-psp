@@ -1,19 +1,19 @@
-#include "audio/Audio.hpp"
-#include "Level.hpp"
-#include "TileBatch.hpp"
-#include "logger/log.h"
-#include "Renderer.hpp"
-#include "GameLoop.hpp"
-#include "Input.hpp"
-#include "ModelViewCamera.hpp"
-#include "ScreenSpaceCamera.hpp"
 #include "GameLoopPlayingState.hpp"
-#include "system/GameEntitySystem.hpp"
+#include "GameLoop.hpp"
+
 #include "game-entities/GameEntity.hpp"
 #include "game-entities/HUD.hpp"
 #include "game-entities/PauseOverlay.hpp"
 #include "game-entities/DeathOverlay.hpp"
+#include "system/GameEntitySystem.hpp"
 #include "main-dude/MainDude.hpp"
+
+#include "logger/log.h"
+#include "ModelViewCamera.hpp"
+#include "ScreenSpaceCamera.hpp"
+#include "Renderer.hpp"
+#include "Level.hpp"
+#include "audio/Audio.hpp"
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -97,9 +97,9 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     Level::instance().get_tile_batch().generate_cave_background();
     Level::instance().get_tile_batch().batch_vertices();
 
-    // Create main dude:
-
-    game_loop._main_dude = std::make_shared<MainDude>(0, 0);
+    // Update main dude:
+    game_loop._main_dude->enter_standing_state();
+    game_loop._main_dude->set_velocity(0, 0);
     game_loop._game_entity_system->add(game_loop._main_dude);
 
     MapTile *entrance = nullptr;
@@ -132,5 +132,4 @@ void GameLoopPlayingState::exit(GameLoop& game_loop)
     _pause_overlay = nullptr;
 
     game_loop._game_entity_system->remove_all();
-    game_loop._main_dude = {};
 }
