@@ -9,7 +9,7 @@ namespace
 
 void MainDudeStunnedState::enter(MainDude &main_dude)
 {
-    // TODO: Notify all observers, once observer pattern is implemented.
+    main_dude.decrease_hearts(1);
     main_dude._physics.set_friction(PhysicsComponent::get_default_friction() * 1.8f);
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_4_LAST),

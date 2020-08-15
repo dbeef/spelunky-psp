@@ -7,19 +7,20 @@
 #include "components/QuadComponent.hpp"
 #include "Point2D.hpp"
 #include "viewport/Viewport.hpp"
+#include "patterns/Observer.hpp"
+#include "main-dude/MainDudeEvent.hpp"
 
-class HUD : public GameEntity
+class MainDude;
+
+class HUD : public GameEntity, public Observer<MainDudeEvent>
 {
 public:
 
-    explicit HUD(std::shared_ptr<Viewport>);
+    HUD(std::shared_ptr<Viewport>, std::shared_ptr<MainDude> main_dude);
+    ~HUD() override;
 
     void update(uint32_t delta_time_ms) override;
-
-    void set_hearts_count(uint32_t hearts);
-    void set_ropes_count(uint32_t ropes);
-    void set_bombs_count(uint32_t bombs);
-    void set_dollars_count(uint32_t dollars);
+    void on_notify(MainDudeEvent) override;
 
 private:
 
@@ -27,6 +28,7 @@ private:
     static constexpr float ICON_SIZE_WORLD_UNITS = 0.5f;
 
     std::shared_ptr<Viewport> _viewport;
+    std::shared_ptr<MainDude> _main_dude;
 
     struct
     {

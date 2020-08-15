@@ -121,13 +121,8 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
     // Create HUD:
 
-    auto hud = std::make_shared<HUD>(game_loop._viewport);
+    auto hud = std::make_shared<HUD>(game_loop._viewport, game_loop._main_dude);
     game_loop._game_objects.push_back(hud);
-
-    hud->set_bombs_count(4);
-    hud->set_dollars_count(0);
-    hud->set_hearts_count(4);
-    hud->set_ropes_count(4);
 
     // Create pause overlay:
 
