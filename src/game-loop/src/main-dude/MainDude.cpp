@@ -179,3 +179,9 @@ bool MainDude::hang_off_cliff_left()
 
     return false;
 }
+
+void MainDude::decrease_hearts(uint8_t amount)
+{
+    _stats.hearts = std::max<int16_t>(0, _stats.hearts - amount);
+    notify(MainDudeEvent::HEARTS_COUNT_CHANGED);
+}

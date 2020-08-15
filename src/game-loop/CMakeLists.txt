@@ -41,6 +41,7 @@ add_library(GameLoop STATIC
         interface/GameLoopLevelSummaryState.hpp
         interface/GameLoopScoresState.hpp
         include/main-dude/MainDude.hpp
+        include/main-dude/MainDudeEvent.hpp
         include/game-entities/GameEntity.hpp
         include/game-entities/MainLogo.hpp
         include/game-entities/QuitSign.hpp
@@ -97,4 +98,5 @@ target_link_libraries(GameLoop
         Renderer
         Collisions
         Level
+        Patterns
 )

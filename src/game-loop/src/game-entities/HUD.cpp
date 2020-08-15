@@ -4,6 +4,7 @@
 
 #include "game-entities/HUD.hpp"
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
+#include "main-dude/MainDude.hpp"
 
 namespace
 {
@@ -21,28 +22,13 @@ void HUD::update(uint32_t delta_time_ms)
     // Nothing to update.
 }
 
-void HUD::set_hearts_count(uint32_t hearts)
+HUD::HUD(std::shared_ptr<Viewport> viewport, std::shared_ptr<MainDude> main_dude)
+    : _viewport(std::move(viewport))
+    , _main_dude(std::move(main_dude))
 {
-    _texts.hearts.set_text(to_string(hearts));
-}
+    assert(_viewport);
+    assert(_main_dude);
 
-void HUD::set_ropes_count(uint32_t ropes)
-{
-    _texts.ropes.set_text(to_string(ropes));
-}
-
-void HUD::set_bombs_count(uint32_t bombs)
-{
-    _texts.bombs.set_text(to_string(bombs));
-}
-
-void HUD::set_dollars_count(uint32_t dollars)
-{
-    _texts.dollars.set_text(to_string(dollars));
-}
-
-HUD::HUD(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
-{
     _quads.heart.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HEART);
     _quads.dollar.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::DOLLAR_SIGN);
     _quads.ropes.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::ROPE_ICON);
@@ -68,4 +54,25 @@ HUD::HUD(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
     _texts.ropes.set_position({ropes_center.x + ICON_SIZE_WORLD_UNITS, ropes_center.y});
     _texts.bombs.set_position({bombs_center.x + ICON_SIZE_WORLD_UNITS, bombs_center.y});
     _texts.dollars.set_position({dollar_center.x + ICON_SIZE_WORLD_UNITS, dollar_center.y});
+
+    _texts.hearts.set_text(to_string(_main_dude->get_hearts()));
+    _texts.ropes.set_text(to_string(_main_dude->get_ropes()));
+    _texts.bombs.set_text(to_string(_main_dude->get_bombs()));
+    _texts.dollars.set_text(to_string(_main_dude->get_dollars()));
+
+    _main_dude->add_observer(this);
+}
+
+void HUD::on_notify(MainDudeEvent event)
+{
+    switch(event)
+    {
+        case MainDudeEvent::HEARTS_COUNT_CHANGED: _texts.hearts.set_text(to_string(_main_dude->get_hearts())); break;
+        default: assert(false); break;
+    }
+}
+
+HUD::~HUD()
+{
+    _main_dude->remove_observer(this);
 }

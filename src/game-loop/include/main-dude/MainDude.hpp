@@ -3,6 +3,7 @@
 #include "RenderEntity.hpp"
 #include "game-entities/GameEntity.hpp"
 #include "spritesheet-frames/MainDudeSpritesheetFrames.hpp"
+#include "patterns/Subject.hpp"
 
 #include "components/PhysicsComponent.hpp"
 #include "components/QuadComponent.hpp"
@@ -27,6 +28,7 @@
 #include "main-dude/states/MainDudeRunningLookingUpState.hpp"
 #include "main-dude/states/MainDudeDeadState.hpp"
 #include "main-dude/states/MainDudeStunnedState.hpp"
+#include "main-dude/MainDudeEvent.hpp"
 
 #include <vector>
 
@@ -34,15 +36,21 @@ class MainDudeBaseState;
 class Input;
 class MapTile;
 
-class MainDude : public GameEntity
+class MainDude : public GameEntity, public Subject<MainDudeEvent>
 {
 public:
 
     MainDude(float x_pos_center, float y_pos_center);
+
     void update(uint32_t delta_time_ms) override;
 
     float get_x_pos_center() const { return _physics.get_x_position(); }
     float get_y_pos_center() const { return _physics.get_y_position(); }
+
+    uint8_t get_hearts() const { return _stats.hearts; }
+    uint8_t get_dollars() const { return _stats.dollars; }
+    uint8_t get_ropes() const { return _stats.ropes; }
+    uint8_t get_bombs() const { return _stats.bombs; }
 
     void set_position_on_tile(MapTile* map_tile);
     void enter_level_summary_state();
@@ -52,6 +60,7 @@ public:
 
 private:
 
+    void decrease_hearts(uint8_t amount);
     void handle_input(const Input& input);
     MapTile* is_overlaping_tile(MapTileType) const;
 
@@ -102,6 +111,14 @@ private:
         MainDudeDeadState dead;
         MainDudeStunnedState stunned;
     } _states;
+
+    struct
+    {
+        int16_t hearts = 4;
+        int16_t ropes = 4;
+        int16_t bombs = 4;
+        int16_t dollars = 0;
+    } _stats;
 
     struct
     {
