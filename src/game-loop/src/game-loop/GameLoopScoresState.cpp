@@ -1,15 +1,17 @@
-#include "logger/log.h"
-#include "ModelViewCamera.hpp"
-#include "Renderer.hpp"
 #include "GameLoopScoresState.hpp"
 #include "GameLoop.hpp"
-#include "Level.hpp"
-#include "main-dude/MainDude.hpp"
-#include "system/GameEntitySystem.hpp"
+
 #include "game-entities/ResetSign.hpp"
 #include "game-entities/PauseOverlay.hpp"
 #include "game-entities/ScoresOverlay.hpp"
-#include "Input.hpp"
+#include "main-dude/MainDude.hpp"
+#include "system/GameEntitySystem.hpp"
+
+#include "logger/log.h"
+#include "ModelViewCamera.hpp"
+#include "ScreenSpaceCamera.hpp"
+#include "Renderer.hpp"
+#include "Level.hpp"
 
 GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -77,8 +79,10 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
     Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::EXIT, entrance);
     assert(entrance);
 
-    // TODO: Single point of tile width/height definition to not hardcode offset by magic values.
-    game_loop._main_dude = std::make_shared<MainDude>(entrance->x + 0.5f, entrance->y + 0.5f);
+    // Update main dude:
+    game_loop._main_dude->enter_standing_state();
+    game_loop._main_dude->set_velocity(0, 0);
+    game_loop._main_dude->set_position(entrance->x + (MapTile::PHYSICAL_WIDTH / 2.0f), entrance->y + (MapTile::PHYSICAL_HEIGHT / 2.0f));
     game_loop._game_entity_system->add(game_loop._main_dude);
 
     // Create pause overlay:
@@ -102,5 +106,4 @@ void GameLoopScoresState::exit(GameLoop& game_loop)
     _scores_overlay = nullptr;
 
     game_loop._game_entity_system->remove_all();
-    game_loop._main_dude = {};
 }

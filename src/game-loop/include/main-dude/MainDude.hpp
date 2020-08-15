@@ -53,8 +53,12 @@ public:
     uint8_t get_bombs() const { return _stats.bombs; }
 
     void set_position_on_tile(MapTile* map_tile);
+    void set_position(float x_center, float y_center) { _physics.set_position(x_center, y_center); }
+    void set_velocity(float x, float y) { _physics.set_velocity(x, y); }
+
     void enter_level_summary_state();
     void enter_dead_state();
+    void enter_standing_state();
 
     bool entered_door() const { return _other.entered_door; }
 

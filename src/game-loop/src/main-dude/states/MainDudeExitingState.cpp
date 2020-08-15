@@ -2,6 +2,11 @@
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 
+void MainDudeExitingState::exit(MainDude& main_dude)
+{
+    main_dude._other.entered_door = false;
+}
+
 void MainDudeExitingState::enter(MainDude& main_dude)
 {
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::EXITING_LEFT_0_FIRST),

@@ -106,6 +106,13 @@ void MainDude::set_position_on_tile(MapTile *map_tile)
     _physics.set_position(x, y);
 }
 
+void MainDude::enter_standing_state()
+{
+    _states.current->exit(*this);
+    _states.current = &_states.standing;
+    _states.current->enter(*this);
+}
+
 void MainDude::enter_dead_state()
 {
     _states.current->exit(*this);
