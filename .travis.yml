@@ -14,7 +14,7 @@ env:
   global:
     - _C=build
     - WORKDIR=/spelunky
-    - BUILD_IMAGE=bedzior/spelunky-psp
+    - BUILD_IMAGE=dbeef/spelunky-psp
 
 stages:
   - build
