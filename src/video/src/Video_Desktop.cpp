@@ -1,8 +1,7 @@
 //
 // Created by dbeef on 7/7/19.
 //
-#include "video/Context.hpp"
-
+#include "video/Video.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
 #include "glad/glad.h"
 #include "logger/log.h"
@@ -11,6 +10,8 @@
 
 bool Video::setup_gl()
 {
+    log_info("Entered Video::setup_gl.");
+
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
     {
         log_error("SDL_Init Error: %s", SDL_GetError());
@@ -90,6 +91,6 @@ bool Video::setup_gl()
     DebugGlCall(glDisable(GL_NORMALIZE));
     DebugGlCall(glDisable(GL_RESCALE_NORMAL));
 
-    log_info("Exiting Video::setupGL, success.");
+    log_info("Exiting Video::setup_gl, success.");
     return true;
 }
