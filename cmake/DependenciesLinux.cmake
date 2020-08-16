@@ -2,7 +2,8 @@ macro(add_linux_dependencies)
     add_library(SDL_1_XX INTERFACE)
     target_link_libraries(SDL_1_XX INTERFACE
         -lSDL
-        )
+        -lSDL_mixer
+    )
 
     add_library(Dependencies INTERFACE)
     target_link_libraries(Dependencies INTERFACE

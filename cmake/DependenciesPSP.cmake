@@ -2,6 +2,7 @@
 macro(add_psp_dependencies)
     add_library(SDL_1_XX INTERFACE)
     target_link_libraries(SDL_1_XX INTERFACE
+        -lSDL_mixer
         -lSDLmain
         -lSDL
         )
@@ -17,6 +18,8 @@ macro(add_psp_dependencies)
             -lz
             -lm
             -lGL
+            -lvorbisidec
+            -lmikmod
             -lpspvfpu
             -L${PSPDEV}/psp/sdk/lib
             -L${PSPDEV}/psp

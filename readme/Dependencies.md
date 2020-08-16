@@ -24,7 +24,7 @@ using cjson instead of [nlohmann/json](https://github.com/nlohmann/json).
 
 ### Platform-specific
 
-The only external dependency so far is SDL 1.2.15, and it is common on every supported platform (PSP/Linux/Windows).
+The only external dependency so far is SDL 1.2.15 / SDL_mixer 1.2, and it is common on every supported platform (PSP/Linux/Windows).
 Why SDL 1.2.15 instead of SDL2.x.x? At the time I started working on the Spelunky PSP, 
 the [PSP toolchain](https://github.com/pspdev/psptoolchain) shipped only this version, and I was happy to use it as
 it is still better than to directly access platform-specific libraries. 

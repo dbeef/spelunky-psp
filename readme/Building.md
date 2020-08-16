@@ -9,7 +9,7 @@
 To install dependencies:
 
 ```bash
-sudo apt install libsdl1.2-dev
+sudo apt install libsdl1.2-dev libsdl-mixer1.2-dev
 ```
 
 To build:
