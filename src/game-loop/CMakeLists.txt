@@ -99,4 +99,5 @@ target_link_libraries(GameLoop
         Collisions
         Level
         Patterns
+        Audio
 )

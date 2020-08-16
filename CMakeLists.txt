@@ -19,6 +19,7 @@ add_executable(Spelunky_PSP src/Main.cpp)
 add_subdirectory(vendor)
 add_subdirectory(src/viewport)
 add_subdirectory(src/video)
+add_subdirectory(src/audio)
 add_subdirectory(src/level)
 add_subdirectory(src/renderer)
 add_subdirectory(src/time)
@@ -33,6 +34,7 @@ add_subdirectory(src/patterns)
 target_link_libraries(Spelunky_PSP PRIVATE
         Logger
         Video
+        Audio
         Level
         Renderer
         Input
