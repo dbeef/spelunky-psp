@@ -25,7 +25,8 @@ public:
 
     void remove_observer(const Observer<EventType>* observer)
     {
-        std::remove_if(_observers.begin(), _observers.end(), [observer](const auto& other){ return observer == other; });
+        const auto iter = std::remove_if(_observers.begin(), _observers.end(), [observer](const auto& other){ return observer == other; });
+        _observers.erase(iter);
     }
 
     void notify(EventType event)
