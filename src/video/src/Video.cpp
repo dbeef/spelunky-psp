@@ -1,15 +1,13 @@
 //
 // Created by dbeef on 2/2/20.
 //
-
-#include "video/Context.hpp"
+#include "video/Video.hpp"
 #include "Input.hpp"
 #include "glad/glad.h"
 #include "graphics_utils/DebugGlCall.hpp"
 #include "time/Timestep.hpp"
 
 #include <SDL/SDL.h>
-
 
 void Video::tear_down_gl()
 {
