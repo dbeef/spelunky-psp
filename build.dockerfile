@@ -12,6 +12,7 @@ RUN apt-get update && \
         flex \
         libncurses5-dev \
         libsdl1.2-dev \
+        libsdl-mixer1.2-dev \
         libsdl2-dev \
         libreadline-dev \
         libusb-dev \
