@@ -1,5 +1,6 @@
 #include <cmath>
 
+#include "audio/Audio.hpp"
 #include "logger/log.h"
 #include "ModelViewCamera.hpp"
 #include "Renderer.hpp"
@@ -104,6 +105,8 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopMainMenuState");
 
+    Audio::instance().play(MusicType::TITLE);
+
     Level::instance().get_tile_batch().generate_frame();
     Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU);
     Level::instance().get_tile_batch().generate_cave_background();
@@ -136,6 +139,8 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
 
 void GameLoopMainMenuState::exit(GameLoop& game_loop)
 {
+    Audio::instance().stop();
+
     _pause_overlay = nullptr;
 
     game_loop._game_objects = {};

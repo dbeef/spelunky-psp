@@ -1,3 +1,4 @@
+#include "audio/Audio.hpp"
 #include "Level.hpp"
 #include "TileBatch.hpp"
 #include "logger/log.h"
@@ -103,6 +104,8 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopPlayingState");
 
+    Audio::instance().play(MusicType::CAVE);
+
     Level::instance().get_tile_batch().generate_new_level_layout();
     Level::instance().get_tile_batch().initialise_tiles_from_room_layout();
     Level::instance().get_tile_batch().generate_frame();
@@ -138,6 +141,8 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
 void GameLoopPlayingState::exit(GameLoop& game_loop)
 {
+    Audio::instance().stop();
+
     _death_overlay = nullptr;
     _pause_overlay = nullptr;
 

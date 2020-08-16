@@ -1,4 +1,5 @@
-#include "video/Context.hpp"
+#include "video/Video.hpp"
+#include "audio/Audio.hpp"
 #include "logger/log.h"
 #include "Level.hpp"
 #include "Renderer.hpp"
@@ -10,16 +11,19 @@
 
 void init_singletons()
 {
-    Level::init();
     Renderer::init();
+    Level::init();
     TextureBank::init();
     Input::init();
+    Audio::init();
 }
 
 void dispose_singletons()
 {
-    Level::dispose();
+    Audio::dispose();
+    Input::dispose();
     TextureBank::dispose();
+    Level::dispose();
     Renderer::dispose();
 }
 
@@ -27,6 +31,12 @@ int start()
 {
     log_info("Started.");
     init_singletons();
+
+    if (!Audio::instance().setup_audio())
+    {
+        log_error("Failed to setup audio.");
+        return EXIT_FAILURE;
+    }
 
     Video video;
 
@@ -42,6 +52,7 @@ int start()
     }
 
     video.tear_down_gl();
+    Audio::instance().tear_down_audio();
 
     dispose_singletons();
     log_info("Exiting peacefully.");

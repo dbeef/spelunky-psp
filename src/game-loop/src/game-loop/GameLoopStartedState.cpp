@@ -5,6 +5,7 @@
 #include "ScreenSpaceCamera.hpp"
 #include "TextureBank.hpp"
 #include "GameLoop.hpp"
+#include "audio/Audio.hpp"
 
 GameLoopBaseState *GameLoopStartedState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -23,6 +24,8 @@ void GameLoopStartedState::enter(GameLoop& game_loop)
     log_info("Entered GameLoopStartedState");
 
     // Need to be done only once in whole game lifespan:
+
+    Audio::instance().load();
 
     game_loop._cameras.model_view.calculate_coefficients();
     game_loop._cameras.screen_space.calculate_coefficients();
