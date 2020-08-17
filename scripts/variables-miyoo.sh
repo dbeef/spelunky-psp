@@ -4,5 +4,5 @@
 set -e
 
 ROOT_PATH=`pwd`
-INSTALL_PATH=$ROOT_PATH/tmp/install-psp
-BUILD_PATH=$ROOT_PATH/tmp/build-psp
+INSTALL_PATH=$ROOT_PATH/tmp/install-miyoo
+BUILD_PATH=$ROOT_PATH/tmp/build-miyoo

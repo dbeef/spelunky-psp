@@ -6,6 +6,7 @@ add_library(Input STATIC
         interface/Toggle.hpp
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,src/Input_PSP.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DESKTOP}>,src/Input_Desktop.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_MIYOO}>,src/Input_Desktop.cpp,>
 )
 
 target_include_directories(Input
@@ -23,4 +24,5 @@ target_link_libraries(Input
         Patterns
     PRIVATE
         $<$<BOOL:${SPELUNKY_PSP_PLATFORM_DESKTOP}>:SDL_1_XX>
+        $<$<BOOL:${SPELUNKY_PSP_PLATFORM_MIYOO}>:SDL_1_XX>
         )

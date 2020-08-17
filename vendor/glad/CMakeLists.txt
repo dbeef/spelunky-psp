@@ -1,6 +1,6 @@
 if (SPELUNKY_PSP_PLATFORM_LINUX OR SPELUNKY_PSP_PLATFORM_WINDOWS)
     add_subdirectory(glad_opengl_1.3)
-elseif(SPELUNKY_PSP_PLATFORM_PSP)
+elseif(SPELUNKY_PSP_PLATFORM_PSP OR SPELUNKY_PSP_PLATFORM_MIYOO)
     add_subdirectory(glad_opengl_es_1.0)
 else()
     message(FATAL_ERROR "Could not match platform")
