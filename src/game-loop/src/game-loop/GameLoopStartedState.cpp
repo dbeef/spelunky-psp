@@ -1,5 +1,6 @@
 #include "Level.hpp"
 #include "logger/log.h"
+#include "system/GameEntitySystem.hpp"
 #include "GameLoopStartedState.hpp"
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
@@ -42,6 +43,6 @@ void GameLoopStartedState::enter(GameLoop& game_loop)
 
 void GameLoopStartedState::exit(GameLoop& game_loop)
 {
-    game_loop._game_objects = {};
+    game_loop._game_entity_system->remove_all();
     game_loop._main_dude = {};
 }

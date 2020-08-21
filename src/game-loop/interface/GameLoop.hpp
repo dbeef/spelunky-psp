@@ -4,8 +4,6 @@
 #include <memory>
 #include <vector>
 
-#include "viewport/Viewport.hpp"
-
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
 
@@ -16,7 +14,7 @@
 #include "GameLoopStartedState.hpp"
 #include "GameLoopScoresState.hpp"
 
-class GameEntity;
+class GameEntitySystem;
 class MainDude;
 class Viewport;
 
@@ -52,8 +50,8 @@ private:
 
     bool _exit = false;
 
+    std::shared_ptr<GameEntitySystem> _game_entity_system;
     std::shared_ptr<Viewport> _viewport;
     std::shared_ptr<MainDude> _main_dude;
-    std::vector<std::shared_ptr<GameEntity>> _game_objects;
     std::function<bool(uint32_t delta_time_ms)> _loop;
 };

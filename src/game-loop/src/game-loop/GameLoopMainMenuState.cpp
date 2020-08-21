@@ -9,6 +9,7 @@
 #include "Level.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
+#include "system/GameEntitySystem.hpp"
 #include "game-entities/MainLogo.hpp"
 #include "game-entities/PauseOverlay.hpp"
 #include "game-entities/QuitSign.hpp"
@@ -28,7 +29,6 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
 {
     auto& screen_space_camera = game_loop._cameras.screen_space;
     auto& model_view_camera = game_loop._cameras.model_view;
-    auto& game_objects = game_loop._game_objects;
     auto& renderer = Renderer::instance();
 
     // Remove render entities marked for disposal:
@@ -60,22 +60,7 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
     }
     else
     {
-        for (auto &game_object : game_objects)
-        {
-            game_object->update(delta_time_ms);
-        }
-    }
-
-    // Remove game objects marked for disposal:
-
-    const auto it = std::remove_if(game_objects.begin(), game_objects.end(), [](const auto& game_object)
-    {
-        return game_object->is_marked_for_disposal();
-    });
-
-    if (it != game_objects.end())
-    {
-        game_objects.erase(it, game_objects.end());
+        game_loop._game_entity_system->update(delta_time_ms);
     }
 
     // Other:
@@ -117,20 +102,20 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     model_view_camera.set_x_not_rounded(game_loop._viewport->get_width_world_units() / 4.0f);
     model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
 
-    game_loop._game_objects.emplace_back(std::make_shared<MainLogo>(9.7f, 5.5f));
-    game_loop._game_objects.emplace_back(std::make_shared<StartSign>(5.5f, 9.0f));
-    game_loop._game_objects.emplace_back(std::make_shared<ScoresSign>(9.5f, 9.0f));
-    game_loop._game_objects.emplace_back(std::make_shared<TutorialSign>(1.0f, 8.5f));
-    game_loop._game_objects.emplace_back(std::make_shared<CopyrightsSign>(10.0f, 10.75f));
-    game_loop._game_objects.emplace_back(std::make_shared<QuitSign>(16.0f, 1.5f));
+    game_loop._game_entity_system->add(std::make_shared<MainLogo>(9.7f, 5.5f));
+    game_loop._game_entity_system->add(std::make_shared<StartSign>(5.5f, 9.0f));
+    game_loop._game_entity_system->add(std::make_shared<ScoresSign>(9.5f, 9.0f));
+    game_loop._game_entity_system->add(std::make_shared<TutorialSign>(1.0f, 8.5f));
+    game_loop._game_entity_system->add(std::make_shared<CopyrightsSign>(10.0f, 10.75f));
+    game_loop._game_entity_system->add(std::make_shared<QuitSign>(16.0f, 1.5f));
 
     game_loop._main_dude = std::make_shared<MainDude>(17.45f, 8.5f);
-    game_loop._game_objects.push_back(game_loop._main_dude);
+    game_loop._game_entity_system->add(game_loop._main_dude);
 
     // Create pause overlay:
 
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::MAIN_MENU);
-    game_loop._game_objects.push_back(_pause_overlay);
+    game_loop._game_entity_system->add(_pause_overlay);
 
     // TODO: Implement a mechanism for sprite rendering priority, so the main logo would be always rendered
     //       behind other sprites. Some RenderingPriority enum representing depth (Z axis) would be sufficient.
@@ -143,6 +128,6 @@ void GameLoopMainMenuState::exit(GameLoop& game_loop)
 
     _pause_overlay = nullptr;
 
-    game_loop._game_objects = {};
+    game_loop._game_entity_system->remove_all();
     game_loop._main_dude = {};
 }

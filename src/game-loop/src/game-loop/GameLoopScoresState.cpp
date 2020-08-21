@@ -5,6 +5,7 @@
 #include "GameLoop.hpp"
 #include "Level.hpp"
 #include "main-dude/MainDude.hpp"
+#include "system/GameEntitySystem.hpp"
 #include "game-entities/ResetSign.hpp"
 #include "game-entities/PauseOverlay.hpp"
 #include "game-entities/ScoresOverlay.hpp"
@@ -14,7 +15,6 @@ GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t del
 {
     auto& screen_space_camera = game_loop._cameras.screen_space;
     auto& model_view_camera = game_loop._cameras.model_view;
-    auto& game_objects = game_loop._game_objects;
     auto& renderer = Renderer::instance();
 
     // Remove render entities marked for disposal:
@@ -46,22 +46,7 @@ GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t del
     }
     else
     {
-        for (auto &game_object : game_objects)
-        {
-            game_object->update(delta_time_ms);
-        }
-    }
-
-    // Remove game objects marked for disposal:
-
-    const auto it = std::remove_if(game_objects.begin(), game_objects.end(), [](const auto& game_object)
-    {
-        return game_object->is_marked_for_disposal();
-    });
-
-    if (it != game_objects.end())
-    {
-        game_objects.erase(it, game_objects.end());
+        game_loop._game_entity_system->update(delta_time_ms);
     }
 
     // Other:
@@ -94,21 +79,21 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
 
     // TODO: Single point of tile width/height definition to not hardcode offset by magic values.
     game_loop._main_dude = std::make_shared<MainDude>(entrance->x + 0.5f, entrance->y + 0.5f);
-    game_loop._game_objects.push_back(game_loop._main_dude);
+    game_loop._game_entity_system->add(game_loop._main_dude);
 
     // Create pause overlay:
 
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::SCORES);
-    game_loop._game_objects.push_back(_pause_overlay);
+    game_loop._game_entity_system->add(_pause_overlay);
 
     // Create scores overlay:
 
     _scores_overlay = std::make_shared<ScoresOverlay>(game_loop._viewport);
-    game_loop._game_objects.push_back(_scores_overlay);
+    game_loop._game_entity_system->add(_scores_overlay);
 
     // Create reset sign:
 
-     game_loop._game_objects.emplace_back(std::make_shared<ResetSign>(16.5f, 18.5f));
+     game_loop._game_entity_system->add(std::make_shared<ResetSign>(16.5f, 18.5f));
 }
 
 void GameLoopScoresState::exit(GameLoop& game_loop)
@@ -116,6 +101,6 @@ void GameLoopScoresState::exit(GameLoop& game_loop)
     _pause_overlay = nullptr;
     _scores_overlay = nullptr;
 
-    game_loop._game_objects = {};
+    game_loop._game_entity_system->remove_all();
     game_loop._main_dude = {};
 }

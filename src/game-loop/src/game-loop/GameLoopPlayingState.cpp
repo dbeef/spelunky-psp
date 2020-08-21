@@ -8,6 +8,7 @@
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
 #include "GameLoopPlayingState.hpp"
+#include "system/GameEntitySystem.hpp"
 #include "game-entities/GameEntity.hpp"
 #include "game-entities/HUD.hpp"
 #include "game-entities/PauseOverlay.hpp"
@@ -19,7 +20,6 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     auto& model_view_camera = game_loop._cameras.model_view;
     auto& screen_space_camera = game_loop._cameras.screen_space;
     auto& renderer = Renderer::instance();
-    auto& game_objects = game_loop._game_objects;
 
     // Adjust camera to follow main dude:
 
@@ -67,22 +67,7 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     }
     else
     {
-        for (auto &game_object : game_objects)
-        {
-            game_object->update(delta_time_ms);
-        }
-    }
-
-    // Remove game objects marked for disposal:
-
-    const auto it = std::remove_if(game_objects.begin(), game_objects.end(), [](const auto& game_object)
-    {
-        return game_object->is_marked_for_disposal();
-    });
-
-    if (it != game_objects.end())
-    {
-        game_objects.erase(it, game_objects.end());
+        game_loop._game_entity_system->update(delta_time_ms);
     }
 
     // Other:
@@ -115,7 +100,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     // Create main dude:
 
     game_loop._main_dude = std::make_shared<MainDude>(0, 0);
-    game_loop._game_objects.push_back(game_loop._main_dude);
+    game_loop._game_entity_system->add(game_loop._main_dude);
 
     MapTile *entrance = nullptr;
     Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
@@ -125,18 +110,18 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     // Create HUD:
 
     auto hud = std::make_shared<HUD>(game_loop._viewport, game_loop._main_dude);
-    game_loop._game_objects.push_back(hud);
+    game_loop._game_entity_system->add(hud);
 
     // Create pause overlay:
 
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::PLAYING);
-    game_loop._game_objects.push_back(_pause_overlay);
+    game_loop._game_entity_system->add(_pause_overlay);
     
     // Create death overlay:
 
     _death_overlay = std::make_shared<DeathOverlay>(game_loop._viewport);
     _death_overlay->disable_input();
-    game_loop._game_objects.push_back(_death_overlay);
+    game_loop._game_entity_system->add(_death_overlay);
 }
 
 void GameLoopPlayingState::exit(GameLoop& game_loop)
@@ -146,6 +131,6 @@ void GameLoopPlayingState::exit(GameLoop& game_loop)
     _death_overlay = nullptr;
     _pause_overlay = nullptr;
 
-    game_loop._game_objects = {};
+    game_loop._game_entity_system->remove_all();
     game_loop._main_dude = {};
 }
