@@ -8,12 +8,12 @@
 #include "logger/log.h"
 
 #include <SDL/SDL.h>
+#include <fstream>
+#include <string>
 
 bool Video::setup_gl()
 {
-    _viewport = std::make_shared<Viewport>(480, 272);
-
-    log_info("Entered Video::setupGL");
+    log_info("Entered Video::setup_gl");
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         log_error("SDL_Init Error: %s", SDL_GetError());
@@ -34,28 +34,69 @@ bool Video::setup_gl()
     SDL_GL_SetAttribute( SDL_GL_ACCUM_BLUE_SIZE, 0);
     SDL_GL_SetAttribute( SDL_GL_ACCUM_ALPHA_SIZE, 0);
 
-    SDL_GL_SetAttribute( SDL_GL_ACCELERATED_VISUAL, 1);
-
+    SDL_GL_SetAttribute( SDL_GL_ACCELERATED_VISUAL, 0);
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
     //  Create a window
-    auto surface = SDL_SetVideoMode(_viewport->get_width_pixels(),
-                                    _viewport->get_height_pixels(),
-                                    0, // current display's bpp
-                                    SDL_DOUBLEBUF | SDL_OPENGL | SDL_SWSURFACE);
+
+    log_info("***(delay)***");
+    SDL_Delay(5000);
+    log_info("Creating a surface...");
+    
+    auto surface = SDL_SetVideoMode(320,
+                                    240,
+                                    16, // current display's bpp
+                                    SDL_FULLSCREEN | SDL_OPENGL);
+                                    // SDL_FULLSCREEN | SDL_OPENGL);
+/*
+   int index=30, cnt=30;
+   while(cnt--){
+    switch(index){
+    case 0:
+      SDL_FillRect(surface, &surface->clip_rect, SDL_MapRGB(surface->format, 0xff, 0x00, 0x00));
+      break;
+    case 1:
+      SDL_FillRect(surface, &surface->clip_rect, SDL_MapRGB(surface->format, 0x00, 0xff, 0x00));
+      break;
+    case 2:
+      SDL_FillRect(surface, &surface->clip_rect, SDL_MapRGB(surface->format, 0x00, 0x00, 0xff));
+      break;
+    }
+    index+= 1;
+    if(index >= 3){
+      index = 0;
+    }
+    SDL_Flip(surface);
+    SDL_Delay(100);
+   }
+*/
+                                    
+    log_info("no cursor");
+    SDL_ShowCursor(0);
 
     if (!surface) {
-        log_error("SDL_SetVideoMode Error: %s", SDL_GetError());
+
+        std::string err = SDL_GetError();
+    
+        std::ofstream out("error.txt");
+        out << err;
+
+        log_error("SDL_SetVideoMode Error: %s", err.c_str());
         SDL_ClearError();
         return false;
     }
 
+    log_info("Calling glad loader...");
+    
     if(!gladLoadGLES1Loader((GLADloadproc) SDL_GL_GetProcAddress)) {
         log_error("Error while loading ptrs to OpenGL functions");
         return false;
     }
 
+    log_info("Glad OK, now OpenGL setup...");
     SDL_ClearError();
+
+    _viewport = std::make_shared<Viewport>(320, 240);
 
     DebugGlCall(glEnable(GL_TEXTURE_2D));
     DebugGlCall(glShadeModel(GL_SMOOTH));

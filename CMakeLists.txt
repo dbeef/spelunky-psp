@@ -39,6 +39,8 @@ target_link_libraries(Spelunky_PSP PRIVATE
         GameLoop
         TextureBank
         Dependencies
+        # Miyoo:
+        -lasound -lmikmod -Wl,--as-needed -Wl,--gc-sections -flto -s
 )
 
 set_target_properties(Spelunky_PSP
@@ -48,7 +50,7 @@ set_target_properties(Spelunky_PSP
         CXX_EXTENSIONS
         OFF
         )
-if(SPELUNKY_PSP_PLATFORM_LINUX OR SPELUNKY_PSP_PLATFORM_PSP)
+if(SPELUNKY_PSP_PLATFORM_LINUX OR SPELUNKY_PSP_PLATFORM_PSP OR SPELUNKY_PSP_PLATFORM_MIYOO)
         set_target_properties(Spelunky_PSP
                 PROPERTIES
                 COMPILE_FLAGS
@@ -63,6 +65,8 @@ if(SPELUNKY_PSP_PLATFORM_LINUX OR SPELUNKY_PSP_PLATFORM_PSP)
                 -G0
                 # Optimize
                 -O2
+                # MiyooCFW
+                -Ofast -fdata-sections -fdata-sections -fno-common -fno-PIC -flto
         )
 endif()
 
