@@ -7,6 +7,7 @@
 #include "Level.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
+#include "system/GameEntitySystem.hpp"
 #include "game-entities/MainLogo.hpp"
 #include "game-entities/QuitSign.hpp"
 #include "game-entities/StartSign.hpp"
@@ -20,7 +21,6 @@ GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32
     auto& model_view_camera = game_loop._cameras.model_view;
     auto& screen_space_camera = game_loop._cameras.screen_space;
     auto& renderer = Renderer::instance();
-    auto& game_objects = game_loop._game_objects;
 
     // Remove render entities marked for disposal:
 
@@ -38,24 +38,7 @@ GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32
 
     renderer.render(Renderer::EntityType::SCREEN_SPACE);
 
-    // Update game objects:
-
-    for (auto& game_object : game_objects)
-    {
-        game_object->update(delta_time_ms);
-    }
-
-    // Remove game objects marked for disposal:
-
-    const auto it = std::remove_if(game_objects.begin(), game_objects.end(), [](const auto& game_object)
-    {
-        return game_object->is_marked_for_disposal();
-    });
-
-    if (it != game_objects.end())
-    {
-        game_objects.erase(it, game_objects.end());
-    }
+    game_loop._game_entity_system->update(delta_time_ms);
 
     // Other:
 
@@ -82,7 +65,7 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
 
     game_loop._main_dude = std::make_shared<MainDude>(0, 0);
-    game_loop._game_objects.push_back(game_loop._main_dude);
+    game_loop._game_entity_system->add(game_loop._main_dude);
 
     MapTile* entrance = nullptr;
     Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
@@ -93,7 +76,7 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     // Create level summary overlay:
 
     _level_summary_overlay = std::make_shared<LevelSummaryOverlay>(game_loop._viewport);
-    game_loop._game_objects.push_back(_level_summary_overlay);
+    game_loop._game_entity_system->add(_level_summary_overlay);
 
 }
 
@@ -101,6 +84,6 @@ void GameLoopLevelSummaryState::exit(GameLoop& game_loop)
 {
     _level_summary_overlay = nullptr;
 
-    game_loop._game_objects = {};
+    game_loop._game_entity_system->remove_all();
     game_loop._main_dude = {};
 }

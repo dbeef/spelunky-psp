@@ -1,5 +1,8 @@
 #include "GameLoop.hpp"
 
+#include "viewport/Viewport.hpp"
+#include "system/GameEntitySystem.hpp"
+
 #include <algorithm>
 #include <cassert>
 
@@ -11,6 +14,7 @@ std::function<bool(uint32_t delta_time_ms)>& GameLoop::get()
 GameLoop::GameLoop(const std::shared_ptr<Viewport>& viewport)
     : _viewport(viewport)
     , _cameras{{viewport}, {viewport, ScreenSpaceCamera::CoordinateType::WORLD_UNITS}}
+    , _game_entity_system(std::make_shared<GameEntitySystem>())
 {
     _states.current = &_states.started;
     _states.current->enter(*this);
