@@ -70,9 +70,12 @@ private:
     std::vector<Vertex> _mesh;
     std::vector<IndexType> _indices;
     RenderEntity _render_entity;
+
+    // TODO: Interface to query XY (in tiles) for loot type.
+    // TODO: Level class will handle populating.
+
     RoomType _layout[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
     int _layout_room_ids[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
 };
 
 #endif //SPELUNKYDS_LEVELGENERATOR_H
-
