@@ -6,6 +6,7 @@
 #include <SDL/SDL_mixer.h>
 
 #include <type_traits>
+#include <cassert>
 
 REGISTER_SINGLETON_INSTANCE(Audio)
 
@@ -27,7 +28,11 @@ namespace
 {
     namespace SpelunkyPSP_AudioFormat
     {
+        // Some less-precise sampling frequency (i.e 22050 Hz) would be a better trade-off
+        // between binary size and quality, but PSP refuses to open an audio device with
+        // any sampling rate other than 44100 Hz due to hardware constraints.
         constexpr static int SAMPLING_FREQUENCY = 44100;
+        // Same as in case of sampling frequency - PSP won't allow any other encoding.
         constexpr static uint16_t DATA_FORMAT = AUDIO_S16LSB;
         constexpr static int CHANNELS = 1;
     };
@@ -174,12 +179,19 @@ void Audio::load()
     log_info("Loading music and sound effects.");
 
     _handles->title_music = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_title_theme_wav())));
+    assert(_handles->title_music);
     _handles->cave_music = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_cave_theme_wav())));
+    assert(_handles->cave_music);
     _handles->jump = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_jump_wav())));
+    assert(_handles->jump);
     _handles->whip = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_whip_wav())));
+    assert(_handles->whip);
     _handles->entering_door = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_entering_door_wav())));
+    assert(_handles->entering_door);
     _handles->die = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_die_wav())));
+    assert(_handles->die);
     _handles->hurt = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_hurt_wav())));
+    assert(_handles->hurt);
 }
 
 void Audio::unload()
