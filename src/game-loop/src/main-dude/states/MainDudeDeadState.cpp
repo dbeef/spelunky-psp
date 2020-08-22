@@ -68,6 +68,7 @@ void MainDudeDeadState::set_current_frame(MainDude& main_dude)
 void MainDudeDeadState::exit(MainDude& main_dude)
 {
     main_dude._physics.set_friction(PhysicsComponent::get_default_friction());
+    main_dude._physics.set_bounciness(0.0f);
     main_dude._other.dead = false;
     main_dude.set_starting_stats();
 }
