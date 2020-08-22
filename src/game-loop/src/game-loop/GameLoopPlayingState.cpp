@@ -72,6 +72,16 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
 
     // Other:
 
+    // TODO: Applying observer pattern would be more suitable.
+    //       Handling pause overlay's death request would have shared code.
+    if (game_loop._main_dude->is_dead())
+    {
+        _death_overlay->launch();
+        _death_overlay->enable_input();
+        _pause_overlay->reset();
+        _pause_overlay->disable_input();
+    }
+
     if (game_loop._main_dude->entered_door())
     {
         return &game_loop._states.level_summary;

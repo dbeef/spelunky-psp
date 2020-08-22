@@ -23,7 +23,16 @@ MainDudeBaseState* MainDudeFallingState::update(MainDude& main_dude, uint32_t de
     {
         if (_last_y_speed >= MainDude::DEFAULT_MAX_Y_VELOCITY)
         {
-            return &main_dude._states.stunned;
+            main_dude.decrease_hearts(1);
+
+            if (main_dude.get_hearts() == 0)
+            {
+                return &main_dude._states.dead;
+            }
+            else
+            {
+                return &main_dude._states.stunned;
+            }
         }
         else if (main_dude._physics.get_x_velocity() == 0.0f)
         {
