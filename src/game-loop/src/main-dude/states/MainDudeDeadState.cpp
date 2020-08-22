@@ -4,6 +4,8 @@
 
 void MainDudeDeadState::enter(MainDude& main_dude)
 {
+    main_dude._other.dead = true;
+
     if (main_dude._physics.get_y_velocity() == 0.0f)
     {
         // Give him a slight jump, just for entertainment:
@@ -65,4 +67,6 @@ void MainDudeDeadState::set_current_frame(MainDude& main_dude)
 void MainDudeDeadState::exit(MainDude& main_dude)
 {
     main_dude._physics.set_friction(PhysicsComponent::get_default_friction());
+    main_dude._other.dead = false;
+    main_dude.set_starting_stats();
 }

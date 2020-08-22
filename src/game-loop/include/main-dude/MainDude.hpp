@@ -61,6 +61,9 @@ public:
     void enter_standing_state();
 
     bool entered_door() const { return _other.entered_door; }
+    bool is_dead() const { return _other.dead; }
+
+    void set_starting_stats();
 
 private:
 
@@ -118,15 +121,16 @@ private:
 
     struct
     {
-        int16_t hearts = 4;
-        int16_t ropes = 4;
-        int16_t bombs = 4;
-        int16_t dollars = 0;
+        int16_t hearts;
+        int16_t ropes;
+        int16_t bombs;
+        int16_t dollars;
     } _stats;
 
     struct
     {
         bool facing_left;
+        bool dead = false;
         bool entered_door = false;
     } _other;
 

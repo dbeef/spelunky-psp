@@ -36,6 +36,7 @@ MainDude::MainDude(float x_pos_center, float y_pos_center)
 
     _other.facing_left = true;
 
+    set_starting_stats();
     update(0);
 }
 
@@ -191,4 +192,12 @@ void MainDude::decrease_hearts(uint8_t amount)
 {
     _stats.hearts = std::max<int16_t>(0, _stats.hearts - amount);
     notify(MainDudeEvent::HEARTS_COUNT_CHANGED);
+}
+
+void MainDude::set_starting_stats()
+{
+    _stats.hearts = 4;
+    _stats.ropes = 4;
+    _stats.bombs = 4;
+    _stats.dollars = 0;
 }
