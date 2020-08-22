@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-enum class MainDudeSpritesheetFrames : uint16_t
+enum class MainDudeSpritesheetFrames : std::uint16_t
 {
     RUN_LEFT_0_FIRST = 0,
     RUN_LEFT_1,
