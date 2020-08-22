@@ -2,14 +2,12 @@
 
 #include <cstdint>
 
-class MainDude;
-
 class PhysicsComponent
 {
 public:
 
     PhysicsComponent(float width, float height);
-    void update(MainDude&, uint32_t delta_time_ms);
+    void update(uint32_t delta_time_ms);
 
     void set_position(float x, float y) { _position.x = x; _position.y = y;}
     void add_position(float x, float y) { _position.x += x; _position.y += y; }
