@@ -7,6 +7,7 @@ add_library(Level STATIC
         interface/Level.hpp
         interface/MapTile.hpp
         interface/MapTileType.hpp
+        interface/LootType.hpp
         interface/SplashScreenType.hpp
         interface/NeighbouringTiles.hpp
         interface/TileBatch.hpp
