@@ -122,9 +122,9 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::MAIN_MENU);
     game_loop._game_entity_system->add(_pause_overlay);
 
-    // TODO: Implement a mechanism for sprite rendering priority, so the main logo would be always rendered
-    //       behind other sprites. Some RenderingPriority enum representing depth (Z axis) would be sufficient.
-    //       Right now stacking logo and signs before the main dude handles the problem.
+    // Make main dude appear on the foreground:
+
+    Renderer::instance().sort_by_layer();
 }
 
 void GameLoopMainMenuState::exit(GameLoop& game_loop)

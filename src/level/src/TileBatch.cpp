@@ -467,6 +467,7 @@ void TileBatch::batch_vertices()
 void TileBatch::add_render_entity()
 {
     auto &renderer = Renderer::instance();
+    _render_entity.layer = RenderingLayer::BACKGROUND;
     _render_entity.vertices = _mesh.data();
     _render_entity.indices = _indices.data();
     _render_entity.indices_count = _indices.size();
