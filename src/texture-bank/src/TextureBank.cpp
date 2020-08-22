@@ -63,6 +63,16 @@ namespace
         #include "generated/font.json.hpp"
     }
 
+    namespace collectibles_png
+    {
+        #include "generated/collectibles.png.hpp"
+    }
+
+    namespace collectibles_json
+    {
+        #include "generated/collectibles.json.hpp"
+    }
+
     struct TextureInput
     {
         const char *data;
@@ -83,7 +93,8 @@ namespace
         out.push_back({main_dude_png::data, sizeof(main_dude_png::data), TextureType::MAIN_DUDE});
         out.push_back({main_menu_png::data, sizeof(main_menu_png::data), TextureType::MAIN_MENU});
         out.push_back({hud_png::data, sizeof(hud_png::data), TextureType::HUD});
-        out.push_back({font_png::data, sizeof(font_json::data), TextureType::FONT});
+        out.push_back({font_png::data, sizeof(font_png::data), TextureType::FONT});
+        out.push_back({collectibles_png::data, sizeof(collectibles_png::data), TextureType::COLLECTIBLES});
         return out;
     }
 
@@ -95,6 +106,7 @@ namespace
         out.push_back({main_menu_json::data, TextureType::MAIN_MENU});
         out.push_back({hud_json::data, TextureType::HUD});
         out.push_back({font_json::data, TextureType::FONT});
+        out.push_back({collectibles_json::data, TextureType::COLLECTIBLES});
         return out;
     }
 }

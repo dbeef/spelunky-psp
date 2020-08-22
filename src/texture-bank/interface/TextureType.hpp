@@ -7,4 +7,5 @@ enum class TextureType
     MAIN_MENU,
     HUD,
     FONT,
+    COLLECTIBLES
 };
