@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-enum class HUDSpritesheetFrames : uint16_t
+enum class HUDSpritesheetFrames : std::uint16_t
 {
     ARROW_ICON = 0,
     BOMB_ICON,

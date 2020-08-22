@@ -9,7 +9,7 @@
 const std::int8_t FONT_ASCII_OFFSET = -32;
 const std::int8_t FONT_ASCII_YELLOW_OFFSET = FONT_ASCII_OFFSET + 59;
 
-enum class FontSpritesheetFrames : int16_t
+enum class FontSpritesheetFrames : std::uint16_t
 {
     SPACE = 0,
     EXCLAMATION_MARK,

@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-enum class MainMenuSpritesheetFrames : uint16_t
+enum class MainMenuSpritesheetFrames : std::uint16_t
 {
     QUIT = 0,
     SCORES,
