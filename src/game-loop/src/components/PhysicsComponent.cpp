@@ -47,7 +47,7 @@ namespace
     }
 }
 
-void PhysicsComponent::update(MainDude &main_dude, uint32_t delta_time_ms)
+void PhysicsComponent::update(uint32_t delta_time_ms)
 {
     _pos_update_delta_ms += delta_time_ms;
 
