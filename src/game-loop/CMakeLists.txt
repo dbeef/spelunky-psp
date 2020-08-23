@@ -35,6 +35,7 @@ add_library(GameLoop STATIC
         src/game-entities/LevelSummaryOverlay.cpp
         src/game-entities/ScoresOverlay.cpp
         src/game-entities/GoldBar.cpp
+        src/populator/LootPopulator.cpp
         interface/GameLoop.hpp
         interface/GameLoopBaseState.hpp
         interface/GameLoopMainMenuState.hpp
@@ -42,6 +43,7 @@ add_library(GameLoop STATIC
         interface/GameLoopStartedState.hpp
         interface/GameLoopLevelSummaryState.hpp
         interface/GameLoopScoresState.hpp
+        include/populator/LootPopulator.hpp
         include/main-dude/MainDude.hpp
         include/main-dude/MainDudeEvent.hpp
         include/game-entities/GameEntity.hpp
