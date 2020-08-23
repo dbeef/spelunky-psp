@@ -9,6 +9,7 @@
 #include "SplashScreenType.hpp"
 #include "RoomType.hpp"
 #include "RenderEntity.hpp"
+#include "LootType.hpp"
 
 #include <vector>
 
@@ -58,6 +59,8 @@ public:
 
     MapTile *map_tiles[Consts::LEVEL_WIDTH_TILES][Consts::LEVEL_HEIGHT_TILES]{};
 
+    LootType get_loot_type_spawned_at(int x_tiles, int y_tiles) const;
+
 private:
 
     // Any encountered closed room will be turned into an altar.
@@ -70,9 +73,6 @@ private:
     std::vector<Vertex> _mesh;
     std::vector<IndexType> _indices;
     RenderEntity _render_entity;
-
-    // TODO: Interface to query XY (in tiles) for loot type.
-    // TODO: Level class will handle populating.
 
     RoomType _layout[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
     int _layout_room_ids[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
