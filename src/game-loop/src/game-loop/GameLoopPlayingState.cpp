@@ -108,20 +108,20 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     game_loop._main_dude->set_position_on_tile(entrance);
 
     // Create HUD:
-
     auto hud = std::make_shared<HUD>(game_loop._viewport, game_loop._main_dude);
     game_loop._game_entity_system->add(hud);
 
     // Create pause overlay:
-
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::PLAYING);
     game_loop._game_entity_system->add(_pause_overlay);
     
     // Create death overlay:
-
     _death_overlay = std::make_shared<DeathOverlay>(game_loop._viewport);
     _death_overlay->disable_input();
     game_loop._game_entity_system->add(_death_overlay);
+
+    // Make main dude appear on the foreground:
+    Renderer::instance().sort_by_layer();
 }
 
 void GameLoopPlayingState::exit(GameLoop& game_loop)

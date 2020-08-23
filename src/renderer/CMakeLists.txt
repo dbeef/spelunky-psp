@@ -4,6 +4,7 @@ add_library(Renderer STATIC
         src/Renderer.cpp
         src/Quad.cpp
         interface/Renderer.hpp
+        interface/RenderingLayer.hpp
         interface/Point2D.hpp
         interface/RenderEntity.hpp
         interface/Mesh.hpp

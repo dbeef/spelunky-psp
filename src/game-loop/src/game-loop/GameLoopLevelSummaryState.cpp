@@ -79,6 +79,8 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     _level_summary_overlay = std::make_shared<LevelSummaryOverlay>(game_loop._viewport);
     game_loop._game_entity_system->add(_level_summary_overlay);
 
+    // Make main dude appear on the foreground:
+    Renderer::instance().sort_by_layer();
 }
 
 void GameLoopLevelSummaryState::exit(GameLoop& game_loop)

@@ -1,15 +1,15 @@
-#include <components/QuadComponent.hpp>
 #include "main-dude/MainDude.hpp"
 #include "Renderer.hpp"
 #include "TextureBank.hpp"
 #include "components/QuadComponent.hpp"
 
-QuadComponent::QuadComponent(TextureType texture_type, Renderer::EntityType entity_type, float quad_width, float quad_height)
+QuadComponent::QuadComponent(TextureType texture_type, Renderer::EntityType entity_type, float quad_width, float quad_height, RenderingLayer layer)
     : _quad_dimensions {quad_width, quad_height}
     , _texture_type(texture_type)
     , _entity_type(entity_type)
+    , _layer(layer)
 {
-    _render_entity_id = Renderer::instance().add_entity(_quad, TextureBank::instance().get_texture(_texture_type), _entity_type);
+    _render_entity_id = Renderer::instance().add_entity(_quad, TextureBank::instance().get_texture(_texture_type), _entity_type, layer);
     assert(_render_entity_id != Renderer::INVALID_ENTITY);
 }
 
@@ -17,8 +17,9 @@ QuadComponent::QuadComponent(const QuadComponent& other)
         : _quad_dimensions {other._quad_dimensions.width, other._quad_dimensions.height}
         , _texture_type(other._texture_type)
         , _entity_type(other._entity_type)
+        , _layer(other._layer)
 {
-    _render_entity_id = Renderer::instance().add_entity(_quad, TextureBank::instance().get_texture(_texture_type), _entity_type);
+    _render_entity_id = Renderer::instance().add_entity(_quad, TextureBank::instance().get_texture(_texture_type), _entity_type, _layer);
     assert(_render_entity_id != Renderer::INVALID_ENTITY);
 }
 

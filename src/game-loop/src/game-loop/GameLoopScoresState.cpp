@@ -86,18 +86,18 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
     game_loop._game_entity_system->add(game_loop._main_dude);
 
     // Create pause overlay:
-
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::SCORES);
     game_loop._game_entity_system->add(_pause_overlay);
 
     // Create scores overlay:
-
     _scores_overlay = std::make_shared<ScoresOverlay>(game_loop._viewport);
     game_loop._game_entity_system->add(_scores_overlay);
 
     // Create reset sign:
-
      game_loop._game_entity_system->add(std::make_shared<ResetSign>(16.5f, 18.5f));
+
+    // Make main dude appear on the foreground:
+    Renderer::instance().sort_by_layer();
 }
 
 void GameLoopScoresState::exit(GameLoop& game_loop)

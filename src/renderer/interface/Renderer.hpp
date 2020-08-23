@@ -26,6 +26,7 @@ public:
 
     void render(EntityType type) const;
     void update();
+    void sort_by_layer();
 
     RenderEntityID add_entity(Mesh& mesh, TextureID texture, EntityType type)
     {
@@ -37,13 +38,14 @@ public:
         return add_entity(entity, type);
     }
 
-    RenderEntityID add_entity(Quad& quad, TextureID texture, EntityType type)
+    RenderEntityID add_entity(Quad& quad, TextureID texture, EntityType type, RenderingLayer layer)
     {
         RenderEntity entity;
         entity.indices_count = Quad::get_indices_count();
         entity.indices = quad.get_indices();
         entity.vertices = quad.get_vertices_transformed();
         entity.texture = texture;
+        entity.layer = layer;
         return add_entity(entity, type);
     }
 

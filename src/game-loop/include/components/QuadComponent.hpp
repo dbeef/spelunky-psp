@@ -11,7 +11,7 @@ class QuadComponent
 {
 public:
 
-    QuadComponent(TextureType, Renderer::EntityType, float quad_width, float quad_height);
+    QuadComponent(TextureType, Renderer::EntityType, float quad_width, float quad_height, RenderingLayer layer = RenderingLayer::MIDDLE);
     QuadComponent(const QuadComponent&);
     ~QuadComponent();
 
@@ -42,4 +42,5 @@ private:
     RenderEntityID _render_entity_id;
     const TextureType _texture_type;
     const Renderer::EntityType _entity_type;
+    const RenderingLayer _layer;
 };

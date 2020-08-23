@@ -10,6 +10,7 @@
 
 #include <string>
 #include <cstring>
+#include <algorithm>
 
 REGISTER_SINGLETON_INSTANCE(Renderer)
 
@@ -51,5 +52,16 @@ void Renderer::update()
                 render_entities_collection.erase(it);
             }
         }
+    }
+}
+
+void Renderer::sort_by_layer()
+{
+    for (std::size_t index = 0; index < static_cast<std::size_t>(EntityType::_SIZE); index++)
+    {
+        std::sort(_render_entities[index].begin(), _render_entities[index].end(), [](const RenderEntity &e1, const RenderEntity &e2)
+        {
+            return static_cast<uint16_t>(e1.layer) > static_cast<uint16_t>(e2.layer);
+        });
     }
 }
