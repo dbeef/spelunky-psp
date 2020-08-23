@@ -32,7 +32,7 @@ std::vector<std::shared_ptr<GameEntity>> populator::generate_loot()
         for (int tile_y = 0; tile_y < Consts::LEVEL_HEIGHT_TILES; tile_y++)
         {
             const auto loot_type = tile_batch.get_loot_type_spawned_at(tile_x, tile_y);
-            bool spawned = (get_random_number() % 5) == 0;
+            bool spawned = (get_random_number() % 8) == 0;
 
             if (spawned)
             {
