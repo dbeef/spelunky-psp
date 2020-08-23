@@ -52,3 +52,8 @@ void GameEntitySystem::update(std::uint32_t delta_t)
         _entities.erase(it, _entities.end());
     }
 }
+
+void GameEntitySystem::add(std::vector<std::shared_ptr<GameEntity>>& other)
+{
+    _entities.insert(_entities.end(), other.begin(), other.end());
+}

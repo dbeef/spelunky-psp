@@ -12,6 +12,7 @@ public:
     GameEntitySystem();
     void update(std::uint32_t delta_t);
     void add(std::shared_ptr<GameEntity> entity);
+    void add(std::vector<std::shared_ptr<GameEntity>>& entities);
     void remove(const std::shared_ptr<GameEntity>& entity);
     void remove_all();
 private:
