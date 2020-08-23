@@ -14,6 +14,7 @@
 #include "Renderer.hpp"
 #include "Level.hpp"
 #include "audio/Audio.hpp"
+#include "populator/LootPopulator.hpp"
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -119,6 +120,15 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     _death_overlay = std::make_shared<DeathOverlay>(game_loop._viewport);
     _death_overlay->disable_input();
     game_loop._game_entity_system->add(_death_overlay);
+
+    // Generate loot:
+
+    // TODO: Batch add method in GameEntitySystem
+    auto loot_entities = populator::generate_loot();
+    for (auto& loot : loot_entities)
+    {
+        game_loop._game_entity_system->add(loot);
+    }
 
     // Make main dude appear on the foreground:
     Renderer::instance().sort_by_layer();
