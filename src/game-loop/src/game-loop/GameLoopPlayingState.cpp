@@ -122,13 +122,8 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     game_loop._game_entity_system->add(_death_overlay);
 
     // Generate loot:
-
-    // TODO: Batch add method in GameEntitySystem
     auto loot_entities = populator::generate_loot();
-    for (auto& loot : loot_entities)
-    {
-        game_loop._game_entity_system->add(loot);
-    }
+    game_loop._game_entity_system->add(loot_entities);
 
     // Make main dude appear on the foreground:
     Renderer::instance().sort_by_layer();
