@@ -4,6 +4,7 @@
 
 void MainDudeDeadState::enter(MainDude& main_dude)
 {
+    main_dude.notify(MainDudeEvent::DIED);
     main_dude._other.dead = true;
 
     if (main_dude._physics.get_y_velocity() == 0.0f)
