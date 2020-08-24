@@ -63,12 +63,12 @@ HUD::HUD(std::shared_ptr<Viewport> viewport, std::shared_ptr<MainDude> main_dude
     _main_dude->add_observer(this);
 }
 
-void HUD::on_notify(MainDudeEvent event)
+void HUD::on_notify(const MainDudeEvent* event)
 {
-    switch(event)
+    switch(*event)
     {
         case MainDudeEvent::HEARTS_COUNT_CHANGED: _texts.hearts.set_text(to_string(_main_dude->get_hearts())); break;
-        default: assert(false); break;
+        default: break;
     }
 }
 

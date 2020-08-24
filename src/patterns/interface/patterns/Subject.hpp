@@ -33,7 +33,7 @@ public:
     {
         for (auto& observer : _observers)
         {
-            observer->on_notify(event);
+            observer->on_notify(&event);
         }
     }
 
