@@ -44,7 +44,7 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
 
     renderer.render(Renderer::EntityType::SCREEN_SPACE);
 
-    // Update game objects:
+    // Update game entities:
 
     if (_pause_overlay->is_paused())
     {
@@ -52,12 +52,9 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
         {
             log_info("Death requested.");
             game_loop._main_dude->enter_dead_state();
-            _death_overlay->launch();
-            _death_overlay->enable_input();
-            _pause_overlay->reset();
-            _pause_overlay->disable_input();
         }
-        else if (_pause_overlay->is_quit_requested())
+
+        if (_pause_overlay->is_quit_requested())
         {
             log_info("Quit requested.");
             game_loop._exit = true;
@@ -71,16 +68,6 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     }
 
     // Other:
-
-    // TODO: Applying observer pattern would be more suitable.
-    //       Handling pause overlay's death request would have shared code.
-    if (game_loop._main_dude->is_dead())
-    {
-        _death_overlay->launch();
-        _death_overlay->enable_input();
-        _pause_overlay->reset();
-        _pause_overlay->disable_input();
-    }
 
     if (game_loop._main_dude->entered_door())
     {
@@ -117,6 +104,9 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     assert(entrance);
     game_loop._main_dude->set_position_on_tile(entrance);
 
+    // Subscribe on main dude's events:
+    game_loop._main_dude->add_observer(this);
+
     // Create HUD:
     auto hud = std::make_shared<HUD>(game_loop._viewport, game_loop._main_dude);
     game_loop._game_entity_system->add(hud);
@@ -142,4 +132,20 @@ void GameLoopPlayingState::exit(GameLoop& game_loop)
     _pause_overlay = nullptr;
 
     game_loop._game_entity_system->remove_all();
+}
+
+void GameLoopPlayingState::on_notify(const MainDudeEvent* event)
+{
+    switch(*event)
+    {
+        case MainDudeEvent::DIED:
+        {
+            _death_overlay->launch();
+            _death_overlay->enable_input();
+            _pause_overlay->reset();
+            _pause_overlay->disable_input();
+            break;
+        }
+        default: break;
+    }
 }
