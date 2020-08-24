@@ -108,8 +108,8 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     game_loop._main_dude->add_observer(this);
 
     // Create HUD:
-    auto hud = std::make_shared<HUD>(game_loop._viewport, game_loop._main_dude);
-    game_loop._game_entity_system->add(hud);
+    _hud = std::make_shared<HUD>(game_loop._viewport, game_loop._main_dude);
+    game_loop._game_entity_system->add(_hud);
 
     // Create pause overlay:
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::PLAYING);
@@ -145,6 +145,7 @@ void GameLoopPlayingState::on_notify(const MainDudeEvent* event)
             _death_overlay->enable_input();
             _pause_overlay->reset();
             _pause_overlay->disable_input();
+            _hud->hide();
             break;
         }
         default: break;

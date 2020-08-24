@@ -22,21 +22,20 @@ public:
     void update(uint32_t delta_time_ms) override;
     void on_notify(const MainDudeEvent*) override;
 
-private:
+    void hide();
 
-    static constexpr float ICONS_OFFSET_WORLD_UNITS = 1.5f;
-    static constexpr float ICON_SIZE_WORLD_UNITS = 0.5f;
+private:
 
     std::shared_ptr<Viewport> _viewport;
     std::shared_ptr<MainDude> _main_dude;
 
     struct
     {
-        QuadComponent heart = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
-        QuadComponent dollar = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
-        QuadComponent ropes = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
-        QuadComponent bombs = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
-        QuadComponent hold_item = {TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS};
+        std::shared_ptr<QuadComponent> heart = nullptr;
+        std::shared_ptr<QuadComponent> dollar = nullptr;
+        std::shared_ptr<QuadComponent> ropes = nullptr;
+        std::shared_ptr<QuadComponent> bombs = nullptr;
+        std::shared_ptr<QuadComponent> hold_item = nullptr;
     } _quads;
 
     struct
