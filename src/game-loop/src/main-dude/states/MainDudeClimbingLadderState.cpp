@@ -48,7 +48,6 @@ MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude
     if (input.jumping().changed() && input.jumping().value())
     {
         main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
-        main_dude._physics.enable_gravity();
         return &main_dude._states.jumping;
     }
 
@@ -67,7 +66,6 @@ MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude
 
             if (main_dude._physics.is_bottom_collision())
             {
-                main_dude._physics.enable_gravity();
                 return &main_dude._states.standing;
             }
         }
@@ -93,9 +91,13 @@ MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude
 
     if (!ladder_tile && !ladder_deck_tile)
     {
-        main_dude._physics.enable_gravity();
         return &main_dude._states.falling;
     }
 
     return this;
+}
+
+void MainDudeClimbingLadderState::exit(MainDude& main_dude)
+{
+    main_dude._physics.enable_gravity();
 }

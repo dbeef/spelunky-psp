@@ -64,9 +64,9 @@ public:
 
 private:
 
+    void enter_if_different(MainDudeBaseState*);
     void set_starting_stats();
     void decrease_hearts(uint8_t amount);
-    void handle_input(const Input& input);
     MapTile* is_overlaping_tile(MapTileType) const;
 
     // Returns true on successful request.

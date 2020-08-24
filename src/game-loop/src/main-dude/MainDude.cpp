@@ -50,33 +50,17 @@ void MainDude::update(uint32_t delta_time_ms)
         _quad.frame_changed();
     }
 
-    // Handle input
-
-    handle_input(Input::instance());
-
     // Update current state:
-    
+
+    MainDudeBaseState* new_state;
+
     assert(_states.current);
-    auto new_state = _states.current->update(*this, delta_time_ms);
+    new_state = _states.current->handle_input(*this, Input::instance());
+    enter_if_different(new_state);
 
-    if (new_state != _states.current)
-    {
-        _states.current->exit(*this);
-        _states.current = new_state;
-        _states.current->enter(*this);
-    }
-}
-
-void MainDude::handle_input(const Input &input)
-{
     assert(_states.current);
-    auto new_state = _states.current->handle_input(*this, input);
-
-    if (new_state != _states.current)
-    {
-        new_state->enter(*this);
-        _states.current = new_state;
-    }
+    new_state = _states.current->update(*this, delta_time_ms);
+    enter_if_different(new_state);
 }
 
 MapTile* MainDude::is_overlaping_tile(MapTileType type) const
@@ -109,23 +93,17 @@ void MainDude::set_position_on_tile(MapTile *map_tile)
 
 void MainDude::enter_standing_state()
 {
-    _states.current->exit(*this);
-    _states.current = &_states.standing;
-    _states.current->enter(*this);
+    enter_if_different(&_states.standing);
 }
 
 void MainDude::enter_dead_state()
 {
-    _states.current->exit(*this);
-    _states.current = &_states.dead;
-    _states.current->enter(*this);
+    enter_if_different(&_states.dead);
 }
 
 void MainDude::enter_level_summary_state()
 {
-    _states.current->exit(*this);
-    _states.current = &_states.level_summary;
-    _states.current->enter(*this);
+    enter_if_different(&_states.level_summary);
 }
 
 bool MainDude::hang_off_cliff_right()
@@ -200,4 +178,14 @@ void MainDude::set_starting_stats()
     _stats.ropes = 4;
     _stats.bombs = 4;
     _stats.dollars = 0;
+}
+
+void MainDude::enter_if_different(MainDudeBaseState* new_state)
+{
+    if (new_state != _states.current)
+    {
+        _states.current->exit(*this);
+        _states.current = new_state;
+        _states.current->enter(*this);
+    }
 }
