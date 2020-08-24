@@ -20,7 +20,7 @@ public:
     ~HUD() override;
 
     void update(uint32_t delta_time_ms) override;
-    void on_notify(MainDudeEvent) override;
+    void on_notify(const MainDudeEvent*) override;
 
 private:
 
