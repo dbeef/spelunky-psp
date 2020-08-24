@@ -8,6 +8,9 @@
 
 namespace
 {
+    const float ICONS_OFFSET_WORLD_UNITS = 1.5f;
+    const float ICON_SIZE_WORLD_UNITS = 0.5f;
+
     // std::to_string is missing in PSP's libc++.
     std::string to_string(uint32_t value)
     {
@@ -29,11 +32,17 @@ HUD::HUD(std::shared_ptr<Viewport> viewport, std::shared_ptr<MainDude> main_dude
     assert(_viewport);
     assert(_main_dude);
 
-    _quads.heart.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HEART);
-    _quads.dollar.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::DOLLAR_SIGN);
-    _quads.ropes.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::ROPE_ICON);
-    _quads.bombs.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::BOMB_ICON);
-    _quads.hold_item.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HOLD_ITEM_ICON);
+    _quads.heart = std::make_shared<QuadComponent>(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS);
+    _quads.dollar = std::make_shared<QuadComponent>(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS);
+    _quads.ropes = std::make_shared<QuadComponent>(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS);
+    _quads.bombs = std::make_shared<QuadComponent>(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS);
+    _quads.hold_item = std::make_shared<QuadComponent>(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS);
+
+    _quads.heart->frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HEART);
+    _quads.dollar->frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::DOLLAR_SIGN);
+    _quads.ropes->frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::ROPE_ICON);
+    _quads.bombs->frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::BOMB_ICON);
+    _quads.hold_item->frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HOLD_ITEM_ICON);
 
     const auto POS_X = static_cast<float>(_viewport->get_width_world_units() * 0.05f);
     const auto POS_Y = static_cast<float>(_viewport->get_height_world_units() * 0.05f);
@@ -44,11 +53,11 @@ HUD::HUD(std::shared_ptr<Viewport> viewport, std::shared_ptr<MainDude> main_dude
     Point2D dollar_center = {POS_X + (ICONS_OFFSET_WORLD_UNITS * 3), POS_Y};
     Point2D hold_item_center = {POS_X + (ICONS_OFFSET_WORLD_UNITS * 4), POS_Y};
 
-    _quads.heart.update(heart_center.x, heart_center.y);
-    _quads.dollar.update(dollar_center.x, dollar_center.y);
-    _quads.ropes.update(ropes_center.x, ropes_center.y);
-    _quads.bombs.update(bombs_center.x, bombs_center.y);
-    _quads.hold_item.update(hold_item_center.x, hold_item_center.y);
+    _quads.heart->update(heart_center.x, heart_center.y);
+    _quads.dollar->update(dollar_center.x, dollar_center.y);
+    _quads.ropes->update(ropes_center.x, ropes_center.y);
+    _quads.bombs->update(bombs_center.x, bombs_center.y);
+    _quads.hold_item->update(hold_item_center.x, hold_item_center.y);
 
     _texts.hearts.set_position({heart_center.x + ICON_SIZE_WORLD_UNITS, heart_center.y});
     _texts.ropes.set_position({ropes_center.x + ICON_SIZE_WORLD_UNITS, ropes_center.y});
@@ -75,4 +84,18 @@ void HUD::on_notify(const MainDudeEvent* event)
 HUD::~HUD()
 {
     _main_dude->remove_observer(this);
+}
+
+void HUD::hide()
+{
+    _quads.heart = nullptr;
+    _quads.dollar = nullptr;
+    _quads.ropes = nullptr;
+    _quads.bombs = nullptr;
+    _quads.hold_item = nullptr;
+
+    _texts.dollars = {};
+    _texts.hearts = {};
+    _texts.ropes = {};
+    _texts.bombs = {};
 }

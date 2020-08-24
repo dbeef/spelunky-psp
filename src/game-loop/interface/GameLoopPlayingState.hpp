@@ -6,6 +6,7 @@
 #include "patterns/Observer.hpp"
 
 class GameLoop;
+class HUD;
 class PauseOverlay;
 class DeathOverlay;
 enum class MainDudeEvent;
@@ -18,6 +19,7 @@ public:
     void exit(GameLoop&) override;
     void on_notify(const MainDudeEvent*) override;
 private:
+    std::shared_ptr<HUD> _hud = nullptr;
     std::shared_ptr<PauseOverlay> _pause_overlay = nullptr;
     std::shared_ptr<DeathOverlay> _death_overlay = nullptr;
 };
