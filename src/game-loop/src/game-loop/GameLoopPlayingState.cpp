@@ -130,6 +130,7 @@ void GameLoopPlayingState::exit(GameLoop& game_loop)
 
     _death_overlay = nullptr;
     _pause_overlay = nullptr;
+    _hud = nullptr;
 
     game_loop._main_dude->remove_observer(this);
     game_loop._game_entity_system->remove_all();
