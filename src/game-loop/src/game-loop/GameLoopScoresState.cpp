@@ -35,7 +35,7 @@ GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t del
 
     renderer.render(Renderer::EntityType::SCREEN_SPACE);
 
-    // Update game objects:
+    // Update game entities:
 
     if (_pause_overlay->is_paused())
     {

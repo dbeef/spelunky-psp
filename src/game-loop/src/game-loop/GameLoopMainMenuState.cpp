@@ -49,7 +49,7 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
 
     renderer.render(Renderer::EntityType::SCREEN_SPACE);
 
-    // Update game objects:
+    // Update game entities:
 
     if (_pause_overlay->is_paused())
     {
