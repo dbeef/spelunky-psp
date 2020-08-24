@@ -61,12 +61,10 @@ public:
     void enter_standing_state();
 
     bool entered_door() const { return _other.entered_door; }
-    bool is_dead() const { return _other.dead; }
-
-    void set_starting_stats();
 
 private:
 
+    void set_starting_stats();
     void decrease_hearts(uint8_t amount);
     void handle_input(const Input& input);
     MapTile* is_overlaping_tile(MapTileType) const;
