@@ -5,6 +5,7 @@
 #include "game-entities/HUD.hpp"
 #include "game-entities/PauseOverlay.hpp"
 #include "game-entities/DeathOverlay.hpp"
+#include "game-entities/LevelStatistics.hpp"
 #include "system/GameEntitySystem.hpp"
 #include "main-dude/MainDude.hpp"
 
@@ -127,6 +128,9 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
     // Make main dude appear on the foreground:
     Renderer::instance().sort_by_layer();
+
+    game_loop._level_statistics->entered_new_level();
+    game_loop._game_entity_system->add(game_loop._level_statistics);
 }
 
 void GameLoopPlayingState::exit(GameLoop& game_loop)

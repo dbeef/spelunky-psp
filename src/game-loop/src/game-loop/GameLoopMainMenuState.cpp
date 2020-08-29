@@ -8,6 +8,7 @@
 #include "game-entities/ScoresSign.hpp"
 #include "game-entities/TutorialSign.hpp"
 #include "game-entities/CopyrightsSign.hpp"
+#include "game-entities/LevelStatistics.hpp"
 #include "system/GameEntitySystem.hpp"
 #include "main-dude/MainDude.hpp"
 
@@ -110,6 +111,8 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     game_loop._game_entity_system->add(std::make_shared<TutorialSign>(1.0f, 8.5f));
     game_loop._game_entity_system->add(std::make_shared<CopyrightsSign>(10.0f, 10.75f));
     game_loop._game_entity_system->add(std::make_shared<QuitSign>(16.0f, 1.5f));
+
+    game_loop._level_statistics->reset();
 
     // Update main dude:
     game_loop._main_dude->enter_standing_state();
