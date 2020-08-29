@@ -1,5 +1,5 @@
 #pragma once
-// Generated from: font.json, at: Sat Aug  8 16:58:27 2020
+// Generated from: font.json, at: Sat Aug 29 15:58:42 2020
 
 char data[] = 
 {
