@@ -5,13 +5,15 @@
 
 #include "GameEntity.hpp"
 #include "components/TextComponent.hpp"
-#include "viewport/Viewport.hpp"
+
+class LevelSummaryOverlay;
+class LevelStatistics;
 
 class LevelSummaryOverlay : public GameEntity
 {
 public:
 
-    explicit LevelSummaryOverlay(std::shared_ptr<Viewport>);
+    LevelSummaryOverlay(std::shared_ptr<Viewport>, const std::shared_ptr<LevelStatistics>&);
     void update(uint32_t delta_time_ms) override;
 
 private:

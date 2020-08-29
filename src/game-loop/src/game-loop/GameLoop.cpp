@@ -2,6 +2,7 @@
 
 #include "viewport/Viewport.hpp"
 #include "system/GameEntitySystem.hpp"
+#include "game-entities/LevelStatistics.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -15,6 +16,7 @@ GameLoop::GameLoop(const std::shared_ptr<Viewport>& viewport)
     : _viewport(viewport)
     , _cameras{{viewport}, {viewport, ScreenSpaceCamera::CoordinateType::WORLD_UNITS}}
     , _game_entity_system(std::make_shared<GameEntitySystem>())
+    , _level_statistics(std::make_shared<LevelStatistics>())
 {
     _states.current = &_states.started;
     _states.current->enter(*this);

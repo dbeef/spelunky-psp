@@ -36,6 +36,7 @@ add_library(GameLoop STATIC
         src/game-entities/ScoresOverlay.cpp
         src/game-entities/SingleGoldBar.cpp
         src/game-entities/TripleGoldBar.cpp
+        src/game-entities/LevelStatistics.cpp
         src/game-entities/Chest.cpp
         src/game-entities/Jar.cpp
         src/game-entities/Rock.cpp
@@ -65,6 +66,7 @@ add_library(GameLoop STATIC
         include/game-entities/Jar.hpp
         include/game-entities/Rock.hpp
         include/game-entities/BigGem.hpp
+        include/game-entities/LevelStatistics.hpp
         include/game-entities/MainLogo.hpp
         include/game-entities/QuitSign.hpp
         include/game-entities/ResetSign.hpp
