@@ -1,36 +1,27 @@
 #pragma once
 
-#include <SDL/SDL_timer.h>
+#include <cstdint>
 #include <thread>
 
-using Timestamp = Uint32;
-using Timediff = Uint32;
+using Timestamp = uint32_t;
+using Timediff = uint32_t;
 
 class Timestep {
 
 public:
 
-    explicit Timestep(float fps = 60.f)
-        : _fps(fps)
-        , _min_delay_ms(static_cast<Timediff>(1000.0f / fps))
+    explicit Timestep(float fps = 60.f) : _min_delay_ms(static_cast<Timediff>(1000.0f / fps))
     { }
 
-    inline void mark_start()
-    {
-        _start = SDL_GetTicks();
-    }
+    void mark_start();
 
-    inline void mark_end()
-    {
-        _end = SDL_GetTicks();
-    }
+    void mark_end();
 
     Timestamp delay() const;
 
 private:
 
-    Timestamp _start;
-    Timestamp _end;
-    const float _fps;
+    Timestamp _start = 0;
+    Timestamp _end = 0;
     const Timediff _min_delay_ms;
 };

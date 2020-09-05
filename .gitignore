@@ -6,3 +6,4 @@ deps/
 install/
 .vscode
 .idea
+platforms/android/build/

@@ -6,4 +6,7 @@ add_library(glad STATIC
 
 target_include_directories(glad
         PUBLIC include
-        )
+)
+
+# For platform defines:
+target_link_libraries(glad PUBLIC Dependencies)

@@ -14,7 +14,13 @@ endif()
 
 set(ASSETS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/assets)
 
-add_executable(Spelunky_PSP src/Main.cpp)
+if (SPELUNKY_PSP_PLATFORM_ANDROID)
+    # On Android, libSpelunky_PSP.so is copied into the final .APK file and SDL2's Java activity
+    # calls the main function through JNI.
+    add_library(Spelunky_PSP SHARED src/Main.cpp)
+else()
+    add_executable(Spelunky_PSP src/Main.cpp)
+endif ()
 
 add_subdirectory(vendor)
 add_subdirectory(src/viewport)
@@ -49,15 +55,12 @@ set_target_properties(Spelunky_PSP
         14
         CXX_EXTENSIONS
         OFF
-        )
-if(SPELUNKY_PSP_PLATFORM_LINUX OR SPELUNKY_PSP_PLATFORM_PSP)
+)
+
+if(SPELUNKY_PSP_PLATFORM_LINUX OR SPELUNKY_PSP_PLATFORM_PSP OR SPELUNKY_PSP_PLATFORM_ANDROID)
         set_target_properties(Spelunky_PSP
                 PROPERTIES
                 COMPILE_FLAGS
-                # Treat every warning as an error
-                -Werror
-                # Disables exceptions support and uses the variant of C++ libraries without exceptions
-                -fno-exceptions
                 # Disable generation of information about every class with virtual functions for use by
                 # the C++ runtime type identification features (dynamic_cast and typeid).
                 -fno-rtti
@@ -70,10 +73,14 @@ endif()
 
 install(TARGETS Spelunky_PSP
         CONFIGURATIONS Debug
-        RUNTIME DESTINATION Debug/bin)
+        RUNTIME DESTINATION Debug/bin
+        LIBRARY DESTINATION Debug/lib
+)
 
 install(TARGETS Spelunky_PSP
         CONFIGURATIONS Release
-        RUNTIME DESTINATION Release/bin)
+        RUNTIME DESTINATION Release/bin
+        LIBRARY DESTINATION Release/lib
+)
 
 spelunky_psp_post_build()

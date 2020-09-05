@@ -27,6 +27,12 @@
 #include <time.h>
 #include <assert.h>
 
+#if defined SPELUNKY_PSP_PLATFORM_ANDROID
+	#include <android/log.h>
+	#define  LOG_TAG    "spelunky"
+	#define  ALOG(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+#endif
+
 #include "log.h"
 
 static struct {
@@ -115,6 +121,15 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
     fprintf(stderr, "\n");
     fflush(stderr);
 
+#elif defined SPELUNKY_PSP_PLATFORM_ANDROID
+
+    ALOG("%s %-5s %s:%d: ", buf, level_names[level], file, line);
+
+    va_start(args, fmt);
+    ALOG(fmt, args);
+    va_end(args);
+    fprintf(stderr, "\n");
+    fflush(stderr);
 #else
     char metadata_buffer[256];
     int status = snprintf(metadata_buffer,

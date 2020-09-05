@@ -1,6 +1,7 @@
 include(cmake/DependenciesLinux.cmake)
 include(cmake/DependenciesPSP.cmake)
 include(cmake/DependenciesWindows.cmake)
+include(cmake/DependenciesAndroid.cmake)
 
 macro(spelunky_psp_detect_platform)
 
@@ -9,6 +10,11 @@ macro(spelunky_psp_detect_platform)
         set(SPELUNKY_PSP_PLATFORM_PSP TRUE)
     endif()
     
+    if (${CMAKE_SYSTEM_NAME} STREQUAL Android)
+        set(SPELUNKY_PSP_PLATFORM "Android")
+        set(SPELUNKY_PSP_PLATFORM_ANDROID TRUE)
+    endif()
+
     if (DEFINED SPELUNKY_PSP_PLATFORM)
         # Nothing to do - SPELUNKY_PSP_PLATFORM was already defined in the toolchain file.
     elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
@@ -33,25 +39,19 @@ macro(spelunky_psp_add_platform_dependencies)
         add_linux_dependencies()
     elseif (${SPELUNKY_PSP_PLATFORM} STREQUAL Windows)
         add_windows_dependencies()
+    elseif (${SPELUNKY_PSP_PLATFORM} STREQUAL Android)
+        add_android_dependencies()
     endif ()
 endmacro()
 
 macro(spelunky_psp_post_build)
     if (${SPELUNKY_PSP_PLATFORM} STREQUAL PSP)
-        add_custom_command(
-            TARGET Spelunky_PSP
-            POST_BUILD COMMAND
-            "psp-strip" "$<TARGET_FILE:Spelunky_PSP>"
-            COMMENT "Stripping binary"
-        )
-
-        create_pbp_file(TARGET Spelunky_PSP
-            ICON_PATH ${ASSETS_PATH}/metadata/icon.png
-            BACKGROUND_PATH ${ASSETS_PATH}/metadata/background.png
-        )
+        spelunky_psp_post_build_psp()
     elseif (${SPELUNKY_PSP_PLATFORM} STREQUAL Linux)
         spelunky_psp_post_build_linux()
     elseif (${SPELUNKY_PSP_PLATFORM} STREQUAL Windows)
         spelunky_psp_post_build_windows()
+    elseif (${SPELUNKY_PSP_PLATFORM} STREQUAL Android)
+        spelunky_psp_post_build_android()
     endif ()
 endmacro()

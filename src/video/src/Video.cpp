@@ -1,23 +1,11 @@
 //
 // Created by dbeef on 2/2/20.
 //
+
 #include "video/Video.hpp"
 #include "Input.hpp"
 #include "glad/glad.h"
 #include "graphics_utils/DebugGlCall.hpp"
-#include "time/Timestep.hpp"
-
-#include <SDL/SDL.h>
-
-void Video::tear_down_gl()
-{
-    SDL_QuitSubSystem(SDL_INIT_VIDEO);
-}
-
-void Video::swap_buffers() const
-{
-    SDL_GL_SwapBuffers();
-}
 
 void Video::run_loop(const std::function<bool(uint32_t delta_time_ms)> &loop_callback)
 {
