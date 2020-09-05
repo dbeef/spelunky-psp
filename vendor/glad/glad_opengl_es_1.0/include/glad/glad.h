@@ -544,14 +544,22 @@ GLAPI PFNGLMULTITEXCOORD4FPROC glad_glMultiTexCoord4f;
 typedef void (APIENTRYP PFNGLNORMAL3FPROC)(GLfloat nx, GLfloat ny, GLfloat nz);
 GLAPI PFNGLNORMAL3FPROC glad_glNormal3f;
 #define glNormal3f glad_glNormal3f
+
 typedef void (APIENTRYP PFNGLORTHOFPROC)(GLfloat l, GLfloat r, GLfloat b, GLfloat t, GLfloat n, GLfloat f);
 GLAPI PFNGLORTHOFPROC glad_glOrthof;
 #define glOrthof glad_glOrthof
-typedef void (APIENTRYP PFNGLORTHOPROC)(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
 
-// Added manually!
-GLAPI PFNGLORTHOPROC glad_glOrtho;
-#define glOrtho glad_glOrtho
+#ifdef SPELUNKY_PSP_PLATFORM_PSP // Added manually:
+    typedef void (APIENTRYP PFNGLORTHOPROC)(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
+    GLAPI PFNGLORTHOPROC glad_glOrtho;
+    #define glOrtho glad_glOrtho
+#endif
+
+#ifdef SPELUNKY_PSP_PLATFORM_ANDROID // Added manually:
+    typedef void (APIENTRYP PFNGLORTHOPROC)(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
+    GLAPI PFNGLORTHOPROC glad_glOrtho;
+    #define glOrtho glad_glOrtho
+#endif
 
 typedef void (APIENTRYP PFNGLPOINTPARAMETERFPROC)(GLenum pname, GLfloat param);
 GLAPI PFNGLPOINTPARAMETERFPROC glad_glPointParameterf;

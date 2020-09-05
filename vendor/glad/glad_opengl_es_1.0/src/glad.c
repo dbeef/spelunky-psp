@@ -299,8 +299,13 @@ static void load_GL_VERSION_ES_CM_1_0(GLADloadproc load) {
 	glad_glNormal3f = (PFNGLNORMAL3FPROC)load("glNormal3f");
 	glad_glOrthof = (PFNGLORTHOFPROC)load("glOrthof");
 
-	// Added manually!
-	glad_glOrtho = (PFNGLORTHOPROC)load("glOrtho");
+    #ifdef SPELUNKY_PSP_PLATFORM_PSP // Added manually
+        glad_glOrtho = (PFNGLORTHOPROC)load("glOrtho");
+    #endif
+
+    #ifdef SPELUNKY_PSP_PLATFORM_ANDROID // Added manually
+        glad_glOrtho = (PFNGLORTHOPROC)load("glOrthof");
+    #endif
 
 	glad_glPointParameterf = (PFNGLPOINTPARAMETERFPROC)load("glPointParameterf");
 	glad_glPointParameterfv = (PFNGLPOINTPARAMETERFVPROC)load("glPointParameterfv");

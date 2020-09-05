@@ -47,3 +47,17 @@ macro(add_psp_dependencies)
             )
 
 endmacro()
+
+macro(spelunky_psp_post_build_psp)
+    add_custom_command(
+            TARGET Spelunky_PSP
+            POST_BUILD COMMAND
+            "psp-strip" "$<TARGET_FILE:Spelunky_PSP>"
+            COMMENT "Stripping binary"
+    )
+
+    create_pbp_file(TARGET Spelunky_PSP
+            ICON_PATH ${ASSETS_PATH}/metadata/icon.png
+            BACKGROUND_PATH ${ASSETS_PATH}/metadata/background.png
+    )
+endmacro()

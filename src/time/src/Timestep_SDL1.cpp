@@ -1,4 +1,5 @@
 #include "time/Timestep.hpp"
+#include <SDL/SDL_timer.h>
 
 Timestamp Timestep::delay() const
 {
@@ -12,3 +13,14 @@ Timestamp Timestep::delay() const
     }
     return delta_ms;
 }
+
+void Timestep::mark_start()
+{
+    _start = SDL_GetTicks();
+}
+
+void Timestep::mark_end()
+{
+    _end = SDL_GetTicks();
+}
+

@@ -8,10 +8,29 @@
 
 #include <SDL/SDL.h>
 
+struct PlatformSpecific
+{
+    // Nothing platform specific to be stored.
+};
+
+Video::~Video() = default; // For pimpl idiom.
+Video::Video() : _timestep(60) {}; // For pimpl idiom.
+
+void Video::tear_down_gl()
+{
+    SDL_QuitSubSystem(SDL_INIT_VIDEO);
+}
+
+void Video::swap_buffers() const
+{
+    SDL_GL_SwapBuffers();
+}
+
 bool Video::setup_gl()
 {
     log_info("Entered Video::setup_gl.");
 
+    _platform_specific = std::make_unique<PlatformSpecific>();
     _viewport = std::make_shared<Viewport>(480, 272);
 
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {

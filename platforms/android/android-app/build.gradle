@@ -1,0 +1,60 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.my.exampleapp"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+
+        // Set the apk base name.
+        setProperty("archivesBaseName", "simpleSDL")
+
+        externalNativeBuild {
+            cmake {
+            	version "3.10.2.4988404"
+                // Add any cmake options here.
+
+                def ANDROID_DEPS=System.getenv('ANDROID_DEPS')
+                def ANDROID_NDK_HOME=System.getenv('ANDROID_NDK_HOME')
+
+                arguments "-DANDROID_STL=c++_static", "-DANDROID=TRUE", "-DCMAKE_BUILD_TYPE=Release", "-DSDL2_DIR=" + ANDROID_DEPS + "/SDL2/lib/cmake/SDL2/", "-DANDROID_ABI=armeabi-v7a", "-DANDROID_NDK=" + ANDROID_NDK_HOME, "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake"
+            }
+        }
+
+        ndk {
+        	version "18.1.5063045"
+            //abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+            // Limiting to a smaller set of  ABIs to save time while testing:
+            abiFilters "armeabi-v7a"
+        }
+    }
+
+    sourceSets {
+        main {
+            assets.srcDirs = ['../../../assets']
+            jniLibs.srcDirs += ['../../../lib']
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    externalNativeBuild {
+        cmake {
+        	version "3.10.2.4988404"
+            path "../../../CMakeLists.txt"
+
+            // Using one top level build dir for all build related files to reduce clutter.
+            buildStagingDirectory file("${buildDir}/../.externalNativeBuild/${project.name}")
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.so'])
+}

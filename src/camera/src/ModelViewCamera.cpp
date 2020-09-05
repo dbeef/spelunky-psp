@@ -4,6 +4,9 @@
 #include "graphics_utils/LookAt.hpp"
 #include "ModelViewCamera.hpp"
 
+#include <cstdlib>
+#include <cmath>
+
 ModelViewCamera::ModelViewCamera(std::shared_ptr<Viewport> viewport)
     : _viewport(std::move(viewport))
     , _bounding_x(2.f)
@@ -50,16 +53,20 @@ void ModelViewCamera::round_position_y() { _y = ((10.f * _y + 0.5f) / 10); }
 
 void ModelViewCamera::adjust_to_bounding_box(float x, float y)
 {
-    auto dx = (x / 2) - _x;
-    auto dy = (y / 2) - _y;
+    float dx = (x / 2) - _x;
+    float dy = (y / 2) - _y;
 
-    if (std::abs(dx) > _bounding_x_half)
+	float c1 = std::abs(dx);
+	
+    if (c1 > _bounding_x_half)
     {
         _x += dx + (dx > 0.f ? -_bounding_x_half : _bounding_x_half);
         round_position_x();
     }
 
-    if (std::abs(dy) > _bounding_y_half)
+	float c2 = std::abs(dy);
+
+    if (c2 > _bounding_y_half)
     {
         _y += dy + (dy > 0.f ? -_bounding_y_half : _bounding_y_half);
         round_position_y();
