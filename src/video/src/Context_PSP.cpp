@@ -18,6 +18,10 @@ bool Video::setup_gl()
 {
     log_info("Entered Video::setup_gl");
 
+    // http://sdl.beuc.net/sdl.wiki/SDL_envvars
+    // https://wiki.dingoonity.org/index.php?title=Dingux:OpenDingux:Development
+    // https://www.kernel.org/doc/html/latest/fb/fbcon.html
+    // https://wiki.libsdl.org/FAQUsingSDL#How_do_I_choose_a_specific_video_driver.3F
     putenv("DISPLAY=:0") ;
     putenv("SDL_VIDEODRIVER=directfb") ;
     putenv("SDL_VIDEO_GL_DRIVER=libGLU.so.1") ;
