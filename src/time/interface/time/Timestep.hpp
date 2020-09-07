@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL/SDL_timer.h>
+#include <SDL2/SDL_timer.h>
 #include <thread>
 
 using Timestamp = Uint32;

@@ -3,7 +3,8 @@
 #
 # Copyright 2020 - Daniel 'dbeef' Zalega
 
-set(MiyooCFW_PATH "/home/dbeef/miyoo-toolchain/")
+#set(MiyooCFW_PATH "/home/dbeef/miyoo-toolchain/")
+set(MiyooCFW_PATH "/home/dbeef/miyoo-toolchain-from-github/miyoo/")
 set(MiyooBIN "${MiyooCFW_PATH}/bin/")
 
 # Basic CMake Declarations
@@ -19,7 +20,7 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 set(STRIP ${MiyooBIN}/arm-linux-strip)
 
 # Include directories:
-include_directories(${include_directories} "${MiyooCFW_PATH}/include;${MiyooCFW_PATH}/arm-buildroot-linux-uclibcgnueabi/sysroot/include/SDL")
+include_directories("${MiyooCFW_PATH}/include;${MiyooCFW_PATH}/arm-buildroot-linux-uclibcgnueabi/sysroot/include/SDL")
 
 # Helper variable for multi-platform projects to identify current platform:
 set(Miyoo_PLATFORM TRUE BOOL)

@@ -1,6 +1,8 @@
 #include "Input.hpp"
 
-#include <SDL/SDL_events.h>
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keyboard.h>
+
 #include <cstdlib>
 
 const char* Input::get_pause_binding_msg()
@@ -45,7 +47,7 @@ void Input::poll()
     {
         if (event.type == SDL_EventType::SDL_KEYDOWN || event.type == SDL_EventType::SDL_KEYUP)
         {
-            const SDLKey& key = event.key.keysym.sym;
+            const auto& key = event.key.keysym.sym;
             const bool v = event.type == SDL_EventType::SDL_KEYDOWN;
 
             if (key == SDLK_LEFT)
