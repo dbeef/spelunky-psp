@@ -18,6 +18,10 @@ bool Video::setup_gl()
 {
     log_info("Entered Video::setup_gl");
 
+    putenv("DISPLAY=:0") ;
+    putenv("SDL_VIDEODRIVER=directfb") ;
+    putenv("SDL_VIDEO_GL_DRIVER=libGLU.so.1") ;
+
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         log_error("SDL_Init Error: %s", SDL_GetError());
         SDL_ClearError();
