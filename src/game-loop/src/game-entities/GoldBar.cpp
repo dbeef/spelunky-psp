@@ -29,7 +29,7 @@ void GoldBar::update(uint32_t delta_time_ms)
 
     if (PhysicsComponentAggregator::instance().is_collision(&_physics, PhysicsComponentType::MAIN_DUDE))
     {
-        // TODO: Update dollars counter
+        // TODO: Update dollars counter - move hearts/dollars/ropes/bombs out of the main dude into GameState singleton?
         mark_for_disposal();
     }
 }
