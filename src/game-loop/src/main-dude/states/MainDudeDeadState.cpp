@@ -1,6 +1,7 @@
 #include "main-dude/states/MainDudeDeadState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
+#include "other/Inventory.hpp"
 
 void MainDudeDeadState::enter(MainDude& main_dude)
 {
@@ -70,5 +71,5 @@ void MainDudeDeadState::exit(MainDude& main_dude)
     main_dude._physics.set_friction(PhysicsComponent::get_default_friction());
     main_dude._physics.set_bounciness(0.0f);
     main_dude._other.dead = false;
-    main_dude.set_starting_stats();
+    Inventory::instance().set_starting_inventory();
 }

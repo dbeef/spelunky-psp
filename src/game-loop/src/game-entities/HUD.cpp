@@ -5,6 +5,7 @@
 #include "game-entities/HUD.hpp"
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
 #include "main-dude/MainDude.hpp"
+#include "other/Inventory.hpp"
 
 namespace
 {
@@ -25,12 +26,9 @@ void HUD::update(uint32_t delta_time_ms)
     // Nothing to update.
 }
 
-HUD::HUD(std::shared_ptr<Viewport> viewport, std::shared_ptr<MainDude> main_dude)
-    : _viewport(std::move(viewport))
-    , _main_dude(std::move(main_dude))
+HUD::HUD(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
 {
     assert(_viewport);
-    assert(_main_dude);
 
     _quads.heart = std::make_shared<QuadComponent>(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS);
     _quads.dollar = std::make_shared<QuadComponent>(TextureType::HUD, Renderer::EntityType::SCREEN_SPACE, ICON_SIZE_WORLD_UNITS, ICON_SIZE_WORLD_UNITS);
@@ -64,26 +62,26 @@ HUD::HUD(std::shared_ptr<Viewport> viewport, std::shared_ptr<MainDude> main_dude
     _texts.bombs.set_position({bombs_center.x + ICON_SIZE_WORLD_UNITS, bombs_center.y});
     _texts.dollars.set_position({dollar_center.x + ICON_SIZE_WORLD_UNITS, dollar_center.y});
 
-    _texts.hearts.set_text(to_string(_main_dude->get_hearts()));
-    _texts.ropes.set_text(to_string(_main_dude->get_ropes()));
-    _texts.bombs.set_text(to_string(_main_dude->get_bombs()));
-    _texts.dollars.set_text(to_string(_main_dude->get_dollars()));
+    _texts.hearts.set_text(to_string(Inventory::instance().get_hearts()));
+    _texts.ropes.set_text(to_string(Inventory::instance().get_ropes()));
+    _texts.bombs.set_text(to_string(Inventory::instance().get_bombs()));
+    _texts.dollars.set_text(to_string(Inventory::instance().get_dollars()));
 
-    _main_dude->add_observer(this);
+    Inventory::instance().add_observer(this);
 }
 
-void HUD::on_notify(const MainDudeEvent* event)
+void HUD::on_notify(const InventoryEvent * event)
 {
     switch(*event)
     {
-        case MainDudeEvent::HEARTS_COUNT_CHANGED: _texts.hearts.set_text(to_string(_main_dude->get_hearts())); break;
+        case InventoryEvent::HEARTS_COUNT_CHANGED: _texts.hearts.set_text(to_string(Inventory::instance().get_hearts())); break;
         default: break;
     }
 }
 
 HUD::~HUD()
 {
-    _main_dude->remove_observer(this);
+    Inventory::instance().remove_observer(this);
 }
 
 void HUD::hide()

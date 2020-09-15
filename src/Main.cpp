@@ -6,6 +6,7 @@
 #include "Input.hpp"
 #include "game-loop/GameLoop.hpp"
 #include "other/PhysicsComponentAggregator.hpp"
+#include "other/Inventory.hpp"
 #include "TextureBank.hpp"
 
 #include <cstdlib>
@@ -18,10 +19,12 @@ void init_singletons()
     Input::init();
     Audio::init();
     PhysicsComponentAggregator::init();
+    Inventory::init();
 }
 
 void dispose_singletons()
 {
+    Inventory::dispose();
     PhysicsComponentAggregator::dispose();
     Audio::dispose();
     Input::dispose();

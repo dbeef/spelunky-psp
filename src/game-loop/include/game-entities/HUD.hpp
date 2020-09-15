@@ -9,25 +9,25 @@
 #include "viewport/Viewport.hpp"
 #include "patterns/Observer.hpp"
 #include "main-dude/MainDudeEvent.hpp"
+#include "other/Inventory.hpp"
 
 class MainDude;
 
-class HUD : public GameEntity, public Observer<MainDudeEvent>
+class HUD : public GameEntity, public Observer<InventoryEvent >
 {
 public:
 
-    HUD(std::shared_ptr<Viewport>, std::shared_ptr<MainDude> main_dude);
+    HUD(std::shared_ptr<Viewport>);
     ~HUD() override;
 
     void update(uint32_t delta_time_ms) override;
-    void on_notify(const MainDudeEvent*) override;
+    void on_notify(const InventoryEvent *) override;
 
     void hide();
 
 private:
 
     std::shared_ptr<Viewport> _viewport;
-    std::shared_ptr<MainDude> _main_dude;
 
     struct
     {

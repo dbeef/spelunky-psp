@@ -2,6 +2,5 @@
 
 enum class MainDudeEvent
 {
-    HEARTS_COUNT_CHANGED,
     DIED
 };

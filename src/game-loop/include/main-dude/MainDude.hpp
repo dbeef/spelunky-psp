@@ -47,11 +47,6 @@ public:
     float get_x_pos_center() const { return _physics.get_x_position(); }
     float get_y_pos_center() const { return _physics.get_y_position(); }
 
-    uint8_t get_hearts() const { return _stats.hearts; }
-    uint8_t get_dollars() const { return _stats.dollars; }
-    uint8_t get_ropes() const { return _stats.ropes; }
-    uint8_t get_bombs() const { return _stats.bombs; }
-
     void set_position_on_tile(MapTile* map_tile);
     void set_position(float x_center, float y_center) { _physics.set_position(x_center, y_center); }
     void set_velocity(float x, float y) { _physics.set_velocity(x, y); }
@@ -65,8 +60,6 @@ public:
 private:
 
     void enter_if_different(MainDudeBaseState*);
-    void set_starting_stats();
-    void decrease_hearts(uint8_t amount);
     MapTile* is_overlaping_tile(MapTileType) const;
 
     // Returns true on successful request.
@@ -116,14 +109,6 @@ private:
         MainDudeDeadState dead;
         MainDudeStunnedState stunned;
     } _states;
-
-    struct
-    {
-        int16_t hearts;
-        int16_t ropes;
-        int16_t bombs;
-        int16_t dollars;
-    } _stats;
 
     struct
     {
