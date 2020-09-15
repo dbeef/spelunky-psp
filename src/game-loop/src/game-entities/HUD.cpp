@@ -1,6 +1,7 @@
 #include <utility>
 #include <sstream>
 #include <string>
+#include <game-entities/HUD.hpp>
 
 #include "game-entities/HUD.hpp"
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
@@ -49,7 +50,7 @@ HUD::HUD(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
     Point2D bombs_center = {POS_X + (ICONS_OFFSET_WORLD_UNITS * 1), POS_Y};
     Point2D ropes_center = {POS_X + (ICONS_OFFSET_WORLD_UNITS * 2), POS_Y};
     Point2D dollar_center = {POS_X + (ICONS_OFFSET_WORLD_UNITS * 3), POS_Y};
-    Point2D hold_item_center = {POS_X + (ICONS_OFFSET_WORLD_UNITS * 4), POS_Y};
+    Point2D hold_item_center = {POS_X + (ICONS_OFFSET_WORLD_UNITS * (0)), POS_Y + (ICONS_OFFSET_WORLD_UNITS * 0.5f)};
 
     _quads.heart->update(heart_center.x, heart_center.y);
     _quads.dollar->update(dollar_center.x, dollar_center.y);
@@ -75,6 +76,7 @@ void HUD::on_notify(const InventoryEvent * event)
     switch(*event)
     {
         case InventoryEvent::HEARTS_COUNT_CHANGED: _texts.hearts.set_text(to_string(Inventory::instance().get_hearts())); break;
+        case InventoryEvent::DOLLARS_COUNT_CHANGED: _texts.dollars.set_text(to_string(Inventory::instance().get_dollars())); break;
         default: break;
     }
 }
