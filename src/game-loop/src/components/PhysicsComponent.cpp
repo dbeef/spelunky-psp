@@ -212,11 +212,10 @@ void PhysicsComponent::update(uint32_t delta_time_ms)
 
 PhysicsComponent::PhysicsComponent(float width, float height, PhysicsComponentType type) : _dimensions{width, height}
 {
-    // TODO: Watch out for copying physics components!
     PhysicsComponentAggregator::instance().add(this, type);
 }
 
-bool PhysicsComponent::is_collision(PhysicsComponent &other) const
+bool PhysicsComponent::is_collision(const PhysicsComponent &other) const
 {
     const float half_w = _dimensions.width / 2.0f;
     const float half_h = _dimensions.height / 2.0f;

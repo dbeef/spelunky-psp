@@ -12,7 +12,7 @@ public:
 
     void update(uint32_t delta_time_ms);
 
-    bool is_collision(PhysicsComponent& other) const;
+    bool is_collision(const PhysicsComponent& other) const;
 
     void set_position(float x, float y) { _position.x = x; _position.y = y;}
     void add_position(float x, float y) { _position.x += x; _position.y += y; }
