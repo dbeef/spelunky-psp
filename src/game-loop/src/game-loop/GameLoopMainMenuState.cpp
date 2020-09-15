@@ -1,5 +1,5 @@
-#include "GameLoopMainMenuState.hpp"
-#include "GameLoop.hpp"
+#include "game-loop/GameLoopMainMenuState.hpp"
+#include "game-loop/GameLoop.hpp"
 
 #include "game-entities/MainLogo.hpp"
 #include "game-entities/PauseOverlay.hpp"

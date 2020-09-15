@@ -1,13 +1,18 @@
 #pragma once
 
+#include "other/PhysicsComponentType.hpp"
 #include <cstdint>
 
 class PhysicsComponent
 {
 public:
 
-    PhysicsComponent(float width, float height);
+    PhysicsComponent(float width, float height, PhysicsComponentType type);
+    ~PhysicsComponent();
+
     void update(uint32_t delta_time_ms);
+
+    bool is_collision(PhysicsComponent& other) const;
 
     void set_position(float x, float y) { _position.x = x; _position.y = y;}
     void add_position(float x, float y) { _position.x += x; _position.y += y; }

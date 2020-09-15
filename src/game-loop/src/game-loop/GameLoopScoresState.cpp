@@ -1,5 +1,5 @@
-#include "GameLoopScoresState.hpp"
-#include "GameLoop.hpp"
+#include "game-loop/GameLoopScoresState.hpp"
+#include "game-loop/GameLoop.hpp"
 
 #include "game-entities/ResetSign.hpp"
 #include "game-entities/PauseOverlay.hpp"

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "GameLoopBaseState.hpp"
+#include "game-loop/GameLoopBaseState.hpp"
 #include "patterns/Observer.hpp"
 
 class GameLoop;

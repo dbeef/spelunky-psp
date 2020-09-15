@@ -1,4 +1,4 @@
-#include "GameLoop.hpp"
+#include "game-loop/GameLoop.hpp"
 
 #include "viewport/Viewport.hpp"
 #include "system/GameEntitySystem.hpp"
