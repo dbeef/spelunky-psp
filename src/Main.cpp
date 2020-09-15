@@ -4,7 +4,8 @@
 #include "Level.hpp"
 #include "Renderer.hpp"
 #include "Input.hpp"
-#include "GameLoop.hpp"
+#include "game-loop/GameLoop.hpp"
+#include "other/PhysicsComponentAggregator.hpp"
 #include "TextureBank.hpp"
 
 #include <cstdlib>
@@ -16,10 +17,12 @@ void init_singletons()
     TextureBank::init();
     Input::init();
     Audio::init();
+    PhysicsComponentAggregator::init();
 }
 
 void dispose_singletons()
 {
+    PhysicsComponentAggregator::dispose();
     Audio::dispose();
     Input::dispose();
     TextureBank::dispose();

@@ -7,12 +7,12 @@
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
 
-#include "GameLoopBaseState.hpp"
-#include "GameLoopLevelSummaryState.hpp"
-#include "GameLoopMainMenuState.hpp"
-#include "GameLoopPlayingState.hpp"
-#include "GameLoopStartedState.hpp"
-#include "GameLoopScoresState.hpp"
+#include "game-loop/GameLoopBaseState.hpp"
+#include "game-loop/GameLoopLevelSummaryState.hpp"
+#include "game-loop/GameLoopMainMenuState.hpp"
+#include "game-loop/GameLoopPlayingState.hpp"
+#include "game-loop/GameLoopStartedState.hpp"
+#include "game-loop/GameLoopScoresState.hpp"
 
 class GameEntitySystem;
 class MainDude;

@@ -2,6 +2,7 @@
 #include "main-dude/MainDude.hpp"
 #include "Level.hpp"
 #include "Collisions.hpp"
+#include "other/PhysicsComponentAggregator.hpp"
 
 // Using C-style <math.h> instead of <cmath> because of some symbols (namely std::copysign)
 // are missing in the PSP's CPP standard library.
@@ -209,7 +210,22 @@ void PhysicsComponent::update(uint32_t delta_time_ms)
     }
 }
 
-PhysicsComponent::PhysicsComponent(float width, float height) : _dimensions{width, height}
+PhysicsComponent::PhysicsComponent(float width, float height, PhysicsComponentType type) : _dimensions{width, height}
 {
+    // TODO: Watch out for copying physics components!
+    PhysicsComponentAggregator::instance().add(this, type);
+}
 
+bool PhysicsComponent::is_collision(PhysicsComponent &other) const
+{
+    const float half_w = _dimensions.width / 2.0f;
+    const float half_h = _dimensions.height / 2.0f;
+
+    return _position.x + half_w > other.get_x_position() && _position.x - half_w < other.get_x_position() + other.get_width() &&
+           _position.y + half_h > other.get_y_position() && _position.y - half_h < other.get_y_position() + other.get_height();
+}
+
+PhysicsComponent::~PhysicsComponent()
+{
+    PhysicsComponentAggregator::instance().remove(this);
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameLoopBaseState.hpp"
+#include "game-loop/GameLoopBaseState.hpp"
 
 class GameLoop;
 

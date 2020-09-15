@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "GameLoopBaseState.hpp"
+#include "game-loop/GameLoopBaseState.hpp"
 
 class GameLoop;
 class PauseOverlay;

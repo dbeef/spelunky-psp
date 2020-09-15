@@ -1,5 +1,5 @@
-#include "GameLoopStartedState.hpp"
-#include "GameLoop.hpp"
+#include "game-loop/GameLoopStartedState.hpp"
+#include "game-loop/GameLoop.hpp"
 
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"

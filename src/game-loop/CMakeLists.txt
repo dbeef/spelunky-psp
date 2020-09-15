@@ -36,13 +36,16 @@ add_library(GameLoop STATIC
         src/game-entities/ScoresOverlay.cpp
         src/game-entities/GoldBar.cpp
         src/populator/LootPopulator.cpp
-        interface/GameLoop.hpp
-        interface/GameLoopBaseState.hpp
-        interface/GameLoopMainMenuState.hpp
-        interface/GameLoopPlayingState.hpp
-        interface/GameLoopStartedState.hpp
-        interface/GameLoopLevelSummaryState.hpp
-        interface/GameLoopScoresState.hpp
+        src/other/PhysicsComponentAggregator.cpp
+        interface/other/PhysicsComponentAggregator.hpp
+        interface/other/PhysicsComponentType.hpp
+        interface/game-loop/GameLoop.hpp
+        interface/game-loop/GameLoopBaseState.hpp
+        interface/game-loop/GameLoopMainMenuState.hpp
+        interface/game-loop/GameLoopPlayingState.hpp
+        interface/game-loop/GameLoopStartedState.hpp
+        interface/game-loop/GameLoopLevelSummaryState.hpp
+        interface/game-loop/GameLoopScoresState.hpp
         include/populator/LootPopulator.hpp
         include/main-dude/MainDude.hpp
         include/main-dude/MainDudeEvent.hpp

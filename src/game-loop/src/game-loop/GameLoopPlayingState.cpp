@@ -1,5 +1,5 @@
-#include "GameLoopPlayingState.hpp"
-#include "GameLoop.hpp"
+#include "game-loop/GameLoopPlayingState.hpp"
+#include "game-loop/GameLoop.hpp"
 
 #include "game-entities/GameEntity.hpp"
 #include "game-entities/HUD.hpp"

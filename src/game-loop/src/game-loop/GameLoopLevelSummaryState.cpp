@@ -1,5 +1,5 @@
-#include "GameLoopLevelSummaryState.hpp"
-#include "GameLoop.hpp"
+#include "game-loop/GameLoopLevelSummaryState.hpp"
+#include "game-loop/GameLoop.hpp"
 
 #include "game-entities/MainLogo.hpp"
 #include "game-entities/QuitSign.hpp"
