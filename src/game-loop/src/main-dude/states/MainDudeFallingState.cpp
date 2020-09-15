@@ -1,6 +1,7 @@
 #include "main-dude/states/MainDudeFallingState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
+#include "other/Inventory.hpp"
 
 void MainDudeFallingState::enter(MainDude& main_dude)
 {
@@ -23,9 +24,9 @@ MainDudeBaseState* MainDudeFallingState::update(MainDude& main_dude, uint32_t de
     {
         if (_last_y_speed >= MainDude::DEFAULT_MAX_Y_VELOCITY)
         {
-            main_dude.decrease_hearts(1);
+            Inventory::instance().remove_hearts(1);
 
-            if (main_dude.get_hearts() == 0)
+            if (Inventory::instance().get_hearts() == 0)
             {
                 return &main_dude._states.dead;
             }

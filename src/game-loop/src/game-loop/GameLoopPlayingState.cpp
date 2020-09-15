@@ -109,7 +109,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     game_loop._main_dude->add_observer(this);
 
     // Create HUD:
-    _hud = std::make_shared<HUD>(game_loop._viewport, game_loop._main_dude);
+    _hud = std::make_shared<HUD>(game_loop._viewport);
     game_loop._game_entity_system->add(_hud);
 
     // Create pause overlay:

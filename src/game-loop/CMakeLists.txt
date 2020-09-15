@@ -37,8 +37,10 @@ add_library(GameLoop STATIC
         src/game-entities/GoldBar.cpp
         src/populator/LootPopulator.cpp
         src/other/PhysicsComponentAggregator.cpp
+        src/other/Inventory.cpp
         interface/other/PhysicsComponentAggregator.hpp
         interface/other/PhysicsComponentType.hpp
+        interface/other/Inventory.hpp
         interface/game-loop/GameLoop.hpp
         interface/game-loop/GameLoopBaseState.hpp
         interface/game-loop/GameLoopMainMenuState.hpp
