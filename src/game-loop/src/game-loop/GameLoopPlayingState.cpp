@@ -14,7 +14,7 @@
 #include "Renderer.hpp"
 #include "Level.hpp"
 #include "audio/Audio.hpp"
-#include "populator/LootPopulator.hpp"
+#include "populator/Populator.hpp"
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {

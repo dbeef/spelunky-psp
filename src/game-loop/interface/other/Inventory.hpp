@@ -2,14 +2,9 @@
 
 #include "patterns/Singleton.hpp"
 #include "patterns/Subject.hpp"
+#include "other/InventoryEvent.hpp"
 
 #include <cstdint>
-
-enum class InventoryEvent
-{
-    DOLLARS_COUNT_CHANGED,
-    HEARTS_COUNT_CHANGED
-};
 
 class Inventory : public Singleton<Inventory>, public Subject<InventoryEvent>
 {
