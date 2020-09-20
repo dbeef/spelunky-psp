@@ -2,6 +2,7 @@
 #include "main-dude/MainDude.hpp"
 #include "main-dude/states/MainDudeClimbingLadderState.hpp"
 #include "Input.hpp"
+#include "audio/Audio.hpp"
 
 namespace
 {
@@ -32,12 +33,19 @@ void MainDudeClimbingLadderState::enter(MainDude& main_dude)
 MainDudeBaseState* MainDudeClimbingLadderState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
     // Update components:
-
     main_dude._physics.update(delta_time_ms);
     main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
+
     if (main_dude._physics.get_y_velocity() != 0.0f)
     {
         main_dude._animation.update(main_dude, delta_time_ms);
+    }
+
+    _climbing_ladder_timer += delta_time_ms;
+    if (_climbing_ladder_timer > 250)
+    {
+        _climbing_ladder_sound_toggle = !_climbing_ladder_sound_toggle;
+        _climbing_ladder_sound_playing = false;
     }
 
     return this;
@@ -59,10 +67,12 @@ MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude
         if (input.up().value())
         {
             main_dude._physics.set_velocity(0.0f, -0.025f);
+            play_sound();
         }
         else if (input.down().value())
         {
             main_dude._physics.set_velocity(0.0f, 0.025f);
+            play_sound();
 
             if (main_dude._physics.is_bottom_collision())
             {
@@ -100,4 +110,27 @@ MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude
 void MainDudeClimbingLadderState::exit(MainDude& main_dude)
 {
     main_dude._physics.enable_gravity();
+}
+
+void MainDudeClimbingLadderState::play_sound()
+{
+    if (_climbing_ladder_sound_playing)
+    {
+        return;
+    }
+    else
+    {
+        _climbing_ladder_timer = 0;
+    }
+
+    if (_climbing_ladder_sound_toggle)
+    {
+        Audio::instance().play(SFXType::MAIN_DUDE_CLIMB_1);
+    }
+    else
+    {
+        Audio::instance().play(SFXType::MAIN_DUDE_CLIMB_2);
+    }
+
+    _climbing_ladder_sound_playing = true;
 }
