@@ -40,6 +40,16 @@ namespace coin_wav
     #include "generated/coin.wav.hpp"
 }
 
+namespace climb_1_wav
+{
+    #include "generated/climb1.wav.hpp"
+}
+
+namespace climb_2_wav
+{
+    #include "generated/climb2.wav.hpp"
+}
+
 const char *audio_bank::get_title_theme_wav()
 {
     return &title_wav::data[0];
@@ -78,4 +88,14 @@ const char *audio_bank::get_hurt_wav()
 const char *audio_bank::get_coin_wav()
 {
     return &coin_wav::data[0];
+}
+
+const char *audio_bank::get_climb_1_wav()
+{
+    return &climb_1_wav::data[0];
+}
+
+const char *audio_bank::get_climb_2_wav()
+{
+    return &climb_2_wav::data[0];
 }
