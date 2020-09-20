@@ -6,5 +6,6 @@ enum class PhysicsComponentType
     SINGLE_GOLD_BAR,
     TRIPLE_GOLD_BAR,
     BIG_GEM,
-    CHEST
+    CHEST,
+    JAR
 };
