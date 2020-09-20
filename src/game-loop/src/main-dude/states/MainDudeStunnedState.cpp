@@ -1,6 +1,7 @@
 #include "main-dude/states/MainDudeStunnedState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
+#include "audio/Audio.hpp"
 
 namespace
 {
@@ -9,6 +10,8 @@ namespace
 
 void MainDudeStunnedState::enter(MainDude &main_dude)
 {
+    Audio::instance().play(SFXType::MAIN_DUDE_HURT);
+
     main_dude._physics.set_friction(PhysicsComponent::get_default_friction() * 1.8f);
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_4_LAST),

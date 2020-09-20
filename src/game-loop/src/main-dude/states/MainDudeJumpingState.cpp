@@ -1,9 +1,11 @@
 #include "main-dude/states/MainDudeJumpingState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
+#include "audio/Audio.hpp"
 
 void MainDudeJumpingState::enter(MainDude& main_dude)
 {
+    Audio::instance().play(SFXType::MAIN_DUDE_JUMP);
     main_dude._physics.set_max_y_velocity(MainDude::DEFAULT_MAX_Y_VELOCITY);
     main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
     main_dude._animation.stop();
