@@ -22,7 +22,23 @@ namespace
 
 void HUD::update(uint32_t delta_time_ms)
 {
-    // Nothing to update.
+    _dollars_buffer_count_timer += delta_time_ms;
+
+    // TODO: User defined literal for milliseconds.
+    if (_dollars_buffer_count_timer > 90)
+    {
+        _dollars_buffer_count_timer = 0;
+
+        if (_dollars_buffer_count > 0)
+        {
+            const int diff = std::min<int>(100, _dollars_buffer_count);
+
+            _dollars_count += diff;
+            _dollars_buffer_count -= diff;
+
+            update_dollars();
+        }
+    }
 }
 
 HUD::HUD(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
@@ -66,6 +82,12 @@ HUD::HUD(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
     _texts.bombs.set_text(to_string(Inventory::instance().get_bombs()));
     _texts.dollars.set_text(to_string(Inventory::instance().get_dollars()));
 
+    _texts.dollars_buffer.set_scale(0.5f);
+    _texts.dollars_buffer.set_yellow(true);
+
+    _dollars_count_previously = Inventory::instance().get_dollars();
+    _dollars_count = Inventory::instance().get_dollars();
+
     Inventory::instance().add_observer(this);
 }
 
@@ -74,7 +96,14 @@ void HUD::on_notify(const InventoryEvent * event)
     switch(*event)
     {
         case InventoryEvent::HEARTS_COUNT_CHANGED: _texts.hearts.set_text(to_string(Inventory::instance().get_hearts())); break;
-        case InventoryEvent::DOLLARS_COUNT_CHANGED: _texts.dollars.set_text(to_string(Inventory::instance().get_dollars())); break;
+        case InventoryEvent::DOLLARS_COUNT_CHANGED:
+        {
+            _dollars_buffer_count += Inventory::instance().get_dollars() - _dollars_count_previously;
+            _dollars_count_previously = Inventory::instance().get_dollars();
+
+            update_dollars();
+            break;
+        }
         default: break;
     }
 }
@@ -96,4 +125,20 @@ void HUD::hide()
     _texts.hearts = {};
     _texts.ropes = {};
     _texts.bombs = {};
+}
+
+void HUD::update_dollars()
+{
+    Point2D buff_position = _texts.dollars.get_pos_screen_space();
+    buff_position.x += _texts.dollars.get_width();
+
+    _texts.dollars_buffer.set_position(buff_position);
+    _texts.dollars_buffer.set_text("+" + to_string(_dollars_buffer_count));
+
+    _texts.dollars.set_text(to_string(_dollars_count));
+
+    if (_dollars_buffer_count == 0)
+    {
+        _texts.dollars_buffer.set_text("");
+    }
 }
