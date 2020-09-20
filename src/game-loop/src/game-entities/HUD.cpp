@@ -115,6 +115,10 @@ HUD::~HUD()
 
 void HUD::hide()
 {
+    _dollars_buffer_count = 0;
+    _dollars_count = 0;
+    _dollars_count_previously = 0;
+
     _quads.heart = nullptr;
     _quads.dollar = nullptr;
     _quads.ropes = nullptr;
@@ -122,6 +126,7 @@ void HUD::hide()
     _quads.hold_item = nullptr;
 
     _texts.dollars = {};
+    _texts.dollars_buffer = {};
     _texts.hearts = {};
     _texts.ropes = {};
     _texts.bombs = {};
