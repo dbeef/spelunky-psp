@@ -36,6 +36,7 @@ add_library(GameLoop STATIC
         src/game-entities/ScoresOverlay.cpp
         src/game-entities/SingleGoldBar.cpp
         src/game-entities/TripleGoldBar.cpp
+        src/game-entities/BigGem.cpp
         src/populator/Populator.cpp
         src/other/PhysicsComponentAggregator.cpp
         src/other/Inventory.cpp
@@ -57,6 +58,7 @@ add_library(GameLoop STATIC
         include/game-entities/GameEntity.hpp
         include/game-entities/SingleGoldBar.hpp
         include/game-entities/TripleGoldBar.hpp
+        include/game-entities/BigGem.hpp
         include/game-entities/MainLogo.hpp
         include/game-entities/QuitSign.hpp
         include/game-entities/ResetSign.hpp
