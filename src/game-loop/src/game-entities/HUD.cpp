@@ -82,7 +82,7 @@ HUD::HUD(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
     _texts.bombs.set_text(to_string(Inventory::instance().get_bombs()));
     _texts.dollars.set_text(to_string(Inventory::instance().get_dollars()));
 
-    _texts.dollars_buffer.set_scale(0.5f);
+    _texts.dollars_buffer.set_scale(0.6f);
     _texts.dollars_buffer.set_yellow(true);
 
     _dollars_count_previously = Inventory::instance().get_dollars();
