@@ -1,5 +1,4 @@
 #include <string>
-#include <cstring>
 #include <sstream>
 #include <iomanip>
 
@@ -31,25 +30,32 @@ namespace
         return out.str();
     }
 
+    std::string get_money_msg(uint32_t money_beginning, uint32_t money_end)
+    {
+        std::stringstream out;
+        out << "MONEY: " << "$" << money_beginning << " / " << "$" << money_end;
+        return out.str();
+    }
+
     const char* TIME_MSG = "TIME:";
     const char* LOOT_MSG = "LOOT:";
     const char* KILLS_MSG = "KILLS:";
     const char* MONEY_MSG = "MONEY:";
 }
 
-LevelSummaryOverlay::LevelSummaryOverlay(std::shared_ptr<Viewport> viewport, const std::shared_ptr<LevelSummaryTracker>& stats)
+LevelSummaryOverlay::LevelSummaryOverlay(std::shared_ptr<Viewport> viewport, const std::shared_ptr<LevelSummaryTracker>& tracker)
     : _viewport(std::move(viewport))
 {
     {
         const Point2D pos = {_viewport->get_width_world_units() * 0.16f, _viewport->get_height_world_units() * 0.155f};
         _texts.level_completed.set_yellow(true);
-        _texts.level_completed.set_text(get_level_completed_msg(stats->get_current_level()));
+        _texts.level_completed.set_text(get_level_completed_msg(tracker->get_current_level()));
         _texts.level_completed.set_position(pos);
     }
 
     {
         const Point2D pos = {_viewport->get_width_world_units() * 0.16f, _viewport->get_height_world_units() * 0.23f};
-        _texts.time.set_text(get_time_msg(stats->get_time_playing_current_level_ms(), stats->get_time_playing_total_ms()));
+        _texts.time.set_text(get_time_msg(tracker->get_time_playing_current_level_ms(), tracker->get_time_playing_total_ms()));
         _texts.time.set_position(pos);
     }
 
@@ -67,7 +73,7 @@ LevelSummaryOverlay::LevelSummaryOverlay(std::shared_ptr<Viewport> viewport, con
 
     {
         const Point2D pos = {_viewport->get_width_world_units() * 0.16f, _viewport->get_height_world_units() * 0.455f};
-        _texts.money.set_text(MONEY_MSG);
+        _texts.money.set_text(get_money_msg(tracker->get_dollars_beginning(), tracker->get_dollars_end()));
         _texts.money.set_position(pos);
     }
 }
