@@ -20,7 +20,6 @@ GoldBar::GoldBar(float x_center, float y_center)
     _quad.frame_changed<CollectiblesSpritesheetFrames>(CollectiblesSpritesheetFrames::GOLD_BAR);
 
     _physics.set_position(x_center, y_center);
-    _physics.set_max_y_velocity(0.39f);
     _physics.set_collision_handler([this](PhysicsComponent* other)
     {
         if (is_marked_for_disposal())

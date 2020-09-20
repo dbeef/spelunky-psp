@@ -49,6 +49,8 @@ public:
     PhysicsComponentType get_type() const { return _type; }
 
     static float get_default_friction() { return 0.005f; }
+    static float get_default_max_x_velocity() { return 0.050f; }
+    static float get_default_max_y_velocity() { return 0.39f; }
 
 private:
 
@@ -68,8 +70,8 @@ private:
     {
         float x = 0;
         float y = 0;
-        float max_x = 0;
-        float max_y = 0;
+        float max_x = get_default_max_x_velocity();
+        float max_y = get_default_max_y_velocity();
     } _velocity;
 
     struct
