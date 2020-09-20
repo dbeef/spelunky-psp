@@ -35,12 +35,13 @@ add_library(GameLoop STATIC
         src/game-entities/LevelSummaryOverlay.cpp
         src/game-entities/ScoresOverlay.cpp
         src/game-entities/GoldBar.cpp
-        src/populator/LootPopulator.cpp
+        src/populator/Populator.cpp
         src/other/PhysicsComponentAggregator.cpp
         src/other/Inventory.cpp
         interface/other/PhysicsComponentAggregator.hpp
         interface/other/PhysicsComponentType.hpp
         interface/other/Inventory.hpp
+        interface/other/InventoryEvent.hpp
         interface/game-loop/GameLoop.hpp
         interface/game-loop/GameLoopBaseState.hpp
         interface/game-loop/GameLoopMainMenuState.hpp
@@ -48,7 +49,8 @@ add_library(GameLoop STATIC
         interface/game-loop/GameLoopStartedState.hpp
         interface/game-loop/GameLoopLevelSummaryState.hpp
         interface/game-loop/GameLoopScoresState.hpp
-        include/populator/LootPopulator.hpp
+        include/populator/Populator.hpp
+        include/populator/Spawner.hpp
         include/main-dude/MainDude.hpp
         include/main-dude/MainDudeEvent.hpp
         include/game-entities/GameEntity.hpp
