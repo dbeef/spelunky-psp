@@ -5,7 +5,7 @@
 #include "game-entities/HUD.hpp"
 #include "game-entities/PauseOverlay.hpp"
 #include "game-entities/DeathOverlay.hpp"
-#include "game-entities/LevelStatistics.hpp"
+#include "game-entities/LevelSummaryTracker.hpp"
 #include "system/GameEntitySystem.hpp"
 #include "main-dude/MainDude.hpp"
 

@@ -8,7 +8,7 @@
 #include "game-entities/ScoresSign.hpp"
 #include "game-entities/TutorialSign.hpp"
 #include "game-entities/CopyrightsSign.hpp"
-#include "game-entities/LevelStatistics.hpp"
+#include "game-entities/LevelSummaryTracker.hpp"
 #include "system/GameEntitySystem.hpp"
 #include "main-dude/MainDude.hpp"
 

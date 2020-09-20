@@ -4,7 +4,7 @@
 #include <iomanip>
 
 #include "game-entities/LevelSummaryOverlay.hpp"
-#include "game-entities/LevelStatistics.hpp"
+#include "game-entities/LevelSummaryTracker.hpp"
 
 namespace
 {
@@ -37,7 +37,7 @@ namespace
     const char* MONEY_MSG = "MONEY:";
 }
 
-LevelSummaryOverlay::LevelSummaryOverlay(std::shared_ptr<Viewport> viewport, const std::shared_ptr<LevelStatistics>& stats)
+LevelSummaryOverlay::LevelSummaryOverlay(std::shared_ptr<Viewport> viewport, const std::shared_ptr<LevelSummaryTracker>& stats)
     : _viewport(std::move(viewport))
 {
     {

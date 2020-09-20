@@ -7,13 +7,13 @@
 #include "components/TextComponent.hpp"
 
 class LevelSummaryOverlay;
-class LevelStatistics;
+class LevelSummaryTracker;
 
 class LevelSummaryOverlay : public GameEntity
 {
 public:
 
-    LevelSummaryOverlay(std::shared_ptr<Viewport>, const std::shared_ptr<LevelStatistics>&);
+    LevelSummaryOverlay(std::shared_ptr<Viewport>, const std::shared_ptr<LevelSummaryTracker>&);
     void update(uint32_t delta_time_ms) override;
 
 private:
