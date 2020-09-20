@@ -1,11 +1,9 @@
 #include <utility>
 #include <sstream>
 #include <string>
-#include <game-entities/HUD.hpp>
 
 #include "game-entities/HUD.hpp"
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
-#include "main-dude/MainDude.hpp"
 #include "other/Inventory.hpp"
 
 namespace

@@ -21,16 +21,23 @@ GoldBar::GoldBar(float x_center, float y_center)
 
     _physics.set_position(x_center, y_center);
     _physics.set_max_y_velocity(0.39f);
+    _physics.set_collision_handler([this](PhysicsComponent* other)
+    {
+        if (is_marked_for_disposal())
+        {
+            return;
+        }
+
+        if (other->get_type() == PhysicsComponentType::MAIN_DUDE)
+        {
+            Inventory::instance().add_dollars(500);
+            mark_for_disposal();
+        }
+    });
 }
 
 void GoldBar::update(uint32_t delta_time_ms)
 {
     _quad.update(_physics.get_x_position(), _physics.get_y_position());
     _physics.update(delta_time_ms);
-
-    if (PhysicsComponentAggregator::instance().is_collision(&_physics, PhysicsComponentType::MAIN_DUDE))
-    {
-        Inventory::instance().add_dollars(500);
-        mark_for_disposal();
-    }
 }
