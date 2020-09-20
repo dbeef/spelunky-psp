@@ -20,6 +20,8 @@ struct Audio::Handles
     Mix_Chunk* die = nullptr;
     Mix_Chunk* hurt = nullptr;
     Mix_Chunk* coin = nullptr;
+    Mix_Chunk* climb_1 = nullptr;
+    Mix_Chunk* climb_2 = nullptr;
 };
 
 Audio::Audio() : _handles(std::make_unique<Audio::Handles>()) {}
@@ -157,6 +159,8 @@ void Audio::play(SFXType sfx)
         case SFXType::MAIN_DUDE_DIE: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->die, 0); break;
         case SFXType::MAIN_DUDE_HURT: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->hurt, 0); break;
         case SFXType::COIN: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->coin, 0); break;
+        case SFXType::MAIN_DUDE_CLIMB_1: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->climb_1, 0); break;
+        case SFXType::MAIN_DUDE_CLIMB_2: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->climb_2, 0); break;
         default: assert(false); break;
     }
 }
@@ -196,6 +200,10 @@ void Audio::load()
     assert(_handles->hurt);
     _handles->coin = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_coin_wav())));
     assert(_handles->coin);
+    _handles->climb_1 = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_climb_1_wav())));
+    assert(_handles->climb_1);
+    _handles->climb_2 = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_climb_2_wav())));
+    assert(_handles->climb_2);
 }
 
 void Audio::unload()
@@ -209,4 +217,7 @@ void Audio::unload()
     Mix_FreeChunk(_handles->entering_door); _handles->entering_door = nullptr;
     Mix_FreeChunk(_handles->die); _handles->die = nullptr;
     Mix_FreeChunk(_handles->hurt); _handles->hurt = nullptr;
+    Mix_FreeChunk(_handles->coin); _handles->coin = nullptr;
+    Mix_FreeChunk(_handles->climb_1); _handles->climb_1 = nullptr;
+    Mix_FreeChunk(_handles->climb_2); _handles->climb_2 = nullptr;
 }
