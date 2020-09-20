@@ -4,6 +4,7 @@
 #include "game-entities/SingleGoldBar.hpp"
 #include "game-entities/TripleGoldBar.hpp"
 #include "game-entities/BigGem.hpp"
+#include "game-entities/Chest.hpp"
 #include "Level.hpp"
 
 #include <utility>
@@ -14,6 +15,7 @@ std::vector<std::shared_ptr<GameEntity>> populator::generate_loot()
     Spawner<SingleGoldBar> single_gold_bar_spawner(6, 8);
     Spawner<TripleGoldBar> triple_gold_bar_spawner(3, 4);
     Spawner<BigGem> big_gem_spawner(3, 4);
+    Spawner<Chest> chest_spawner(3, 4);
 
     std::vector<std::shared_ptr<GameEntity>> out{};
 
@@ -33,7 +35,11 @@ std::vector<std::shared_ptr<GameEntity>> populator::generate_loot()
                 case LootType::NOTHING: break;
                 case LootType::ANY:
                 {
-                    if (triple_gold_bar_spawner.can_spawn())
+                    if (chest_spawner.can_spawn())
+                    {
+                        out.push_back(chest_spawner.spawn(pos_x, pos_y));
+                    }
+                    else if (triple_gold_bar_spawner.can_spawn())
                     {
                         out.push_back(triple_gold_bar_spawner.spawn(pos_x, pos_y));
                     }
