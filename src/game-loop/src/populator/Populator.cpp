@@ -1,7 +1,8 @@
 #include "populator/Populator.hpp"
 #include "populator/Spawner.hpp"
 #include "game-entities/GameEntity.hpp"
-#include "game-entities/GoldBar.hpp"
+#include "game-entities/SingleGoldBar.hpp"
+#include "game-entities/TripleGoldBar.hpp"
 #include "Level.hpp"
 
 #include <utility>
@@ -9,7 +10,8 @@
 
 std::vector<std::shared_ptr<GameEntity>> populator::generate_loot()
 {
-    Spawner<GoldBar> gold_bar_spawner(12, 10);
+    Spawner<SingleGoldBar> single_gold_bar_spawner(6, 8);
+    Spawner<TripleGoldBar> triple_gold_bar_spawner(6, 8);
 
     std::vector<std::shared_ptr<GameEntity>> out{};
 
@@ -27,8 +29,18 @@ std::vector<std::shared_ptr<GameEntity>> populator::generate_loot()
             switch (loot_type)
             {
                 case LootType::NOTHING:break;
-                case LootType::GOLD_BAR: { if (gold_bar_spawner.can_spawn()) { out.push_back(gold_bar_spawner.spawn(pos_x, pos_y)); } break; }
-                case LootType::TRIPLE_GOLD_BAR:break;
+                case LootType::ANY:
+                {
+                    if (triple_gold_bar_spawner.can_spawn())
+                    {
+                        out.push_back(triple_gold_bar_spawner.spawn(pos_x, pos_y));
+                    }
+                    else if (single_gold_bar_spawner.can_spawn())
+                    {
+                        out.push_back(single_gold_bar_spawner.spawn(pos_x, pos_y));
+                    }
+                    break;
+                }
                 default: assert(false);
             }
         }
