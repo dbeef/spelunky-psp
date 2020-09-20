@@ -16,8 +16,12 @@ public:
     void set_scale(float scale) { _properties.scale = scale; update(); }
     void set_position(Point2D pos_screen_space) { _properties.pos_screen_space = pos_screen_space; update(); }
 
-    WorldUnit_t get_font_width() { return 0.5f * _properties.scale; }
-    WorldUnit_t get_font_height() { return 0.5f * _properties.scale; }
+    const Point2D& get_pos_screen_space() const { return _properties.pos_screen_space; }
+
+    WorldUnit_t get_font_width() const { return 0.5f * _properties.scale; }
+    WorldUnit_t get_font_height() const { return 0.5f * _properties.scale; }
+
+    WorldUnit_t get_width() const { return _quads.size() * get_font_width(); }
 
 private:
 

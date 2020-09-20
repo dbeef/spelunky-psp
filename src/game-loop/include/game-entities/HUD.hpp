@@ -29,6 +29,11 @@ private:
 
     std::shared_ptr<Viewport> _viewport;
 
+    int _dollars_buffer_count = 0;
+    uint32_t _dollars_buffer_count_timer = 0;
+    uint32_t _dollars_count_previously = 0;
+    uint32_t _dollars_count = 0;
+
     struct
     {
         std::shared_ptr<QuadComponent> heart = nullptr;
@@ -42,7 +47,10 @@ private:
     {
         TextComponent hearts;
         TextComponent dollars;
+        TextComponent dollars_buffer;
         TextComponent ropes;
         TextComponent bombs;
     } _texts;
+
+    void update_dollars();
 };
