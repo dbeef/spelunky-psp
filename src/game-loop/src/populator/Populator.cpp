@@ -6,6 +6,7 @@
 #include "game-entities/BigGem.hpp"
 #include "game-entities/Chest.hpp"
 #include "game-entities/Jar.hpp"
+#include "game-entities/Rock.hpp"
 #include "Level.hpp"
 
 #include <utility>
@@ -18,6 +19,7 @@ std::vector<std::shared_ptr<GameEntity>> populator::generate_loot()
     Spawner<BigGem> big_gem_spawner(3, 4);
     Spawner<Chest> chest_spawner(3, 4);
     Spawner<Jar> jar_spawner(3, 4);
+    Spawner<Rock> rock_spawner(2, 4);
 
     std::vector<std::shared_ptr<GameEntity>> out{};
 
@@ -37,7 +39,11 @@ std::vector<std::shared_ptr<GameEntity>> populator::generate_loot()
                 case LootType::NOTHING: break;
                 case LootType::ANY:
                 {
-                    if (jar_spawner.can_spawn())
+                    if (rock_spawner.can_spawn())
+                    {
+                        out.push_back(rock_spawner.spawn(pos_x, pos_y));
+                    }
+                    else if (jar_spawner.can_spawn())
                     {
                         out.push_back(jar_spawner.spawn(pos_x, pos_y));
                     }
