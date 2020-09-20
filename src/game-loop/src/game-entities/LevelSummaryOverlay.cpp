@@ -16,17 +16,17 @@ namespace
 
     std::string get_time_msg(uint32_t time_playing_current_level_ms, uint32_t time_playing_total_ms)
     {
-        const auto time_playing_current_level_s = static_cast<uint32_t>(time_playing_current_level_ms / 1000) % 60;
-        const auto time_playing_total_s = static_cast<uint32_t>(time_playing_total_ms / 1000) % 60;
+        const auto time_playing_current_level_s = static_cast<uint32_t>(time_playing_current_level_ms / 1000);
+        const auto time_playing_current_level_minutes = static_cast<uint32_t>(time_playing_current_level_s / 60);
 
-        const auto time_playing_current_level_minutes = static_cast<uint32_t>(time_playing_current_level_ms / (60 * 1000));
-        const auto time_playing_total_minutes = static_cast<uint32_t>(time_playing_total_ms / (60 * 1000));
+        const auto time_playing_total_s = static_cast<uint32_t>(time_playing_total_ms / 1000);
+        const auto time_playing_total_minutes = static_cast<uint32_t>(time_playing_total_s / 60);
 
         std::stringstream out;
-        out << "TIME: " << std::setw(2) << std::left << std::setfill('0') << time_playing_current_level_minutes << ":"
-                        << std::setw(2) << std::left << std::setfill('0') << time_playing_current_level_s << " / "
-                        << std::setw(2) << std::left << std::setfill('0') << time_playing_total_minutes << ":"
-                        << std::setw(2) << std::left << std::setfill('0') << time_playing_total_s;
+        out << "TIME: " << std::setw(2) << std::right << std::setfill('0') << time_playing_current_level_minutes << ":"
+                        << std::setw(2) << std::right << std::setfill('0') << time_playing_current_level_s % 60 << " / "
+                        << std::setw(2) << std::right << std::setfill('0') << time_playing_total_minutes << ":"
+                        << std::setw(2) << std::right << std::setfill('0') << time_playing_total_s % 60;
         return out.str();
     }
 
@@ -37,10 +37,8 @@ namespace
         return out.str();
     }
 
-    const char* TIME_MSG = "TIME:";
-    const char* LOOT_MSG = "LOOT:";
-    const char* KILLS_MSG = "KILLS:";
-    const char* MONEY_MSG = "MONEY:";
+    const char* LOOT_MSG = "LOOT: NONE"; // placeholder
+    const char* KILLS_MSG = "KILLS: NONE"; // placeholder
 }
 
 LevelSummaryOverlay::LevelSummaryOverlay(std::shared_ptr<Viewport> viewport, const std::shared_ptr<LevelSummaryTracker>& tracker)
