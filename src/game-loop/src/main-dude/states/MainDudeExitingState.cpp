@@ -1,6 +1,7 @@
 #include "main-dude/states/MainDudeExitingState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
+#include "audio/Audio.hpp"
 
 void MainDudeExitingState::exit(MainDude& main_dude)
 {
@@ -9,6 +10,7 @@ void MainDudeExitingState::exit(MainDude& main_dude)
 
 void MainDudeExitingState::enter(MainDude& main_dude)
 {
+    Audio::instance().play(SFXType::MAIN_DUDE_ENTERING_DOOR);
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::EXITING_LEFT_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::EXITING_LEFT_15_LAST),
                                75, false);

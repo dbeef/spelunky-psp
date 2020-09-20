@@ -1,9 +1,11 @@
 #include "main-dude/states/MainDudeThrowingState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
+#include "audio/Audio.hpp"
 
 void MainDudeThrowingState::enter(MainDude &main_dude)
 {
+    Audio::instance().play(SFXType::MAIN_DUDE_WHIP);
     main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::THROWING_LEFT_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::THROWING_LEFT_8_LAST),
                                50, false);

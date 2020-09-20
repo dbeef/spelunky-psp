@@ -2,9 +2,13 @@
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 #include "other/Inventory.hpp"
+#include "audio/Audio.hpp"
 
 void MainDudeDeadState::enter(MainDude& main_dude)
 {
+    Audio::instance().stop();
+    Audio::instance().play(SFXType::MAIN_DUDE_DIE);
+
     main_dude.notify(MainDudeEvent::DIED);
     main_dude._other.dead = true;
 
