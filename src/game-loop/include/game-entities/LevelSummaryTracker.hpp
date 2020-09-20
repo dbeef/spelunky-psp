@@ -3,7 +3,7 @@
 #include "game-entities/GameEntity.hpp"
 #include <cstdint>
 
-class LevelStatistics : public GameEntity
+class LevelSummaryTracker : public GameEntity
 {
 public:
     void update(uint32_t delta_time_ms) override;
