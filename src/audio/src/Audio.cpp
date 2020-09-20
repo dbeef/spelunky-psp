@@ -19,6 +19,7 @@ struct Audio::Handles
     Mix_Chunk* entering_door = nullptr;
     Mix_Chunk* die = nullptr;
     Mix_Chunk* hurt = nullptr;
+    Mix_Chunk* coin = nullptr;
 };
 
 Audio::Audio() : _handles(std::make_unique<Audio::Handles>()) {}
@@ -155,6 +156,7 @@ void Audio::play(SFXType sfx)
         case SFXType::MAIN_DUDE_ENTERING_DOOR: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->entering_door, 0); break;
         case SFXType::MAIN_DUDE_DIE: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->die, 0); break;
         case SFXType::MAIN_DUDE_HURT: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->hurt, 0); break;
+        case SFXType::COIN: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->coin, 0); break;
         default: assert(false); break;
     }
 }
@@ -192,6 +194,8 @@ void Audio::load()
     assert(_handles->die);
     _handles->hurt = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_hurt_wav())));
     assert(_handles->hurt);
+    _handles->coin = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_coin_wav())));
+    assert(_handles->coin);
 }
 
 void Audio::unload()

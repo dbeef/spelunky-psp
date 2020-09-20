@@ -35,6 +35,11 @@ namespace hurt_wav
     #include "generated/hurt.wav.hpp"
 }
 
+namespace coin_wav
+{
+    #include "generated/coin.wav.hpp"
+}
+
 const char *audio_bank::get_title_theme_wav()
 {
     return &title_wav::data[0];
@@ -68,4 +73,9 @@ const char *audio_bank::get_die_wav()
 const char *audio_bank::get_hurt_wav()
 {
     return &hurt_wav::data[0];
+}
+
+const char *audio_bank::get_coin_wav()
+{
+    return &coin_wav::data[0];
 }
