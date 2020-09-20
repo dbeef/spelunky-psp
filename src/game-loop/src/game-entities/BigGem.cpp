@@ -3,6 +3,7 @@
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
 #include "other/PhysicsComponentAggregator.hpp"
 #include "other/Inventory.hpp"
+#include "audio/Audio.hpp"
 
 namespace
 {
@@ -32,6 +33,7 @@ BigGem::BigGem(float x_center, float y_center)
         if (other->get_type() == PhysicsComponentType::MAIN_DUDE)
         {
             Inventory::instance().add_dollars(1000);
+            Audio::instance().play(SFXType::COIN);
             mark_for_disposal();
         }
     });
