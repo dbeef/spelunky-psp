@@ -2,7 +2,6 @@
 #include "game-entities/GameEntity.hpp"
 #include "game-entities/GoldBar.hpp"
 #include "Level.hpp"
-#include "logger/log.h"
 
 #include <utility>
 #include <random>

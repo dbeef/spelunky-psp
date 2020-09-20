@@ -208,11 +208,39 @@ void PhysicsComponent::update(uint32_t delta_time_ms)
             _velocity.y += GRAVITY;
         }
     }
+
+    // Now update collisions with other PhysicsComponents:
+    // FIXME: High computational complexity, optimize with spatial partitioning in the future.
+
+    auto& physics_components = PhysicsComponentAggregator::instance().get_physics_components();
+
+    for (auto& other : physics_components)
+    {
+        if (this == other)
+        {
+            continue;
+        }
+
+        if (is_collision(*other))
+        {
+            if (_collision_handler)
+            {
+                _collision_handler(other);
+            }
+
+            if (other->get_collision_handler())
+            {
+                other->get_collision_handler()(this);
+            }
+        }
+    }
 }
 
-PhysicsComponent::PhysicsComponent(float width, float height, PhysicsComponentType type) : _dimensions{width, height}
+PhysicsComponent::PhysicsComponent(float width, float height, PhysicsComponentType type)
+    : _dimensions{width, height}
+    , _type(type)
 {
-    PhysicsComponentAggregator::instance().add(this, type);
+    PhysicsComponentAggregator::instance().add(this);
 }
 
 bool PhysicsComponent::is_collision(const PhysicsComponent &other) const

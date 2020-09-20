@@ -4,7 +4,6 @@
 #include "other/PhysicsComponentType.hpp"
 
 #include <vector>
-#include <utility>
 
 class PhysicsComponent;
 
@@ -14,12 +13,11 @@ public:
     DELETE_COPY_MOVE_CONSTRUCTORS(PhysicsComponentAggregator)
     FRIEND_SINGLETON(PhysicsComponentAggregator)
 
-    void add(PhysicsComponent*, PhysicsComponentType);
+    void add(PhysicsComponent*);
     void remove(PhysicsComponent*);
-
-    bool is_collision(PhysicsComponent* component, PhysicsComponentType type);
+    std::vector<PhysicsComponent*>& get_physics_components() { return _physics_components; }
 
 private:
-    std::vector<std::pair<PhysicsComponent*, PhysicsComponentType>> _components;
+    std::vector<PhysicsComponent*> _physics_components;
     PhysicsComponentAggregator() = default;
 };
