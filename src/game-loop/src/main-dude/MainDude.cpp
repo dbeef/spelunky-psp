@@ -1,7 +1,4 @@
-#include <cmath>
-
 #include "NeighbouringTiles.hpp"
-#include "logger/log.h"
 #include "Level.hpp"
 #include "Collisions.hpp"
 #include "main-dude/MainDude.hpp"
@@ -9,9 +6,7 @@
 #include "Renderer.hpp"
 #include "Input.hpp"
 #include "other/Inventory.hpp"
-#include "spritesheet-frames/MainDudeSpritesheetFrames.hpp"
 #include "main-dude/states/MainDudeRunningState.hpp"
-#include "main-dude/states/MainDudeStandingState.hpp"
 
 namespace
 {
@@ -19,7 +14,10 @@ namespace
     // into the portion with 2px margin on the left and right side of a sprite,
     // thus making collision box smaller:
     const float MAIN_DUDE_PHYSICAL_WIDTH = 1.0f - 2 * (2.0f / 16.0f);
-    const float MAIN_DUDE_PHYSICAL_HEIGHT = 1.0f;
+    // Main dude height is 16 pixels, but making its collision box smaller by a quarter of pixel top and down,
+    // so it would be smoother to jump through slits between the tiles:
+    const float MAIN_DUDE_PHYSICAL_HEIGHT = 1.0f - 2 * (0.25f / 16.0f);
+    // No offset is applied on main-dude's quad that would account for this collision box change - FIXME.
 
     const float MAIN_DUDE_QUAD_WIDTH = 1.0f;
     const float MAIN_DUDE_QUAD_HEIGHT = 1.0f;
