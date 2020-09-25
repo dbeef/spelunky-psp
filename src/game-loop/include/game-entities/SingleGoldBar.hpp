@@ -4,8 +4,10 @@
 
 #include "components/PhysicsComponent.hpp"
 #include "components/QuadComponent.hpp"
+#include "patterns/Subject.hpp"
+#include "other/LootCollectedEvent.hpp"
 
-class SingleGoldBar : public GameEntity
+class SingleGoldBar : public GameEntity, public Subject<LootCollectedEvent>
 {
 public:
 

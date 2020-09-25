@@ -16,7 +16,7 @@ GameLoop::GameLoop(const std::shared_ptr<Viewport>& viewport)
     : _viewport(viewport)
     , _cameras{{viewport}, {viewport, ScreenSpaceCamera::CoordinateType::WORLD_UNITS}}
     , _game_entity_system(std::make_shared<GameEntitySystem>())
-    , _level_statistics(std::make_shared<LevelSummaryTracker>())
+    , _level_summary_tracker(std::make_shared<LevelSummaryTracker>())
 {
     _states.current = &_states.started;
     _states.current->enter(*this);

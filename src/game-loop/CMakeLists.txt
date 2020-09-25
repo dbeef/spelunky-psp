@@ -55,6 +55,7 @@ add_library(GameLoop STATIC
         interface/game-loop/GameLoopStartedState.hpp
         interface/game-loop/GameLoopLevelSummaryState.hpp
         interface/game-loop/GameLoopScoresState.hpp
+        include/other/LootCollectedEvent.hpp
         include/populator/Populator.hpp
         include/populator/Spawner.hpp
         include/main-dude/MainDude.hpp

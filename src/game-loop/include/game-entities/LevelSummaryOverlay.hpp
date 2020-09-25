@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "GameEntity.hpp"
 #include "components/TextComponent.hpp"
@@ -28,4 +29,7 @@ private:
         TextComponent kills;
         TextComponent money;
     } _texts;
+
+    uint32_t _loot_appearing_timer = 0;
+    std::vector<std::shared_ptr<GameEntity>> _loot_entities;
 };
