@@ -32,6 +32,7 @@ TripleGoldBar::TripleGoldBar(float x_center, float y_center)
         {
             Inventory::instance().add_dollars(1000);
             Audio::instance().play(SFXType::COIN);
+            notify(LootCollectedEvent::TRIPLE_GOLD_BAR);
             mark_for_disposal();
         }
     });

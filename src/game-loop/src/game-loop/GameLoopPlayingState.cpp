@@ -123,14 +123,14 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     game_loop._game_entity_system->add(_death_overlay);
 
     // Generate loot:
-    auto loot_entities = populator::generate_loot();
+    auto loot_entities = populator::generate_loot(game_loop._level_summary_tracker);
     game_loop._game_entity_system->add(loot_entities);
 
     // Make main dude appear on the foreground:
     Renderer::instance().sort_by_layer();
 
-    game_loop._level_statistics->entered_new_level();
-    game_loop._game_entity_system->add(game_loop._level_statistics);
+    game_loop._level_summary_tracker->entered_new_level();
+    game_loop._game_entity_system->add(game_loop._level_summary_tracker);
 }
 
 void GameLoopPlayingState::exit(GameLoop& game_loop)

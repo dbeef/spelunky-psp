@@ -112,7 +112,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     game_loop._game_entity_system->add(std::make_shared<CopyrightsSign>(10.0f, 10.75f));
     game_loop._game_entity_system->add(std::make_shared<QuitSign>(16.0f, 1.5f));
 
-    game_loop._level_statistics->reset();
+    game_loop._level_summary_tracker->reset();
 
     // Update main dude:
     game_loop._main_dude->enter_standing_state();

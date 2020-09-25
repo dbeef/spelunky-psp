@@ -10,10 +10,9 @@ class Subject
 {
 public:
 
-    Subject()
+    Subject(std::size_t capacity = 4)
     {
-        const std::size_t DEFAULT_OBSERVERS_CAPACITY = 8;
-        _observers.reserve(DEFAULT_OBSERVERS_CAPACITY);
+        _observers.reserve(capacity);
     }
 
     ~Subject() = default;

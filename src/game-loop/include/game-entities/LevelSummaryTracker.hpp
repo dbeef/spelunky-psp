@@ -2,11 +2,13 @@
 
 #include "game-entities/GameEntity.hpp"
 #include "other/InventoryEvent.hpp"
+#include "other/LootCollectedEvent.hpp"
 #include "patterns/Observer.hpp"
 
 #include <cstdint>
+#include <vector>
 
-class LevelSummaryTracker : public GameEntity, public Observer<InventoryEvent>
+class LevelSummaryTracker : public GameEntity, public Observer<InventoryEvent>, public Observer<LootCollectedEvent>
 {
 public:
 
@@ -15,6 +17,7 @@ public:
 
     void update(uint32_t delta_time_ms) override;
     void on_notify(const InventoryEvent*) override;
+    void on_notify(const LootCollectedEvent*) override;
 
     void entered_new_level();
     void reset();
@@ -26,6 +29,9 @@ public:
     uint32_t get_dollars_beginning() const { return _dollars_beginning; }
     uint32_t get_dollars_end() const { return _dollars_end; }
 
+    void sort_loot_collected_events();
+    const std::vector<LootCollectedEvent>& get_loot_collected_events() const { return _loot_collected_events; }
+
 private:
     uint32_t _level_counter = 0;
     uint32_t _time_playing_total_ms = 0;
@@ -33,4 +39,6 @@ private:
 
     uint32_t _dollars_beginning = 0;
     uint32_t _dollars_end = 0;
+
+    std::vector<LootCollectedEvent> _loot_collected_events;
 };

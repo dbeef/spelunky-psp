@@ -1,5 +1,6 @@
 #include "populator/Populator.hpp"
 #include "populator/Spawner.hpp"
+#include "game-entities/LevelSummaryTracker.hpp"
 #include "game-entities/GameEntity.hpp"
 #include "game-entities/SingleGoldBar.hpp"
 #include "game-entities/TripleGoldBar.hpp"
@@ -12,14 +13,14 @@
 #include <utility>
 #include <random>
 
-std::vector<std::shared_ptr<GameEntity>> populator::generate_loot()
+std::vector<std::shared_ptr<GameEntity>> populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
 {
-    Spawner<SingleGoldBar> single_gold_bar_spawner(6, 8);
-    Spawner<TripleGoldBar> triple_gold_bar_spawner(3, 4);
-    Spawner<BigGem> big_gem_spawner(3, 4);
-    Spawner<Chest> chest_spawner(3, 4);
-    Spawner<Jar> jar_spawner(3, 4);
-    Spawner<Rock> rock_spawner(2, 4);
+    Spawner single_gold_bar_spawner(6, 8);
+    Spawner triple_gold_bar_spawner(3, 4);
+    Spawner big_gem_spawner(3, 4);
+    Spawner chest_spawner(3, 4);
+    Spawner jar_spawner(3, 4);
+    Spawner rock_spawner(2, 4);
 
     std::vector<std::shared_ptr<GameEntity>> out{};
 
@@ -41,27 +42,39 @@ std::vector<std::shared_ptr<GameEntity>> populator::generate_loot()
                 {
                     if (rock_spawner.can_spawn())
                     {
-                        out.push_back(rock_spawner.spawn(pos_x, pos_y));
+                        rock_spawner.spawned();
+                        out.push_back(std::make_shared<Rock>(pos_x, pos_y));
                     }
                     else if (jar_spawner.can_spawn())
                     {
-                        out.push_back(jar_spawner.spawn(pos_x, pos_y));
+                        jar_spawner.spawned();
+                        out.push_back(std::make_shared<Jar>(pos_x, pos_y));
                     }
                     else if (chest_spawner.can_spawn())
                     {
-                        out.push_back(chest_spawner.spawn(pos_x, pos_y));
+                        chest_spawner.spawned();
+                        out.push_back(std::make_shared<Chest>(pos_x, pos_y));
                     }
                     else if (triple_gold_bar_spawner.can_spawn())
                     {
-                        out.push_back(triple_gold_bar_spawner.spawn(pos_x, pos_y));
+                        triple_gold_bar_spawner.spawned();
+                        auto triple_gold_bar = std::make_shared<TripleGoldBar>(pos_x, pos_y);
+                        triple_gold_bar->add_observer(tracker.get());
+                        out.push_back(triple_gold_bar);
                     }
                     else if (big_gem_spawner.can_spawn())
                     {
-                        out.push_back(big_gem_spawner.spawn(pos_x, pos_y));
+                        big_gem_spawner.spawned();
+                        auto big_gem = std::make_shared<BigGem>(pos_x, pos_y);
+                        big_gem->add_observer(tracker.get());
+                        out.push_back(big_gem);
                     }
                     else if (single_gold_bar_spawner.can_spawn())
                     {
-                        out.push_back(single_gold_bar_spawner.spawn(pos_x, pos_y));
+                        single_gold_bar_spawner.spawned();
+                        auto single_gold_bar = std::make_shared<SingleGoldBar>(pos_x, pos_y);
+                        single_gold_bar->add_observer(tracker.get());
+                        out.push_back(single_gold_bar);
                     }
                     break;
                 }

@@ -4,8 +4,10 @@
 
 #include "components/PhysicsComponent.hpp"
 #include "components/QuadComponent.hpp"
+#include "patterns/Subject.hpp"
+#include "other/LootCollectedEvent.hpp"
 
-class BigGem : public GameEntity
+class BigGem : public GameEntity, public Subject<LootCollectedEvent>
 {
 public:
 

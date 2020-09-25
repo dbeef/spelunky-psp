@@ -1,11 +1,7 @@
 #pragma once
 
-#include <memory>
 #include <random>
 
-class GameEntity;
-
-template<class SpawnedType>
 class Spawner
 {
 public:
@@ -14,7 +10,7 @@ public:
         , _max_number_of_spawned(max_number_of_spawned)
     {}
 
-    std::shared_ptr<SpawnedType> spawn(float pos_x, float pos_y) { _number_spawned++; return std::make_shared<SpawnedType>(pos_x, pos_y); }
+    void spawned() { _number_spawned++; }
 
     bool can_spawn() const
     {

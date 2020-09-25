@@ -18,12 +18,12 @@ BigGem::BigGem(float x_center, float y_center)
         : _physics(BIG_GEM_PHYSICAL_WIDTH, BIG_GEM_PHYSICAL_HEIGHT, PhysicsComponentType::BIG_GEM)
         , _quad(TextureType::COLLECTIBLES, Renderer::EntityType::MODEL_VIEW_SPACE, BIG_GEM_QUAD_WIDTH, BIG_GEM_QUAD_HEIGHT)
 {
-    // Randomize between diamond/emerald/ruby:
+    // Randomize between diamond/emerald/ruby (blue/green/red):
     auto gem_type = static_cast<CollectiblesSpritesheetFrames>(static_cast<int>(CollectiblesSpritesheetFrames::DIAMOND_BIG) + std::rand() % 3);
     _quad.frame_changed<CollectiblesSpritesheetFrames>(gem_type);
 
     _physics.set_position(x_center, y_center);
-    _physics.set_collision_handler([this](PhysicsComponent* other)
+    _physics.set_collision_handler([this, gem_type](PhysicsComponent* other)
     {
         if (is_marked_for_disposal())
         {
@@ -34,6 +34,15 @@ BigGem::BigGem(float x_center, float y_center)
         {
             Inventory::instance().add_dollars(1000);
             Audio::instance().play(SFXType::COIN);
+
+            switch (gem_type)
+            {
+                case CollectiblesSpritesheetFrames::DIAMOND_BIG: notify(LootCollectedEvent::GEM_DIAMOND); break;
+                case CollectiblesSpritesheetFrames::EMERALD_BIG: notify(LootCollectedEvent::GEM_EMERALD); break;
+                case CollectiblesSpritesheetFrames::RUBY_BIG: notify(LootCollectedEvent::GEM_RUBY); break;
+                default: break;
+            }
+
             mark_for_disposal();
         }
     });

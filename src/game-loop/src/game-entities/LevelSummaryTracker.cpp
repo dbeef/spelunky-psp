@@ -1,6 +1,18 @@
 #include "game-entities/LevelSummaryTracker.hpp"
 #include "other/Inventory.hpp"
 
+#include <algorithm>
+
+LevelSummaryTracker::LevelSummaryTracker()
+{
+    Inventory::instance().add_observer(this);
+}
+
+LevelSummaryTracker::~LevelSummaryTracker()
+{
+    Inventory::instance().remove_observer(this);
+}
+
 void LevelSummaryTracker::update(uint32_t delta_time_ms)
 {
     _time_playing_total_ms += delta_time_ms;
@@ -12,6 +24,7 @@ void LevelSummaryTracker::entered_new_level()
     _level_counter += 1;
     _time_playing_current_level_ms = 0;
     _dollars_beginning = _dollars_end;
+    _loot_collected_events.clear();
 }
 
 void LevelSummaryTracker::reset()
@@ -23,7 +36,7 @@ void LevelSummaryTracker::reset()
     _dollars_end = 0;
 }
 
-void LevelSummaryTracker::on_notify(const InventoryEvent* event)
+void LevelSummaryTracker::on_notify(const InventoryEvent *event)
 {
     if (*event == InventoryEvent::DOLLARS_COUNT_CHANGED)
     {
@@ -31,12 +44,17 @@ void LevelSummaryTracker::on_notify(const InventoryEvent* event)
     }
 }
 
-LevelSummaryTracker::LevelSummaryTracker()
+void LevelSummaryTracker::on_notify(const LootCollectedEvent *event)
 {
-    Inventory::instance().add_observer(this);
+    _loot_collected_events.push_back(*event);
 }
 
-LevelSummaryTracker::~LevelSummaryTracker()
+void LevelSummaryTracker::sort_loot_collected_events()
 {
-    Inventory::instance().remove_observer(this);
+    std::sort(_loot_collected_events.begin(), _loot_collected_events.end(),
+              [](const LootCollectedEvent &e1, const LootCollectedEvent &e2)
+              {
+                  return static_cast<int>(e1) < static_cast<int>(e2);
+              }
+    );
 }

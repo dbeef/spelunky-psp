@@ -32,6 +32,7 @@ SingleGoldBar::SingleGoldBar(float x_center, float y_center)
         {
             Inventory::instance().add_dollars(500);
             Audio::instance().play(SFXType::COIN);
+            notify(LootCollectedEvent::SINGLE_GOLD_BAR);
             mark_for_disposal();
         }
     });
