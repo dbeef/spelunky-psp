@@ -35,12 +35,17 @@ jobs:
     name: "Build PSP"
     script:
       - docker exec -w $WORKDIR $_C /bin/bash -c "./scripts/config-psp.sh ; ./scripts/build-psp.sh"
-      - cp tmp/build-psp/EBOOT.PBP install/SpelunkyPSP.pbp
+      - cp tmp/build-psp/EBOOT.PBP install/Spelunky_PSP.pbp
   - name: "Build Linux"
     os: linux
     script:
       - docker exec -w $WORKDIR $_C /bin/bash -c "./scripts/config-linux.sh ; ./scripts/build-linux.sh"
-      - cp tmp/install-linux/Release/bin/Spelunky_PSP install/SpelunkyLinux
+      - cp tmp/install-linux/Release/bin/Spelunky_PSP install/Spelunky_PSP_Linux
+  - name: "Build Android"
+    os: linux
+    script:
+      - docker exec -w $WORKDIR $_C /bin/bash -c "./scripts/build-android.sh"
+      - cp tmp/install-android/Spelunky_PSP.apk install/Spelunky_PSP_Android.apk
   - name: "Build Windows"
     os: windows
     script:
