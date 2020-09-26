@@ -35,5 +35,5 @@ macro(add_android_dependencies)
 endmacro()
 
 macro(spelunky_psp_post_build_android)
-    # TODO: Call gradlew to create .apk
+    # Nothing to be done post-build.
 endmacro()
