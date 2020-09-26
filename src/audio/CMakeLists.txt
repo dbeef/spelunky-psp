@@ -21,7 +21,7 @@ if (NOT SPELUNKY_PSP_PLATFORM_WINDOWS)
             COMPILE_FLAGS
             # FIXME: Suppressing silly warning from resource-compiled assets.
             #        Changing outputted type to std::int8_t should fix it.
-            "-Wno-error=narrowing"
+            "-Wno-error=narrowing -Wno-everything"
     )
 endif()
 

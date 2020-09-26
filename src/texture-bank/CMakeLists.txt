@@ -28,7 +28,7 @@ set_target_properties(TextureBank PROPERTIES
         COMPILE_FLAGS
         # FIXME: Suppressing silly warning from resource-compiled assets.
         #        Changing outputted type to std::int8_t should fix it.
-        "-Wno-error=narrowing"
+        "-Wno-error=narrowing -Wno-everything"
         )
 endif()
 
