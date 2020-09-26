@@ -56,17 +56,13 @@ void ModelViewCamera::adjust_to_bounding_box(float x, float y)
     float dx = (x / 2) - _x;
     float dy = (y / 2) - _y;
 
-	float c1 = std::abs(dx);
-	
-    if (c1 > _bounding_x_half)
+    if (std::abs(dx) > _bounding_x_half)
     {
         _x += dx + (dx > 0.f ? -_bounding_x_half : _bounding_x_half);
         round_position_x();
     }
 
-	float c2 = std::abs(dy);
-
-    if (c2 > _bounding_y_half)
+    if (std::abs(dy) > _bounding_y_half)
     {
         _y += dy + (dy > 0.f ? -_bounding_y_half : _bounding_y_half);
         round_position_y();
