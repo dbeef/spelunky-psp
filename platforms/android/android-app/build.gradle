@@ -3,14 +3,14 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.my.exampleapp"
+        applicationId "lol.dbeef.spelunky_psp"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
 
         // Set the apk base name.
-        setProperty("archivesBaseName", "simpleSDL")
+        setProperty("archivesBaseName", "Spelunky_PSP")
 
         externalNativeBuild {
             cmake {
@@ -34,8 +34,8 @@ android {
 
     sourceSets {
         main {
-            assets.srcDirs = ['../../../assets']
-            jniLibs.srcDirs += ['../../../lib']
+            // No external assets are required, as libSpelunky_PSP.so has all required assets resource-compiled in it.
+            // No external dynamic libraries are required, as libSpelunky_PSP.so links SDL statically.
         }
     }
     buildTypes {

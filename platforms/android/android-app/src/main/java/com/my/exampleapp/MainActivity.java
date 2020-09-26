@@ -1,4 +1,4 @@
-package com.my.exampleapp;
+package lol.dbeef.spelunky_psp;
 
 
 public class MainActivity extends org.libsdl.app.SDLActivity {

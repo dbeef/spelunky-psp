@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Replace com.my.exampleapp with the identifier of your game.
--->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.my.exampleapp">
 
-    <!-- OpenGL ES 3.0 -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="lol.dbeef.spelunky_psp">
+
+    <!-- OpenGL ES 1.0 -->
     <uses-feature android:glEsVersion="0x00010000" />
 
     <!-- Touchscreen support -->
@@ -14,9 +13,6 @@
 
     <!-- Allow writing to external storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!-- if you want to capture audio, uncomment this. -->
-    <!-- <uses-permission android:name="android.permission.RECORD_AUDIO" /> -->
 
     <!-- Create a Java class extending SDLActivity and place it in a
          directory under src matching the package, e.g.

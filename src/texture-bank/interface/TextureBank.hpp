@@ -49,8 +49,6 @@ private:
 
     TextureBank() = default;
 
-	//std::function<std::size_t(const TextureType&)> texture_type_hasher = [](const TextureType& c) { return static_cast<std::size_t>(c); };
-
     std::unordered_map<TextureType, TextureID> _texture_ids;
     std::unordered_map<TextureType, std::vector<TextureRegion>> _texture_regions;
 };

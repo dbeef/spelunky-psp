@@ -5,6 +5,8 @@
 #include "other/Inventory.hpp"
 #include "audio/Audio.hpp"
 
+#include <cstdlib>
+
 namespace
 {
     const float BIG_GEM_PHYSICAL_WIDTH = 0.5f;

@@ -141,12 +141,14 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
      */
     protected String[] getLibraries() {
         return new String[] {
-            //"SDL2",
+            // Spelunky_PSP links SDL statically, thus the following lines are commented out:
+            //
+            // "SDL2",
             // "SDL2_image",
             // "SDL2_mixer",
             // "SDL2_net",
             // "SDL2_ttf",
-            //"main"
+            // "main"
         };
     }
 
