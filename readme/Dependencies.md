@@ -24,10 +24,20 @@ using cjson instead of [nlohmann/json](https://github.com/nlohmann/json).
 
 ### Platform-specific
 
-The only external dependency so far is SDL 1.2.15 / SDL_mixer 1.2, and it is common on every supported platform (PSP/Linux/Windows).
+The only external dependency so far is SDL.
+ 
+SDL 1.2.15 / SDL_mixer 1.2 on PSP/Linux/Windows, SDL 2.0.9 on Android.
+
 Why SDL 1.2.15 instead of SDL2.x.x? At the time I started working on the Spelunky PSP, 
 the [PSP toolchain](https://github.com/pspdev/psptoolchain) shipped only this version, and I was happy to use it as
 it is still better than to directly access platform-specific libraries. 
 
 As using legacy SDL set a precedent, I decided to utilize it on every other platform, yet this is not obligatory and I am
-planning to move on to SDL2 at least on generic Linux/Windows platforms. 
+planning to move on to SDL2 at least on generic Linux/Windows platforms.
+
+Android does not utilize any version of SDL_mixer as for technical reasons audio module is right now disabled for Android.
+I had difficulties cross-compiling SDL_mixer using included Android.mk file, and choose to postpone it as Android support isn't of high priority.
+
+### Recognitions
+
+[SDL2 Android Activity wrapper by suikki](https://github.com/suikki/simpleSDL/)

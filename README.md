@@ -21,15 +21,17 @@ using platform-specific rendering API.
 Currently supported platforms are:
 
 * PSP
+* Android
 * Linux
 * Windows
 
-With successful attempts to run it on such devices as Raspberry PI 3 and Orange PI One.
+With successful attempts to run it on such devices as Raspberry PI 3, Orange PI One, Samsung Note III.
 
 ### See the development videos I put on Youtube:
 
 * [Spelunky-PSP devlog #1](https://www.youtube.com/watch?v=2v40JiyYs-M)
 * [Spelunky-PSP devlog #2](https://www.youtube.com/watch?v=UDkkU8J8Ejk)
+* Spelunky-PSP devlog #3 - In production
   
 ### See my other Spelunky-related projects:
  

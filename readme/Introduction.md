@@ -13,8 +13,8 @@ Just like Doom is ported to all those weird devices - calculators, printers, dig
 smart watches and so on, Spelunky classic would be playable everywhere, where rudimentary subset of OpenGL settled.
 
 I split creating rendering context into platform-specific directories (under `/src/video`). 
-There, depending on platform, I use glad for obtaining OpenGL 1.3 context on desktops or OpenGL-ES 1.0 on PSP. 
-Those are 1:1 subsets of OpenGL in terms of functions they provide, so code written and run on desktop should 
+There, depending on platform, I use glad for obtaining OpenGL 1.3 context on desktops or OpenGL-ES 1.0 on PSP and Android. 
+Those are (almost) 1:1 subsets of OpenGL in terms of functions they provide, so code written and run on desktop should 
 compile, link and run successfuly on a PSP. 
 
 Using [glad](https://github.com/Dav1dde/glad) as an abstraction layer for OpenGL is deliberate. 
