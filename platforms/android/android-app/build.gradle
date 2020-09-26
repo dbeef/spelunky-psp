@@ -14,21 +14,38 @@ android {
 
         externalNativeBuild {
             cmake {
-            	version "3.10.2.4988404"
+            	version "3.10.2+"
                 // Add any cmake options here.
 
-                def ANDROID_DEPS=System.getenv('ANDROID_DEPS')
+                def ANDROID_DEPS_ARMEABI_V7A=System.getenv('ANDROID_DEPS_ARMEABI_V7A')
+                def ANDROID_DEPS_ARM64_V8A=System.getenv('ANDROID_DEPS_ARM64_V8A')
+
                 def ANDROID_NDK_HOME=System.getenv('ANDROID_NDK_HOME')
 
-                arguments "-DANDROID_STL=c++_static", "-DANDROID=TRUE", "-DCMAKE_BUILD_TYPE=Release", "-DSDL2_DIR=" + ANDROID_DEPS + "/SDL2/lib/cmake/SDL2/", "-DANDROID_ABI=armeabi-v7a", "-DANDROID_NDK=" + ANDROID_NDK_HOME, "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake"
+                if (ANDROID_DEPS_ARM64_V8A == null || ANDROID_DEPS_ARMEABI_V7A == null || ANDROID_NDK_HOME == null)
+                {
+                    throw new GradleException("ANDROID_DEPS_ARMEABI_V7A, ANDROID_DEPS_ARM64_V8A, ANDROID_NDK_HOME must be present in environment.")
+                }
+                else
+                {
+                    println "ANDROID_DEPS_ARM64_V8A is: " + ANDROID_DEPS_ARM64_V8A
+                    println "ANDROID_DEPS_ARMEABI_V7A is: " + ANDROID_DEPS_ARMEABI_V7A
+                    println "ANDROID_NDK_HOME is: " + ANDROID_NDK_HOME   
+                }
+
+                arguments "-DANDROID_STL=c++_static", 
+                          "-DANDROID=TRUE",
+                          "-DCMAKE_BUILD_TYPE=Release",
+                          "-DANDROID_NDK=" + ANDROID_NDK_HOME,
+                          "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_NDK_HOME + "/build/cmake/android.toolchain.cmake",
+                          "-DCMAKE_PREFIX_PATH=" + ANDROID_DEPS_ARMEABI_V7A + ";" + ANDROID_DEPS_ARM64_V8A
             }
         }
 
         ndk {
         	version "18.1.5063045"
-            //abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
-            // Limiting to a smaller set of  ABIs to save time while testing:
-            abiFilters "armeabi-v7a"
+            // Limiting to a smaller set of  ABIs:
+            abiFilters "armeabi-v7a", "arm64-v8a"
         }
     }
 
@@ -46,7 +63,7 @@ android {
     }
     externalNativeBuild {
         cmake {
-        	version "3.10.2.4988404"
+        	version "3.10.2+"
             path "../../../CMakeLists.txt"
 
             // Using one top level build dir for all build related files to reduce clutter.
