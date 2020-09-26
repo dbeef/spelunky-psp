@@ -1,6 +1,17 @@
 macro(add_android_dependencies)
 
-	find_package(SDL2 REQUIRED)
+    foreach(PATH ${CMAKE_PREFIX_PATH})
+        set(SDL2_DIR "${PATH}/SDL2/lib/cmake/SDL2/")
+        message(STATUS "Checking directory for SDL2: ${SDL2_DIR}")
+        find_package(SDL2)
+        if (SDL2_FOUND)
+            break()
+        endif ()
+    endforeach()
+
+    if (NOT SDL2_FOUND)
+        message(FATAL "Failed to find SDL2. Make sure you passed it through CMAKE_PREFIX_PATH.")
+    endif ()
 
     add_library(SDL_2_XX INTERFACE)
     target_link_libraries(SDL_2_XX INTERFACE
