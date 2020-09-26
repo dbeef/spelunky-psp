@@ -29,7 +29,7 @@
 
 #if defined SPELUNKY_PSP_PLATFORM_ANDROID
 	#include <android/log.h>
-	#define  LOG_TAG    "spelunky"
+	#define  LOG_TAG    "Spelunky_PSP"
 	#define  ALOG(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #endif
 
@@ -123,13 +123,23 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
 
 #elif defined SPELUNKY_PSP_PLATFORM_ANDROID
 
-    ALOG("%s %-5s %s:%d: ", buf, level_names[level], file, line);
+    char metadata_buffer[256];
+    int status = snprintf(metadata_buffer,
+                          sizeof(metadata_buffer),
+                          "SPELUNKY %s %-5s %s:%d: ", buf, level_names[level], file, line);
+    assert(status >= 0 && status <= 256);
 
+    char message_buffer[256];
     va_start(args, fmt);
-    ALOG(fmt, args);
+    status = vsprintf(&message_buffer[0], fmt, args);
+    assert(status >= 0 && status <= 256);
     va_end(args);
-    fprintf(stderr, "\n");
-    fflush(stderr);
+
+    char combined_buffers[512];
+    status = snprintf(combined_buffers, sizeof(combined_buffers), "%s %s", metadata_buffer, message_buffer);
+    assert(status >= 0 && status <= 256);
+
+    ALOG("%s", &combined_buffers[0]);
 #else
     char metadata_buffer[256];
     int status = snprintf(metadata_buffer,
