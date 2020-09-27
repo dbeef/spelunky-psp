@@ -52,7 +52,7 @@ jobs:
       - powershell -File ./scripts/dependencies-install.ps1
       - powershell -File ./scripts/config-windows.ps1
       - powershell -File ./scripts/build-windows.ps1
-      - 7z a -sdel install/SpelunkyWindows.zip ./tmp/install-windows/Release/bin/*
+      - 7z a -sdel install/Spelunky_PSP_Windows.zip ./tmp/install-windows/Release/bin/*
 
 deploy:
   provider: releases
