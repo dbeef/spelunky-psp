@@ -16,7 +16,7 @@ GameMaker declares it will now support some retro console (which is very unlikel
 But, as there are good people providing and maintaining free, homebrew toolchains 
 (i.e [devkitPro](https://github.com/devkitPro) organization or [pspdev group](https://github.com/pspdev)) it is still
 possible to reuse assets and use provided sources as a point of reference, when rewriting original sources to C++,
-using platform-specific rendering API.  
+using commonly adopted, multi-platform rendering API - OpenGL.
   
 Currently supported platforms are:
 
