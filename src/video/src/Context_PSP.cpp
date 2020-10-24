@@ -22,11 +22,12 @@ bool Video::setup_gl()
     // https://wiki.dingoonity.org/index.php?title=Dingux:OpenDingux:Development
     // https://www.kernel.org/doc/html/latest/fb/fbcon.html
     // https://wiki.libsdl.org/FAQUsingSDL#How_do_I_choose_a_specific_video_driver.3F
-    putenv("DISPLAY=:0") ;
-    putenv("SDL_VIDEODRIVER=directfb") ;
-    putenv("SDL_VIDEO_GL_DRIVER=libGLU.so.1") ;
+    setenv("DISPLAY=:0") ;
+    setenv("SDL_VIDEODRIVER=directfb") ;
+    setenv("SDL_VIDEO_GL_DRIVER=libGLESv1_CM.so.1") ;
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) 
+    {
         log_error("SDL_Init Error: %s", SDL_GetError());
         SDL_ClearError();
         return false;
@@ -44,8 +45,8 @@ bool Video::setup_gl()
     //SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
     //SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
 
-    //SDL_GL_LoadLibrary(nullptr);
-    //SDL_ClearError();
+    SDL_GL_LoadLibrary("libGLESv1_CM.so.1");
+    SDL_ClearError();
 
     //  Create a window
     
@@ -53,7 +54,6 @@ bool Video::setup_gl()
                                     0,
                                     0,
                                     SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP);
-                                    // SDL_FULLSCREEN | SDL_OPENGL);
 
     if (!window)
     {
@@ -79,29 +79,7 @@ bool Video::setup_gl()
     
     SDL_GL_MakeCurrent(window, glContext);
     SDL_ClearError();
-/*
-   int index=30, cnt=30;
-   while(cnt--){
-    switch(index){
-    case 0:
-      SDL_FillRect(surface, &surface->clip_rect, SDL_MapRGB(surface->format, 0xff, 0x00, 0x00));
-      break;
-    case 1:
-      SDL_FillRect(surface, &surface->clip_rect, SDL_MapRGB(surface->format, 0x00, 0xff, 0x00));
-      break;
-    case 2:
-      SDL_FillRect(surface, &surface->clip_rect, SDL_MapRGB(surface->format, 0x00, 0x00, 0xff));
-      break;
-    }
-    index+= 1;
-    if(index >= 3){
-      index = 0;
-    }
-    SDL_Flip(surface);
-    SDL_Delay(100);
-   }
-*/
-                                    
+
     log_info("hiding cursor...");
     SDL_ShowCursor(0);
 
