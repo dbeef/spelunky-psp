@@ -1,4 +1,5 @@
 macro(add_linux_dependencies)
+
     add_library(SDL_1_XX INTERFACE)
     target_link_libraries(SDL_1_XX INTERFACE
         -lSDL
@@ -12,10 +13,19 @@ macro(add_linux_dependencies)
             -ldl
             )
 
+    if (WITH_GLFBDEV)
+        target_link_libraries(Dependencies INTERFACE
+            -lOSMesa
+            -lm
+            -ldl
+            -lGL
+        )
+    endif()
+
     target_compile_definitions(Dependencies INTERFACE
             SPELUNKY_PSP_PLATFORM_LINUX
             SPELUNKY_PSP_PLATFORM_DESKTOP
-            )
+        )
 endmacro()
 
 macro(spelunky_psp_post_build_linux)

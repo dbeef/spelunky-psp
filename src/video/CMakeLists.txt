@@ -7,6 +7,7 @@ add_library(Video STATIC
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,src/Video_Desktop.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Video_Desktop.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,src/Video_Android.cpp,>
+        $<IF:$<BOOL:${WITH_GLFBDEV}>,src/Video_GLFBDEV.cpp,>
 )
 
 target_include_directories(Video
