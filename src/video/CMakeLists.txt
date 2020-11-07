@@ -20,8 +20,8 @@ target_link_libraries(Video
     PUBLIC
         Time
         Viewport
-        /usr/local/lib/libOSMesa.so.7.9.0
-        /usr/local/lib/libGL.so.7.9.0
+        /home/dbeef/MiyooSDK/mesa/lib/libOSMesa.so.7.9.0
+        /home/dbeef/MiyooSDK/mesa/lib/libGL.so.7.9.0
     PRIVATE
         Logger
         glad

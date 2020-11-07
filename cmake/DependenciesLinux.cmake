@@ -2,8 +2,8 @@ macro(add_linux_dependencies)
 
     add_library(SDL_1_XX INTERFACE)
     target_link_libraries(SDL_1_XX INTERFACE
-	/usr/local/lib/libSDL-1.2.so.0.11.4
-	/usr/local/lib/libSDLmain.a
+    /home/dbeef/MiyooSDK/miyoo/arm-miyoo-linux-uclibcgnueabi/sysroot/usr/lib/libSDL-1.2.so.0.11.4
+    /home/dbeef/MiyooSDK/miyoo/arm-miyoo-linux-uclibcgnueabi/sysroot/usr/lib/libSDLmain.a
     )
 
     add_library(Dependencies INTERFACE)

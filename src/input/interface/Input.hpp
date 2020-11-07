@@ -2,6 +2,7 @@
 
 #include "patterns/Singleton.hpp"
 #include "Toggle.hpp"
+#include <SDL/SDL.h>
 
 class Input : public Singleton<Input>
 {
@@ -31,7 +32,11 @@ public:
 
 private:
 
-    Input() = default;
+    Input()
+    {
+        SDL_InitSubSystem(SDL_INIT_EVERYTHING);
+    }
+
 
     struct
     {

@@ -21,7 +21,8 @@
 
 extern "C"
 {
-#include <GL/glfbdev.h>
+//#include <GL/glfbdev.h>
+#include "/home/dbeef/MiyooSDK/mesa/include/GL/glfbdev.h"
 }
 
 #include <math.h>
@@ -32,8 +33,8 @@ static    GLFBDevVisualPtr vis;
 static    int bytes, r, g, b, a;
 static    float ang;
 static    int i;
-static    const int XRes = 1024, YRes = 768, Hz = 70;
-static    int DesiredDepth = 32;
+//static    const int XRes = 320, YRes = 240, Hz = 70;
+static    int DesiredDepth = 16;
 static    int NumFrames = 100;
 static    struct fb_fix_screeninfo FixedInfo;
 static    struct fb_var_screeninfo VarInfo, OrigVarInfo;
@@ -162,25 +163,34 @@ namespace
             exit(1);
         }
 
-#if 1
+ #if 1
+           log_info("Opening framebuffer device...");
+
         /* open the framebuffer device */
-        FrameBufferFD = open("/dev/fb1", O_RDWR);
+        FrameBufferFD = open("/dev/fb0", O_RDWR);
         if (FrameBufferFD < 0) {
-            fprintf(stderr, "Error opening /dev/fb1: %s\n", strerror(errno));
+            fprintf(stderr, "Error opening /dev/fb0: %s\n", strerror(errno));
             exit(1);
         }
 #endif
+
+        log_info("Opening /dev/tty0...");
 
         /* open /dev/tty0 and get the vt number */
         if ((fd = open("/dev/tty0", O_WRONLY, 0)) < 0) {
             fprintf(stderr, "error opening /dev/tty0\n");
             exit(1);
         }
+
+        log_info("Getting vt number...");
+        
         if (ioctl(fd, VT_OPENQRY, &vtnumber) < 0 || vtnumber < 0) {
             fprintf(stderr, "error: couldn't get a free vt\n");
             exit(1);
         }
         close(fd);
+
+        log_info("Opening console tty...");
 
         /* open the console tty */
         sprintf(ttystr, "/dev/tty%d", vtnumber);  /* /dev/tty1-64 */
@@ -197,12 +207,17 @@ namespace
                 OriginalVT = vts.v_active;
         }
 
+        log_info("Disconnecting from controlling tty...");
+
         /* disconnect from controlling tty */
         ttyfd = open("/dev/tty", O_RDWR);
         if (ttyfd >= 0) {
             ioctl(ttyfd, TIOCNOTTY, 0);
             close(ttyfd);
         }
+
+#if 0
+          log_info("Magic...");
 
         /* some magic to restore the vt when we exit */
         {
@@ -226,6 +241,10 @@ namespace
                 exit(1);
             }
         }
+#endif
+
+        log_info("Going into graphics mode...");
+
 
         /* go into graphics mode */
         if (ioctl(ConsoleFD, KDSETMODE, KD_GRAPHICS) < 0) {
@@ -237,9 +256,9 @@ namespace
 
 #if 0
         /* open the framebuffer device */
-   FrameBufferFD = open("/dev/fb1", O_RDWR);
+   FrameBufferFD = open("/dev/fb0", O_RDWR);
    if (FrameBufferFD < 0) {
-      fprintf(stderr, "Error opening /dev/fb1: %s\n", strerror(errno));
+      fprintf(stderr, "Error opening /dev/fb0: %s\n", strerror(errno));
       exit(1);
    }
 #endif
@@ -291,64 +310,12 @@ namespace
             VarInfo.transp.length = 8;
         }
 
-        /* timing values taken from /etc/fb.modes */
-        if (XRes == 1280 && YRes == 1024) {
-            VarInfo.xres_virtual = VarInfo.xres = XRes;
-            VarInfo.yres_virtual = VarInfo.yres = YRes;
-            if (Hz == 75) {
-                VarInfo.pixclock = 7408;
-                VarInfo.left_margin = 248;
-                VarInfo.right_margin = 16;
-                VarInfo.upper_margin = 38;
-                VarInfo.lower_margin = 1;
-                VarInfo.hsync_len = 144;
-                VarInfo.vsync_len = 3;
-            }
-            else if (Hz == 70) {
-                VarInfo.pixclock = 7937;
-                VarInfo.left_margin = 216;
-                VarInfo.right_margin = 80;
-                VarInfo.upper_margin = 36;
-                VarInfo.lower_margin = 1;
-                VarInfo.hsync_len = 112;
-                VarInfo.vsync_len = 5;
-            }
-            else if (Hz == 60) {
-                VarInfo.pixclock = 9260;
-                VarInfo.left_margin = 248;
-                VarInfo.right_margin = 48;
-                VarInfo.upper_margin = 38;
-                VarInfo.lower_margin = 1;
-                VarInfo.hsync_len = 112;
-                VarInfo.vsync_len = 3;
-            }
-            else {
-                fprintf(stderr, "invalid rate for 1280x1024\n");
-                exit(1);
-            }
-        }
-        else if (XRes == 1024 && YRes == 768 && Hz == 70) {
-            VarInfo.xres_virtual = VarInfo.xres = XRes;
-            VarInfo.yres_virtual = VarInfo.yres = YRes;
-            if (Hz == 70) {
-                VarInfo.pixclock = 13334;
-                VarInfo.left_margin = 144;
-                VarInfo.right_margin = 24;
-                VarInfo.upper_margin = 29;
-                VarInfo.lower_margin = 3;
-                VarInfo.hsync_len = 136;
-                VarInfo.vsync_len = 6;
-            }
-            else {
-                fprintf(stderr, "invalid rate for 1024x768\n");
-                exit(1);
-            }
-        }
-
         VarInfo.xoffset = 0;
         VarInfo.yoffset = 0;
         VarInfo.nonstd = 0;
         VarInfo.vmode &= ~FB_VMODE_YWRAP; /* turn off scrolling */
+
+        log_info("Setting new variable screen info.");
 
         /* set new variable screen info */
         if (ioctl(FrameBufferFD, FBIOPUT_VSCREENINFO, &VarInfo)) {
@@ -528,7 +495,7 @@ bool Video::setup_gl()
                r, g, b, a);
 
 
-    _viewport = std::make_shared<Viewport>(160, 128);
+    _viewport = std::make_shared<Viewport>(320, 240);
 
     DebugGlCall(glEnable(GL_TEXTURE_2D));
     DebugGlCall(glShadeModel(GL_SMOOTH));
