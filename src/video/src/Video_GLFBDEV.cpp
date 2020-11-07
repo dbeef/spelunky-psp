@@ -18,29 +18,33 @@
 #include <linux/kd.h>
 #include <linux/vt.h>
 #include <GL/gl.h>
+
+extern "C"
+{
 #include <GL/glfbdev.h>
+}
+
 #include <math.h>
+
+static    GLFBDevContextPtr ctx;
+static    GLFBDevBufferPtr buf;
+static    GLFBDevVisualPtr vis;
+static    int bytes, r, g, b, a;
+static    float ang;
+static    int i;
+static    const int XRes = 1024, YRes = 768, Hz = 70;
+static    int DesiredDepth = 32;
+static    int NumFrames = 100;
+static    struct fb_fix_screeninfo FixedInfo;
+static    struct fb_var_screeninfo VarInfo, OrigVarInfo;
+static    int OriginalVT = -1;
+static    int ConsoleFD = -1;
+static    int FrameBufferFD = -1;
+static    caddr_t FrameBuffer = (caddr_t) -1;
+static    caddr_t MMIOAddress = (caddr_t) -1;
 
 namespace
 {
-    // TODO: Move this to platform-specific
-    GLFBDevContextPtr ctx;
-    GLFBDevBufferPtr buf;
-    GLFBDevVisualPtr vis;
-    int bytes, r, g, b, a;
-    float ang;
-    int i;
-    const int XRes = 1024, YRes = 768, Hz = 70;
-    int DesiredDepth = 32;
-    int NumFrames = 100;
-    struct fb_fix_screeninfo FixedInfo;
-    struct fb_var_screeninfo VarInfo, OrigVarInfo;
-    int OriginalVT = -1;
-    int ConsoleFD = -1;
-    int FrameBufferFD = -1;
-    caddr_t FrameBuffer = (caddr_t) -1;
-    caddr_t MMIOAddress = (caddr_t) -1;
-
     const int attribs[] = {
             GLFBDEV_DOUBLE_BUFFER,
             GLFBDEV_DEPTH_SIZE, 16,
@@ -121,12 +125,6 @@ namespace
                 GLFBDEV_DEPTH_SIZE, 16,
                 GLFBDEV_NONE
         };
-        GLFBDevContextPtr ctx;
-        GLFBDevBufferPtr buf;
-        GLFBDevVisualPtr vis;
-        int bytes, r, g, b, a;
-        float ang;
-        int i;
 
         printf("GLFBDEV_VENDOR = %s\n", glFBDevGetString(GLFBDEV_VENDOR));
         printf("GLFBDEV_VERSION = %s\n", glFBDevGetString(GLFBDEV_VERSION));
@@ -134,25 +132,21 @@ namespace
         /* framebuffer size */
         bytes = VarInfo.xres_virtual * VarInfo.yres_virtual * VarInfo.bits_per_pixel / 8;
 
+	log_info("glFBDevCreateVisual");
         vis = glFBDevCreateVisual( &FixedInfo, &VarInfo, attribs );
         assert(vis);
 
+	log_info("glFBDevCreateBuffer");
         buf = glFBDevCreateBuffer( &FixedInfo, &VarInfo, vis, FrameBuffer, NULL, bytes );
         assert(buf);
 
+	log_info("glFBDevCreateContext");
         ctx = glFBDevCreateContext( vis, NULL );
         assert(buf);
 
+	log_info("glFBDevMakeCurrent");
         b = glFBDevMakeCurrent( ctx, buf, buf );
         assert(b);
-
-        /*printf("GL_EXTENSIONS: %s\n", glGetString(GL_EXTENSIONS));*/
-        glGetIntegerv(GL_RED_BITS, &r);
-        glGetIntegerv(GL_GREEN_BITS, &g);
-        glGetIntegerv(GL_BLUE_BITS, &b);
-        glGetIntegerv(GL_ALPHA_BITS, &a);
-        printf("RED_BITS=%d GREEN_BITS=%d BLUE_BITS=%d ALPHA_BITS=%d\n",
-               r, g, b, a);
     }
 
     void initialize_fbdev( void )
@@ -511,7 +505,9 @@ bool Video::setup_gl()
     signal(SIGSEGV, signal_handler);  /* catch segfaults */
 
     log_info("Entered Video::setup_gl.");
+    log_info("Initializing fbdev");
     initialize_fbdev();
+    log_info("Initializing GL");
     initialize_gl();
 
     _platform_specific = std::make_unique<PlatformSpecific>();
@@ -522,7 +518,17 @@ bool Video::setup_gl()
         return false;
     }
 
-    _viewport = std::make_shared<Viewport>(surface->w, surface->h);
+        log_info("Now GLAD should take on...");
+        /*printf("GL_EXTENSIONS: %s\n", glGetString(GL_EXTENSIONS));*/
+        glGetIntegerv(GL_RED_BITS, &r);
+        glGetIntegerv(GL_GREEN_BITS, &g);
+        glGetIntegerv(GL_BLUE_BITS, &b);
+        glGetIntegerv(GL_ALPHA_BITS, &a);
+        printf("RED_BITS=%d GREEN_BITS=%d BLUE_BITS=%d ALPHA_BITS=%d\n",
+               r, g, b, a);
+
+
+    _viewport = std::make_shared<Viewport>(160, 128);
 
     DebugGlCall(glEnable(GL_TEXTURE_2D));
     DebugGlCall(glShadeModel(GL_SMOOTH));

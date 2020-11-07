@@ -3,11 +3,7 @@ project(Video)
 add_library(Video STATIC
         interface/video/Video.hpp
         src/Video.cpp
-        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,src/Video_PSP.cpp,>
-        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,src/Video_Desktop.cpp,>
-        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Video_Desktop.cpp,>
-        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,src/Video_Android.cpp,>
-        $<IF:$<BOOL:${WITH_GLFBDEV}>,src/Video_GLFBDEV.cpp,>
+        src/Video_GLFBDEV.cpp
 )
 
 target_include_directories(Video
@@ -24,13 +20,11 @@ target_link_libraries(Video
     PUBLIC
         Time
         Viewport
+        /usr/local/lib/libOSMesa.so.7.9.0
+        /usr/local/lib/libGL.so.7.9.0
     PRIVATE
         Logger
         glad
         Input
         GraphicsUtils
-        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,SDL_1_XX,>
-        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,SDL_1_XX,>
-        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,SDL_1_XX,>
-        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,SDL_2_XX,>
 )

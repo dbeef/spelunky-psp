@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(Spelunky_PSP)
 
 option(WITH_DEV_TOOLS "Tools meant to be run only on host (development) system." FALSE)
-option(WITH_GLFBDEV "Use Mesa GLFBDEV as rendering backend")
+option(WITH_GLFBDEV "Use Mesa GLFBDEV as rendering backend" TRUE)
 
 include(cmake/CurrentPlatform.cmake)
 
