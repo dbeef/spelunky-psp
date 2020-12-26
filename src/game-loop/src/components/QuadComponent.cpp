@@ -2,6 +2,7 @@
 #include "Renderer.hpp"
 #include "TextureBank.hpp"
 #include "components/QuadComponent.hpp"
+#include "logger/log.h"
 
 QuadComponent::QuadComponent(TextureType texture_type, Renderer::EntityType entity_type, float quad_width, float quad_height, RenderingLayer layer)
     : _quad_dimensions {quad_width, quad_height}

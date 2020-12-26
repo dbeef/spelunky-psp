@@ -4,15 +4,22 @@
 
 void MainDudeRunningState::enter(MainDude &main_dude)
 {
-    main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
+    auto* physics = main_dude.get_physics_component();
+    auto* animation = main_dude.get_animation_component();
+
+    assert(physics);
+    assert(animation);
+
+    physics->set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
+
     if (main_dude._states.current == &main_dude._states.running_looking_up)
     {
-        main_dude._animation.resume(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST),
+        animation->resume(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST),
                                     static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_5_LAST));
     }
     else
     {
-        main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST),
+        animation->start(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST),
                                    static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_5_LAST),
                                    75, true);
     }
@@ -20,24 +27,27 @@ void MainDudeRunningState::enter(MainDude &main_dude)
 
 MainDudeBaseState *MainDudeRunningState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
-    // Update components:
+    auto* physics = main_dude.get_physics_component();
+    auto* quad = main_dude.get_quad_component();
+    auto* animation = main_dude.get_animation_component();
 
-    main_dude._physics.update(delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
-    main_dude._animation.update(main_dude, delta_time_ms);
+    assert(physics);
+    assert(animation);
 
-    // Other:
+    physics->update(delta_time_ms);
+    quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
+    animation->update(*quad, delta_time_ms);
     
-    if (main_dude._physics.get_x_velocity() == 0.0f)
+    if (physics->get_x_velocity() == 0.0f)
     {
         return &main_dude._states.standing;
     }
 
-    if (main_dude._physics.get_y_velocity() > 0.0f)
+    if (physics->get_y_velocity() > 0.0f)
     {
         return &main_dude._states.falling;
     }
-    else if (main_dude._physics.get_y_velocity() < 0.0f)
+    else if (physics->get_y_velocity() < 0.0f)
     {
         return &main_dude._states.jumping;
     }
@@ -47,17 +57,25 @@ MainDudeBaseState *MainDudeRunningState::update(MainDude& main_dude, uint32_t de
 
 MainDudeBaseState *MainDudeRunningState::handle_input(MainDude& main_dude, const Input &input)
 {
+    auto* physics = main_dude.get_physics_component();
+    auto* animation = main_dude.get_animation_component();
+    auto* quad = main_dude.get_quad_component();
+
+    assert(physics);
+    assert(animation);
+    assert(quad);
+
     if (input.left().value())
     {
-        main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
+        physics->add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
     }
     if (input.right().value())
     {
-        main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
+        physics->add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
     if (input.jumping().changed() && input.jumping().value())
     {
-        main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
+        physics->add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;
     }
     if (input.ducking().value())
@@ -67,13 +85,13 @@ MainDudeBaseState *MainDudeRunningState::handle_input(MainDude& main_dude, const
 
     if (input.running_fast().value())
     {
-        main_dude._physics.set_max_x_velocity(MainDude::MAX_RUNNING_VELOCITY_X);
-        main_dude._animation.set_time_per_frame_ms(50);
+        physics->set_max_x_velocity(MainDude::MAX_RUNNING_VELOCITY_X);
+        animation->set_time_per_frame_ms(50);
     }
     else
     {
-        main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
-        main_dude._animation.set_time_per_frame_ms(75);
+        physics->set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
+        animation->set_time_per_frame_ms(75);
     }
 
     if (input.throwing().changed() && input.throwing().value())
@@ -86,9 +104,9 @@ MainDudeBaseState *MainDudeRunningState::handle_input(MainDude& main_dude, const
         const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
         if (exit_tile)
         {
-            main_dude._physics.set_position(
-                    exit_tile->x + main_dude._quad.get_quad_width() / 2,
-                    exit_tile->y + main_dude._quad.get_quad_height() / 2);
+            physics->set_position(
+                    exit_tile->x + quad->get_quad_width() / 2,
+                    exit_tile->y + quad->get_quad_height() / 2);
 
             return &main_dude._states.exiting;
         }
@@ -99,9 +117,9 @@ MainDudeBaseState *MainDudeRunningState::handle_input(MainDude& main_dude, const
         if (ladder_tile || ladder_deck_tile)
         {
             const auto* tile = ladder_tile ? ladder_tile : ladder_deck_tile;
-            main_dude._physics.set_position(
-                    tile->x + main_dude._quad.get_quad_width() / 2,
-                    main_dude.get_y_pos_center());
+            physics->set_position(
+                    tile->x + quad->get_quad_width() / 2,
+                    physics->get_y_position());
 
             return &main_dude._states.climbing;
         }

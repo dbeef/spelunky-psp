@@ -10,7 +10,9 @@ namespace
     const char* GAME_OVER_MSG = "GAME OVER";
 }
 
-DeathOverlay::DeathOverlay(std::shared_ptr<Viewport>  viewport) : _viewport(std::move(viewport))
+DeathOverlay::DeathOverlay(std::shared_ptr<Viewport>  viewport)
+    : GameEntity(GameEntity::Type::DEATH_OVERLAY)
+    , _viewport(std::move(viewport))
 {
 }
 

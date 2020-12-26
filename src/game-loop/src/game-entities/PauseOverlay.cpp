@@ -74,7 +74,8 @@ void PauseOverlay::update(uint32_t delta_time_ms)
 }
 
 PauseOverlay::PauseOverlay(std::shared_ptr<Viewport> viewport, Type pause_screen_type)
-    : _viewport(std::move(viewport))
+    : GameEntity(GameEntity::Type::PAUSE_OVERLAY)
+    , _viewport(std::move(viewport))
     , _type(pause_screen_type)
 {
 }

@@ -6,9 +6,12 @@
 #define SPELUNKYDS_MAPTILE_H
 
 #include "MapTileType.hpp"
+#include "Point2D.hpp"
 
-struct MapTile
+class MapTile
 {
+public:
+
     static constexpr float PHYSICAL_WIDTH = 1.0f;
     static constexpr float PHYSICAL_HEIGHT = 1.0f;
 
@@ -22,6 +25,7 @@ struct MapTile
 
     // Sets tile's properties (i.e whether it is collidable or destroyable) to be of exact tile type.
     void match_tile(MapTileType type);
+    Point2D get_center() const { return {x + PHYSICAL_WIDTH / 2, y + PHYSICAL_HEIGHT / 2}; }
 };
 
 

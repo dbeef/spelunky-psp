@@ -32,7 +32,9 @@ namespace
     }
 }
 
-ScoresOverlay::ScoresOverlay(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
+ScoresOverlay::ScoresOverlay(std::shared_ptr<Viewport> viewport)
+    : GameEntity(GameEntity::Type::SCORES_OVERLAY)
+    , _viewport(std::move(viewport))
 {
     {
         const float text_width = std::strlen(TOP_DEFILERS_MSG) * _texts.top_defilers.get_font_width();

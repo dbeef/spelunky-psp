@@ -1,5 +1,5 @@
 #include "game-loop/GameLoop.hpp"
-
+#include "other/World.hpp"
 #include "viewport/Viewport.hpp"
 #include "system/GameEntitySystem.hpp"
 #include "game-entities/LevelSummaryTracker.hpp"

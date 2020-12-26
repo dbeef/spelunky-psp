@@ -102,7 +102,7 @@ add_library(GameLoop STATIC
         include/main-dude/states/MainDudeRunningLookingUpState.hpp
         include/main-dude/states/MainDudeDeadState.hpp
         include/main-dude/states/MainDudeStunnedState.hpp
-)
+        include/other/World.hpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface

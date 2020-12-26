@@ -6,26 +6,34 @@
 void MainDudeThrowingState::enter(MainDude &main_dude)
 {
     Audio::instance().play(SFXType::MAIN_DUDE_WHIP);
-    main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::THROWING_LEFT_0_FIRST),
-                               static_cast<std::size_t>(MainDudeSpritesheetFrames::THROWING_LEFT_8_LAST),
-                               50, false);
+
+    auto* animation = main_dude.get_animation_component();
+    assert(animation);
+
+    animation->start(static_cast<std::size_t>(MainDudeSpritesheetFrames::THROWING_LEFT_0_FIRST),
+                     static_cast<std::size_t>(MainDudeSpritesheetFrames::THROWING_LEFT_8_LAST),
+                     50, false);
 }
 
 MainDudeBaseState *MainDudeThrowingState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
-    // Update components:
+    auto* physics = main_dude.get_physics_component();
+    auto* quad = main_dude.get_quad_component();
+    auto* animation = main_dude.get_animation_component();
 
-    main_dude._physics.update(delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
-    main_dude._animation.update(main_dude, delta_time_ms);
+    assert(physics);
+    assert(quad);
+    assert(animation);
 
-    // Other:
+    physics->update(delta_time_ms);
+    quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
+    animation->update(*quad, delta_time_ms);
 
-    if (main_dude._animation.is_finished())
+    if (animation->is_finished())
     {
-        if (main_dude._physics.is_bottom_collision())
+        if (physics->is_bottom_collision())
         {
-            if (main_dude._physics.get_x_velocity() == 0.0f)
+            if (physics->get_x_velocity() == 0.0f)
             {
                 return &main_dude._states.standing;
             }
@@ -36,11 +44,11 @@ MainDudeBaseState *MainDudeThrowingState::update(MainDude& main_dude, uint32_t d
         }
         else
         {
-            if (main_dude._physics.get_y_velocity() > 0.0f)
+            if (physics->get_y_velocity() > 0.0f)
             {
                 return &main_dude._states.falling;
             }
-            else if (main_dude._physics.get_y_velocity() < 0.0f)
+            else if (physics->get_y_velocity() < 0.0f)
             {
                 return &main_dude._states.jumping;
             }
@@ -52,26 +60,29 @@ MainDudeBaseState *MainDudeThrowingState::update(MainDude& main_dude, uint32_t d
 
 MainDudeBaseState *MainDudeThrowingState::handle_input(MainDude& main_dude, const Input &input)
 {
+    auto* physics = main_dude.get_physics_component();
+    assert(physics);
+
     if (input.left().value())
     {
-        main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
+        physics->add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
     }
     if (input.right().value())
     {
-        main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
+        physics->add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
-    if (input.jumping().changed() && input.jumping().value() && main_dude._physics.is_bottom_collision())
+    if (input.jumping().changed() && input.jumping().value() && physics->is_bottom_collision())
     {
-        main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
+        physics->add_velocity(0.0f, -MainDude::JUMP_SPEED);
     }
 
     if (input.running_fast().value())
     {
-        main_dude._physics.set_max_x_velocity(MainDude::MAX_RUNNING_VELOCITY_X);
+        physics->set_max_x_velocity(MainDude::MAX_RUNNING_VELOCITY_X);
     }
     else
     {
-        main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
+        physics->set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
     }
 
     return this;

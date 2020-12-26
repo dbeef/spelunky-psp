@@ -3,7 +3,7 @@
 #include <cstdint>
 
 #include "TextureType.hpp"
-#include "Quad.hpp"
+#include "QuadComponent.hpp"
 
 class MainDude;
 
@@ -11,7 +11,7 @@ class AnimationComponent
 {
 public:
 
-    void update(MainDude&, uint32_t delta_time_ms);
+    void update(QuadComponent&, uint32_t delta_time_ms);
     void start(std::size_t start_frame, std::size_t end_frame, uint32_t time_per_frame_ms, bool loop);
     void resume(std::size_t start_frame, std::size_t end_frame);
     void stop() { _running = false; }

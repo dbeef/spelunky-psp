@@ -80,9 +80,13 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
     assert(entrance);
 
     // Update main dude:
+    auto* dude_physics = game_loop._main_dude->get_physics_component();
+    assert(dude_physics);
+
+    dude_physics->set_velocity(0, 0);
+    dude_physics->set_position(entrance->x + (MapTile::PHYSICAL_WIDTH / 2.0f), entrance->y + (MapTile::PHYSICAL_HEIGHT / 2.0f));
+
     game_loop._main_dude->enter_standing_state();
-    game_loop._main_dude->set_velocity(0, 0);
-    game_loop._main_dude->set_position(entrance->x + (MapTile::PHYSICAL_WIDTH / 2.0f), entrance->y + (MapTile::PHYSICAL_HEIGHT / 2.0f));
     game_loop._game_entity_system->add(game_loop._main_dude);
 
     // Create pause overlay:
@@ -94,7 +98,7 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
     game_loop._game_entity_system->add(_scores_overlay);
 
     // Create reset sign:
-     game_loop._game_entity_system->add(std::make_shared<ResetSign>(16.5f, 18.5f));
+    game_loop._game_entity_system->add(std::make_shared<ResetSign>(16.5f, 18.5f));
 
     // Make main dude appear on the foreground:
     Renderer::instance().sort_by_layer();

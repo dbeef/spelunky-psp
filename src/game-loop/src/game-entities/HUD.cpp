@@ -41,7 +41,9 @@ void HUD::update(uint32_t delta_time_ms)
     }
 }
 
-HUD::HUD(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
+HUD::HUD(std::shared_ptr<Viewport> viewport)
+    : GameEntity(GameEntity::Type::HUD)
+    , _viewport(std::move(viewport))
 {
     assert(_viewport);
 

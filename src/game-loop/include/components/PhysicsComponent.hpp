@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <functional>
 #include <utility>
+#include "Point2D.hpp"
 
 class PhysicsComponent
 {
@@ -19,6 +20,7 @@ public:
     bool is_collision(const PhysicsComponent& other) const;
 
     void set_position(float x, float y) { _position.x = x; _position.y = y;}
+    void set_position(Point2D position) { _position.x = position.x; _position.y = position.y; }
     void add_position(float x, float y) { _position.x += x; _position.y += y; }
     float get_x_position() const { return _position.x; }
     float get_y_position() const { return _position.y; }

@@ -49,7 +49,8 @@ namespace
 }
 
 LevelSummaryOverlay::LevelSummaryOverlay(std::shared_ptr<Viewport> viewport, const std::shared_ptr<LevelSummaryTracker>& tracker)
-    : _viewport(std::move(viewport))
+    : GameEntity(GameEntity::Type::LEVEL_SUMMARY_OVERLAY)
+    , _viewport(std::move(viewport))
 {
     {
         const Point2D pos = {_viewport->get_width_world_units() * 0.16f, _viewport->get_height_world_units() * 0.155f};

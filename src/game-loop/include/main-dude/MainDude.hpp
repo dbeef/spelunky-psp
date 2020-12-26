@@ -5,10 +5,6 @@
 #include "spritesheet-frames/MainDudeSpritesheetFrames.hpp"
 #include "patterns/Subject.hpp"
 
-#include "components/PhysicsComponent.hpp"
-#include "components/QuadComponent.hpp"
-#include "components/AnimationComponent.hpp"
-
 #include "MapTile.hpp"
 #include "MapTileType.hpp"
 
@@ -44,13 +40,6 @@ public:
 
     void update(uint32_t delta_time_ms) override;
 
-    float get_x_pos_center() const { return _physics.get_x_position(); }
-    float get_y_pos_center() const { return _physics.get_y_position(); }
-
-    void set_position_on_tile(MapTile* map_tile);
-    void set_position(float x_center, float y_center) { _physics.set_position(x_center, y_center); }
-    void set_velocity(float x, float y) { _physics.set_velocity(x, y); }
-
     void enter_level_summary_state();
     void enter_dead_state();
     void enter_standing_state();
@@ -65,12 +54,6 @@ private:
     // Returns true on successful request.
     bool hang_off_cliff_left();
     bool hang_off_cliff_right();
-
-    friend class PhysicsComponent;
-    friend class AnimationComponent;
-    PhysicsComponent _physics;
-    QuadComponent _quad;
-    AnimationComponent _animation;
 
     friend class MainDudeBaseState;
     friend class MainDudeRunningState;

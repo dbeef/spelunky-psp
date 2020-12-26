@@ -25,8 +25,12 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
 
     // Adjust camera to follow main dude:
 
-    auto x = game_loop._main_dude->get_x_pos_center();
-    auto y = game_loop._main_dude->get_y_pos_center();
+    auto dude_physics = game_loop._main_dude->get_physics_component();
+    assert(dude_physics);
+
+    auto x = dude_physics->get_x_position();
+    auto y = dude_physics->get_y_position();
+
     model_view_camera.adjust_to_bounding_box(x, y);
     model_view_camera.adjust_to_level_boundaries(Consts::LEVEL_WIDTH_TILES, Consts::LEVEL_HEIGHT_TILES);
 
@@ -98,13 +102,16 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
     // Update main dude:
     game_loop._main_dude->enter_standing_state();
-    game_loop._main_dude->set_velocity(0, 0);
     game_loop._game_entity_system->add(game_loop._main_dude);
+
+    auto dude_physics = game_loop._main_dude->get_physics_component();
+    assert(dude_physics);
+    dude_physics->set_velocity(0, 0);
 
     MapTile *entrance = nullptr;
     Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
     assert(entrance);
-    game_loop._main_dude->set_position_on_tile(entrance);
+    dude_physics->set_position(entrance->get_center());
 
     // Subscribe on main dude's events:
     game_loop._main_dude->add_observer(this);

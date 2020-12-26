@@ -40,10 +40,10 @@ void Renderer::update()
 {
     for (std::size_t index = 0; index < static_cast<std::size_t>(EntityType::_SIZE); index++)
     {
-        const auto& id_collection = _for_removal[index];
+        auto& ids_to_remove = _for_removal[index];
         auto& render_entities_collection = _render_entities[index];
 
-        for (const auto &id : id_collection)
+        for (const auto &id : ids_to_remove)
         {
             const auto predicate = [&id](const RenderEntity &e) { return e.id == id; };
             const auto it = std::remove_if(render_entities_collection.begin(), render_entities_collection.end(), predicate);
@@ -51,7 +51,13 @@ void Renderer::update()
             {
                 render_entities_collection.erase(it);
             }
+            else
+            {
+                assert(false);
+            }
         }
+
+        ids_to_remove.clear();
     }
 }
 

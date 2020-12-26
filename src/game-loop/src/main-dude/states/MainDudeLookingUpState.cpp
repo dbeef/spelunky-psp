@@ -1,33 +1,40 @@
-
 #include "main-dude/states/MainDudeLookingUpState.hpp"
 #include "main-dude/MainDude.hpp"
 #include "Input.hpp"
 
 void MainDudeLookingUpState::enter(MainDude& main_dude)
 {
-    main_dude._animation.stop();
-    main_dude._quad.frame_changed(MainDudeSpritesheetFrames::STANDING_LOOKING_UP);
+    auto* animation = main_dude.get_animation_component();
+    auto* quad = main_dude.get_quad_component();
+
+    assert(animation);
+    assert(quad);
+
+    animation->stop();
+    quad->frame_changed(MainDudeSpritesheetFrames::STANDING_LOOKING_UP);
 }
 
 MainDudeBaseState* MainDudeLookingUpState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
-    // Update components:
+    auto* physics = main_dude.get_physics_component();
+    auto* quad = main_dude.get_quad_component();
 
-    main_dude._physics.update(delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
+    assert(physics);
+    assert(quad);
 
-    // Other:
+    physics->update(delta_time_ms);
+    quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
 
-    if (main_dude._physics.get_x_velocity() != 0.0f)
+    if (physics->get_x_velocity() != 0.0f)
     {
         return &main_dude._states.running_looking_up;
     }
 
-    if (main_dude._physics.get_y_velocity() > 0.0f)
+    if (physics->get_y_velocity() > 0.0f)
     {
         return &main_dude._states.falling;
     }
-    else if (main_dude._physics.get_y_velocity() < 0.0f)
+    else if (physics->get_y_velocity() < 0.0f)
     {
         return &main_dude._states.jumping;
     }
@@ -37,17 +44,20 @@ MainDudeBaseState* MainDudeLookingUpState::update(MainDude& main_dude, uint32_t 
 
 MainDudeBaseState *MainDudeLookingUpState::handle_input(MainDude& main_dude, const Input &input)
 {
+    auto* physics = main_dude.get_physics_component();
+    assert(physics);
+
     if (input.left().value())
     {
-        main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
+        physics->add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
     }
     if (input.right().value())
     {
-        main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
+        physics->add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
     if (input.jumping().changed() && input.jumping().value())
     {
-        main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
+        physics->add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;
     }
     if (input.throwing().changed() && input.throwing().value())

@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <vector>
 
+#include "logger/log.h"
+
 class Renderer : public Singleton<Renderer>
 {
 public:

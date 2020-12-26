@@ -12,30 +12,41 @@ void MainDudeStunnedState::enter(MainDude &main_dude)
 {
     Audio::instance().play(SFXType::MAIN_DUDE_HURT);
 
-    main_dude._physics.set_friction(PhysicsComponent::get_default_friction() * 1.8f);
-    main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_0_FIRST),
-                               static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_4_LAST),
-                               75, true);
+    auto* physics = main_dude.get_physics_component();
+    auto* animation = main_dude.get_animation_component();
+
+    assert(physics);
+    assert(animation);
+
+    physics->set_friction(PhysicsComponent::get_default_friction() * 1.8f);
+    animation->start(static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_0_FIRST),
+                     static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_4_LAST),
+                     75, true);
+
     _stunned_timer_ms = 0;
 }
 
 MainDudeBaseState *MainDudeStunnedState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
-    // Update components:
+    auto* physics = main_dude.get_physics_component();
+    auto* animation = main_dude.get_animation_component();
+    auto* quad = main_dude.get_quad_component();
 
-    main_dude._physics.update(delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
-    main_dude._animation.update(main_dude, delta_time_ms);
+    assert(physics);
+    assert(animation);
+    assert(quad);
 
-    // Other:
+    physics->update(delta_time_ms);
+    quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
+    animation->update(*quad, delta_time_ms);
 
     _stunned_timer_ms += delta_time_ms;
 
     if (_stunned_timer_ms > STUNNED_TIME_MS)
     {
-        if (main_dude._physics.is_bottom_collision())
+        if (physics->is_bottom_collision())
         {
-            if (main_dude._physics.get_x_velocity() == 0.0f)
+            if (physics->get_x_velocity() == 0.0f)
             {
                 return &main_dude._states.standing;
             }
@@ -46,11 +57,11 @@ MainDudeBaseState *MainDudeStunnedState::update(MainDude& main_dude, uint32_t de
         }
         else
         {
-            if (main_dude._physics.get_y_velocity() > 0.0f)
+            if (physics->get_y_velocity() > 0.0f)
             {
                 return &main_dude._states.falling;
             }
-            else if (main_dude._physics.get_y_velocity() < 0.0f)
+            else if (physics->get_y_velocity() < 0.0f)
             {
                 return &main_dude._states.jumping;
             }
@@ -67,5 +78,8 @@ MainDudeBaseState *MainDudeStunnedState::handle_input(MainDude& main_dude, const
 
 void MainDudeStunnedState::exit(MainDude& main_dude)
 {
-    main_dude._physics.set_friction(PhysicsComponent::get_default_friction());
+    auto* physics = main_dude.get_physics_component();
+    assert(physics);
+
+    physics->set_friction(PhysicsComponent::get_default_friction());
 }

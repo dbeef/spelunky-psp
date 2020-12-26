@@ -27,10 +27,10 @@ target_link_libraries(Renderer
     PUBLIC
         Patterns
         TextureBank
-    PRIVATE
         Logger
+    PRIVATE
         GraphicsUtils
-        )
+    )
 
 if (SPELUNKY_PSP_PLATFORM_LINUX)
     target_link_libraries(Renderer PRIVATE dl)

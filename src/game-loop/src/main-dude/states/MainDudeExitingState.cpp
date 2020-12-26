@@ -10,18 +10,29 @@ void MainDudeExitingState::exit(MainDude& main_dude)
 
 void MainDudeExitingState::enter(MainDude& main_dude)
 {
+    auto* animation = main_dude.get_animation_component();
+    assert(animation);
+
     Audio::instance().play(SFXType::MAIN_DUDE_ENTERING_DOOR);
-    main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::EXITING_LEFT_0_FIRST),
-                               static_cast<std::size_t>(MainDudeSpritesheetFrames::EXITING_LEFT_15_LAST),
-                               75, false);
+    animation->start(static_cast<std::size_t>(MainDudeSpritesheetFrames::EXITING_LEFT_0_FIRST),
+                     static_cast<std::size_t>(MainDudeSpritesheetFrames::EXITING_LEFT_15_LAST),
+                     75, false);
 }
 
 MainDudeBaseState* MainDudeExitingState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
-    main_dude._animation.update(main_dude, delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
+    auto* animation = main_dude.get_animation_component();
+    auto* quad = main_dude.get_quad_component();
+    auto* physics = main_dude.get_physics_component();
 
-    if (main_dude._animation.is_finished())
+    assert(animation);
+    assert(quad);
+    assert(physics);
+
+    animation->update(*quad, delta_time_ms);
+    quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
+
+    if (animation->is_finished())
     {
         main_dude._other.entered_door = true;
     }

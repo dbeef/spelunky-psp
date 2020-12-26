@@ -14,14 +14,14 @@ namespace
     const float TRIPLE_GOLD_BAR_QUAD_HEIGHT = 1.0f;
 }
 
-TripleGoldBar::TripleGoldBar(float x_center, float y_center)
-        : _physics(TRIPLE_GOLD_BAR_PHYSICAL_WIDTH, TRIPLE_GOLD_BAR_PHYSICAL_HEIGHT, PhysicsComponentType::TRIPLE_GOLD_BAR)
-        , _quad(TextureType::COLLECTIBLES, Renderer::EntityType::MODEL_VIEW_SPACE, TRIPLE_GOLD_BAR_QUAD_WIDTH, TRIPLE_GOLD_BAR_QUAD_HEIGHT)
+TripleGoldBar::TripleGoldBar(float x_center, float y_center) : GameEntity(GameEntity::Type::TRIPLE_GOLD_BAR)
 {
-    _quad.frame_changed<CollectiblesSpritesheetFrames>(CollectiblesSpritesheetFrames::TRIPLE_GOLD_BAR);
+    _quad_component = std::make_shared<QuadComponent>(TextureType::COLLECTIBLES, Renderer::EntityType::MODEL_VIEW_SPACE, TRIPLE_GOLD_BAR_QUAD_WIDTH, TRIPLE_GOLD_BAR_QUAD_HEIGHT);
+    _quad_component->frame_changed<CollectiblesSpritesheetFrames>(CollectiblesSpritesheetFrames::TRIPLE_GOLD_BAR);
 
-    _physics.set_position(x_center, y_center);
-    _physics.set_collision_handler([this](PhysicsComponent* other)
+    _physics_component = std::make_shared<PhysicsComponent>(TRIPLE_GOLD_BAR_PHYSICAL_WIDTH, TRIPLE_GOLD_BAR_PHYSICAL_HEIGHT, PhysicsComponentType::TRIPLE_GOLD_BAR);
+    _physics_component->set_position(x_center, y_center);
+    _physics_component->set_collision_handler([this](PhysicsComponent* other)
     {
         if (is_marked_for_disposal())
         {
@@ -40,6 +40,6 @@ TripleGoldBar::TripleGoldBar(float x_center, float y_center)
 
 void TripleGoldBar::update(uint32_t delta_time_ms)
 {
-    _quad.update(_physics.get_x_position(), _physics.get_y_position());
-    _physics.update(delta_time_ms);
+    _quad_component->update(_physics_component->get_x_position(), _physics_component->get_y_position());
+    _physics_component->update(delta_time_ms);
 }

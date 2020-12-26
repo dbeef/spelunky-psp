@@ -1,7 +1,7 @@
 #include "components/AnimationComponent.hpp"
 #include "main-dude/MainDude.hpp"
 
-void AnimationComponent::update(MainDude& main_dude, uint32_t delta_time_ms)
+void AnimationComponent::update(QuadComponent& quad, uint32_t delta_time_ms)
 {
     if (!_running)
     {
@@ -31,7 +31,7 @@ void AnimationComponent::update(MainDude& main_dude, uint32_t delta_time_ms)
         _current_frame_index++;
     }
 
-    main_dude._quad.frame_changed(_current_frame_index);
+    quad.frame_changed(_current_frame_index);
     _timer_ms = 0;
 }
 

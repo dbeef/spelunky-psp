@@ -16,16 +16,17 @@ namespace
     const float BIG_GEM_QUAD_HEIGHT = 0.5f;
 }
 
-BigGem::BigGem(float x_center, float y_center)
-        : _physics(BIG_GEM_PHYSICAL_WIDTH, BIG_GEM_PHYSICAL_HEIGHT, PhysicsComponentType::BIG_GEM)
-        , _quad(TextureType::COLLECTIBLES, Renderer::EntityType::MODEL_VIEW_SPACE, BIG_GEM_QUAD_WIDTH, BIG_GEM_QUAD_HEIGHT)
+BigGem::BigGem(float x_center, float y_center) : GameEntity(GameEntity::Type::BIG_GEM)
 {
+    _physics_component = std::make_shared<PhysicsComponent>(BIG_GEM_PHYSICAL_WIDTH, BIG_GEM_PHYSICAL_HEIGHT, PhysicsComponentType::BIG_GEM);
+    _quad_component = std::make_shared<QuadComponent>(TextureType::COLLECTIBLES, Renderer::EntityType::MODEL_VIEW_SPACE, BIG_GEM_QUAD_WIDTH, BIG_GEM_QUAD_HEIGHT);
+
     // Randomize between diamond/emerald/ruby (blue/green/red):
     auto gem_type = static_cast<CollectiblesSpritesheetFrames>(static_cast<int>(CollectiblesSpritesheetFrames::DIAMOND_BIG) + std::rand() % 3);
-    _quad.frame_changed<CollectiblesSpritesheetFrames>(gem_type);
+    _quad_component->frame_changed<CollectiblesSpritesheetFrames>(gem_type);
 
-    _physics.set_position(x_center, y_center);
-    _physics.set_collision_handler([this, gem_type](PhysicsComponent* other)
+    _physics_component->set_position(x_center, y_center);
+    _physics_component->set_collision_handler([this, gem_type](PhysicsComponent* other)
     {
         if (is_marked_for_disposal())
         {
@@ -52,6 +53,6 @@ BigGem::BigGem(float x_center, float y_center)
 
 void BigGem::update(uint32_t delta_time_ms)
 {
-    _quad.update(_physics.get_x_position(), _physics.get_y_position());
-    _physics.update(delta_time_ms);
+    _quad_component->update(_physics_component->get_x_position(), _physics_component->get_y_position());
+    _physics_component->update(delta_time_ms);
 }

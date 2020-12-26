@@ -23,15 +23,17 @@ namespace
     const float MAIN_DUDE_QUAD_HEIGHT = 1.0f;
 }
 
-MainDude::MainDude(float x_pos_center, float y_pos_center)
-    : _physics(MAIN_DUDE_PHYSICAL_WIDTH, MAIN_DUDE_PHYSICAL_HEIGHT, PhysicsComponentType::MAIN_DUDE)
-    , _quad(TextureType::MAIN_DUDE, Renderer::EntityType::MODEL_VIEW_SPACE, MAIN_DUDE_QUAD_WIDTH, MAIN_DUDE_QUAD_HEIGHT, RenderingLayer::FOREGROUND)
+MainDude::MainDude(float x_pos_center, float y_pos_center) : GameEntity(GameEntity::Type::MAIN_DUDE)
 {
+    _physics_component = std::make_shared<PhysicsComponent>(MAIN_DUDE_PHYSICAL_WIDTH, MAIN_DUDE_PHYSICAL_HEIGHT, PhysicsComponentType::MAIN_DUDE);
+    _quad_component = std::make_shared<QuadComponent>(TextureType::MAIN_DUDE, Renderer::EntityType::MODEL_VIEW_SPACE, MAIN_DUDE_QUAD_WIDTH, MAIN_DUDE_QUAD_HEIGHT, RenderingLayer::FOREGROUND);
+    _animation_component = std::make_shared<AnimationComponent>();
+
     _states.current = &_states.standing;
     _states.current->enter(*this);
 
-    _physics.set_position(x_pos_center, y_pos_center);
-    _physics.set_max_y_velocity(MainDude::DEFAULT_MAX_Y_VELOCITY);
+    _physics_component->set_position(x_pos_center, y_pos_center);
+    _physics_component->set_max_y_velocity(MainDude::DEFAULT_MAX_Y_VELOCITY);
 
     _other.facing_left = true;
 
@@ -43,10 +45,10 @@ void MainDude::update(uint32_t delta_time_ms)
 {
     // Update generic properties:
 
-    if (_physics.get_x_velocity() != 0.0f)
+    if (_physics_component->get_x_velocity() != 0.0f)
     {
-        _other.facing_left = _physics.get_x_velocity() < 0.0f;
-        _quad.frame_changed();
+        _other.facing_left = _physics_component->get_x_velocity() < 0.0f;
+        _quad_component->frame_changed();
     }
 
     // Update current state:
@@ -65,7 +67,7 @@ void MainDude::update(uint32_t delta_time_ms)
 MapTile* MainDude::is_overlaping_tile(MapTileType type) const
 {
     MapTile* neighbours[9] = {nullptr};
-    Level::instance().get_tile_batch().get_neighbouring_tiles(_physics.get_x_position(), _physics.get_y_position(), neighbours);
+    Level::instance().get_tile_batch().get_neighbouring_tiles(_physics_component->get_x_position(), _physics_component->get_y_position(), neighbours);
 
     for (const auto neighbour : neighbours)
     {
@@ -74,20 +76,13 @@ MapTile* MainDude::is_overlaping_tile(MapTileType type) const
             continue;
         }
 
-        if (collisions::overlaps(neighbour, _physics.get_x_position(), _physics.get_y_position(), _physics.get_width(), _physics.get_height()))
+        if (collisions::overlaps(neighbour, _physics_component->get_x_position(), _physics_component->get_y_position(), _physics_component->get_width(), _physics_component->get_height()))
         {
             return neighbour;
         }
     }
 
     return nullptr;
-}
-
-void MainDude::set_position_on_tile(MapTile *map_tile)
-{
-    const auto x = map_tile->x + _quad.get_quad_width() / 2;
-    const auto y = map_tile->y + _quad.get_quad_height() / 2;
-    _physics.set_position(x, y);
 }
 
 void MainDude::enter_standing_state()
@@ -107,13 +102,13 @@ void MainDude::enter_level_summary_state()
 
 bool MainDude::hang_off_cliff_right()
 {
-    if (_physics.is_right_collision())
+    if (_physics_component->is_right_collision())
     {
         MapTile *neighbours[9] = {nullptr};
 
         Level::instance().get_tile_batch().get_neighbouring_tiles(
-                get_x_pos_center(),
-                get_y_pos_center(),
+                _physics_component->get_x_position(),
+                _physics_component->get_y_position(),
                 neighbours);
 
         auto* right_tile = neighbours[static_cast<int>(NeighbouringTiles::CENTER)];
@@ -122,11 +117,11 @@ bool MainDude::hang_off_cliff_right()
         if (right_tile && right_tile->collidable &&
             (!right_upper_tile || !right_upper_tile->collidable) &&
                 // Main dude's center must be in margin of a quarter of a tile from its beginning:
-                (get_y_pos_center() >= right_tile->y + 0.25f)
+                (_physics_component->get_y_position() >= right_tile->y + 0.25f)
             )
         {
-            _physics.set_position(
-                    right_tile->x - (_physics.get_width() / 2.0f),
+            _physics_component->set_position(
+                    right_tile->x - (_physics_component->get_width() / 2.0f),
                     right_tile->y + 0.5f);
             return true;
         }
@@ -137,13 +132,13 @@ bool MainDude::hang_off_cliff_right()
 
 bool MainDude::hang_off_cliff_left()
 {
-    if (_physics.is_left_collision())
+    if (_physics_component->is_left_collision())
     {
         MapTile *neighbours[9] = {nullptr};
 
         Level::instance().get_tile_batch().get_neighbouring_tiles(
-                get_x_pos_center(),
-                get_y_pos_center(),
+                _physics_component->get_x_position(),
+                _physics_component->get_y_position(),
                 neighbours);
       
         auto* left_tile = neighbours[static_cast<int>(NeighbouringTiles::LEFT_MIDDLE)];
@@ -152,11 +147,11 @@ bool MainDude::hang_off_cliff_left()
         if (left_tile && left_tile->collidable &&
             (!left_upper_tile || !left_upper_tile->collidable) &&
                 // Main dude's center must be in margin of a quarter of a tile from its beginning:
-                (get_y_pos_center() >= left_tile->y + 0.25f)
+                (_physics_component->get_y_position() >= left_tile->y + 0.25f)
             )
         {
-            _physics.set_position(
-                    left_tile->x + MapTile::PHYSICAL_WIDTH + (_physics.get_width() / 2.0f),
+            _physics_component->set_position(
+                    left_tile->x + MapTile::PHYSICAL_WIDTH + (_physics_component->get_width() / 2.0f),
                     left_tile->y + (MapTile::PHYSICAL_HEIGHT / 2.0f));
             return true;
         }

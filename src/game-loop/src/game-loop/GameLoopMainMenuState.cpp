@@ -70,8 +70,11 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
 
     if (game_loop._main_dude->entered_door())
     {
-        const Point2D pos_in_tiles = {std::floor(game_loop._main_dude->get_x_pos_center()),
-                                      std::floor(game_loop._main_dude->get_y_pos_center())};
+        auto* dude_physics = game_loop._main_dude->get_physics_component();
+
+        const Point2D pos_in_tiles = {std::floor(dude_physics->get_x_position()),
+                                      std::floor(dude_physics->get_y_position())};
+
         if (pos_in_tiles == PLAY_COORDS)
         {
             return &game_loop._states.playing;
@@ -115,9 +118,14 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     game_loop._level_summary_tracker->reset();
 
     // Update main dude:
+
+    auto* dude_physics = game_loop._main_dude->get_physics_component();
+    assert(dude_physics);
+
+    dude_physics->set_velocity(0, 0);
+    dude_physics->set_position(17.45f, 8.5f);
+
     game_loop._main_dude->enter_standing_state();
-    game_loop._main_dude->set_velocity(0, 0);
-    game_loop._main_dude->set_position(17.45f, 8.5f);
     game_loop._game_entity_system->add(game_loop._main_dude);
 
     // Create pause overlay:

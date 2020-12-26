@@ -4,24 +4,31 @@
 
 void MainDudePushingState::enter(MainDude& main_dude)
 {
-    main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::PUSH_LEFT_0_FIRST),
-                               static_cast<std::size_t>(MainDudeSpritesheetFrames::PUSH_LEFT_6_LAST),
-                               75, true);
+    auto* animation = main_dude.get_animation_component();
+    assert(animation);
+
+    animation->start(static_cast<std::size_t>(MainDudeSpritesheetFrames::PUSH_LEFT_0_FIRST),
+                     static_cast<std::size_t>(MainDudeSpritesheetFrames::PUSH_LEFT_6_LAST),
+                     75, true);
 }
 
 MainDudeBaseState* MainDudePushingState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
-    // Update components:
+    auto* physics = main_dude.get_physics_component();
+    auto* quad = main_dude.get_quad_component();
+    auto* animation = main_dude.get_animation_component();
 
-    main_dude._physics.update(delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
-    main_dude._animation.update(main_dude, delta_time_ms);
+    assert(physics);
+    assert(quad);
+    assert(animation);
 
-    // Other:
+    physics->update(delta_time_ms);
+    quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
+    animation->update(*quad, delta_time_ms);
 
-    if (!main_dude._physics.is_left_collision() && !main_dude._physics.is_right_collision())
+    if (!physics->is_left_collision() && !physics->is_right_collision())
     {
-        if (main_dude._physics.get_x_velocity() == 0.0f)
+        if (physics->get_x_velocity() == 0.0f)
         {
             return &main_dude._states.standing;
         }
@@ -36,9 +43,12 @@ MainDudeBaseState* MainDudePushingState::update(MainDude& main_dude, uint32_t de
 
 MainDudeBaseState *MainDudePushingState::handle_input(MainDude& main_dude, const Input &input)
 {
+    auto* physics = main_dude.get_physics_component();
+    assert(physics);
+
     if (input.left().value())
     {
-        main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
+        physics->add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
     }
     else if (main_dude._other.facing_left)
     {
@@ -47,7 +57,7 @@ MainDudeBaseState *MainDudePushingState::handle_input(MainDude& main_dude, const
 
     if (input.right().value())
     {
-        main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
+        physics->add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
     }
     else if (!main_dude._other.facing_left)
     {
@@ -56,7 +66,7 @@ MainDudeBaseState *MainDudePushingState::handle_input(MainDude& main_dude, const
 
     if (input.jumping().changed() && input.jumping().value())
     {
-        main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
+        physics->add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;
     }
 

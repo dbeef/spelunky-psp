@@ -66,13 +66,18 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
 
     // Update main dude:
+    game_loop._main_dude->enter_level_summary_state();
+    game_loop._game_entity_system->add(game_loop._main_dude);
+
+    auto* dude_physics = game_loop._main_dude->get_physics_component();
+    assert(dude_physics);
+
     MapTile* entrance = nullptr;
     Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
     assert(entrance);
-    game_loop._main_dude->set_position_on_tile(entrance);
-    game_loop._main_dude->enter_level_summary_state();
-    game_loop._main_dude->set_velocity(0, 0);
-    game_loop._game_entity_system->add(game_loop._main_dude);
+
+    dude_physics->set_position(entrance->get_center());
+    dude_physics->set_velocity(0, 0);
 
     // Create level summary overlay:
 

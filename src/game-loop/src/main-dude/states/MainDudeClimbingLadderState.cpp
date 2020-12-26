@@ -22,23 +22,38 @@ namespace
 
 void MainDudeClimbingLadderState::enter(MainDude& main_dude)
 {
-    main_dude._physics.set_velocity(0.0f, 0.0f);
-    main_dude._physics.disable_gravity();
-    main_dude._quad.frame_changed(MainDudeSpritesheetFrames::CLIMBING_LADDER_0_FIRST);
-    main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::CLIMBING_LADDER_0_FIRST),
+    auto* physics = main_dude.get_physics_component();
+    auto* quad = main_dude.get_quad_component();
+    auto* animation = main_dude.get_animation_component();
+
+    assert(physics);
+    assert(quad);
+    assert(animation);
+
+    physics->set_velocity(0.0f, 0.0f);
+    physics->disable_gravity();
+    quad->frame_changed(MainDudeSpritesheetFrames::CLIMBING_LADDER_0_FIRST);
+    animation->start(static_cast<std::size_t>(MainDudeSpritesheetFrames::CLIMBING_LADDER_0_FIRST),
                                static_cast<std::size_t>(MainDudeSpritesheetFrames::CLIMBING_LADDER_5_LAST),
                                75, true);
 }
 
 MainDudeBaseState* MainDudeClimbingLadderState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
-    // Update components:
-    main_dude._physics.update(delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
+    auto* physics = main_dude.get_physics_component();
+    auto* quad = main_dude.get_quad_component();
+    auto* animation = main_dude.get_animation_component();
 
-    if (main_dude._physics.get_y_velocity() != 0.0f)
+    assert(physics);
+    assert(quad);
+    assert(animation);
+
+    physics->update(delta_time_ms);
+    quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
+
+    if (physics->get_y_velocity() != 0.0f)
     {
-        main_dude._animation.update(main_dude, delta_time_ms);
+        animation->update(*quad, delta_time_ms);
     }
 
     _climbing_ladder_timer += delta_time_ms;
@@ -53,9 +68,17 @@ MainDudeBaseState* MainDudeClimbingLadderState::update(MainDude& main_dude, uint
 
 MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude, const Input &input)
 {
+    auto* physics = main_dude.get_physics_component();
+    auto* quad = main_dude.get_quad_component();
+    auto* animation = main_dude.get_animation_component();
+
+    assert(physics);
+    assert(quad);
+    assert(animation);
+
     if (input.jumping().changed() && input.jumping().value())
     {
-        main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
+        physics->add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;
     }
 
@@ -66,35 +89,35 @@ MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude
     {
         if (input.up().value())
         {
-            main_dude._physics.set_velocity(0.0f, -0.025f);
+            physics->set_velocity(0.0f, -0.025f);
             play_sound();
         }
         else if (input.down().value())
         {
-            main_dude._physics.set_velocity(0.0f, 0.025f);
+            physics->set_velocity(0.0f, 0.025f);
             play_sound();
 
-            if (main_dude._physics.is_bottom_collision())
+            if (physics->is_bottom_collision())
             {
                 return &main_dude._states.standing;
             }
         }
         else
         {
-            main_dude._physics.set_velocity(0.0f, 0.0f);
+            physics->set_velocity(0.0f, 0.0f);
         }
     }
 
     // Ladders are always topped with MapTileType::LADDER tiles, therefore checking only for this type:
     if (ladder_tile && is_end_of_ladder(ladder_tile))
     {
-        if (main_dude._physics.get_y_position() <= ladder_tile->y)
+        if (physics->get_y_position() <= ladder_tile->y)
         {
-            main_dude._physics.set_position(main_dude.get_x_pos_center(), ladder_tile->y);
+            physics->set_position(physics->get_x_position(), ladder_tile->y);
             // Prohibit further climbing upwards:
-            if (main_dude._physics.get_y_velocity() < 0.0f)
+            if (physics->get_y_velocity() < 0.0f)
             {
-                main_dude._physics.set_velocity(0.0f, 0.0f);
+                physics->set_velocity(0.0f, 0.0f);
             }
         }
     }
@@ -109,7 +132,10 @@ MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude
 
 void MainDudeClimbingLadderState::exit(MainDude& main_dude)
 {
-    main_dude._physics.enable_gravity();
+    auto* physics = main_dude.get_physics_component();
+    assert(physics);
+
+    physics->enable_gravity();
 }
 
 void MainDudeClimbingLadderState::play_sound()

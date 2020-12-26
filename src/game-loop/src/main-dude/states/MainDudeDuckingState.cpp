@@ -4,29 +4,39 @@
 
 void MainDudeDuckingState::enter(MainDude& main_dude)
 {
-    main_dude._animation.stop();
-    main_dude._quad.frame_changed(MainDudeSpritesheetFrames::CRAWLING_LEFT_0_FIRST);
+    auto* animation = main_dude.get_animation_component();
+    auto* quad = main_dude.get_quad_component();
+
+    assert(animation);
+    assert(quad);
+
+    animation->stop();
+    quad->frame_changed(MainDudeSpritesheetFrames::CRAWLING_LEFT_0_FIRST);
 }
 
 MainDudeBaseState* MainDudeDuckingState::update(MainDude& main_dude, uint32_t delta_time_ms)
 {
-    // Update components:
+    auto* animation = main_dude.get_animation_component();
+    auto* quad = main_dude.get_quad_component();
+    auto* physics = main_dude.get_physics_component();
 
-    main_dude._physics.update(delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
+    assert(animation);
+    assert(quad);
+    assert(physics);
 
-    // Other:
+    physics->update(delta_time_ms);
+    quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
 
-    if (main_dude._physics.get_x_velocity() != 0.0f)
+    if (physics->get_x_velocity() != 0.0f)
     {
         return &main_dude._states.running;
     }
 
-    if (main_dude._physics.get_y_velocity() > 0.0f)
+    if (physics->get_y_velocity() > 0.0f)
     {
         return &main_dude._states.falling;
     }
-    else if (main_dude._physics.get_y_velocity() < 0.0f)
+    else if (physics->get_y_velocity() < 0.0f)
     {
         return &main_dude._states.jumping;
     }
@@ -36,19 +46,25 @@ MainDudeBaseState* MainDudeDuckingState::update(MainDude& main_dude, uint32_t de
 
 MainDudeBaseState *MainDudeDuckingState::handle_input(MainDude& main_dude, const Input &input)
 {
+    auto* physics = main_dude.get_physics_component();
+    auto* quad = main_dude.get_quad_component();
+
+    assert(physics);
+    assert(quad);
+
     if (input.left().value())
     {
-        main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
+        physics->add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
         return &main_dude._states.crawling;
     }
     if (input.right().value())
     {
-        main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
+        physics->add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
         return &main_dude._states.crawling;
     }
     if (input.jumping().changed() && input.jumping().value())
     {
-        main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
+        physics->add_velocity(0.0f, -MainDude::JUMP_SPEED);
         return &main_dude._states.jumping;
     }
     if (!input.ducking().value())
@@ -66,9 +82,9 @@ MainDudeBaseState *MainDudeDuckingState::handle_input(MainDude& main_dude, const
         const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
         if (exit_tile)
         {
-            main_dude._physics.set_position(
-                    exit_tile->x + main_dude._quad.get_quad_width() / 2,
-                    exit_tile->y + main_dude._quad.get_quad_height() / 2);
+            physics->set_position(
+                    exit_tile->x + quad->get_quad_width() / 2,
+                    exit_tile->y + quad->get_quad_height() / 2);
 
             return &main_dude._states.exiting;
         }

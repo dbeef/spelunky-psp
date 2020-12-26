@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-LevelSummaryTracker::LevelSummaryTracker()
+LevelSummaryTracker::LevelSummaryTracker() : GameEntity(GameEntity::Type::LEVEL_SUMMARY_TRACKER)
 {
     Inventory::instance().add_observer(this);
 }
