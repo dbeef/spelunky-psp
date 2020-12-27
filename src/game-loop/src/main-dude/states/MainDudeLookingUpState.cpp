@@ -14,7 +14,7 @@ void MainDudeLookingUpState::enter(MainDude& main_dude)
     quad->frame_changed(MainDudeSpritesheetFrames::STANDING_LOOKING_UP);
 }
 
-MainDudeBaseState* MainDudeLookingUpState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeLookingUpState::update(MainDude& main_dude, World* world, uint32_t delta_time_ms)
 {
     auto* physics = main_dude.get_physics_component();
     auto* quad = main_dude.get_quad_component();
@@ -22,7 +22,7 @@ MainDudeBaseState* MainDudeLookingUpState::update(MainDude& main_dude, uint32_t 
     assert(physics);
     assert(quad);
 
-    physics->update(delta_time_ms);
+    physics->update(world, delta_time_ms);
     quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
 
     if (physics->get_x_velocity() != 0.0f)
@@ -42,7 +42,7 @@ MainDudeBaseState* MainDudeLookingUpState::update(MainDude& main_dude, uint32_t 
     return this;
 }
 
-MainDudeBaseState *MainDudeLookingUpState::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeLookingUpState::handle_input(MainDude& main_dude, World* world, const Input &input)
 {
     auto* physics = main_dude.get_physics_component();
     assert(physics);

@@ -13,7 +13,7 @@ LevelSummaryTracker::~LevelSummaryTracker()
     Inventory::instance().remove_observer(this);
 }
 
-void LevelSummaryTracker::update(uint32_t delta_time_ms)
+void LevelSummaryTracker::update(World* world, uint32_t delta_time_ms)
 {
     _time_playing_total_ms += delta_time_ms;
     _time_playing_current_level_ms += delta_time_ms;

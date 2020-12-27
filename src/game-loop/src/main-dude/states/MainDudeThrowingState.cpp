@@ -15,7 +15,7 @@ void MainDudeThrowingState::enter(MainDude &main_dude)
                      50, false);
 }
 
-MainDudeBaseState *MainDudeThrowingState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState *MainDudeThrowingState::update(MainDude& main_dude, World* world, uint32_t delta_time_ms)
 {
     auto* physics = main_dude.get_physics_component();
     auto* quad = main_dude.get_quad_component();
@@ -25,7 +25,7 @@ MainDudeBaseState *MainDudeThrowingState::update(MainDude& main_dude, uint32_t d
     assert(quad);
     assert(animation);
 
-    physics->update(delta_time_ms);
+    physics->update(world, delta_time_ms);
     quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
     animation->update(*quad, delta_time_ms);
 
@@ -58,7 +58,7 @@ MainDudeBaseState *MainDudeThrowingState::update(MainDude& main_dude, uint32_t d
     return this;
 }
 
-MainDudeBaseState *MainDudeThrowingState::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeThrowingState::handle_input(MainDude& main_dude, World* world, const Input &input)
 {
     auto* physics = main_dude.get_physics_component();
     assert(physics);

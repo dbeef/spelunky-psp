@@ -2,6 +2,7 @@
 #include "main-dude/MainDude.hpp"
 #include "main-dude/states/MainDudeCliffHangingState.hpp"
 #include "Input.hpp"
+#include "other/World.hpp"
 
 void MainDudeCliffHangingState::enter(MainDude& main_dude)
 {
@@ -16,7 +17,7 @@ void MainDudeCliffHangingState::enter(MainDude& main_dude)
     quad->frame_changed(MainDudeSpritesheetFrames::HANGING_LEFT);
 }
 
-MainDudeBaseState* MainDudeCliffHangingState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeCliffHangingState::update(MainDude& main_dude, World* world, uint32_t delta_time_ms)
 {
     auto* physics = main_dude.get_physics_component();
     auto* quad = main_dude.get_quad_component();
@@ -24,13 +25,13 @@ MainDudeBaseState* MainDudeCliffHangingState::update(MainDude& main_dude, uint32
     assert(physics);
     assert(quad);
 
-    physics->update(delta_time_ms);
+    physics->update(world, delta_time_ms);
     quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
 
     return this;
 }
 
-MainDudeBaseState *MainDudeCliffHangingState::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeCliffHangingState::handle_input(MainDude& main_dude, World* world, const Input &input)
 {
     auto* physics = main_dude.get_physics_component();
     assert(physics);

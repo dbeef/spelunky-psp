@@ -7,8 +7,8 @@ class MainDudeStunnedState : public MainDudeBaseState
 {
 public:
 
-    MainDudeBaseState* update(MainDude& main_dude, uint32_t delta_time_ms) override;
-    MainDudeBaseState* handle_input(MainDude&, const Input& input) override;
+    MainDudeBaseState* update(MainDude& main_dude, World* world, uint32_t delta_time_ms) override;
+    MainDudeBaseState* handle_input(MainDude&, World* world, const Input& input) override;
     void enter(MainDude&) override;
     void exit(MainDude&) override;
 private:

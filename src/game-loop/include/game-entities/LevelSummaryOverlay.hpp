@@ -15,7 +15,7 @@ class LevelSummaryOverlay : public GameEntity
 public:
 
     LevelSummaryOverlay(std::shared_ptr<Viewport>, const std::shared_ptr<LevelSummaryTracker>&);
-    void update(uint32_t delta_time_ms) override;
+    void update(World* world, uint32_t delta_time_ms) override;
 
 private:
 

@@ -17,7 +17,7 @@ void MainDudeStandingState::enter(MainDude& main_dude)
     _x_collision_timer = 0;
 }
 
-MainDudeBaseState *MainDudeStandingState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState *MainDudeStandingState::update(MainDude& main_dude, World* world, uint32_t delta_time_ms)
 {
     // Update components:
 
@@ -29,7 +29,7 @@ MainDudeBaseState *MainDudeStandingState::update(MainDude& main_dude, uint32_t d
     assert(quad);
     assert(animation);
 
-    physics->update(delta_time_ms);
+    physics->update(world, delta_time_ms);
     quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
 
     // Other:
@@ -65,7 +65,7 @@ MainDudeBaseState *MainDudeStandingState::update(MainDude& main_dude, uint32_t d
     return this;
 }
 
-MainDudeBaseState *MainDudeStandingState::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeStandingState::handle_input(MainDude& main_dude, World* world, const Input &input)
 {
     auto* physics = main_dude.get_physics_component();
     auto* quad = main_dude.get_quad_component();
@@ -97,7 +97,7 @@ MainDudeBaseState *MainDudeStandingState::handle_input(MainDude& main_dude, cons
 
     if (input.up().value())
     {
-        const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
+        const auto* exit_tile = main_dude.is_overlaping_tile(world, MapTileType::EXIT);
         if (exit_tile)
         {
             physics->set_position(
@@ -107,8 +107,8 @@ MainDudeBaseState *MainDudeStandingState::handle_input(MainDude& main_dude, cons
             return &main_dude._states.exiting;
         }
 
-        const auto* ladder_tile = main_dude.is_overlaping_tile(MapTileType::LADDER);
-        const auto* ladder_deck_tile = main_dude.is_overlaping_tile(MapTileType::LADDER_DECK);
+        const auto* ladder_tile = main_dude.is_overlaping_tile(world, MapTileType::LADDER);
+        const auto* ladder_deck_tile = main_dude.is_overlaping_tile(world, MapTileType::LADDER_DECK);
 
         if (ladder_tile || ladder_deck_tile)
         {

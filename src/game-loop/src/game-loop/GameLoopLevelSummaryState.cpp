@@ -16,14 +16,16 @@
 #include "ScreenSpaceCamera.hpp"
 #include "Renderer.hpp"
 #include "Level.hpp"
+#include "other/World.hpp"
+#include "TileBatch.hpp"
 
 GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
     auto& model_view_camera = game_loop._cameras.model_view;
     auto& screen_space_camera = game_loop._cameras.screen_space;
+    auto& main_dude = game_loop._world->get_main_dude();
     auto& renderer = Renderer::instance();
-
-    // Remove render entities marked for disposal:
+    auto& world = game_loop._world;
 
     renderer.update();
 
@@ -39,15 +41,14 @@ GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32
 
     renderer.render(Renderer::EntityType::SCREEN_SPACE);
 
-    game_loop._game_entity_system->update(delta_time_ms);
+    game_loop._game_entity_system->update(world.get(), delta_time_ms);
 
     // Other:
 
-    if (game_loop._main_dude->entered_door())
+    if (main_dude->entered_door())
     {
         return &game_loop._states.playing;
     }
-
     return this;
 }
 
@@ -55,10 +56,12 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopLevelSummaryState");
 
-    Level::instance().get_tile_batch().generate_frame();
-    Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::LEVEL_SUMMARY);
-    Level::instance().get_tile_batch().generate_cave_background();
-    Level::instance().get_tile_batch().batch_vertices();
+    auto& tile_batch = game_loop._world->get_tile_batch();
+
+    tile_batch->generate_frame();
+    tile_batch->initialise_tiles_from_splash_screen(SplashScreenType::LEVEL_SUMMARY);
+    tile_batch->generate_cave_background();
+    tile_batch->batch_vertices();
 
     // Splash screens are copied into the [0, 0] position (left-upper corner), center on them:
     auto &model_view_camera = game_loop._cameras.model_view;
@@ -66,14 +69,16 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
 
     // Update main dude:
-    game_loop._main_dude->enter_level_summary_state();
-    game_loop._game_entity_system->add(game_loop._main_dude);
 
-    auto* dude_physics = game_loop._main_dude->get_physics_component();
+    auto& main_dude = game_loop._world->get_main_dude();
+    main_dude->enter_level_summary_state();
+    game_loop._game_entity_system->add(main_dude);
+
+    auto* dude_physics = main_dude->get_physics_component();
     assert(dude_physics);
 
     MapTile* entrance = nullptr;
-    Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
+    tile_batch->get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
     assert(entrance);
 
     dude_physics->set_position(entrance->get_center());

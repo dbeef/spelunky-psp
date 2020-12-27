@@ -43,7 +43,7 @@ void DeathOverlay::launch()
     }
 }
 
-void DeathOverlay::update(uint32_t delta_time_ms)
+void DeathOverlay::update(World* world, uint32_t delta_time_ms)
 {
     if (_disabled_input)
     {

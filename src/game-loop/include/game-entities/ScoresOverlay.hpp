@@ -12,7 +12,7 @@ class ScoresOverlay : public GameEntity
 public:
 
     explicit ScoresOverlay(std::shared_ptr<Viewport>);
-    void update(uint32_t delta_time_ms) override;
+    void update(World* world, uint32_t delta_time_ms) override;
 
 private:
 

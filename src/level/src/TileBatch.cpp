@@ -9,7 +9,6 @@
 #include <algorithm>
 
 #include "NeighbouringTiles.hpp"
-#include "Level.hpp"
 #include "Renderer.hpp"
 #include "TileBatch.hpp"
 #include "SplashScreenType.hpp"
@@ -165,14 +164,13 @@ void TileBatch::generate_new_level_layout()
 
 void TileBatch::place_an_altar()
 {
-    auto &level = Level::instance().get_tile_batch();
     for (int x = 0; x < ROOMS_COUNT_WIDTH; x++)
     {
         for (int y = 0; y < ROOMS_COUNT_HEIGHT; y++)
         {
-            if (level._layout[x][y] == RoomType::CLOSED)
+            if (_layout[x][y] == RoomType::CLOSED)
             {
-                level._layout[x][y] = RoomType::ALTAR;
+                _layout[x][y] = RoomType::ALTAR;
                 return;
             }
         }
@@ -181,54 +179,52 @@ void TileBatch::place_an_altar()
 
 void TileBatch::place_a_shop()
 {
-    auto &level = Level::instance().get_tile_batch();
-
     for (int x = 0; x < ROOMS_COUNT_WIDTH; x++)
     {
         for (int y = 0; y < ROOMS_COUNT_HEIGHT; y++)
         {
-            if (level._layout[x][y] == RoomType::CLOSED)
+            if (_layout[x][y] == RoomType::CLOSED)
             {
                 if (x == 0)
                 {
-                    if (level._layout[x + 1][y] != RoomType::CLOSED)
+                    if (_layout[x + 1][y] != RoomType::CLOSED)
                     {
 //                        TODO: Uncomment once shopkeeper is implemented.
 //                        if (GameState::instance().robbed_or_killed_shopkeeper)
 //                        if (false)
-//                            level.layout[a][b] = RoomType::SHOP_RIGHT_MUGSHOT;
+//                            layout[a][b] = RoomType::SHOP_RIGHT_MUGSHOT;
 //                        else
-                        level._layout[x][y] = RoomType::SHOP_RIGHT;
+                        _layout[x][y] = RoomType::SHOP_RIGHT;
                         return;
                     }
                 }
                 else if (x == 2)
                 {
-                    if (level._layout[x - 1][y] != RoomType::CLOSED)
+                    if (_layout[x - 1][y] != RoomType::CLOSED)
                     {
 //                        TODO: Uncomment once shopkeeper is implemented.
 //                        if (GameState::instance().robbed_or_killed_shopkeeper)
 //                        if (false)
-//                            level.layout[a][b] = RoomType::SHOP_LEFT_MUGSHOT;
+//                            layout[a][b] = RoomType::SHOP_LEFT_MUGSHOT;
 //                        else
 
                         // Placed a shop, can return.
-                        level._layout[x][y] = RoomType::SHOP_LEFT;
+                        _layout[x][y] = RoomType::SHOP_LEFT;
                         return;
                     }
                 }
                 else if (x == 1)
                 {
-                    if (level._layout[x - 1][y] != RoomType::CLOSED &&
-                        level._layout[x + 1][y] != RoomType::CLOSED)
+                    if (_layout[x - 1][y] != RoomType::CLOSED &&
+                        _layout[x + 1][y] != RoomType::CLOSED)
                     {
 
                         if (get_random_number() % 2 == 0)
                         {
-                            level._layout[x][y] = RoomType::SHOP_LEFT;
+                            _layout[x][y] = RoomType::SHOP_LEFT;
                         } else
                         {
-                            level._layout[x][y] = RoomType::SHOP_RIGHT;
+                            _layout[x][y] = RoomType::SHOP_RIGHT;
                         }
 
                         // Placed a shop, can return.

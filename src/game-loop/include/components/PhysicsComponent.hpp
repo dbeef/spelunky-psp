@@ -1,21 +1,19 @@
 #pragma once
 
-#include "other/PhysicsComponentType.hpp"
+#include "Point2D.hpp"
 
 #include <cstdint>
 #include <functional>
 #include <utility>
-#include "Point2D.hpp"
+
+class World;
 
 class PhysicsComponent
 {
 public:
-    using CollisionHandlerType = std::function<void(PhysicsComponent*)>;
+    PhysicsComponent(float width, float height);
 
-    PhysicsComponent(float width, float height, PhysicsComponentType type);
-    ~PhysicsComponent();
-
-    void update(uint32_t delta_time_ms);
+    void update(World* world, uint32_t delta_time_ms);
 
     bool is_collision(const PhysicsComponent& other) const;
 
@@ -46,9 +44,6 @@ public:
 
     void set_bounciness(float bounciness) { _properties.bounciness = bounciness; }
     void set_friction(float friction) { _properties.friction = friction; }
-    void set_collision_handler(CollisionHandlerType collision_handler) { _collision_handler = std::move(collision_handler); }
-    CollisionHandlerType& get_collision_handler() { return _collision_handler; }
-    PhysicsComponentType get_type() const { return _type; }
 
     static float get_default_friction() { return 0.005f; }
     static float get_default_max_x_velocity() { return 0.050f; }
@@ -92,6 +87,4 @@ private:
 
     bool _gravity = true;
     int32_t _pos_update_delta_ms = 0;
-    PhysicsComponentType _type;
-    CollisionHandlerType _collision_handler = nullptr;
 };

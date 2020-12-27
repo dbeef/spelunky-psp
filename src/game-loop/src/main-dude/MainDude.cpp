@@ -7,6 +7,8 @@
 #include "Input.hpp"
 #include "other/Inventory.hpp"
 #include "main-dude/states/MainDudeRunningState.hpp"
+#include "TileBatch.hpp"
+#include "other/World.hpp"
 
 namespace
 {
@@ -25,7 +27,7 @@ namespace
 
 MainDude::MainDude(float x_pos_center, float y_pos_center) : GameEntity(GameEntity::Type::MAIN_DUDE)
 {
-    _physics_component = std::make_shared<PhysicsComponent>(MAIN_DUDE_PHYSICAL_WIDTH, MAIN_DUDE_PHYSICAL_HEIGHT, PhysicsComponentType::MAIN_DUDE);
+    _physics_component = std::make_shared<PhysicsComponent>(MAIN_DUDE_PHYSICAL_WIDTH, MAIN_DUDE_PHYSICAL_HEIGHT);
     _quad_component = std::make_shared<QuadComponent>(TextureType::MAIN_DUDE, Renderer::EntityType::MODEL_VIEW_SPACE, MAIN_DUDE_QUAD_WIDTH, MAIN_DUDE_QUAD_HEIGHT, RenderingLayer::FOREGROUND);
     _animation_component = std::make_shared<AnimationComponent>();
 
@@ -38,10 +40,9 @@ MainDude::MainDude(float x_pos_center, float y_pos_center) : GameEntity(GameEnti
     _other.facing_left = true;
 
     Inventory::instance().set_starting_inventory();
-    update(0);
 }
 
-void MainDude::update(uint32_t delta_time_ms)
+void MainDude::update(World* world, uint32_t delta_time_ms)
 {
     // Update generic properties:
 
@@ -56,18 +57,18 @@ void MainDude::update(uint32_t delta_time_ms)
     MainDudeBaseState* new_state;
 
     assert(_states.current);
-    new_state = _states.current->handle_input(*this, Input::instance());
+    new_state = _states.current->handle_input(*this, world, Input::instance());
     enter_if_different(new_state);
 
     assert(_states.current);
-    new_state = _states.current->update(*this, delta_time_ms);
+    new_state = _states.current->update(*this, world, delta_time_ms);
     enter_if_different(new_state);
 }
 
-MapTile* MainDude::is_overlaping_tile(MapTileType type) const
+MapTile* MainDude::is_overlaping_tile(World* world, MapTileType type) const
 {
     MapTile* neighbours[9] = {nullptr};
-    Level::instance().get_tile_batch().get_neighbouring_tiles(_physics_component->get_x_position(), _physics_component->get_y_position(), neighbours);
+    world->get_tile_batch()->get_neighbouring_tiles(_physics_component->get_x_position(), _physics_component->get_y_position(), neighbours);
 
     for (const auto neighbour : neighbours)
     {
@@ -100,13 +101,15 @@ void MainDude::enter_level_summary_state()
     enter_if_different(&_states.level_summary);
 }
 
-bool MainDude::hang_off_cliff_right()
+bool MainDude::hang_off_cliff_right(World* world)
 {
+    auto& tile_batch = world->get_tile_batch();
+
     if (_physics_component->is_right_collision())
     {
         MapTile *neighbours[9] = {nullptr};
 
-        Level::instance().get_tile_batch().get_neighbouring_tiles(
+        tile_batch->get_neighbouring_tiles(
                 _physics_component->get_x_position(),
                 _physics_component->get_y_position(),
                 neighbours);
@@ -130,13 +133,15 @@ bool MainDude::hang_off_cliff_right()
     return false;
 }
 
-bool MainDude::hang_off_cliff_left()
+bool MainDude::hang_off_cliff_left(World* world)
 {
+    auto& tile_batch = world->get_tile_batch();
+
     if (_physics_component->is_left_collision())
     {
         MapTile *neighbours[9] = {nullptr};
 
-        Level::instance().get_tile_batch().get_neighbouring_tiles(
+        tile_batch->get_neighbouring_tiles(
                 _physics_component->get_x_position(),
                 _physics_component->get_y_position(),
                 neighbours);

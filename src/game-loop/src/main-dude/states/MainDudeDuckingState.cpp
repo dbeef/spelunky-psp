@@ -14,7 +14,7 @@ void MainDudeDuckingState::enter(MainDude& main_dude)
     quad->frame_changed(MainDudeSpritesheetFrames::CRAWLING_LEFT_0_FIRST);
 }
 
-MainDudeBaseState* MainDudeDuckingState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeDuckingState::update(MainDude& main_dude, World* world, uint32_t delta_time_ms)
 {
     auto* animation = main_dude.get_animation_component();
     auto* quad = main_dude.get_quad_component();
@@ -24,7 +24,7 @@ MainDudeBaseState* MainDudeDuckingState::update(MainDude& main_dude, uint32_t de
     assert(quad);
     assert(physics);
 
-    physics->update(delta_time_ms);
+    physics->update(world, delta_time_ms);
     quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
 
     if (physics->get_x_velocity() != 0.0f)
@@ -44,7 +44,7 @@ MainDudeBaseState* MainDudeDuckingState::update(MainDude& main_dude, uint32_t de
     return this;
 }
 
-MainDudeBaseState *MainDudeDuckingState::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeDuckingState::handle_input(MainDude& main_dude, World* world, const Input &input)
 {
     auto* physics = main_dude.get_physics_component();
     auto* quad = main_dude.get_quad_component();
@@ -79,7 +79,7 @@ MainDudeBaseState *MainDudeDuckingState::handle_input(MainDude& main_dude, const
 
     if (input.up().value())
     {
-        const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
+        const auto* exit_tile = main_dude.is_overlaping_tile(world, MapTileType::EXIT);
         if (exit_tile)
         {
             physics->set_position(

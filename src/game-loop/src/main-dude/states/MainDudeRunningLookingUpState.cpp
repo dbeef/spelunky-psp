@@ -25,7 +25,7 @@ void MainDudeRunningLookingUpState::enter(MainDude &main_dude)
     }
 }
 
-MainDudeBaseState *MainDudeRunningLookingUpState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState *MainDudeRunningLookingUpState::update(MainDude& main_dude, World* world, uint32_t delta_time_ms)
 {
     auto* physics = main_dude.get_physics_component();
     auto* animation = main_dude.get_animation_component();
@@ -35,7 +35,7 @@ MainDudeBaseState *MainDudeRunningLookingUpState::update(MainDude& main_dude, ui
     assert(animation);
     assert(quad);
 
-    physics->update(delta_time_ms);
+    physics->update(world, delta_time_ms);
     quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
     animation->update(*quad, delta_time_ms);
 
@@ -56,7 +56,7 @@ MainDudeBaseState *MainDudeRunningLookingUpState::update(MainDude& main_dude, ui
     return this;
 }
 
-MainDudeBaseState *MainDudeRunningLookingUpState::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeRunningLookingUpState::handle_input(MainDude& main_dude, World* world, const Input &input)
 {
     auto* physics = main_dude.get_physics_component();
     auto* animation = main_dude.get_animation_component();
@@ -102,15 +102,15 @@ MainDudeBaseState *MainDudeRunningLookingUpState::handle_input(MainDude& main_du
 
     if (input.up().value())
     {
-        const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
+        const auto* exit_tile = main_dude.is_overlaping_tile(world, MapTileType::EXIT);
         if (exit_tile)
         {
             physics->set_position(exit_tile->x + quad->get_quad_width() / 2, exit_tile->y + quad->get_quad_height() / 2);
             return &main_dude._states.exiting;
         }
 
-        const auto* ladder_tile = main_dude.is_overlaping_tile(MapTileType::LADDER);
-        const auto* ladder_deck_tile = main_dude.is_overlaping_tile(MapTileType::LADDER_DECK);
+        const auto* ladder_tile = main_dude.is_overlaping_tile(world, MapTileType::LADDER);
+        const auto* ladder_deck_tile = main_dude.is_overlaping_tile(world, MapTileType::LADDER_DECK);
 
         if (ladder_tile || ladder_deck_tile)
         {

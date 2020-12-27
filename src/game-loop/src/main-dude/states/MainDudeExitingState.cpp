@@ -19,7 +19,7 @@ void MainDudeExitingState::enter(MainDude& main_dude)
                      75, false);
 }
 
-MainDudeBaseState* MainDudeExitingState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeExitingState::update(MainDude& main_dude, World* world, uint32_t delta_time_ms)
 {
     auto* animation = main_dude.get_animation_component();
     auto* quad = main_dude.get_quad_component();
@@ -40,7 +40,7 @@ MainDudeBaseState* MainDudeExitingState::update(MainDude& main_dude, uint32_t de
     return this;
 }
 
-MainDudeBaseState *MainDudeExitingState::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeExitingState::handle_input(MainDude& main_dude, World* world, const Input &input)
 {
     return this;
 }

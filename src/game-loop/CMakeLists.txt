@@ -42,10 +42,7 @@ add_library(GameLoop STATIC
         src/game-entities/Rock.cpp
         src/game-entities/BigGem.cpp
         src/populator/Populator.cpp
-        src/other/PhysicsComponentAggregator.cpp
         src/other/Inventory.cpp
-        interface/other/PhysicsComponentAggregator.hpp
-        interface/other/PhysicsComponentType.hpp
         interface/other/Inventory.hpp
         interface/other/InventoryEvent.hpp
         interface/game-loop/GameLoop.hpp
@@ -102,7 +99,7 @@ add_library(GameLoop STATIC
         include/main-dude/states/MainDudeRunningLookingUpState.hpp
         include/main-dude/states/MainDudeDeadState.hpp
         include/main-dude/states/MainDudeStunnedState.hpp
-        include/other/World.hpp)
+        include/other/World.hpp interface/other/World.cpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface

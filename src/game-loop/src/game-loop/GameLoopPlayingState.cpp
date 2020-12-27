@@ -16,16 +16,19 @@
 #include "Level.hpp"
 #include "audio/Audio.hpp"
 #include "populator/Populator.hpp"
+#include "other/World.hpp"
+#include "TileBatch.hpp"
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
     auto& model_view_camera = game_loop._cameras.model_view;
     auto& screen_space_camera = game_loop._cameras.screen_space;
+    auto& main_dude = game_loop._world->get_main_dude();
     auto& renderer = Renderer::instance();
 
     // Adjust camera to follow main dude:
 
-    auto dude_physics = game_loop._main_dude->get_physics_component();
+    auto dude_physics = main_dude->get_physics_component();
     assert(dude_physics);
 
     auto x = dude_physics->get_x_position();
@@ -57,7 +60,7 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
         if (_pause_overlay->is_death_requested())
         {
             log_info("Death requested.");
-            game_loop._main_dude->enter_dead_state();
+            main_dude->enter_dead_state();
         }
 
         if (_pause_overlay->is_quit_requested())
@@ -66,16 +69,16 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
             game_loop._exit = true;
         }
 
-        _pause_overlay->update(delta_time_ms);
+        _pause_overlay->update(game_loop._world.get(), delta_time_ms);
     }
     else
     {
-        game_loop._game_entity_system->update(delta_time_ms);
+        game_loop._game_entity_system->update(game_loop._world.get(),  delta_time_ms);
     }
 
     // Other:
 
-    if (game_loop._main_dude->entered_door())
+    if (main_dude->entered_door())
     {
         return &game_loop._states.level_summary;
     }
@@ -94,27 +97,31 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
     Audio::instance().play(MusicType::CAVE);
 
-    Level::instance().get_tile_batch().generate_new_level_layout();
-    Level::instance().get_tile_batch().initialise_tiles_from_room_layout();
-    Level::instance().get_tile_batch().generate_frame();
-    Level::instance().get_tile_batch().generate_cave_background();
-    Level::instance().get_tile_batch().batch_vertices();
+    auto& tile_batch = game_loop._world->get_tile_batch();
+
+    tile_batch->generate_new_level_layout();
+    tile_batch->initialise_tiles_from_room_layout();
+    tile_batch->generate_frame();
+    tile_batch->generate_cave_background();
+    tile_batch->batch_vertices();
 
     // Update main dude:
-    game_loop._main_dude->enter_standing_state();
-    game_loop._game_entity_system->add(game_loop._main_dude);
+    auto& main_dude = game_loop._world->get_main_dude();
+    auto main_dude_physics = main_dude->get_physics_component();
+    assert(main_dude_physics);
 
-    auto dude_physics = game_loop._main_dude->get_physics_component();
-    assert(dude_physics);
-    dude_physics->set_velocity(0, 0);
+    game_loop._world->get_main_dude()->enter_standing_state();
+    game_loop._game_entity_system->add(main_dude);
+
+    main_dude_physics->set_velocity(0, 0);
 
     MapTile *entrance = nullptr;
-    Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
+    tile_batch->get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
     assert(entrance);
-    dude_physics->set_position(entrance->get_center());
+    main_dude_physics->set_position(entrance->get_center());
 
     // Subscribe on main dude's events:
-    game_loop._main_dude->add_observer(this);
+    main_dude->add_observer(this);
 
     // Create HUD:
     _hud = std::make_shared<HUD>(game_loop._viewport);
@@ -130,7 +137,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     game_loop._game_entity_system->add(_death_overlay);
 
     // Generate loot:
-    auto loot_entities = populator::generate_loot(game_loop._level_summary_tracker);
+    auto loot_entities = populator::generate_loot(game_loop._level_summary_tracker, game_loop._world.get());
     game_loop._game_entity_system->add(loot_entities);
 
     // Make main dude appear on the foreground:
@@ -148,7 +155,8 @@ void GameLoopPlayingState::exit(GameLoop& game_loop)
     _pause_overlay = nullptr;
     _hud = nullptr;
 
-    game_loop._main_dude->remove_observer(this);
+    auto& main_dude = game_loop._world->get_main_dude();
+    main_dude->remove_observer(this);
     game_loop._game_entity_system->remove_all();
 }
 

@@ -20,7 +20,7 @@ public:
     HUD(std::shared_ptr<Viewport>);
     ~HUD() override;
 
-    void update(uint32_t delta_time_ms) override;
+    void update(World* world, uint32_t delta_time_ms) override;
     void on_notify(const InventoryEvent *) override;
 
     void hide();

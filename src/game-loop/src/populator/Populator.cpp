@@ -12,9 +12,13 @@
 
 #include <utility>
 #include <random>
+#include "TileBatch.hpp"
+#include "other/World.hpp"
 
-std::vector<std::shared_ptr<GameEntity>> populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
+std::vector<std::shared_ptr<GameEntity>> populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker, World* world)
 {
+    auto& tile_batch = world->get_tile_batch();
+    
     Spawner single_gold_bar_spawner(6, 8);
     Spawner triple_gold_bar_spawner(3, 4);
     Spawner big_gem_spawner(3, 4);
@@ -24,13 +28,11 @@ std::vector<std::shared_ptr<GameEntity>> populator::generate_loot(std::shared_pt
 
     std::vector<std::shared_ptr<GameEntity>> out{};
 
-    const auto& tile_batch = Level::instance().get_tile_batch();
-
     for (int tile_x = 0; tile_x < Consts::LEVEL_WIDTH_TILES; tile_x++)
     {
         for (int tile_y = 0; tile_y < Consts::LEVEL_HEIGHT_TILES; tile_y++)
         {
-            const auto loot_type = tile_batch.get_loot_type_spawned_at(tile_x, tile_y);
+            const auto loot_type = tile_batch->get_loot_type_spawned_at(tile_x, tile_y);
 
             float pos_x = static_cast<float>(tile_x) + (MapTile::PHYSICAL_WIDTH / 2.0f);
             float pos_y = static_cast<float>(tile_y) + (MapTile::PHYSICAL_HEIGHT / 2.0f);

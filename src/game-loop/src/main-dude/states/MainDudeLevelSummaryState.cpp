@@ -16,7 +16,7 @@ void MainDudeLevelSummaryState::enter(MainDude& main_dude)
                                75, true);
 }
 
-MainDudeBaseState* MainDudeLevelSummaryState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeLevelSummaryState::update(MainDude& main_dude, World* world, uint32_t delta_time_ms)
 {
     auto* physics = main_dude.get_physics_component();
     auto* animation = main_dude.get_animation_component();
@@ -26,13 +26,13 @@ MainDudeBaseState* MainDudeLevelSummaryState::update(MainDude& main_dude, uint32
     assert(animation);
     assert(quad);
 
-    physics->update(delta_time_ms);
+    physics->update(world, delta_time_ms);
     quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
     animation->update(*quad, delta_time_ms);
 
     physics->set_velocity(0.095f, 0.0f);
 
-    const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
+    const auto* exit_tile = main_dude.is_overlaping_tile(world, MapTileType::EXIT);
     if (exit_tile)
     {
         physics->set_position(exit_tile->x + quad->get_quad_width() / 2, exit_tile->y + quad->get_quad_height() / 2);
@@ -42,7 +42,7 @@ MainDudeBaseState* MainDudeLevelSummaryState::update(MainDude& main_dude, uint32
     return this;
 }
 
-MainDudeBaseState *MainDudeLevelSummaryState::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeLevelSummaryState::handle_input(MainDude& main_dude, World* world, const Input &input)
 {
     // Input is blocked in this state.
     return this;

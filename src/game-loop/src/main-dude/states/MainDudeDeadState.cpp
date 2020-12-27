@@ -35,7 +35,7 @@ void MainDudeDeadState::enter(MainDude& main_dude)
     //       XY describes center of the body. Should be changed to describe upper-left corner.
 }
 
-MainDudeBaseState* MainDudeDeadState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeDeadState::update(MainDude& main_dude, World* world, uint32_t delta_time_ms)
 {
     auto* physics = main_dude.get_physics_component();
     auto* quad = main_dude.get_quad_component();
@@ -43,14 +43,14 @@ MainDudeBaseState* MainDudeDeadState::update(MainDude& main_dude, uint32_t delta
     assert(physics);
     assert(quad);
 
-    physics->update(delta_time_ms);
+    physics->update(world, delta_time_ms);
     quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
     set_current_frame(main_dude);
 
     return this;
 }
 
-MainDudeBaseState *MainDudeDeadState::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeDeadState::handle_input(MainDude& main_dude, World* world, const Input &input)
 {
     return this;
 }

@@ -10,6 +10,8 @@
 #include "TextureBank.hpp"
 #include "audio/Audio.hpp"
 #include "main-dude/MainDude.hpp"
+#include "other/World.hpp"
+#include "TileBatch.hpp"
 
 GameLoopBaseState *GameLoopStartedState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -37,11 +39,14 @@ void GameLoopStartedState::enter(GameLoop& game_loop)
     TextureBank::instance().load_textures();
     TextureBank::instance().load_texture_regions();
 
-    Level::instance().get_tile_batch().generate_cave_background();
-    Level::instance().get_tile_batch().batch_vertices();
-    Level::instance().get_tile_batch().add_render_entity();
+    auto& tile_batch = game_loop._world->get_tile_batch();
 
-    game_loop._main_dude = std::make_shared<MainDude>(0, 0);
+    tile_batch->generate_cave_background();
+    tile_batch->batch_vertices();
+    tile_batch->add_render_entity();
+
+    auto& main_dude = game_loop._world->get_main_dude();
+    main_dude = std::make_shared<MainDude>(0, 0);
 
     _game_initialized = true;
 }

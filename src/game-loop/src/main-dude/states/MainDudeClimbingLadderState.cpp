@@ -3,14 +3,16 @@
 #include "main-dude/states/MainDudeClimbingLadderState.hpp"
 #include "Input.hpp"
 #include "audio/Audio.hpp"
+#include "other/World.hpp"
+#include "TileBatch.hpp"
 
 namespace
 {
-    bool is_end_of_ladder(MapTile *tile)
+    bool is_end_of_ladder(World* world, MapTile *tile)
     {
         if (tile->y - 1 >= 0)
         {
-            auto* tile_above = Level::instance().get_tile_batch().map_tiles[tile->x][tile->y - 1];
+            auto* tile_above = world->get_tile_batch()->map_tiles[tile->x][tile->y - 1];
             return tile_above->map_tile_type != MapTileType::LADDER && tile_above->map_tile_type != MapTileType::LADDER_DECK;
         }
         else
@@ -38,7 +40,7 @@ void MainDudeClimbingLadderState::enter(MainDude& main_dude)
                                75, true);
 }
 
-MainDudeBaseState* MainDudeClimbingLadderState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeClimbingLadderState::update(MainDude& main_dude, World* world, uint32_t delta_time_ms)
 {
     auto* physics = main_dude.get_physics_component();
     auto* quad = main_dude.get_quad_component();
@@ -48,7 +50,7 @@ MainDudeBaseState* MainDudeClimbingLadderState::update(MainDude& main_dude, uint
     assert(quad);
     assert(animation);
 
-    physics->update(delta_time_ms);
+    physics->update(world, delta_time_ms);
     quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
 
     if (physics->get_y_velocity() != 0.0f)
@@ -66,7 +68,7 @@ MainDudeBaseState* MainDudeClimbingLadderState::update(MainDude& main_dude, uint
     return this;
 }
 
-MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude, World* world, const Input &input)
 {
     auto* physics = main_dude.get_physics_component();
     auto* quad = main_dude.get_quad_component();
@@ -82,8 +84,8 @@ MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude
         return &main_dude._states.jumping;
     }
 
-    const auto ladder_tile = main_dude.is_overlaping_tile(MapTileType::LADDER);
-    const auto ladder_deck_tile = main_dude.is_overlaping_tile(MapTileType::LADDER_DECK);
+    const auto ladder_tile = main_dude.is_overlaping_tile(world, MapTileType::LADDER);
+    const auto ladder_deck_tile = main_dude.is_overlaping_tile(world, MapTileType::LADDER_DECK);
 
     if (ladder_tile || ladder_deck_tile)
     {
@@ -109,7 +111,7 @@ MainDudeBaseState *MainDudeClimbingLadderState::handle_input(MainDude& main_dude
     }
 
     // Ladders are always topped with MapTileType::LADDER tiles, therefore checking only for this type:
-    if (ladder_tile && is_end_of_ladder(ladder_tile))
+    if (ladder_tile && is_end_of_ladder(world, ladder_tile))
     {
         if (physics->get_y_position() <= ladder_tile->y)
         {

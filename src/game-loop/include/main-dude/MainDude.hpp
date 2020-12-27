@@ -38,7 +38,7 @@ public:
 
     MainDude(float x_pos_center, float y_pos_center);
 
-    void update(uint32_t delta_time_ms) override;
+    void update(World* world, uint32_t delta_time_ms) override;
 
     void enter_level_summary_state();
     void enter_dead_state();
@@ -49,11 +49,11 @@ public:
 private:
 
     void enter_if_different(MainDudeBaseState*);
-    MapTile* is_overlaping_tile(MapTileType) const;
+    MapTile* is_overlaping_tile(World*, MapTileType) const;
 
     // Returns true on successful request.
-    bool hang_off_cliff_left();
-    bool hang_off_cliff_right();
+    bool hang_off_cliff_left(World* world);
+    bool hang_off_cliff_right(World* world);
 
     friend class MainDudeBaseState;
     friend class MainDudeRunningState;

@@ -11,7 +11,7 @@ namespace
     const char* PAUSED_MSG = "PAUSED";
 }
 
-void PauseOverlay::update(uint32_t delta_time_ms)
+void PauseOverlay::update(World* world, uint32_t delta_time_ms)
 {
     if (_disabled_input)
     {

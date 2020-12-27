@@ -20,7 +20,7 @@ namespace
     }
 }
 
-void HUD::update(uint32_t delta_time_ms)
+void HUD::update(World* world, uint32_t delta_time_ms)
 {
     _dollars_buffer_count_timer += delta_time_ms;
 

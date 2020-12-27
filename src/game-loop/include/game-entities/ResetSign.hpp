@@ -18,7 +18,7 @@ public:
         _quad_component->update(_center.x, _center.y);
     }
 
-    void update(uint32_t delta_time_ms) override {}
+    void update(World* world, uint32_t delta_time_ms) override {}
 
 private:
     const float QUAD_WIDTH_WORLD_UNITS = 3;

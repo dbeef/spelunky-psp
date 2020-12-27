@@ -115,7 +115,7 @@ LevelSummaryOverlay::LevelSummaryOverlay(std::shared_ptr<Viewport> viewport, con
     }
 }
 
-void LevelSummaryOverlay::update(uint32_t delta_time_ms)
+void LevelSummaryOverlay::update(World* world, uint32_t delta_time_ms)
 {
     // Make consecutive loot elements appear in an interval (calling update for the first time shows quad):
 
@@ -125,6 +125,6 @@ void LevelSummaryOverlay::update(uint32_t delta_time_ms)
     for (std::size_t index = 0; index < elements_appearing && index < _loot_entities.size(); index++)
     {
         auto& loot = _loot_entities[index];
-        loot->update(0);
+        loot->update(world, 0);
     }
 }

@@ -11,6 +11,8 @@
 
 #include "logger/log.h"
 
+class World;
+
 class GameEntity
 {
 public:
@@ -74,7 +76,7 @@ public:
         log_debug("Disposing entity: %s", type_to_string(_type));
     }
 
-    virtual void update(uint32_t delta_time_ms) = 0;
+    virtual void update(World* world, uint32_t delta_time_ms) = 0;
     bool is_marked_for_disposal() const { return _to_dispose; }
 
     explicit GameEntity(Type type) : _type(type)

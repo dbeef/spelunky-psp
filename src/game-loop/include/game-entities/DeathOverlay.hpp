@@ -17,7 +17,7 @@ public:
     void disable_input();
     void enable_input();
 
-    void update(uint32_t delta_time_ms) override;
+    void update(World* world, uint32_t delta_time_ms) override;
     bool is_scores_requested() const { return _scores_requested; };
 
 private:

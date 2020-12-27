@@ -16,7 +16,7 @@ void MainDudeCrawlingState::enter(MainDude& main_dude)
                      75, true);
 }
 
-MainDudeBaseState* MainDudeCrawlingState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeCrawlingState::update(MainDude& main_dude, World* world, uint32_t delta_time_ms)
 {
     auto* physics = main_dude.get_physics_component();
     auto* animation = main_dude.get_animation_component();
@@ -26,7 +26,7 @@ MainDudeBaseState* MainDudeCrawlingState::update(MainDude& main_dude, uint32_t d
     assert(animation);
     assert(quad);
 
-    physics->update(delta_time_ms);
+    physics->update(world, delta_time_ms);
     quad->update(physics->get_x_position(), physics->get_y_position(), !main_dude._other.facing_left);
     animation->update(*quad, delta_time_ms);
 
@@ -47,7 +47,7 @@ MainDudeBaseState* MainDudeCrawlingState::update(MainDude& main_dude, uint32_t d
     return this;
 }
 
-MainDudeBaseState *MainDudeCrawlingState::handle_input(MainDude& main_dude, const Input &input)
+MainDudeBaseState *MainDudeCrawlingState::handle_input(MainDude& main_dude, World* world, const Input &input)
 {
     auto* physics = main_dude.get_physics_component();
     auto* quad = main_dude.get_quad_component();
@@ -80,7 +80,7 @@ MainDudeBaseState *MainDudeCrawlingState::handle_input(MainDude& main_dude, cons
 
     if (input.up().value())
     {
-        const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
+        const auto* exit_tile = main_dude.is_overlaping_tile(world, MapTileType::EXIT);
         if (exit_tile)
         {
             physics->set_position(

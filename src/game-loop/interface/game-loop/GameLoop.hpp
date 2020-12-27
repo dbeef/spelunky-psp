@@ -18,6 +18,7 @@ class GameEntitySystem;
 class MainDude;
 class LevelSummaryTracker;
 class Viewport;
+class World;
 
 class GameLoop
 {
@@ -52,8 +53,8 @@ private:
     bool _exit = false;
 
     std::shared_ptr<GameEntitySystem> _game_entity_system;
+    std::shared_ptr<World> _world;
     std::shared_ptr<Viewport> _viewport;
-    std::shared_ptr<MainDude> _main_dude;
     std::shared_ptr<LevelSummaryTracker> _level_summary_tracker;
     std::function<bool(uint32_t delta_time_ms)> _loop;
 };

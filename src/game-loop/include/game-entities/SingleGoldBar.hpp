@@ -11,5 +11,5 @@ class SingleGoldBar : public GameEntity, public Subject<LootCollectedEvent>
 {
 public:
     SingleGoldBar(float x_center, float y_center);
-    void update(uint32_t delta_time_ms) override;
+    void update(World* world, uint32_t delta_time_ms) override;
 };

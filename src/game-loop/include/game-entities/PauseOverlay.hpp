@@ -21,7 +21,7 @@ public:
     PauseOverlay(std::shared_ptr<Viewport>, Type);
     ~PauseOverlay() override;
 
-    void update(uint32_t delta_time_ms) override;
+    void update(World* world, uint32_t delta_time_ms) override;
     void reset();
 
     void disable_input() { _disabled_input = true; }

@@ -97,7 +97,7 @@ ScoresOverlay::ScoresOverlay(std::shared_ptr<Viewport> viewport)
     }
 }
 
-void ScoresOverlay::update(uint32_t delta_time_ms)
+void ScoresOverlay::update(World* world, uint32_t delta_time_ms)
 {
     // Nothing to update.
 }

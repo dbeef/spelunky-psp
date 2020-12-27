@@ -2,12 +2,12 @@
 #include "main-dude/MainDude.hpp"
 #include "Level.hpp"
 #include "Collisions.hpp"
-#include "other/PhysicsComponentAggregator.hpp"
+#include "other/World.hpp"
+#include "TileBatch.hpp"
 
 // Using C-style <math.h> instead of <cmath> because of some symbols (namely std::copysign)
 // are missing in the PSP's CPP standard library.
 #include <math.h>
-#include <components/PhysicsComponent.hpp>
 
 namespace
 {
@@ -48,8 +48,10 @@ namespace
     }
 }
 
-void PhysicsComponent::update(uint32_t delta_time_ms)
+void PhysicsComponent::update(World* world, uint32_t delta_time_ms)
 {
+    auto& tile_batch = world->get_tile_batch();
+
     _pos_update_delta_ms += delta_time_ms;
 
     // Limit speed
@@ -75,7 +77,7 @@ void PhysicsComponent::update(uint32_t delta_time_ms)
         if (!initial_check_done)
         {
             MapTile *neighbours[9] = {nullptr};
-            Level::instance().get_tile_batch().get_neighbouring_tiles(_position.x, _position.y, neighbours);
+            tile_batch->get_neighbouring_tiles(_position.x, _position.y, neighbours);
             const auto *overlapping_tile = collisions::overlaps_strict(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
             if (overlapping_tile)
             {
@@ -128,7 +130,7 @@ void PhysicsComponent::update(uint32_t delta_time_ms)
                 // Step on X axis
 
                 _position.x += copysign(SMALLEST_POSITION_STEP, temp_velocity_x);
-                Level::instance().get_tile_batch().get_neighbouring_tiles(_position.x, _position.y, neighbours);
+                tile_batch->get_neighbouring_tiles(_position.x, _position.y, neighbours);
                 const auto* overlapping_tile = collisions::overlaps
                         (neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
                 if (overlapping_tile)
@@ -165,7 +167,7 @@ void PhysicsComponent::update(uint32_t delta_time_ms)
                 // Step on Y axis
 
                 _position.y += copysign(SMALLEST_POSITION_STEP, temp_velocity_y);
-                Level::instance().get_tile_batch().get_neighbouring_tiles(_position.x,  _position.y, neighbours);
+                tile_batch->get_neighbouring_tiles(_position.x,  _position.y, neighbours);
                 const auto* overlapping_tile = collisions::overlaps(neighbours, _position.x, _position.y, _dimensions.width, _dimensions.height);
                 if (overlapping_tile)
                 {
@@ -208,39 +210,10 @@ void PhysicsComponent::update(uint32_t delta_time_ms)
             _velocity.y += GRAVITY;
         }
     }
-
-    // Now update collisions with other PhysicsComponents:
-    // FIXME: High computational complexity, optimize with spatial partitioning in the future.
-
-    auto& physics_components = PhysicsComponentAggregator::instance().get_physics_components();
-
-    for (auto& other : physics_components)
-    {
-        if (this == other)
-        {
-            continue;
-        }
-
-        if (is_collision(*other))
-        {
-            if (_collision_handler)
-            {
-                _collision_handler(other);
-            }
-
-            if (other->get_collision_handler())
-            {
-                other->get_collision_handler()(this);
-            }
-        }
-    }
 }
 
-PhysicsComponent::PhysicsComponent(float width, float height, PhysicsComponentType type)
-    : _dimensions{width, height}
-    , _type(type)
+PhysicsComponent::PhysicsComponent(float width, float height) : _dimensions{width, height}
 {
-    PhysicsComponentAggregator::instance().add(this);
 }
 
 bool PhysicsComponent::is_collision(const PhysicsComponent &other) const
@@ -250,9 +223,4 @@ bool PhysicsComponent::is_collision(const PhysicsComponent &other) const
 
     return _position.x + half_w > other.get_x_position() && _position.x - half_w < other.get_x_position() + other.get_width() &&
            _position.y + half_h > other.get_y_position() && _position.y - half_h < other.get_y_position() + other.get_height();
-}
-
-PhysicsComponent::~PhysicsComponent()
-{
-    PhysicsComponentAggregator::instance().remove(this);
 }

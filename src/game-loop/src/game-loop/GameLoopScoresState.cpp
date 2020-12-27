@@ -12,11 +12,14 @@
 #include "ScreenSpaceCamera.hpp"
 #include "Renderer.hpp"
 #include "Level.hpp"
+#include "other/World.hpp"
+#include "TileBatch.hpp"
 
 GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
     auto& screen_space_camera = game_loop._cameras.screen_space;
     auto& model_view_camera = game_loop._cameras.model_view;
+    auto& main_dude = game_loop._world->get_main_dude();
     auto& renderer = Renderer::instance();
 
     // Remove render entities marked for disposal:
@@ -44,16 +47,16 @@ GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t del
             log_info("Quit requested.");
             game_loop._exit = true;
         }
-        _pause_overlay->update(delta_time_ms);
+        _pause_overlay->update(game_loop._world.get(), delta_time_ms);
     }
     else
     {
-        game_loop._game_entity_system->update(delta_time_ms);
+        game_loop._game_entity_system->update(game_loop._world.get(), delta_time_ms);
     }
 
     // Other:
 
-    if (game_loop._main_dude->entered_door())
+    if (main_dude->entered_door())
     {
         return &game_loop._states.main_menu;
     }
@@ -65,10 +68,12 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopScoresState");
 
-    Level::instance().get_tile_batch().generate_frame();
-    Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::SCORES);
-    Level::instance().get_tile_batch().generate_cave_background();
-    Level::instance().get_tile_batch().batch_vertices();
+    auto& tile_batch = game_loop._world->get_tile_batch();
+
+    tile_batch->generate_frame();
+    tile_batch->initialise_tiles_from_splash_screen(SplashScreenType::SCORES);
+    tile_batch->generate_cave_background();
+    tile_batch->batch_vertices();
 
     // Splash screens are copied into the [0, 0] position (left-upper corner), center on them:
     auto &model_view_camera = game_loop._cameras.model_view;
@@ -76,18 +81,19 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
     model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
 
     MapTile* entrance = nullptr;
-    Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::EXIT, entrance);
+    tile_batch->get_first_tile_of_given_type(MapTileType::EXIT, entrance);
     assert(entrance);
 
     // Update main dude:
-    auto* dude_physics = game_loop._main_dude->get_physics_component();
+    auto& main_dude = game_loop._world->get_main_dude();
+    auto* dude_physics = main_dude->get_physics_component();
     assert(dude_physics);
 
     dude_physics->set_velocity(0, 0);
     dude_physics->set_position(entrance->x + (MapTile::PHYSICAL_WIDTH / 2.0f), entrance->y + (MapTile::PHYSICAL_HEIGHT / 2.0f));
 
-    game_loop._main_dude->enter_standing_state();
-    game_loop._game_entity_system->add(game_loop._main_dude);
+    main_dude->enter_standing_state();
+    game_loop._game_entity_system->add(main_dude);
 
     // Create pause overlay:
     _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::SCORES);
