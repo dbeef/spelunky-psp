@@ -14,7 +14,7 @@ target_include_directories(Camera
 
 set_target_properties(Camera PROPERTIES
     CXX_STANDARD
-    14
+    17
 )
 
 target_link_libraries(Camera

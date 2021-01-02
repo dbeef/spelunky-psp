@@ -12,7 +12,7 @@ target_include_directories(Collisions
 
 set_target_properties(Collisions PROPERTIES
         CXX_STANDARD
-        14
+        17
         )
 
 target_link_libraries(Collisions PRIVATE

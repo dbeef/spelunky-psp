@@ -52,7 +52,7 @@ target_link_libraries(Spelunky_PSP PRIVATE
 set_target_properties(Spelunky_PSP
         PROPERTIES
         CXX_STANDARD
-        14
+        17
         CXX_EXTENSIONS
         OFF
 )

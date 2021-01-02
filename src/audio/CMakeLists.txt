@@ -32,7 +32,7 @@ target_include_directories(Audio
 
 set_target_properties(Audio PROPERTIES
         CXX_STANDARD
-        14
+        17
 )
 
 target_link_libraries(Audio

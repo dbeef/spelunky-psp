@@ -14,7 +14,7 @@ target_include_directories(GraphicsUtils
 
 set_target_properties(GraphicsUtils PROPERTIES
         CXX_STANDARD
-        14
+        17
 )
 
 target_link_libraries(GraphicsUtils

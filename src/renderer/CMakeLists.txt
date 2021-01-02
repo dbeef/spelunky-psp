@@ -20,7 +20,7 @@ target_include_directories(Renderer
 
 set_target_properties(Renderer PROPERTIES
         CXX_STANDARD
-        14
+        17
 )
 
 target_link_libraries(Renderer
