@@ -34,7 +34,8 @@ set_target_properties(Level PROPERTIES
 
 target_link_libraries(Level
         PUBLIC
-            Renderer
+            entt
+            RenderingTypes
             Patterns
         PRIVATE
             glad

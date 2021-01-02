@@ -6,9 +6,9 @@
 #include "patterns/Observer.hpp"
 
 class GameLoop;
-class HUD;
-class PauseOverlay;
-class DeathOverlay;
+class HUDComponent;
+class PauseOverlayComponent;
+class DeathOverlayComponent;
 enum class MainDudeEvent;
 
 class GameLoopPlayingState : public GameLoopBaseState, public Observer<MainDudeEvent>
@@ -19,7 +19,8 @@ public:
     void exit(GameLoop&) override;
     void on_notify(const MainDudeEvent*) override;
 private:
-    std::shared_ptr<HUD> _hud = nullptr;
-    std::shared_ptr<PauseOverlay> _pause_overlay = nullptr;
-    std::shared_ptr<DeathOverlay> _death_overlay = nullptr;
+    entt::entity _main_dude = entt::null;
+    entt::entity _hud = entt::null;
+    entt::entity _pause_overlay = entt::null;
+    entt::entity _death_overlay = entt::null;
 };

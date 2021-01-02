@@ -1,11 +1,12 @@
 #pragma once
 
 #include <memory>
+#include <entt/entt.hpp>
 #include "game-loop/GameLoopBaseState.hpp"
 
 class GameLoop;
-class PauseOverlay;
-class ScoresOverlay;
+class PauseOverlayComponent;
+class ScoresOverlayComponent;
 
 class GameLoopScoresState : public GameLoopBaseState
 {
@@ -14,6 +15,7 @@ public:
     void enter(GameLoop&) override;
     void exit(GameLoop&) override;
 private:
-    std::shared_ptr<PauseOverlay> _pause_overlay = nullptr;
-    std::shared_ptr<ScoresOverlay> _scores_overlay = nullptr;
+    entt::entity _main_dude = entt::null;
+    entt::entity _pause_overlay = entt::null;
+    entt::entity _death_overlay = entt::null;
 };

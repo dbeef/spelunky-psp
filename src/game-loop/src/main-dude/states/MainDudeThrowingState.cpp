@@ -1,77 +1,82 @@
+#include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudeThrowingState.hpp"
-#include "main-dude/MainDude.hpp"
+#include "components/specialized/MainDudeComponent.hpp"
 #include "Input.hpp"
 #include "audio/Audio.hpp"
 
-void MainDudeThrowingState::enter(MainDude &main_dude)
+void MainDudeThrowingState::enter(MainDudeComponent& dude)
 {
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
+
+    auto& animation = registry.get<AnimationComponent>(owner);
+    animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::THROWING_LEFT_0_FIRST),
+                    static_cast<std::size_t>(MainDudeSpritesheetFrames::THROWING_LEFT_8_LAST),
+                    50, false);
+
     Audio::instance().play(SFXType::MAIN_DUDE_WHIP);
-    main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::THROWING_LEFT_0_FIRST),
-                               static_cast<std::size_t>(MainDudeSpritesheetFrames::THROWING_LEFT_8_LAST),
-                               50, false);
 }
 
-MainDudeBaseState *MainDudeThrowingState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState *MainDudeThrowingState::update(MainDudeComponent& dude, uint32_t delta_time_ms)
 {
-    // Update components:
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
 
-    main_dude._physics.update(delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
-    main_dude._animation.update(main_dude, delta_time_ms);
+    const auto& input = Input::instance();
 
-    // Other:
+    auto& animation = registry.get<AnimationComponent>(owner);
+    auto& physics = registry.get<PhysicsComponent>(owner);
+    auto& quad = registry.get<QuadComponent>(owner);
+    auto& position = registry.get<PositionComponent>(owner);
 
-    if (main_dude._animation.is_finished())
+    if (animation.is_finished())
     {
-        if (main_dude._physics.is_bottom_collision())
+        if (physics.is_bottom_collision())
         {
-            if (main_dude._physics.get_x_velocity() == 0.0f)
+            if (physics.get_x_velocity() == 0.0f)
             {
-                return &main_dude._states.standing;
+                return &dude._states.standing;
             }
             else
             {
-                return &main_dude._states.running;
+                return &dude._states.running;
             }
         }
         else
         {
-            if (main_dude._physics.get_y_velocity() > 0.0f)
+            if (physics.get_y_velocity() > 0.0f)
             {
-                return &main_dude._states.falling;
+                return &dude._states.falling;
             }
-            else if (main_dude._physics.get_y_velocity() < 0.0f)
+            else if (physics.get_y_velocity() < 0.0f)
             {
-                return &main_dude._states.jumping;
+                return &dude._states.jumping;
             }
         }
     }
 
-    return this;
-}
-
-MainDudeBaseState *MainDudeThrowingState::handle_input(MainDude& main_dude, const Input &input)
-{
     if (input.left().value())
     {
-        main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
+        physics.set_x_velocity(physics.get_x_velocity() - MainDudeComponent::DEFAULT_DELTA_X);
     }
+
     if (input.right().value())
     {
-        main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
+        physics.set_x_velocity(physics.get_x_velocity() + MainDudeComponent::DEFAULT_DELTA_X);
     }
-    if (input.jumping().changed() && input.jumping().value() && main_dude._physics.is_bottom_collision())
+
+    if (input.jumping().changed() && input.jumping().value() && physics.is_bottom_collision())
     {
-        main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
+        physics.set_y_velocity(-MainDudeComponent::JUMP_SPEED);
     }
 
     if (input.running_fast().value())
     {
-        main_dude._physics.set_max_x_velocity(MainDude::MAX_RUNNING_VELOCITY_X);
+        physics.set_max_x_velocity(MainDudeComponent::MAX_RUNNING_VELOCITY_X);
     }
     else
     {
-        main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
+        physics.set_max_x_velocity(MainDudeComponent::DEFAULT_MAX_X_VELOCITY);
     }
 
     return this;

@@ -3,6 +3,7 @@
 #include "patterns/Singleton.hpp"
 #include "TextureType.hpp"
 #include "TextureRegion.hpp"
+#include "TextureID.hpp"
 
 #include <unordered_map>
 #include <vector>
@@ -10,7 +11,6 @@
 #include <cstdint>
 #include <functional>
 
-using TextureID = unsigned int;
 const TextureID INVALID_TEXTURE = 0;
 const TextureRegion INVALID_REGION = {};
 

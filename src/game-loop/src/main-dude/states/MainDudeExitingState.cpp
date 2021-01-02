@@ -1,35 +1,44 @@
+#include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudeExitingState.hpp"
-#include "main-dude/MainDude.hpp"
+#include "components/specialized/MainDudeComponent.hpp"
 #include "Input.hpp"
 #include "audio/Audio.hpp"
+#include "EntityRegistry.hpp"
 
-void MainDudeExitingState::exit(MainDude& main_dude)
+void MainDudeExitingState::exit(MainDudeComponent& dude)
 {
-    main_dude._other.entered_door = false;
+    dude._other.entered_door = false;
 }
 
-void MainDudeExitingState::enter(MainDude& main_dude)
+void MainDudeExitingState::enter(MainDudeComponent& dude)
 {
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
+
+    auto& physics = registry.get<PhysicsComponent>(owner);
+    physics.set_x_velocity(0);
+    physics.set_y_velocity(0);
+
     Audio::instance().play(SFXType::MAIN_DUDE_ENTERING_DOOR);
-    main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::EXITING_LEFT_0_FIRST),
-                               static_cast<std::size_t>(MainDudeSpritesheetFrames::EXITING_LEFT_15_LAST),
-                               75, false);
+
+    auto& animation = registry.get<AnimationComponent>(owner);
+    animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::EXITING_LEFT_0_FIRST),
+                    static_cast<std::size_t>(MainDudeSpritesheetFrames::EXITING_LEFT_15_LAST),
+                    75, false);
 }
 
-MainDudeBaseState* MainDudeExitingState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeExitingState::update(MainDudeComponent& dude, uint32_t delta_time_ms)
 {
-    main_dude._animation.update(main_dude, delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
 
-    if (main_dude._animation.is_finished())
+    auto& animation = registry.get<AnimationComponent>(owner);
+    auto& quad = registry.get<QuadComponent>(owner);
+
+    if (animation.is_finished())
     {
-        main_dude._other.entered_door = true;
+        dude._other.entered_door = true;
     }
 
-    return this;
-}
-
-MainDudeBaseState *MainDudeExitingState::handle_input(MainDude& main_dude, const Input &input)
-{
     return this;
 }

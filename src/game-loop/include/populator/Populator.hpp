@@ -3,10 +3,13 @@
 #include <memory>
 #include <vector>
 
+#include <entt/entt.hpp>
+#include <components/specialized/HudOverlayComponent.hpp>
+
 class GameEntity;
 class LevelSummaryTracker;
 
 namespace populator
 {
-    std::vector<std::shared_ptr<GameEntity>> generate_loot(std::shared_ptr<LevelSummaryTracker>&);
+    void generate_loot(std::shared_ptr<LevelSummaryTracker>&);
 }

@@ -1,5 +1,6 @@
+#include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudeStunnedState.hpp"
-#include "main-dude/MainDude.hpp"
+#include "components/specialized/MainDudeComponent.hpp"
 #include "Input.hpp"
 #include "audio/Audio.hpp"
 
@@ -8,51 +9,62 @@ namespace
     constexpr float STUNNED_TIME_MS = 3500;
 }
 
-void MainDudeStunnedState::enter(MainDude &main_dude)
+void MainDudeStunnedState::enter(MainDudeComponent& dude)
 {
-    Audio::instance().play(SFXType::MAIN_DUDE_HURT);
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
 
-    main_dude._physics.set_friction(PhysicsComponent::get_default_friction() * 1.8f);
-    main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_0_FIRST),
-                               static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_4_LAST),
-                               75, true);
+    auto& animation = registry.get<AnimationComponent>(owner);
+    auto& physics = registry.get<PhysicsComponent>(owner);
+
+    physics.set_friction(PhysicsComponent::get_default_friction() * 1.8f);
+    animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_0_FIRST),
+                    static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_4_LAST),
+                    75, true);
+
+    Audio::instance().play(SFXType::MAIN_DUDE_HURT);
     _stunned_timer_ms = 0;
+    if (physics.get_y_velocity() == 0.0f)
+    {
+        // Give him a slight jump, just for entertainment:
+        physics.set_y_velocity(physics.get_y_velocity() - 0.07f);
+    }
 }
 
-MainDudeBaseState *MainDudeStunnedState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState *MainDudeStunnedState::update(MainDudeComponent& dude, uint32_t delta_time_ms)
 {
-    // Update components:
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
 
-    main_dude._physics.update(delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
-    main_dude._animation.update(main_dude, delta_time_ms);
-
-    // Other:
+    auto& animation = registry.get<AnimationComponent>(owner);
+    auto& physics = registry.get<PhysicsComponent>(owner);
+    auto& quad = registry.get<QuadComponent>(owner);
+    auto& position = registry.get<PositionComponent>(owner);
 
     _stunned_timer_ms += delta_time_ms;
 
     if (_stunned_timer_ms > STUNNED_TIME_MS)
     {
-        if (main_dude._physics.is_bottom_collision())
+        if (physics.is_bottom_collision())
         {
-            if (main_dude._physics.get_x_velocity() == 0.0f)
+            if (physics.get_x_velocity() == 0.0f)
             {
-                return &main_dude._states.standing;
+                return &dude._states.standing;
             }
             else
             {
-                return &main_dude._states.running;
+                return &dude._states.running;
             }
         }
         else
         {
-            if (main_dude._physics.get_y_velocity() > 0.0f)
+            if (physics.get_y_velocity() > 0.0f)
             {
-                return &main_dude._states.falling;
+                return &dude._states.falling;
             }
-            else if (main_dude._physics.get_y_velocity() < 0.0f)
+            else if (physics.get_y_velocity() < 0.0f)
             {
-                return &main_dude._states.jumping;
+                return &dude._states.jumping;
             }
         }
     }
@@ -60,12 +72,15 @@ MainDudeBaseState *MainDudeStunnedState::update(MainDude& main_dude, uint32_t de
     return this;
 }
 
-MainDudeBaseState *MainDudeStunnedState::handle_input(MainDude& main_dude, const Input &input)
+void MainDudeStunnedState::exit(MainDudeComponent& dude)
 {
-    return this;
-}
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
 
-void MainDudeStunnedState::exit(MainDude& main_dude)
-{
-    main_dude._physics.set_friction(PhysicsComponent::get_default_friction());
+    auto& animation = registry.get<AnimationComponent>(owner);
+    auto& physics = registry.get<PhysicsComponent>(owner);
+    auto& quad = registry.get<QuadComponent>(owner);
+    auto& position = registry.get<PositionComponent>(owner);
+
+    physics.set_friction(PhysicsComponent::get_default_friction());
 }

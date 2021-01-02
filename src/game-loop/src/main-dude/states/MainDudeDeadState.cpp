@@ -1,79 +1,88 @@
+#include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudeDeadState.hpp"
-#include "main-dude/MainDude.hpp"
+#include "components/specialized/MainDudeComponent.hpp"
 #include "Input.hpp"
 #include "other/Inventory.hpp"
 #include "audio/Audio.hpp"
 
-void MainDudeDeadState::enter(MainDude& main_dude)
+void MainDudeDeadState::enter(MainDudeComponent& dude)
 {
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
+
+    auto& physics = registry.get<PhysicsComponent>(owner);
+    auto& animation = registry.get<AnimationComponent>(owner);
+    auto& quad = registry.get<QuadComponent>(owner);
+
+    if (physics.get_y_velocity() == 0.0f)
+    {
+        // Give him a slight jump, just for entertainment:
+        physics.set_y_velocity(physics.get_y_velocity() - 0.07f);
+    }
+
+    physics.set_friction(PhysicsComponent::get_default_friction() * 1.8f);
+    physics.set_bounciness(0.5f);
+    animation.stop();
+    set_current_frame(quad, physics);
+
     Audio::instance().stop();
     Audio::instance().play(SFXType::MAIN_DUDE_DIE);
 
-    main_dude.notify(MainDudeEvent::DIED);
-    main_dude._other.dead = true;
-
-    if (main_dude._physics.get_y_velocity() == 0.0f)
-    {
-        // Give him a slight jump, just for entertainment:
-        main_dude._physics.add_velocity(0.0f, -0.07f);
-    }
-
-    main_dude._physics.set_friction(PhysicsComponent::get_default_friction() * 1.8f);
-    main_dude._physics.set_bounciness(0.5f);
-    main_dude._physics.set_dimensions(main_dude._physics.get_width(), main_dude._physics.get_height());
-    main_dude._animation.stop();
-    set_current_frame(main_dude);
+    dude.notify(MainDudeEvent::DIED);
+    dude._other.dead = true;
 
     // TODO: Change physical size of the main dude (about half of the height when dead).
     //       This can be done only after convention for storing position is changed - right now physics component's
     //       XY describes center of the body. Should be changed to describe upper-left corner.
 }
 
-MainDudeBaseState* MainDudeDeadState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeDeadState::update(MainDudeComponent& dude, uint32_t delta_time_ms)
 {
-    // Update components:
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
 
-    main_dude._physics.update(delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
-    set_current_frame(main_dude);
+    auto& physics = registry.get<PhysicsComponent>(owner);
+    auto& quad = registry.get<QuadComponent>(owner);
+
+    set_current_frame(quad, physics);
 
     return this;
 }
 
-MainDudeBaseState *MainDudeDeadState::handle_input(MainDude& main_dude, const Input &input)
+void MainDudeDeadState::set_current_frame(QuadComponent& quad, PhysicsComponent& physics)
 {
-    return this;
-}
-
-void MainDudeDeadState::set_current_frame(MainDude& main_dude)
-{
-    if (main_dude._physics.get_y_velocity() > 0.0f)
+    if (physics.get_y_velocity() > 0.0f)
     {
-        if (main_dude._quad.get_current_frame<MainDudeSpritesheetFrames>() != MainDudeSpritesheetFrames::DEAD_FALLING)
+        if (quad.get_current_frame<MainDudeSpritesheetFrames>() != MainDudeSpritesheetFrames::DEAD_FALLING)
         {
-            main_dude._quad.frame_changed(MainDudeSpritesheetFrames::DEAD_FALLING);
+            quad.frame_changed(MainDudeSpritesheetFrames::DEAD_FALLING);
         }
     }
-    else if (main_dude._physics.get_y_velocity() < 0.0f)
+    else if (physics.get_y_velocity() < 0.0f)
     {
-        if (main_dude._quad.get_current_frame<MainDudeSpritesheetFrames>() != MainDudeSpritesheetFrames::DEAD_BOUNCE)
+        if (quad.get_current_frame<MainDudeSpritesheetFrames>() != MainDudeSpritesheetFrames::DEAD_BOUNCE)
         {
-            main_dude._quad.frame_changed(MainDudeSpritesheetFrames::DEAD_BOUNCE);
+            quad.frame_changed(MainDudeSpritesheetFrames::DEAD_BOUNCE);
         }
     }
     else
     {
-        if (main_dude._quad.get_current_frame<MainDudeSpritesheetFrames>() != MainDudeSpritesheetFrames::DEAD)
+        if (quad.get_current_frame<MainDudeSpritesheetFrames>() != MainDudeSpritesheetFrames::DEAD)
         {
-            main_dude._quad.frame_changed(MainDudeSpritesheetFrames::DEAD);
+            quad.frame_changed(MainDudeSpritesheetFrames::DEAD);
         }
     }
 }
 
-void MainDudeDeadState::exit(MainDude& main_dude)
+void MainDudeDeadState::exit(MainDudeComponent& dude)
 {
-    main_dude._physics.set_friction(PhysicsComponent::get_default_friction());
-    main_dude._physics.set_bounciness(0.0f);
-    main_dude._other.dead = false;
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
+
+    auto& physics = registry.get<PhysicsComponent>(owner);
+
+    physics.set_friction(PhysicsComponent::get_default_friction());
+    physics.set_bounciness(0.0f);
+    dude._other.dead = false;
     Inventory::instance().set_starting_inventory();
 }

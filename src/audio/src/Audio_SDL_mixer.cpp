@@ -141,6 +141,7 @@ void Audio::tear_down_audio()
 
 void Audio::play(MusicType music)
 {
+    return;
     switch(music)
     {
         case MusicType::TITLE: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->title_music, 0); break;
@@ -151,6 +152,7 @@ void Audio::play(MusicType music)
 
 void Audio::play(SFXType sfx)
 {
+    return;
     switch(sfx)
     {
         case SFXType::MAIN_DUDE_JUMP: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->jump, 0); break;

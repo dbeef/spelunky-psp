@@ -21,6 +21,10 @@ struct TextureRegion
     void set_quad_xy(Quad&) const;
     void set_quad_indices(Quad&, uint16_t offset = 0) const;
 
+    void set_quad_uv(Vertex*, bool vflip = false, bool hflip = false) const;
+    void set_quad_xy(Vertex*) const;
+    void set_quad_indices(IndexType*, uint16_t offset = 0) const;
+
     std::vector<Vertex> get_quad_vertices(float x, float y, bool vflip = false, bool hflip = false) const;
     std::vector<IndexType> get_quad_indices(uint16_t offset = 0) const;
 

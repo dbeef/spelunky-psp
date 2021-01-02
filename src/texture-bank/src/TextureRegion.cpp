@@ -123,6 +123,38 @@ std::vector<IndexType> TextureRegion::get_quad_indices(uint16_t offset) const
     return out;
 }
 
+void TextureRegion::set_quad_uv(Vertex* vertices_base, bool vflip, bool hflip) const
+{
+    for (std::size_t index = 0; index < 4; index++)
+    {
+        Vertex* v = vertices_base + index;
+
+        if (hflip)
+        {
+            v->u = uv_normalized[3 - index][0];
+            v->v = uv_normalized[3 - index][1];
+        }
+        else if (vflip)
+        {
+            if (index % 2)
+            {
+                v->u = uv_normalized[index - 1][0];
+                v->v = uv_normalized[index - 1][1];
+            }
+            else
+            {
+                v->u = uv_normalized[index + 1][0];
+                v->v = uv_normalized[index + 1][1];
+            }
+        }
+        else
+        {
+            v->u = uv_normalized[index][0];
+            v->v = uv_normalized[index][1];
+        }
+    }
+}
+
 void TextureRegion::set_quad_uv(Quad& quad, bool vflip, bool hflip) const
 {
     Vertex* out = quad.get_vertices_base();
@@ -157,6 +189,15 @@ void TextureRegion::set_quad_uv(Quad& quad, bool vflip, bool hflip) const
     }
 }
 
+void TextureRegion::set_quad_indices(IndexType* out_indices, uint16_t offset) const
+{
+    for (std::size_t index = 0; index < 6; index++)
+    {
+        auto value = indices[index];
+        out_indices[index] = (value + (offset * 4));
+    }
+}
+
 void TextureRegion::set_quad_indices(Quad& quad, uint16_t offset) const
 {
     IndexType* out = quad.get_indices();
@@ -165,6 +206,17 @@ void TextureRegion::set_quad_indices(Quad& quad, uint16_t offset) const
     {
         auto value = indices[index];
         out[index] = (value + (offset * 4));
+    }
+}
+
+void TextureRegion::set_quad_xy(Vertex* vertices_base) const
+{
+    for (std::size_t index = 0; index < 4; index++)
+    {
+        Vertex *v = vertices_base + index;
+
+        v->x = positions_normalized[index][0];
+        v->y = positions_normalized[index][1];
     }
 }
 

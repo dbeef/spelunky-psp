@@ -1,59 +1,62 @@
+#include <components/generic/SortRenderingLayersComponent.hpp>
 #include "game-loop/GameLoopScoresState.hpp"
 #include "game-loop/GameLoop.hpp"
 
-#include "game-entities/ResetSign.hpp"
-#include "game-entities/PauseOverlay.hpp"
-#include "game-entities/ScoresOverlay.hpp"
-#include "main-dude/MainDude.hpp"
-#include "system/GameEntitySystem.hpp"
+#include "EntityRegistry.hpp"
+
+#include "prefabs/main-dude/MainDude.hpp"
+#include "prefabs/ui/ScoresOverlay.hpp"
+#include "prefabs/ui/PauseOverlay.hpp"
+#include "prefabs/props/ResetSign.hpp"
+
+#include "components/specialized/PauseOverlayComponent.hpp"
+#include "components/specialized/MainDudeComponent.hpp"
+
+#include "system/RenderingSystem.hpp"
+#include "system/ScriptingSystem.hpp"
+#include "system/PhysicsSystem.hpp"
+#include "system/AnimationSystem.hpp"
 
 #include "logger/log.h"
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
-#include "Renderer.hpp"
+#include "CameraType.hpp"
 #include "Level.hpp"
+#include "other/Inventory.hpp"
 
 GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
-    auto& screen_space_camera = game_loop._cameras.screen_space;
-    auto& model_view_camera = game_loop._cameras.model_view;
-    auto& renderer = Renderer::instance();
+    auto& registry = EntityRegistry::instance().get_registry();
 
-    // Remove render entities marked for disposal:
+    auto& rendering_system = game_loop._rendering_system;
+    auto& scripting_system = game_loop._scripting_system;
+    auto& physics_system = game_loop._physics_system;
+    auto& animation_system = game_loop._animation_system;
 
-    renderer.update();
+    rendering_system->update(delta_time_ms);
 
-    // Render:
+    auto& pause = registry.get<PauseOverlayComponent>(_pause_overlay);
 
-    model_view_camera.update_gl_modelview_matrix();
-    model_view_camera.update_gl_projection_matrix();
-
-    renderer.render(Renderer::EntityType::MODEL_VIEW_SPACE);
-
-    screen_space_camera.update_gl_modelview_matrix();
-    screen_space_camera.update_gl_projection_matrix();
-
-    renderer.render(Renderer::EntityType::SCREEN_SPACE);
-
-    // Update game entities:
-
-    if (_pause_overlay->is_paused())
+    if (pause.is_paused())
     {
-        if (_pause_overlay->is_quit_requested())
+        if (pause.is_quit_requested())
         {
             log_info("Quit requested.");
             game_loop._exit = true;
         }
-        _pause_overlay->update(delta_time_ms);
+
+        pause.update(registry);
     }
     else
     {
-        game_loop._game_entity_system->update(delta_time_ms);
+        physics_system->update(delta_time_ms);
+        animation_system->update(delta_time_ms);
+        scripting_system->update(delta_time_ms);
     }
 
-    // Other:
+    auto& dude = registry.get<MainDudeComponent>(_main_dude);
 
-    if (game_loop._main_dude->entered_door())
+    if (dude.entered_door())
     {
         return &game_loop._states.main_menu;
     }
@@ -65,45 +68,38 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopScoresState");
 
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    auto& rendering_system = game_loop._rendering_system;
+
     Level::instance().get_tile_batch().generate_frame();
     Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::SCORES);
     Level::instance().get_tile_batch().generate_cave_background();
     Level::instance().get_tile_batch().batch_vertices();
+    Level::instance().get_tile_batch().add_render_entity(registry);
 
     // Splash screens are copied into the [0, 0] position (left-upper corner), center on them:
-    auto &model_view_camera = game_loop._cameras.model_view;
+    auto &model_view_camera = rendering_system->get_model_view_camera();
     model_view_camera.set_x_not_rounded(game_loop._viewport->get_width_world_units() / 4.0f);
     model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
+    model_view_camera.update_gl_modelview_matrix();
 
     MapTile* entrance = nullptr;
     Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::EXIT, entrance);
     assert(entrance);
 
-    // Update main dude:
-    game_loop._main_dude->enter_standing_state();
-    game_loop._main_dude->set_velocity(0, 0);
-    game_loop._main_dude->set_position(entrance->x + (MapTile::PHYSICAL_WIDTH / 2.0f), entrance->y + (MapTile::PHYSICAL_HEIGHT / 2.0f));
-    game_loop._game_entity_system->add(game_loop._main_dude);
+    float pos_x = entrance->x + (MapTile::PHYSICAL_WIDTH / 2.0f);
+    float pos_y = entrance->y + (MapTile::PHYSICAL_HEIGHT / 2.0f);
 
-    // Create pause overlay:
-    _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::SCORES);
-    game_loop._game_entity_system->add(_pause_overlay);
+    _main_dude = prefabs::MainDude::create(pos_x, pos_y);
+    _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::SCORES);
 
-    // Create scores overlay:
-    _scores_overlay = std::make_shared<ScoresOverlay>(game_loop._viewport);
-    game_loop._game_entity_system->add(_scores_overlay);
-
-    // Create reset sign:
-     game_loop._game_entity_system->add(std::make_shared<ResetSign>(16.5f, 18.5f));
-
-    // Make main dude appear on the foreground:
-    Renderer::instance().sort_by_layer();
+    prefabs::ScoresOverlay::create(game_loop._viewport);
+    prefabs::ResetSign::create(16.5f, 10.5f);
 }
 
 void GameLoopScoresState::exit(GameLoop& game_loop)
 {
-    _pause_overlay = nullptr;
-    _scores_overlay = nullptr;
-
-    game_loop._game_entity_system->remove_all();
+    auto& registry = EntityRegistry::instance().get_registry();
+    registry.clear();
 }

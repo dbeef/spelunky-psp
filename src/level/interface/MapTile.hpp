@@ -6,6 +6,7 @@
 #define SPELUNKYDS_MAPTILE_H
 
 #include "MapTileType.hpp"
+#include "Point2D.hpp"
 
 struct MapTile
 {

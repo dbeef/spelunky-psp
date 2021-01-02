@@ -1,8 +1,12 @@
 #include "game-loop/GameLoop.hpp"
 
 #include "viewport/Viewport.hpp"
-#include "system/GameEntitySystem.hpp"
-#include "game-entities/LevelSummaryTracker.hpp"
+#include "components/specialized/LevelSummaryTracker.hpp"
+#include "system/RenderingSystem.hpp"
+#include "system/ScriptingSystem.hpp"
+#include "system/CollectibleSystem.hpp"
+#include "system/PhysicsSystem.hpp"
+#include "system/AnimationSystem.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -14,9 +18,12 @@ std::function<bool(uint32_t delta_time_ms)>& GameLoop::get()
 
 GameLoop::GameLoop(const std::shared_ptr<Viewport>& viewport)
     : _viewport(viewport)
-    , _cameras{{viewport}, {viewport, ScreenSpaceCamera::CoordinateType::WORLD_UNITS}}
-    , _game_entity_system(std::make_shared<GameEntitySystem>())
     , _level_summary_tracker(std::make_shared<LevelSummaryTracker>())
+    , _rendering_system(std::make_shared<RenderingSystem>(viewport))
+    , _scripting_system(std::make_shared<ScriptingSystem>())
+    , _physics_system(std::make_shared<PhysicsSystem>())
+    , _animation_system(std::make_shared<AnimationSystem>())
+    , _collectible_system(std::make_shared<CollectibleSystem>())
 {
     _states.current = &_states.started;
     _states.current->enter(*this);

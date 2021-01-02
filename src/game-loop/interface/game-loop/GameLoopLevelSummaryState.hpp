@@ -2,10 +2,11 @@
 
 #include "game-loop/GameLoopBaseState.hpp"
 #include <memory>
+#include <entt/entt.hpp>
 
 class GameLoop;
-class MainDude;
-class LevelSummaryOverlay;
+class MainDudeComponent;
+class LevelSummaryOverlayComponent;
 
 class GameLoopLevelSummaryState : public GameLoopBaseState
 {
@@ -14,6 +15,8 @@ public:
     void enter(GameLoop&) override;
     void exit(GameLoop&) override;
 private:
-    std::shared_ptr<LevelSummaryOverlay> _level_summary_overlay = nullptr;
+    entt::entity _main_dude = entt::null;
+    entt::entity _pause_overlay = entt::null;
+    entt::entity _death_overlay = entt::null;
 };
 

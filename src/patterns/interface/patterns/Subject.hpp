@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Observer.hpp"
+#include "logger/log.h"
 
 #include <vector>
 #include <algorithm>
@@ -25,7 +26,14 @@ public:
     void remove_observer(const Observer<EventType>* observer)
     {
         const auto iter = std::remove_if(_observers.begin(), _observers.end(), [observer](const auto& other){ return observer == other; });
-        _observers.erase(iter);
+        if (iter != _observers.end())
+        {
+            _observers.erase(iter);
+        }
+        else
+        {
+            log_warn("Failed to remove observer - not subscribed to this subject.");
+        }
     }
 
     void notify(EventType event)

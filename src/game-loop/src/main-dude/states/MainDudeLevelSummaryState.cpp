@@ -1,42 +1,41 @@
+#include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudeLevelSummaryState.hpp"
-#include "main-dude/MainDude.hpp"
+#include "components/specialized/MainDudeComponent.hpp"
 #include "Input.hpp"
 
-void MainDudeLevelSummaryState::enter(MainDude& main_dude)
+void MainDudeLevelSummaryState::enter(MainDudeComponent& dude)
 {
-    main_dude._physics.set_max_x_velocity(MainDude::DEFAULT_MAX_X_VELOCITY);
-    main_dude._animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST),
-                               static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_5_LAST),
-                               75, true);
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
+
+    auto& animation = registry.get<AnimationComponent>(owner);
+    auto& physics = registry.get<PhysicsComponent>(owner);
+
+    physics.set_max_x_velocity(MainDudeComponent::DEFAULT_MAX_X_VELOCITY);
+    animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST),
+                    static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_5_LAST),
+                    75, true);
 }
 
-MainDudeBaseState* MainDudeLevelSummaryState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeLevelSummaryState::update(MainDudeComponent& dude, uint32_t delta_time_ms)
 {
-    // Update components:
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
 
-    main_dude._physics.update(delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
-    main_dude._animation.update(main_dude, delta_time_ms);
+    auto& animation = registry.get<AnimationComponent>(owner);
+    auto& physics = registry.get<PhysicsComponent>(owner);
+    auto& quad = registry.get<QuadComponent>(owner);
+    auto& position = registry.get<PositionComponent>(owner);
 
-    // Other:
-    main_dude._physics.set_velocity(0.095f, 0.0f);
+    physics.set_x_velocity(0.095f);
+    physics.set_y_velocity(0);
 
-    const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
+    const auto* exit_tile = dude.is_overlaping_tile(MapTileType::EXIT, physics, position);
     if (exit_tile)
     {
-        main_dude._physics.set_position(
-                exit_tile->x + main_dude._quad.get_quad_width() / 2,
-                exit_tile->y + main_dude._quad.get_quad_height() / 2);
-
-        return &main_dude._states.exiting;
+        position.set_position_on_tile(exit_tile);
+        return &dude._states.exiting;
     }
 
     return this;
 }
-
-MainDudeBaseState *MainDudeLevelSummaryState::handle_input(MainDude& main_dude, const Input &input)
-{
-    // Input is blocked in this state.
-    return this;
-}
-

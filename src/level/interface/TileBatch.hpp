@@ -5,13 +5,16 @@
 #ifndef SPELUNKYDS_LEVELGENERATOR_H
 #define SPELUNKYDS_LEVELGENERATOR_H
 
+#include "Vertex.hpp"
+#include "IndexType.hpp"
+
 #include "MapTile.hpp"
 #include "SplashScreenType.hpp"
 #include "RoomType.hpp"
-#include "RenderEntity.hpp"
 #include "LootType.hpp"
 
 #include <vector>
+#include "entt/entt.hpp"
 
 namespace Consts
 {
@@ -53,7 +56,7 @@ public:
 
     void batch_vertices();
 
-    void add_render_entity();
+    entt::entity add_render_entity(entt::registry &registry);
 
     void get_neighbouring_tiles(float x, float y, MapTile *out_neighboring_tiles[9]) const;
 
@@ -72,7 +75,6 @@ private:
 
     std::vector<Vertex> _mesh;
     std::vector<IndexType> _indices;
-    RenderEntity _render_entity;
 
     RoomType _layout[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
     int _layout_room_ids[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
