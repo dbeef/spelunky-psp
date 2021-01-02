@@ -7,10 +7,12 @@
 #include <cstdlib>
 #include <cstring>
 #include <algorithm>
+#include <TextureType.hpp>
+#include <RenderingLayer.hpp>
 
+#include "TextureBank.hpp"
 #include "NeighbouringTiles.hpp"
 #include "Level.hpp"
-#include "Renderer.hpp"
 #include "TileBatch.hpp"
 #include "SplashScreenType.hpp"
 #include "EntranceRooms.hpp"
@@ -23,6 +25,8 @@
 #include "AltarRoom.hpp"
 #include "RoomType.hpp"
 #include "ShopRooms.hpp"
+// FIXME
+#include "../../game-loop/include/components/generic/MeshComponent.hpp"
 
 using namespace Consts;
 
@@ -427,11 +431,6 @@ TileBatch::~TileBatch()
             delete map_tiles[x][y];
         }
     }
-
-    if (_render_entity.id != Renderer::INVALID_ENTITY)
-    {
-        Renderer::instance().mark_for_removal(_render_entity.id, Renderer::EntityType::MODEL_VIEW_SPACE);
-    }
 }
 
 void TileBatch::batch_vertices()
@@ -464,15 +463,22 @@ void TileBatch::batch_vertices()
     }
 }
 
-void TileBatch::add_render_entity()
+entt::entity TileBatch::add_render_entity(entt::registry &registry)
 {
-    auto &renderer = Renderer::instance();
-    _render_entity.layer = RenderingLayer::BACKGROUND;
-    _render_entity.vertices = _mesh.data();
-    _render_entity.indices = _indices.data();
-    _render_entity.indices_count = _indices.size();
-    _render_entity.texture = TextureBank::instance().get_texture(TextureType::CAVE_LEVEL_TILES);
-    _render_entity.id = renderer.add_entity(_render_entity, Renderer::EntityType::MODEL_VIEW_SPACE);
+    const auto entity = registry.create();
+
+    MeshComponent mesh_component;
+
+    mesh_component.vertices = _mesh.data();
+    mesh_component.indices = _indices.data();
+    mesh_component.indices_count = _indices.size();
+    mesh_component.texture_id = TextureBank::instance().get_texture(TextureType::CAVE_LEVEL_TILES);
+    mesh_component.rendering_layer = RenderingLayer::LAYER_5_TILES;
+    mesh_component.camera_type = CameraType::MODEL_VIEW_SPACE;
+
+    registry.emplace<MeshComponent>(entity, mesh_component);
+
+    return entity;
 }
 
 void TileBatch::generate_cave_background()
@@ -503,8 +509,8 @@ void TileBatch::generate_cave_background()
 
 void TileBatch::get_neighbouring_tiles(float x, float y, MapTile *out_neighboring_tiles[9]) const
 {
-    std::uint16_t x_tiles = std::floor(x + (MapTile::PHYSICAL_WIDTH / 2.0f));
-    std::uint16_t y_tiles = std::floor(y + (MapTile::PHYSICAL_HEIGHT / 2.0f));
+    std::uint16_t x_tiles = std::floor(x);
+    std::uint16_t y_tiles = std::floor(y);
 
     assert(x_tiles < Consts::LEVEL_WIDTH_TILES);
     assert(y_tiles < Consts::LEVEL_HEIGHT_TILES);

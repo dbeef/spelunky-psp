@@ -2,35 +2,32 @@
 #include "audio/Audio.hpp"
 #include "logger/log.h"
 #include "Level.hpp"
-#include "Renderer.hpp"
 #include "Input.hpp"
 #include "game-loop/GameLoop.hpp"
-#include "other/PhysicsComponentAggregator.hpp"
 #include "other/Inventory.hpp"
 #include "TextureBank.hpp"
+#include "EntityRegistry.hpp"
 
 #include <cstdlib>
 
 void init_singletons()
 {
-    Renderer::init();
     Level::init();
     TextureBank::init();
     Input::init();
     Audio::init();
-    PhysicsComponentAggregator::init();
     Inventory::init();
+    EntityRegistry::init();
 }
 
 void dispose_singletons()
 {
+    EntityRegistry::dispose();
     Inventory::dispose();
-    PhysicsComponentAggregator::dispose();
     Audio::dispose();
     Input::dispose();
     TextureBank::dispose();
     Level::dispose();
-    Renderer::dispose();
 }
 
 int start()

@@ -11,7 +11,7 @@ add_library(TextureBank STATIC
         interface/spritesheet-frames/MainMenuSpritesheetFrames.hpp
         interface/spritesheet-frames/MainDudeSpritesheetFrames.hpp
         interface/spritesheet-frames/FontSpritesheetFrames.hpp
-        )
+        interface/TextureID.hpp)
 
 target_include_directories(TextureBank
         PRIVATE include interface
@@ -34,7 +34,7 @@ endif()
 
 target_link_libraries(TextureBank
     PUBLIC
-        Renderer
+        RenderingTypes
         Patterns
     PRIVATE
         Logger

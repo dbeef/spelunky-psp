@@ -1,105 +1,112 @@
+#include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudeStandingState.hpp"
-#include "main-dude/MainDude.hpp"
+#include "components/specialized/MainDudeComponent.hpp"
 #include "Input.hpp"
 #include "logger/log.h"
 
-void MainDudeStandingState::enter(MainDude& main_dude)
+void MainDudeStandingState::enter(MainDudeComponent& dude)
 {
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
+
+    auto& animation = registry.get<AnimationComponent>(owner);
+    auto& quad = registry.get<QuadComponent>(owner);
+
+    animation.stop();
+    quad.frame_changed(MainDudeSpritesheetFrames::STAND_LEFT);
+
     _x_collision_timer = 0;
-    main_dude._animation.stop();
-    main_dude._quad.frame_changed(MainDudeSpritesheetFrames::STAND_LEFT);
 }
 
-MainDudeBaseState *MainDudeStandingState::update(MainDude& main_dude, uint32_t delta_time_ms)
+MainDudeBaseState *MainDudeStandingState::update(MainDudeComponent& dude, uint32_t delta_time_ms)
 {
-    // Update components:
+    const auto& input = Input::instance();
+    auto& registry = EntityRegistry::instance().get_registry();
+    const auto& owner = dude._owner;
 
-    main_dude._physics.update(delta_time_ms);
-    main_dude._quad.update(main_dude.get_x_pos_center(), main_dude.get_y_pos_center(), !main_dude._other.facing_left);
+    auto& animation = registry.get<AnimationComponent>(owner);
+    auto& physics = registry.get<PhysicsComponent>(owner);
+    auto& quad = registry.get<QuadComponent>(owner);
+    auto& position = registry.get<PositionComponent>(owner);
 
-    // Other:
-
-    if (main_dude._physics.get_x_velocity() != 0.0f)
+    if (input.left().value())
     {
-        return &main_dude._states.running;
+        physics.set_x_velocity(physics.get_x_velocity() - MainDudeComponent::DEFAULT_DELTA_X);
     }
 
-    if (main_dude._physics.get_y_velocity() > 0.0f)
+    if (input.right().value())
     {
-        return &main_dude._states.falling;
-    }
-    else if (main_dude._physics.get_y_velocity() < 0.0f)
-    {
-        return &main_dude._states.jumping;
+        physics.set_x_velocity(physics.get_x_velocity() + MainDudeComponent::DEFAULT_DELTA_X);
     }
 
-    if (main_dude._physics.is_left_collision() || main_dude._physics.is_right_collision())
+    if (input.jumping().changed() && input.jumping().value())
+    {
+        physics.set_y_velocity(physics.get_y_velocity() - MainDudeComponent::JUMP_SPEED);
+        return &dude._states.jumping;
+    }
+
+    if (input.ducking().value())
+    {
+        return &dude._states.ducking;
+    }
+
+    if (input.throwing().changed() && input.throwing().value())
+    {
+        return &dude._states.throwing;
+    }
+
+    if (input.up().value())
+    {
+        const auto* exit_tile = dude.is_overlaping_tile(MapTileType::EXIT, physics, position);
+
+        if (exit_tile)
+        {
+            position.set_position_on_tile(exit_tile);
+            return &dude._states.exiting;
+        }
+
+        const auto* ladder_tile = dude.is_overlaping_tile(MapTileType::LADDER, physics, position);
+        const auto* ladder_deck_tile = dude.is_overlaping_tile(MapTileType::LADDER_DECK, physics, position);
+
+        if (ladder_tile || ladder_deck_tile)
+        {
+            const auto* tile = ladder_tile ? ladder_tile : ladder_deck_tile;
+            position.x_center = tile->x + quad.get_quad_width() / 2;
+
+            return &dude._states.climbing;
+        }
+
+        return &dude._states.looking_up;
+    }
+
+    //
+
+    if (physics.get_x_velocity() != 0.0f)
+    {
+        return &dude._states.running;
+    }
+
+    if (physics.get_y_velocity() > 0.0f)
+    {
+        return &dude._states.falling;
+    }
+    else if (physics.get_y_velocity() < 0.0f)
+    {
+        return &dude._states.jumping;
+    }
+
+    if (physics.is_left_collision() || physics.is_right_collision())
     {
         _x_collision_timer += delta_time_ms;
         if (_x_collision_timer > 400)
         {
             _x_collision_timer = 0;
-            return &main_dude._states.pushing;
+            return &dude._states.pushing;
         }
     }
     else
     {
         _x_collision_timer = 0;
-    }
-
-    return this;
-}
-
-MainDudeBaseState *MainDudeStandingState::handle_input(MainDude& main_dude, const Input &input)
-{
-    if (input.left().value())
-    {
-        main_dude._physics.add_velocity(-MainDude::DEFAULT_DELTA_X, 0.0f);
-    }
-    if (input.right().value())
-    {
-        main_dude._physics.add_velocity(MainDude::DEFAULT_DELTA_X, 0.0f);
-    }
-    if (input.jumping().changed() && input.jumping().value())
-    {
-        main_dude._physics.add_velocity(0.0f, -MainDude::JUMP_SPEED);
-        return &main_dude._states.jumping;
-    }
-    if (input.ducking().value())
-    {
-        return &main_dude._states.ducking;
-    }
-    if (input.throwing().changed() && input.throwing().value())
-    {
-        return &main_dude._states.throwing;
-    }
-
-    if (input.up().value())
-    {
-        const auto* exit_tile = main_dude.is_overlaping_tile(MapTileType::EXIT);
-        if (exit_tile)
-        {
-            main_dude._physics.set_position(
-                    exit_tile->x + main_dude._quad.get_quad_width() / 2,
-                    exit_tile->y + main_dude._quad.get_quad_height() / 2);
-
-            return &main_dude._states.exiting;
-        }
-
-        const auto* ladder_tile = main_dude.is_overlaping_tile(MapTileType::LADDER);
-        const auto* ladder_deck_tile = main_dude.is_overlaping_tile(MapTileType::LADDER_DECK);
-
-        if (ladder_tile || ladder_deck_tile)
-        {
-            const auto* tile = ladder_tile ? ladder_tile : ladder_deck_tile;
-            main_dude._physics.set_position(
-                    tile->x + main_dude._quad.get_quad_width() / 2,
-                    main_dude.get_y_pos_center());
-
-            return &main_dude._states.climbing;
-        }
-
-        return &main_dude._states.looking_up;
     }
 
     return this;

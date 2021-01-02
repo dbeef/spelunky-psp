@@ -1,85 +1,95 @@
+#include "prefabs/ui/DeathOverlay.hpp"
+#include "prefabs/ui/HudOverlay.hpp"
+#include "prefabs/main-dude/MainDude.hpp"
+#include "prefabs/ui/PauseOverlay.hpp"
+
 #include "game-loop/GameLoopPlayingState.hpp"
 #include "game-loop/GameLoop.hpp"
 
-#include "game-entities/GameEntity.hpp"
-#include "game-entities/HUD.hpp"
-#include "game-entities/PauseOverlay.hpp"
-#include "game-entities/DeathOverlay.hpp"
-#include "game-entities/LevelSummaryTracker.hpp"
-#include "system/GameEntitySystem.hpp"
-#include "main-dude/MainDude.hpp"
+#include "EntityRegistry.hpp"
+
+#include "components/specialized/HudOverlayComponent.hpp"
+#include "components/specialized/PauseOverlayComponent.hpp"
+#include "components/specialized/DeathOverlayComponent.hpp"
+#include "components/specialized/LevelSummaryTracker.hpp"
+#include "components/specialized/MainDudeComponent.hpp"
+
+#include "system/RenderingSystem.hpp"
+#include "system/CollectibleSystem.hpp"
+#include "system/ScriptingSystem.hpp"
+#include "system/PhysicsSystem.hpp"
+#include "system/AnimationSystem.hpp"
 
 #include "logger/log.h"
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
-#include "Renderer.hpp"
+#include "CameraType.hpp"
 #include "Level.hpp"
 #include "audio/Audio.hpp"
 #include "populator/Populator.hpp"
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
-    auto& model_view_camera = game_loop._cameras.model_view;
-    auto& screen_space_camera = game_loop._cameras.screen_space;
-    auto& renderer = Renderer::instance();
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    auto& rendering_system = game_loop._rendering_system;
+    auto& scripting_system = game_loop._scripting_system;
+    auto& physics_system = game_loop._physics_system;
+    auto& animation_system = game_loop._animation_system;
+    auto& collectible_system = game_loop._collectible_system;
 
     // Adjust camera to follow main dude:
+    auto& position = registry.get<PositionComponent>(_main_dude);
+    auto& model_view_camera = game_loop._rendering_system->get_model_view_camera();
 
-    auto x = game_loop._main_dude->get_x_pos_center();
-    auto y = game_loop._main_dude->get_y_pos_center();
-    model_view_camera.adjust_to_bounding_box(x, y);
+    model_view_camera.adjust_to_bounding_box(position.x_center, position.y_center);
     model_view_camera.adjust_to_level_boundaries(Consts::LEVEL_WIDTH_TILES, Consts::LEVEL_HEIGHT_TILES);
-
-    // Remove render entities marked for disposal:
-
-    renderer.update();
-
-    // Render:
-
     model_view_camera.update_gl_modelview_matrix();
-    model_view_camera.update_gl_projection_matrix();
 
-    renderer.render(Renderer::EntityType::MODEL_VIEW_SPACE);
+    rendering_system->update(delta_time_ms);
 
-    screen_space_camera.update_gl_modelview_matrix();
-    screen_space_camera.update_gl_projection_matrix();
+    auto& pause = registry.get<PauseOverlayComponent>(_pause_overlay);
 
-    renderer.render(Renderer::EntityType::SCREEN_SPACE);
-
-    // Update game entities:
-
-    if (_pause_overlay->is_paused())
+    if (pause.is_paused())
     {
-        if (_pause_overlay->is_death_requested())
+        if (pause.is_death_requested())
         {
             log_info("Death requested.");
-            game_loop._main_dude->enter_dead_state();
+            auto& dude = registry.get<MainDudeComponent>(_main_dude);
+            dude.enter_dead_state();
         }
 
-        if (_pause_overlay->is_quit_requested())
+        if (pause.is_quit_requested())
         {
             log_info("Quit requested.");
             game_loop._exit = true;
         }
 
-        _pause_overlay->update(delta_time_ms);
+        pause.update(registry);
     }
     else
     {
-        game_loop._game_entity_system->update(delta_time_ms);
+        scripting_system->update(delta_time_ms);
+        physics_system->update(delta_time_ms);
+        animation_system->update(delta_time_ms);
+        collectible_system->update(delta_time_ms);
     }
 
-    // Other:
+    auto& dude = registry.get<MainDudeComponent>(_main_dude);
 
-    if (game_loop._main_dude->entered_door())
+    if (dude.entered_door())
     {
         return &game_loop._states.level_summary;
     }
 
-    if (_death_overlay->is_scores_requested())
+    auto& death = registry.get<DeathOverlayComponent>(_death_overlay);
+
+    if (death.is_scores_requested())
     {
         return &game_loop._states.scores;
     }
+
+    game_loop._level_summary_tracker->update(delta_time_ms);
 
     return this;
 }
@@ -88,6 +98,8 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopPlayingState");
 
+    auto& registry = EntityRegistry::instance().get_registry();
+
     Audio::instance().play(MusicType::CAVE);
 
     Level::instance().get_tile_batch().generate_new_level_layout();
@@ -95,67 +107,67 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     Level::instance().get_tile_batch().generate_frame();
     Level::instance().get_tile_batch().generate_cave_background();
     Level::instance().get_tile_batch().batch_vertices();
+    Level::instance().get_tile_batch().add_render_entity(registry);
 
     // Update main dude:
-    game_loop._main_dude->enter_standing_state();
-    game_loop._main_dude->set_velocity(0, 0);
-    game_loop._game_entity_system->add(game_loop._main_dude);
-
     MapTile *entrance = nullptr;
     Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
     assert(entrance);
-    game_loop._main_dude->set_position_on_tile(entrance);
 
-    // Subscribe on main dude's events:
-    game_loop._main_dude->add_observer(this);
+    float pos_x = entrance->x + (MapTile::PHYSICAL_WIDTH / 2.0f);
+    float pos_y = entrance->y + (MapTile::PHYSICAL_HEIGHT / 2.0f);
 
-    // Create HUD:
-    _hud = std::make_shared<HUD>(game_loop._viewport);
-    game_loop._game_entity_system->add(_hud);
+    // Update main dude:
+    _main_dude = prefabs::MainDude::create(pos_x, pos_y);
+    _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::PLAYING);
+    _death_overlay = prefabs::DeathOverlay::create(game_loop._viewport);
+    _hud = prefabs::HudOverlay::create(game_loop._viewport);
 
-    // Create pause overlay:
-    _pause_overlay = std::make_shared<PauseOverlay>(game_loop._viewport, PauseOverlay::Type::PLAYING);
-    game_loop._game_entity_system->add(_pause_overlay);
-    
-    // Create death overlay:
-    _death_overlay = std::make_shared<DeathOverlay>(game_loop._viewport);
-    _death_overlay->disable_input();
-    game_loop._game_entity_system->add(_death_overlay);
+    game_loop._rendering_system->sort();
 
-    // Generate loot:
-    auto loot_entities = populator::generate_loot(game_loop._level_summary_tracker);
-    game_loop._game_entity_system->add(loot_entities);
+    auto& dude = registry.get<MainDudeComponent>(_main_dude);
+    dude.add_observer(this);
 
-    // Make main dude appear on the foreground:
-    Renderer::instance().sort_by_layer();
+    auto& death = registry.get<DeathOverlayComponent>(_death_overlay);
+    death.disable_input();
 
+    populator::generate_loot(game_loop._level_summary_tracker);
     game_loop._level_summary_tracker->entered_new_level();
-    game_loop._game_entity_system->add(game_loop._level_summary_tracker);
 }
 
 void GameLoopPlayingState::exit(GameLoop& game_loop)
 {
+    auto& registry = EntityRegistry::instance().get_registry();
     Audio::instance().stop();
 
-    _death_overlay = nullptr;
-    _pause_overlay = nullptr;
-    _hud = nullptr;
+    auto& dude = registry.get<MainDudeComponent>(_main_dude);
+    dude.remove_observer(this);
 
-    game_loop._main_dude->remove_observer(this);
-    game_loop._game_entity_system->remove_all();
+    registry.clear();
 }
 
 void GameLoopPlayingState::on_notify(const MainDudeEvent* event)
 {
+    auto& registry = EntityRegistry::instance().get_registry();
+
     switch(*event)
     {
         case MainDudeEvent::DIED:
         {
-            _death_overlay->launch();
-            _death_overlay->enable_input();
-            _pause_overlay->reset();
-            _pause_overlay->disable_input();
-            _hud->hide();
+            // TODO: Maybe just remove components when they are no longer needed?
+            auto& death = registry.get<DeathOverlayComponent>(_death_overlay);
+            auto& pause = registry.get<PauseOverlayComponent>(_pause_overlay);
+
+            death.launch();
+            death.enable_input();
+
+            pause.unpause();
+            pause.hide(registry);
+            pause.disable_input();
+
+            registry.destroy(_hud);
+            _hud = entt::null;
+
             break;
         }
         default: break;

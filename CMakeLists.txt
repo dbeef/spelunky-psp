@@ -19,15 +19,16 @@ if (SPELUNKY_PSP_PLATFORM_ANDROID)
     # calls the main function through JNI.
     add_library(Spelunky_PSP SHARED src/Main.cpp)
 else()
-    add_executable(Spelunky_PSP src/Main.cpp)
+    add_executable(Spelunky_PSP src/Main.cpp src/entity-registry/src/EntityRegistry.cpp src/entity-registry/interface/EntityRegistry.hpp)
 endif ()
 
 add_subdirectory(vendor)
+add_subdirectory(src/entity-registry)
 add_subdirectory(src/viewport)
 add_subdirectory(src/video)
 add_subdirectory(src/audio)
 add_subdirectory(src/level)
-add_subdirectory(src/renderer)
+add_subdirectory(src/rendering-types)
 add_subdirectory(src/time)
 add_subdirectory(src/camera)
 add_subdirectory(src/input)
@@ -42,7 +43,7 @@ target_link_libraries(Spelunky_PSP PRIVATE
         Video
         Audio
         Level
-        Renderer
+        RenderingTypes
         Input
         GameLoop
         TextureBank

@@ -1,20 +1,24 @@
+#include "EntityRegistry.hpp"
 #include "populator/Populator.hpp"
 #include "populator/Spawner.hpp"
-#include "game-entities/LevelSummaryTracker.hpp"
-#include "game-entities/GameEntity.hpp"
-#include "game-entities/SingleGoldBar.hpp"
-#include "game-entities/TripleGoldBar.hpp"
-#include "game-entities/BigGem.hpp"
-#include "game-entities/Chest.hpp"
-#include "game-entities/Jar.hpp"
-#include "game-entities/Rock.hpp"
+#include "components/specialized/LevelSummaryTracker.hpp"
+
+#include "prefabs/collectibles/SingleGoldBar.hpp"
+#include "prefabs/collectibles/TripleGoldBar.hpp"
+#include "prefabs/collectibles/BigGem.hpp"
+#include "prefabs/items/Rock.hpp"
+#include "prefabs/items/Jar.hpp"
+#include "prefabs/items/Chest.hpp"
 #include "Level.hpp"
 
 #include <utility>
 #include <random>
+#include <components/generic/CollectibleComponent.hpp>
 
-std::vector<std::shared_ptr<GameEntity>> populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
+void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
 {
+    auto& registry = EntityRegistry::instance().get_registry();
+
     Spawner single_gold_bar_spawner(6, 8);
     Spawner triple_gold_bar_spawner(3, 4);
     Spawner big_gem_spawner(3, 4);
@@ -43,38 +47,38 @@ std::vector<std::shared_ptr<GameEntity>> populator::generate_loot(std::shared_pt
                     if (rock_spawner.can_spawn())
                     {
                         rock_spawner.spawned();
-                        out.push_back(std::make_shared<Rock>(pos_x, pos_y));
+                        prefabs::Rock::create(pos_x, pos_y);
                     }
                     else if (jar_spawner.can_spawn())
                     {
                         jar_spawner.spawned();
-                        out.push_back(std::make_shared<Jar>(pos_x, pos_y));
+                        prefabs::Jar::create(pos_x, pos_y);
                     }
                     else if (chest_spawner.can_spawn())
                     {
                         chest_spawner.spawned();
-                        out.push_back(std::make_shared<Chest>(pos_x, pos_y));
+                        prefabs::Chest::create(pos_x, pos_y);
                     }
                     else if (triple_gold_bar_spawner.can_spawn())
                     {
                         triple_gold_bar_spawner.spawned();
-                        auto triple_gold_bar = std::make_shared<TripleGoldBar>(pos_x, pos_y);
-                        triple_gold_bar->add_observer(tracker.get());
-                        out.push_back(triple_gold_bar);
+                        auto entity = prefabs::TripleGoldBar::create(pos_x, pos_y);
+                        auto& collectible = registry.get<CollectibleComponent>(entity);
+                        collectible.add_observer(tracker.get());
                     }
                     else if (big_gem_spawner.can_spawn())
                     {
                         big_gem_spawner.spawned();
-                        auto big_gem = std::make_shared<BigGem>(pos_x, pos_y);
-                        big_gem->add_observer(tracker.get());
-                        out.push_back(big_gem);
+                        auto entity = prefabs::BigGem::create(pos_x, pos_y);
+                        auto& collectible = registry.get<CollectibleComponent>(entity);
+                        collectible.add_observer(tracker.get());
                     }
                     else if (single_gold_bar_spawner.can_spawn())
                     {
                         single_gold_bar_spawner.spawned();
-                        auto single_gold_bar = std::make_shared<SingleGoldBar>(pos_x, pos_y);
-                        single_gold_bar->add_observer(tracker.get());
-                        out.push_back(single_gold_bar);
+                        auto entity = prefabs::SingleGoldBar::create(pos_x, pos_y);
+                        auto& collectible = registry.get<CollectibleComponent>(entity);
+                        collectible.add_observer(tracker.get());
                     }
                     break;
                 }
@@ -82,6 +86,4 @@ std::vector<std::shared_ptr<GameEntity>> populator::generate_loot(std::shared_pt
             }
         }
     }
-
-    return std::move(out);
 }

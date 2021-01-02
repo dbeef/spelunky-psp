@@ -14,10 +14,16 @@
 #include "game-loop/GameLoopStartedState.hpp"
 #include "game-loop/GameLoopScoresState.hpp"
 
-class GameEntitySystem;
-class MainDude;
+#include <entt/entt.hpp>
+
+class MainDudeComponent;
 class LevelSummaryTracker;
 class Viewport;
+class RenderingSystem;
+class ScriptingSystem;
+class PhysicsSystem;
+class AnimationSystem;
+class CollectibleSystem;
 
 class GameLoop
 {
@@ -42,18 +48,15 @@ private:
         GameLoopScoresState scores;
         GameLoopBaseState* current;
     } _states;
-    
-    struct
-    {
-        ModelViewCamera model_view;
-        ScreenSpaceCamera screen_space;
-    } _cameras;
 
     bool _exit = false;
 
-    std::shared_ptr<GameEntitySystem> _game_entity_system;
+    std::shared_ptr<PhysicsSystem> _physics_system;
+    std::shared_ptr<AnimationSystem> _animation_system;
+    std::shared_ptr<RenderingSystem> _rendering_system;
+    std::shared_ptr<ScriptingSystem> _scripting_system;
+    std::shared_ptr<CollectibleSystem> _collectible_system;
     std::shared_ptr<Viewport> _viewport;
-    std::shared_ptr<MainDude> _main_dude;
     std::shared_ptr<LevelSummaryTracker> _level_summary_tracker;
     std::function<bool(uint32_t delta_time_ms)> _loop;
 };
