@@ -16,7 +16,7 @@ target_include_directories(Input
 
 set_target_properties(Input PROPERTIES
         CXX_STANDARD
-        14
+        17
 )
 
 target_link_libraries(Input

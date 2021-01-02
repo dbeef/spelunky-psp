@@ -16,7 +16,7 @@ target_include_directories(Video
 
 set_target_properties(Video PROPERTIES
         CXX_STANDARD
-        14
+        17
 )
 
 target_link_libraries(Video

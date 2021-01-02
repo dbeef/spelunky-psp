@@ -21,5 +21,5 @@ target_link_libraries(Time PUBLIC
 )
 set_target_properties(Time PROPERTIES
         CXX_STANDARD
-        14
+        17
 )

@@ -20,7 +20,7 @@ target_include_directories(TextureBank
 
 set_target_properties(TextureBank PROPERTIES
         CXX_STANDARD
-        14
+        17
         )
 
 if (NOT SPELUNKY_PSP_PLATFORM_WINDOWS)

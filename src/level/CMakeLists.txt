@@ -29,7 +29,7 @@ target_include_directories(Level
 
 set_target_properties(Level PROPERTIES
         CXX_STANDARD
-        14
+        17
         )
 
 target_link_libraries(Level

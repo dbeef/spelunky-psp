@@ -111,7 +111,7 @@ target_include_directories(GameLoop
 
 set_target_properties(GameLoop PROPERTIES
         CXX_STANDARD
-        14
+        17
 )
 
 target_link_libraries(GameLoop
