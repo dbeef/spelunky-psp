@@ -1,6 +1,7 @@
 #include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudeStandingState.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
+#include <components/generic/InputComponent.hpp>
 #include "Input.hpp"
 #include "logger/log.h"
 
@@ -11,6 +12,26 @@ void MainDudeStandingState::enter(MainDudeComponent& dude)
 
     auto& animation = registry.get<AnimationComponent>(owner);
     auto& quad = registry.get<QuadComponent>(owner);
+    auto& input = registry.get<InputComponent>(owner);
+
+    input.allowed_events = {
+            InputEvent::JUMPING,
+            InputEvent::JUMPING_PRESSED,
+            InputEvent::LEFT,
+            InputEvent::LEFT_PRESSED,
+            InputEvent::RIGHT,
+            InputEvent::RIGHT_PRESSED,
+            InputEvent::RUNNING_FAST,
+            InputEvent::RUNNING_FAST_PRESSED,
+            InputEvent::THROWING,
+            InputEvent::THROWING_PRESSED,
+            InputEvent::OUT_BOMB,
+            InputEvent::OUT_BOMB_PRESSED,
+            InputEvent::OUT_ROPE,
+            InputEvent::OUT_ROPE_PRESSED,
+            InputEvent::UP,
+            InputEvent::UP_PRESSED,
+    };
 
     animation.stop();
     quad.frame_changed(MainDudeSpritesheetFrames::STAND_LEFT);
@@ -29,30 +50,14 @@ MainDudeBaseState *MainDudeStandingState::update(MainDudeComponent& dude, uint32
     auto& quad = registry.get<QuadComponent>(owner);
     auto& position = registry.get<PositionComponent>(owner);
 
-    if (input.left().value())
+    if (physics.get_y_velocity() < 0.0f)
     {
-        physics.set_x_velocity(physics.get_x_velocity() - MainDudeComponent::DEFAULT_DELTA_X);
-    }
-
-    if (input.right().value())
-    {
-        physics.set_x_velocity(physics.get_x_velocity() + MainDudeComponent::DEFAULT_DELTA_X);
-    }
-
-    if (input.jumping().changed() && input.jumping().value())
-    {
-        physics.set_y_velocity(physics.get_y_velocity() - MainDudeComponent::JUMP_SPEED);
         return &dude._states.jumping;
     }
 
     if (input.ducking().value())
     {
         return &dude._states.ducking;
-    }
-
-    if (input.throwing().changed() && input.throwing().value())
-    {
-        return &dude._states.throwing;
     }
 
     if (input.up().value())
@@ -78,8 +83,6 @@ MainDudeBaseState *MainDudeStandingState::update(MainDudeComponent& dude, uint32
 
         return &dude._states.looking_up;
     }
-
-    //
 
     if (physics.get_x_velocity() != 0.0f)
     {

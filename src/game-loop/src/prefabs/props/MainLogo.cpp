@@ -1,9 +1,10 @@
-#include "EntityRegistry.hpp"
 #include "prefabs/props/MainLogo.hpp"
+
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
-#include "TextureBank.hpp"
+
+#include "EntityRegistry.hpp"
 #include "TextureType.hpp"
 #include "spritesheet-frames/MainMenuSpritesheetFrames.hpp"
 

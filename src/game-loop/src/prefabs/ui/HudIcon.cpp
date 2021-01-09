@@ -1,10 +1,12 @@
-#include <components/generic/PositionComponent.hpp>
-#include <TextureType.hpp>
-#include <components/generic/MeshComponent.hpp>
-#include <components/generic/QuadComponent.hpp>
-#include <spritesheet-frames/HUDSpritesheetFrames.hpp>
 #include "prefabs/ui/HudIcon.hpp"
+
+#include "components/generic/PositionComponent.hpp"
+#include "components/generic/MeshComponent.hpp"
+#include "components/generic/QuadComponent.hpp"
+
 #include "EntityRegistry.hpp"
+#include "TextureType.hpp"
+#include "spritesheet-frames/HUDSpritesheetFrames.hpp"
 
 entt::entity prefabs::HudIcon::create(float x, float y, HUDSpritesheetFrames frame)
 {
@@ -16,7 +18,7 @@ entt::entity prefabs::HudIcon::create(float x, float y, HUDSpritesheetFrames fra
     QuadComponent quad(TextureType::HUD, getIconSizeWorldUnits(), getIconSizeWorldUnits());
     MeshComponent mesh;
 
-    mesh.rendering_layer = RenderingLayer::LAYER_2_UI_QUADS;
+    mesh.rendering_layer = RenderingLayer::LAYER_2_ITEMS;
     mesh.camera_type = CameraType::SCREEN_SPACE;
     quad.frame_changed<HUDSpritesheetFrames>(frame);
 

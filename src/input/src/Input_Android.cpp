@@ -94,6 +94,16 @@ void Input::poll()
             {
                 _toggles.quit_requested.feed(v);
             }
+            else if (key == SDLK_z)
+            {
+                _toggles.out_bomb.feed(v);
+            }
+            else if (key == SDLK_x)
+            {
+                _toggles.out_rope.feed(v);
+            }
         }
+
+        fill_input_events();
     }
 }

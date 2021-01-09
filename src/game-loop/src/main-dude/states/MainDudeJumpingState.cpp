@@ -1,6 +1,7 @@
 #include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudeJumpingState.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
+#include <components/generic/InputComponent.hpp>
 #include "Input.hpp"
 #include "audio/Audio.hpp"
 
@@ -11,6 +12,26 @@ void MainDudeJumpingState::enter(MainDudeComponent& dude)
 
     auto& animation = registry.get<AnimationComponent>(owner);
     auto& quad = registry.get<QuadComponent>(owner);
+    auto& input = registry.get<InputComponent>(owner);
+
+    input.allowed_events = {
+            InputEvent::LEFT,
+            InputEvent::LEFT_PRESSED,
+            InputEvent::RIGHT,
+            InputEvent::RIGHT_PRESSED,
+            InputEvent::RUNNING_FAST,
+            InputEvent::RUNNING_FAST_PRESSED,
+            InputEvent::JUMPING,
+            InputEvent::JUMPING_PRESSED,
+            InputEvent::THROWING,
+            InputEvent::THROWING_PRESSED,
+            InputEvent::OUT_BOMB,
+            InputEvent::OUT_BOMB_PRESSED,
+            InputEvent::OUT_ROPE,
+            InputEvent::OUT_ROPE_PRESSED,
+            InputEvent::UP,
+            InputEvent::UP_PRESSED,
+    };
 
     animation.stop();
     quad.frame_changed(MainDudeSpritesheetFrames::JUMP_LEFT);
@@ -29,38 +50,23 @@ MainDudeBaseState* MainDudeJumpingState::update(MainDudeComponent& dude, uint32_
     auto& quad = registry.get<QuadComponent>(owner);
     auto& position = registry.get<PositionComponent>(owner);
 
-    if (input.left().value())
+    if (input.left().value() && dude.hang_off_cliff_left(physics, position))
     {
-        physics.set_x_velocity(physics.get_x_velocity() - MainDudeComponent::DEFAULT_DELTA_X);
-        if (dude.hang_off_cliff_left(physics, position))
-        {
-            return &dude._states.cliff_hanging;
-        }
+        return &dude._states.cliff_hanging;
     }
 
-    if (input.right().value())
+    if (input.right().value() && dude.hang_off_cliff_right(physics, position))
     {
-        physics.set_x_velocity(physics.get_x_velocity() + MainDudeComponent::DEFAULT_DELTA_X);
-        if (dude.hang_off_cliff_right(physics, position))
-        {
-            return &dude._states.cliff_hanging;
-        }
+        return &dude._states.cliff_hanging;
     }
 
     if (input.running_fast().value())
     {
-        physics.set_max_x_velocity(MainDudeComponent::MAX_RUNNING_VELOCITY_X);
         animation.set_time_per_frame_ms(50);
     }
     else
     {
-        physics.set_max_x_velocity(MainDudeComponent::DEFAULT_MAX_X_VELOCITY);
         animation.set_time_per_frame_ms(75);
-    }
-
-    if (input.throwing().changed() && input.throwing().value())
-    {
-        return &dude._states.throwing;
     }
 
     if (input.up().value())

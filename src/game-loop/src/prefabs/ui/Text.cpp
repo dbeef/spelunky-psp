@@ -4,10 +4,8 @@
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/TextComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
-#include "components/generic/QuadComponent.hpp"
 
 #include "TextureBank.hpp"
-#include "TextureType.hpp"
 
 entt::entity prefabs::Text::create()
 {

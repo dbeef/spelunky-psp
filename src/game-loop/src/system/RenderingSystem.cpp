@@ -1,4 +1,3 @@
-#include <components/generic/SortRenderingLayersComponent.hpp>
 #include "system/RenderingSystem.hpp"
 #include "EntityRegistry.hpp"
 #include "Vertex.hpp"
@@ -16,13 +15,9 @@ void RenderingSystem::update(std::uint32_t delta_time_ms)
     registry.view<QuadComponent>().each([&registry](entt::entity e, QuadComponent &quad) { quad.update(e); });
     registry.view<TextComponent>().each([&registry](entt::entity e, TextComponent &text) { text.update(e); });
 
-    const auto sort_layers_components = registry.view<SortRenderingLayersComponent>();
-    if (!sort_layers_components.empty())
-    {
-        sort_layers_components.each([&registry](entt::entity e){ registry.destroy(e); });
-        sort();
-    }
+    sort(); // FIXME: Sorting components every frame!
 
+    // FIXME: Pointers to meshes may become invalidated after entity pool resize. Same as BombSpawner.cpp:31.
     auto meshes = registry.view<MeshComponent>();
     meshes.each([this](MeshComponent &mesh)
     {

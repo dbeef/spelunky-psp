@@ -8,7 +8,6 @@
 #include <components/generic/PositionComponent.hpp>
 #include <components/generic/MeshComponent.hpp>
 #include <components/specialized/HudOverlayComponent.hpp>
-#include <components/generic/SortRenderingLayersComponent.hpp>
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
 #include "other/Inventory.hpp"
 
@@ -128,11 +127,6 @@ void HudOverlayComponent::update_dollars()
             text.set_scale(0.5f);
             text.set_yellow(true);
             text.set_text(to_string(Inventory::instance().get_dollars()));
-        }
-
-        {
-            auto entity = registry.create();
-            registry.emplace<SortRenderingLayersComponent>(entity);
         }
     }
 

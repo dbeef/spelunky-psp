@@ -1,14 +1,12 @@
-#include "EntityRegistry.hpp"
-#include <components/generic/CollectibleComponent.hpp>
 #include "prefabs/collectibles/TripleGoldBar.hpp"
 
-#include "components/generic/SortRenderingLayersComponent.hpp"
+#include "components/generic/CollectibleComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 
-#include "TextureBank.hpp"
+#include "EntityRegistry.hpp"
 #include "TextureType.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
 
@@ -41,11 +39,6 @@ entt::entity prefabs::TripleGoldBar::create(float pos_x_center, float pos_y_cent
     registry.emplace<MeshComponent>(entity, mesh);
     registry.emplace<PhysicsComponent>(entity, physics);
     registry.emplace<CollectibleComponent>(entity, collectible);
-
-    {
-        const auto entity = registry.create();
-        registry.emplace<SortRenderingLayersComponent>(entity);
-    }
 
     return entity;
 }

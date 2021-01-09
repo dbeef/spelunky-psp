@@ -1,6 +1,3 @@
-//#include "components/specialized/SingleGoldBar.hpp"
-//#include "components/specialized/TripleGoldBar.hpp"
-//#include "components/specialized/BigGem.hpp"
 #include "components/specialized/LevelSummaryOverlayComponent.hpp"
 #include "components/specialized/LevelSummaryTracker.hpp"
 
@@ -10,7 +7,6 @@
 #include <cmath>
 #include <components/generic/MeshComponent.hpp>
 #include <components/generic/PositionComponent.hpp>
-#include <components/generic/SortRenderingLayersComponent.hpp>
 #include <prefabs/collectibles/SingleGoldBar.hpp>
 #include <prefabs/collectibles/TripleGoldBar.hpp>
 #include <prefabs/collectibles/BigGem.hpp>
@@ -152,11 +148,6 @@ LevelSummaryOverlayComponent::LevelSummaryOverlayComponent(const std::shared_ptr
         registry.emplace<MeshComponent>(entity, mesh);
     }
 
-    {
-        auto entity = registry.create();
-        registry.emplace<SortRenderingLayersComponent>(entity);
-    }
-
     _level_summary_tracker->sort_loot_collected_events();
 }
 
@@ -191,7 +182,7 @@ void LevelSummaryOverlayComponent::update(uint32_t delta_time_ms)
                 registry.remove<PhysicsComponent>(entity);
                 break;
             }
-            case LootCollectedEvent::GEM:
+            case LootCollectedEvent::BIG_GEM:
             {
                 auto entity = prefabs::BigGem::create(x, y);
                 registry.remove<PhysicsComponent>(entity);

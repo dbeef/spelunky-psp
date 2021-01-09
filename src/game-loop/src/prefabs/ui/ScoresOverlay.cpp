@@ -3,15 +3,8 @@
 #include "prefabs/ui/Text.hpp"
 
 #include "components/generic/PositionComponent.hpp"
-#include "components/generic/QuadComponent.hpp"
 #include "components/generic/TextComponent.hpp"
-#include "components/generic/SortRenderingLayersComponent.hpp"
 
-#include "TextureBank.hpp"
-#include "TextureType.hpp"
-#include "spritesheet-frames/MainMenuSpritesheetFrames.hpp"
-
-#include <cstring>
 #include <sstream>
 #include <iomanip>
 
@@ -147,10 +140,5 @@ void prefabs::ScoresOverlay::create(const std::shared_ptr<Viewport> &viewport)
 
         position.x_center = viewport->get_width_world_units() * 0.4f;
         position.y_center = viewport->get_height_world_units() * 0.71f;
-    }
-
-    {
-        auto entity = registry.create();
-        registry.emplace<SortRenderingLayersComponent>(entity);
     }
 }

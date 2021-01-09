@@ -2,6 +2,7 @@
 #include "Level.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
 #include "main-dude/states/MainDudeClimbingLadderState.hpp"
+#include "components/generic/InputComponent.hpp"
 #include "Input.hpp"
 #include "audio/Audio.hpp"
 
@@ -29,6 +30,22 @@ void MainDudeClimbingLadderState::enter(MainDudeComponent& dude)
     auto& physics = registry.get<PhysicsComponent>(owner);
     auto& quad = registry.get<QuadComponent>(owner);
     auto& animation = registry.get<AnimationComponent>(owner);
+    auto& input = registry.get<InputComponent>(owner);
+
+    input.allowed_events = {
+            InputEvent::UP,
+            InputEvent::UP_PRESSED,
+            InputEvent::DOWN,
+            InputEvent::DOWN_PRESSED,
+            InputEvent::JUMPING,
+            InputEvent::JUMPING_PRESSED,
+            InputEvent::THROWING,
+            InputEvent::THROWING_PRESSED,
+            InputEvent::OUT_BOMB,
+            InputEvent::OUT_BOMB_PRESSED,
+            InputEvent::OUT_ROPE,
+            InputEvent::OUT_ROPE_PRESSED,
+    };
 
     physics.set_x_velocity(0);
     physics.set_y_velocity(0);
@@ -53,6 +70,7 @@ MainDudeBaseState* MainDudeClimbingLadderState::update(MainDudeComponent& dude, 
 
     if (input.jumping().changed() && input.jumping().value())
     {
+        // FIXME: InputSystem checks for bottom collision which is not true in this case
         physics.set_y_velocity(physics.get_y_velocity() - MainDudeComponent::JUMP_SPEED);
         return &dude._states.jumping;
     }
@@ -64,14 +82,10 @@ MainDudeBaseState* MainDudeClimbingLadderState::update(MainDudeComponent& dude, 
     {
         if (input.up().value())
         {
-            physics.set_x_velocity(0.0f);
-            physics.set_y_velocity(-0.025f);
             play_sound();
         }
         else if (input.down().value())
         {
-            physics.set_x_velocity(0.0f);
-            physics.set_y_velocity(0.025f);
             play_sound();
 
             if (physics.is_bottom_collision())

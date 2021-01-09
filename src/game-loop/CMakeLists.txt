@@ -1,6 +1,8 @@
 project(GameLoop)
 
 add_library(GameLoop STATIC
+        # Game loop:
+
         src/game-loop/GameLoop.cpp
         src/game-loop/GameLoopMainMenuState.cpp
         src/game-loop/GameLoopPlayingState.cpp
@@ -15,6 +17,8 @@ add_library(GameLoop STATIC
         interface/game-loop/GameLoopStartedState.hpp
         interface/game-loop/GameLoopLevelSummaryState.hpp
         interface/game-loop/GameLoopScoresState.hpp
+
+        # Main dude:
 
         src/main-dude/MainDudeComponent.cpp
         src/main-dude/states/MainDudeStandingState.cpp
@@ -52,6 +56,9 @@ add_library(GameLoop STATIC
         include/main-dude/states/MainDudeStunnedState.hpp
         include/main-dude/MainDudeEvent.hpp
 
+        # Components:
+
+        src/components/generic/ItemCarrierComponent.cpp
         src/components/specialized/HudOverlayComponent.cpp
         src/components/specialized/PauseOverlayComponent.cpp
         src/components/specialized/DeathOverlayComponent.cpp
@@ -61,12 +68,22 @@ add_library(GameLoop STATIC
         src/components/generic/TextComponent.cpp
         src/components/generic/AnimationComponent.cpp
         src/components/generic/PhysicsComponent.cpp
+        src/components/generic/ItemComponent.cpp
+        include/components/generic/OpenableComponent.hpp
+        include/components/generic/CollectibleComponent.hpp
+        include/components/generic/ScriptingComponent.hpp
+        include/components/generic/InputComponent.hpp
+        include/components/generic/TimeLimitComponent.hpp
+        include/components/generic/ParticleEmitterComponent.hpp
+        include/components/generic/ItemCarrierComponent.hpp
+        include/components/generic/ItemComponent.hpp
+        include/components/generic/HorizontalOrientationComponent.hpp
         include/components/generic/PositionComponent.hpp
         include/components/generic/QuadComponent.hpp
         include/components/generic/PhysicsComponent.hpp
         include/components/generic/AnimationComponent.hpp
         include/components/generic/MeshComponent.hpp
-        include/components/generic/SortRenderingLayersComponent.hpp
+        include/components/generic/ActivableComponent.hpp
         include/components/specialized/MainDudeComponent.hpp
         include/components/specialized/LevelSummaryTracker.hpp
         include/components/specialized/HudOverlayComponent.hpp
@@ -74,21 +91,7 @@ add_library(GameLoop STATIC
         include/components/specialized/DeathOverlayComponent.hpp
         include/components/specialized/LevelSummaryOverlayComponent.hpp
 
-        include/system/System.hpp
-        include/system/RenderingSystem.hpp
-        include/system/PhysicsSystem.hpp
-        include/system/ScriptingSystem.hpp
-        include/system/AnimationSystem.hpp
-
-        src/populator/Populator.cpp
-        include/populator/Populator.hpp
-        include/populator/Spawner.hpp
-
-        src/other/Inventory.cpp
-        interface/other/PhysicsComponentType.hpp
-        interface/other/Inventory.hpp
-        interface/other/InventoryEvent.hpp
-        include/other/LootCollectedEvent.hpp
+        # Prefabs:
 
         include/prefabs/props/StartSign.hpp
         include/prefabs/props/ScoresSign.hpp
@@ -103,6 +106,40 @@ add_library(GameLoop STATIC
         include/prefabs/ui/DeathOverlay.hpp
         include/prefabs/ui/LevelSummaryOverlay.hpp
         include/prefabs/ui/HudOverlay.hpp
+        include/prefabs/ui/Text.hpp
+        include/prefabs/collectibles/SingleGoldBar.hpp
+        include/prefabs/collectibles/TripleGoldBar.hpp
+        include/prefabs/collectibles/BigGem.hpp
+        include/prefabs/items/Rock.hpp
+        include/prefabs/items/Jar.hpp
+        include/prefabs/items/Chest.hpp
+        include/prefabs/ui/HudIcon.hpp
+        include/prefabs/particles/ItemCollectedParticle.hpp
+        include/prefabs/particles/BloodTrailParticle.hpp
+        include/prefabs/particles/SmokePuffParticle.hpp
+        include/prefabs/particles/RubbleSmallParticle.hpp
+        include/prefabs/particles/PoofParticle.hpp
+        include/prefabs/particles/FlameTrailParticle.hpp
+        include/prefabs/particles/FlameParticle.hpp
+        include/prefabs/particles/RopeCollectedParticle.hpp
+        include/prefabs/particles/BombCollectedParticle.hpp
+        include/prefabs/collectibles/GoldNugget.hpp
+        include/prefabs/collectibles/GoldChunk.hpp
+        include/prefabs/collectibles/SmallGem.hpp
+        include/prefabs/items/Jetpack.hpp
+        include/prefabs/items/BombSpawner.hpp
+        include/prefabs/items/Bomb.hpp
+        include/prefabs/items/Pistol.hpp
+        include/prefabs/items/Shotgun.hpp
+        include/prefabs/items/RopeSpawner.hpp
+        include/prefabs/items/Rope.hpp
+        include/prefabs/items/RopeChainElement.hpp
+        include/prefabs/items/Whip.hpp
+        include/prefabs/items/Crate.hpp
+        include/prefabs/items/Cape.hpp
+        include/prefabs/effects/Explosion.hpp
+        include/prefabs/effects/ShotgunBlast.hpp
+        include/prefabs/other/Bullet.hpp
 
         src/prefabs/props/QuitSign.cpp
         src/prefabs/props/ResetSign.cpp
@@ -117,7 +154,76 @@ add_library(GameLoop STATIC
         src/prefabs/ui/DeathOverlay.cpp
         src/prefabs/ui/LevelSummaryOverlay.cpp
         src/prefabs/ui/HudOverlay.cpp
-        include/prefabs/ui/Text.hpp src/prefabs/ui/Text.cpp include/prefabs/collectibles/SingleGoldBar.hpp src/prefabs/collectibles/SingleGoldBar.cpp include/prefabs/collectibles/TripleGoldBar.hpp src/prefabs/collectibles/TripleGoldBar.cpp include/prefabs/collectibles/BigGem.hpp src/prefabs/collectibles/BigGem.cpp include/prefabs/items/Rock.hpp src/prefabs/items/Rock.cpp include/prefabs/items/Jar.hpp src/prefabs/items/Jar.cpp include/prefabs/items/Chest.hpp src/prefabs/items/Chest.cpp include/components/generic/CollectibleComponent.hpp include/system/CollectibleSystem.hpp src/system/RenderingSystem.cpp include/prefabs/ui/HudIcon.hpp src/prefabs/ui/HudIcon.cpp src/system/PhysicsSystem.cpp src/system/CollectibleSystem.cpp src/system/AnimationSystem.cpp src/system/ScriptingSystem.cpp)
+        src/prefabs/ui/Text.cpp
+        src/prefabs/collectibles/SingleGoldBar.cpp
+        src/prefabs/collectibles/TripleGoldBar.cpp
+        src/prefabs/collectibles/BigGem.cpp
+        src/prefabs/items/Rock.cpp
+        src/prefabs/items/Jar.cpp
+        src/prefabs/items/Chest.cpp
+        src/prefabs/ui/HudIcon.cpp
+        src/prefabs/particles/ItemCollectedParticle.cpp
+        src/prefabs/particles/BloodTrailParticle.cpp
+        src/prefabs/particles/SmokePuffParticle.cpp
+        src/prefabs/particles/RubbleSmallParticle.cpp
+        src/prefabs/particles/FlameTrailParticle.cpp
+        src/prefabs/particles/PoofParticle.cpp
+        src/prefabs/particles/FlameParticle.cpp
+        src/prefabs/particles/RopeCollectedParticle.cpp
+        src/prefabs/particles/BombCollectedParticle.cpp
+        src/prefabs/collectibles/GoldNugget.cpp
+        src/prefabs/collectibles/GoldChunk.cpp
+        src/prefabs/collectibles/SmallGem.cpp
+        src/prefabs/items/Jetpack.cpp
+        src/prefabs/items/BombSpawner.cpp
+        src/prefabs/items/Bomb.cpp
+        src/prefabs/items/Pistol.cpp
+        src/prefabs/items/Shotgun.cpp
+        src/prefabs/items/RopeSpawner.cpp
+        src/prefabs/items/Rope.cpp
+        src/prefabs/items/RopeChainElement.cpp
+        src/prefabs/items/Whip.cpp
+        src/prefabs/items/Crate.cpp
+        src/prefabs/items/Cape.cpp
+        src/prefabs/effects/Explosion.cpp
+        src/prefabs/effects/ShotgunBlast.cpp
+        src/prefabs/other/Bullet.cpp
+
+        # Systems:
+
+        include/system/System.hpp
+        include/system/RenderingSystem.hpp
+        include/system/PhysicsSystem.hpp
+        include/system/ScriptingSystem.hpp
+        include/system/AnimationSystem.hpp
+        include/system/ParticleSystem.hpp
+        include/system/CollectibleSystem.hpp
+        include/system/InputSystem.hpp
+        include/system/DisposingSystem.hpp
+        include/system/ItemSystem.hpp
+
+        src/system/ParticleSystem.cpp
+        src/system/RenderingSystem.cpp
+        src/system/PhysicsSystem.cpp
+        src/system/CollectibleSystem.cpp
+        src/system/AnimationSystem.cpp
+        src/system/ScriptingSystem.cpp
+        src/system/InputSystem.cpp
+        src/system/DisposingSystem.cpp
+        src/system/ItemSystem.cpp
+
+        # Other:
+
+        src/populator/Populator.cpp
+        include/populator/Populator.hpp
+        include/populator/Spawner.hpp
+
+        src/other/Inventory.cpp
+        interface/other/PhysicsComponentType.hpp
+        interface/other/Inventory.hpp
+        interface/other/InventoryEvent.hpp
+        include/other/LootCollectedEvent.hpp
+)
 
 target_include_directories(GameLoop
         PRIVATE include interface

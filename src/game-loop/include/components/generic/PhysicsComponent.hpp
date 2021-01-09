@@ -13,7 +13,7 @@ public:
     PhysicsComponent(float width, float height);
     PhysicsComponent() = default;
 
-    bool is_collision(PhysicsComponent& other_physics, PositionComponent& other_position, PositionComponent& this_position);
+    bool is_collision(PhysicsComponent& other_physics, PositionComponent& other_position, PositionComponent& this_position) const;
 
     void update(uint32_t delta_time_ms,PositionComponent& position);
 
@@ -35,6 +35,8 @@ public:
     float get_max_x_velocity() const { return _velocity.max_x; }
     float get_max_y_velocity() const { return _velocity.max_y; }
 
+    void set_gravity_modifier(float modifier) { _properties.gravity_modifier = modifier; }
+
     void disable_gravity() { _gravity = false; };
     void enable_gravity() { _gravity = true; };
 
@@ -47,7 +49,7 @@ public:
     void set_friction(float friction) { _properties.friction = friction; }
 
     static float get_default_friction() { return 0.005f; }
-    static float get_default_max_x_velocity() { return 0.050f; }
+    static float get_default_max_x_velocity() { return 0.35f; }
     static float get_default_max_y_velocity() { return 0.39f; }
 
 private:
@@ -78,6 +80,7 @@ private:
     {
         float bounciness = 0.0f;
         float friction = PhysicsComponent::get_default_friction();
+        float gravity_modifier = 1.0f;
     } _properties;
 
     bool _gravity = true;

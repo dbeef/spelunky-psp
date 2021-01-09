@@ -3,10 +3,14 @@
 #include "viewport/Viewport.hpp"
 #include "components/specialized/LevelSummaryTracker.hpp"
 #include "system/RenderingSystem.hpp"
+#include "system/DisposingSystem.hpp"
+#include "system/InputSystem.hpp"
 #include "system/ScriptingSystem.hpp"
 #include "system/CollectibleSystem.hpp"
 #include "system/PhysicsSystem.hpp"
+#include "system/ParticleSystem.hpp"
 #include "system/AnimationSystem.hpp"
+#include "system/ItemSystem.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -24,6 +28,10 @@ GameLoop::GameLoop(const std::shared_ptr<Viewport>& viewport)
     , _physics_system(std::make_shared<PhysicsSystem>())
     , _animation_system(std::make_shared<AnimationSystem>())
     , _collectible_system(std::make_shared<CollectibleSystem>())
+    , _input_system(std::make_shared<InputSystem>())
+    , _disposing_system(std::make_shared<DisposingSystem>())
+    , _particle_system(std::make_shared<ParticleSystem>())
+    , _item_system(std::make_shared<ItemSystem>())
 {
     _states.current = &_states.started;
     _states.current->enter(*this);

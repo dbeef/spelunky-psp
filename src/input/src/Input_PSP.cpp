@@ -47,4 +47,8 @@ void Input::poll()
     _toggles.running_fast.feed(pad.Buttons & PSP_CTRL_LTRIGGER);
     _toggles.throwing.feed(pad.Buttons & PSP_CTRL_RTRIGGER);
     _toggles.paused.feed(pad.Buttons & PSP_CTRL_SELECT);
+    _toggles.out_bomb.feed(pad.Buttons & PSP_CTRL_TRIANGLE);
+    _toggles.out_rope.feed(pad.Buttons & PSP_CTRL_SQUARE);
+
+    fill_input_events();
 }

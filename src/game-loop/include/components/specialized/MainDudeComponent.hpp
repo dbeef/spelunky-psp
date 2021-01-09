@@ -48,6 +48,7 @@ public:
     void enter_level_summary_state();
     void enter_dead_state();
     void enter_standing_state();
+    void enter_throwing_state();
 
     bool entered_door() const { return _other.entered_door; }
 
@@ -100,7 +101,6 @@ private:
 
     struct
     {
-        bool facing_left;
         bool dead = false;
         bool entered_door = false;
     } _other;

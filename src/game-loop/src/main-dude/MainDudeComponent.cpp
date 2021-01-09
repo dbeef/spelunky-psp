@@ -32,20 +32,11 @@ MainDudeComponent::MainDudeComponent(entt::entity owner) : _owner(owner)
 
     _states.current = &_states.standing;
     _states.current->enter(*this);
-    _other.facing_left = true;
 }
-
-//MainDudeComponent::MainDudeComponent(co)
-//{
-//    _states.current = &_states.standing;
-//    _other.facing_left = true;
-//    Inventory::instance().set_starting_inventory();
-//}
 
 MainDudeComponent::MainDudeComponent(const MainDudeComponent& other) : _owner(other._owner)
 {
     _states.current = &_states.standing;
-    _other.facing_left = true;
 }
 
 void MainDudeComponent::update(uint32_t delta_time_ms)
@@ -56,14 +47,6 @@ void MainDudeComponent::update(uint32_t delta_time_ms)
 
     auto& physics = registry.get<PhysicsComponent>(_owner);
     auto& quad = registry.get<QuadComponent>(_owner);
-
-    if (physics.get_x_velocity() != 0.0f)
-    {
-        _other.facing_left = physics.get_x_velocity() < 0.0f;
-
-        quad.set_vertical_flip(!_other.facing_left);
-        quad.frame_changed();
-    }
 
     // Update current state:
 
@@ -98,6 +81,11 @@ MapTile* MainDudeComponent::is_overlaping_tile(MapTileType type, PhysicsComponen
 void MainDudeComponent::enter_standing_state()
 {
     enter_if_different(&_states.standing);
+}
+
+void MainDudeComponent::enter_throwing_state()
+{
+    enter_if_different(&_states.throwing);
 }
 
 void MainDudeComponent::enter_dead_state()

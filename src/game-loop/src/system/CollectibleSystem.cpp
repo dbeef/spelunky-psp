@@ -1,5 +1,4 @@
 #include "system/CollectibleSystem.hpp"
-#include "components/generic/SortRenderingLayersComponent.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
 #include "components/generic/CollectibleComponent.hpp"
 #include "EntityRegistry.hpp"
@@ -34,8 +33,5 @@ void CollectibleSystem::update(std::uint32_t delta_time_ms)
             };
 
     registry.view<CollectibleComponent, PositionComponent, PhysicsComponent>().each(check_collisions);
-
-    auto entity = registry.create();
-    registry.emplace<SortRenderingLayersComponent>(entity);
 }
 
