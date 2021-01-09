@@ -1,12 +1,11 @@
 #include "prefabs/collectibles/BigGem.hpp"
 
-#include "components/generic/SortRenderingLayersComponent.hpp"
 #include "components/generic/CollectibleComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
-#include "TextureBank.hpp"
+
 #include "TextureType.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
 #include "EntityRegistry.hpp"
@@ -29,7 +28,7 @@ entt::entity prefabs::BigGem::create(float pos_x_center, float pos_y_center)
     QuadComponent quad(TextureType::COLLECTIBLES, width, height);
     MeshComponent mesh;
     PhysicsComponent physics(width, height);
-    CollectibleComponent collectible(1000, LootCollectedEvent::GEM);
+    CollectibleComponent collectible(1000, LootCollectedEvent::BIG_GEM);
 
     std::uint16_t frame_index = static_cast<std::uint16_t>(CollectiblesSpritesheetFrames::DIAMOND_BIG) + std::rand() % 3;
     
@@ -42,11 +41,6 @@ entt::entity prefabs::BigGem::create(float pos_x_center, float pos_y_center)
     registry.emplace<MeshComponent>(entity, mesh);
     registry.emplace<PhysicsComponent>(entity, physics);
     registry.emplace<CollectibleComponent>(entity, collectible);
-
-    {
-        const auto entity = registry.create();
-        registry.emplace<SortRenderingLayersComponent>(entity);
-    }
 
     return entity;
 }

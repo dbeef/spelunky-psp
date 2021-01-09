@@ -1,5 +1,6 @@
 #include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudeDeadState.hpp"
+#include <components/generic/InputComponent.hpp>
 #include "components/specialized/MainDudeComponent.hpp"
 #include "Input.hpp"
 #include "other/Inventory.hpp"
@@ -13,6 +14,9 @@ void MainDudeDeadState::enter(MainDudeComponent& dude)
     auto& physics = registry.get<PhysicsComponent>(owner);
     auto& animation = registry.get<AnimationComponent>(owner);
     auto& quad = registry.get<QuadComponent>(owner);
+    auto& input = registry.get<InputComponent>(owner);
+
+    input.allowed_events = {};
 
     if (physics.get_y_velocity() == 0.0f)
     {

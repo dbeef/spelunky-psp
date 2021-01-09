@@ -24,6 +24,10 @@ class ScriptingSystem;
 class PhysicsSystem;
 class AnimationSystem;
 class CollectibleSystem;
+class InputSystem;
+class DisposingSystem;
+class ParticleSystem;
+class ItemSystem;
 
 class GameLoop
 {
@@ -56,6 +60,10 @@ private:
     std::shared_ptr<RenderingSystem> _rendering_system;
     std::shared_ptr<ScriptingSystem> _scripting_system;
     std::shared_ptr<CollectibleSystem> _collectible_system;
+    std::shared_ptr<DisposingSystem> _disposing_system;
+    std::shared_ptr<ParticleSystem> _particle_system;
+    std::shared_ptr<InputSystem> _input_system;
+    std::shared_ptr<ItemSystem> _item_system;
     std::shared_ptr<Viewport> _viewport;
     std::shared_ptr<LevelSummaryTracker> _level_summary_tracker;
     std::function<bool(uint32_t delta_time_ms)> _loop;

@@ -38,6 +38,8 @@ void Input::poll()
     _toggles.ducking.reset_changed();
     _toggles.running_fast.reset_changed();
     _toggles.throwing.reset_changed();
+    _toggles.out_bomb.reset_changed();
+    _toggles.out_rope.reset_changed();
 
     SDL_Event event{};
 
@@ -80,6 +82,14 @@ void Input::poll()
             {
                 _toggles.throwing.feed(v);
             }
+            else if (key == SDLK_z)
+            {
+                _toggles.out_bomb.feed(v);
+            }
+            else if (key == SDLK_x)
+            {
+                _toggles.out_rope.feed(v);
+            }
             else if (key == SDLK_ESCAPE)
             {
                 _toggles.paused.feed(v);
@@ -94,4 +104,6 @@ void Input::poll()
             }
         }
     }
+
+    fill_input_events();
 }

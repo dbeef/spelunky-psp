@@ -1,3 +1,4 @@
+#include <components/generic/InputComponent.hpp>
 #include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudeRunningState.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
@@ -9,6 +10,26 @@ void MainDudeRunningState::enter(MainDudeComponent& dude)
     const auto& owner = dude._owner;
 
     auto& animation = registry.get<AnimationComponent>(owner);
+    auto& input = registry.get<InputComponent>(owner);
+
+    input.allowed_events = {
+            InputEvent::JUMPING,
+            InputEvent::JUMPING_PRESSED,
+            InputEvent::LEFT,
+            InputEvent::LEFT_PRESSED,
+            InputEvent::RIGHT,
+            InputEvent::RIGHT_PRESSED,
+            InputEvent::RUNNING_FAST,
+            InputEvent::RUNNING_FAST_PRESSED,
+            InputEvent::THROWING,
+            InputEvent::THROWING_PRESSED,
+            InputEvent::OUT_BOMB,
+            InputEvent::OUT_BOMB_PRESSED,
+            InputEvent::OUT_ROPE,
+            InputEvent::OUT_ROPE_PRESSED,
+            InputEvent::UP,
+            InputEvent::UP_PRESSED,
+    };
 
     if (dude._states.current == &dude._states.running_looking_up)
     {
@@ -35,19 +56,8 @@ MainDudeBaseState *MainDudeRunningState::update(MainDudeComponent& dude, uint32_
     auto& quad = registry.get<QuadComponent>(owner);
     auto& position = registry.get<PositionComponent>(owner);
 
-    if (input.left().value() && !physics.is_left_collision())
+    if (physics.get_y_velocity() < 0.0f)
     {
-        physics.set_x_velocity(physics.get_x_velocity() - MainDudeComponent::DEFAULT_DELTA_X);
-    }
-
-    if (input.right().value() && !physics.is_right_collision())
-    {
-        physics.set_x_velocity(physics.get_x_velocity() + MainDudeComponent::DEFAULT_DELTA_X);
-    }
-
-    if (input.jumping().changed() && input.jumping().value())
-    {
-        physics.set_y_velocity(-MainDudeComponent::JUMP_SPEED);
         return &dude._states.jumping;
     }
 
@@ -56,20 +66,14 @@ MainDudeBaseState *MainDudeRunningState::update(MainDudeComponent& dude, uint32_
         return &dude._states.crawling;
     }
 
+    // FIXME: How will InputComponent handle this?
     if (input.running_fast().value())
     {
-        physics.set_max_x_velocity(MainDudeComponent::MAX_RUNNING_VELOCITY_X);
         animation.set_time_per_frame_ms(50);
     }
     else
     {
-        physics.set_max_x_velocity(MainDudeComponent::DEFAULT_MAX_X_VELOCITY);
         animation.set_time_per_frame_ms(75);
-    }
-
-    if (input.throwing().changed() && input.throwing().value())
-    {
-        return &dude._states.throwing;
     }
 
     if (input.up().value())

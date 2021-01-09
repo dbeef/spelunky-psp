@@ -1,7 +1,6 @@
 #include "components/specialized/PauseOverlayComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
-#include "components/generic/SortRenderingLayersComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
@@ -43,7 +42,7 @@ void PauseOverlayComponent::update(entt::registry& registry)
                                         _viewport->get_height_world_units());
                 MeshComponent mesh;
 
-                mesh.rendering_layer = RenderingLayer::LAYER_2_UI_QUADS;
+                mesh.rendering_layer = RenderingLayer::LAYER_2_ITEMS;
                 mesh.camera_type = CameraType::SCREEN_SPACE;
                 quad.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HALF_OPAQUE_TILE);
 
@@ -94,11 +93,6 @@ void PauseOverlayComponent::update(entt::registry& registry)
                 registry.emplace<MeshComponent>(entity, mesh);
 
                 _children.push_back(entity);
-            }
-
-            {
-                auto entity = registry.create();
-                registry.emplace<SortRenderingLayersComponent>(entity);
             }
         }
         else
@@ -171,9 +165,4 @@ void PauseOverlayComponent::hide(entt::registry& registry)
     }
 
     _children.clear();
-
-    {
-        auto entity = registry.create();
-        registry.emplace<SortRenderingLayersComponent>(entity);
-    }
 }

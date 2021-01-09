@@ -1,3 +1,4 @@
+#include <components/generic/InputComponent.hpp>
 #include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudeThrowingState.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
@@ -9,10 +10,22 @@ void MainDudeThrowingState::enter(MainDudeComponent& dude)
     auto& registry = EntityRegistry::instance().get_registry();
     const auto& owner = dude._owner;
 
+    auto& input = registry.get<InputComponent>(owner);
     auto& animation = registry.get<AnimationComponent>(owner);
     animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::THROWING_LEFT_0_FIRST),
                     static_cast<std::size_t>(MainDudeSpritesheetFrames::THROWING_LEFT_8_LAST),
                     50, false);
+
+    input.allowed_events = {
+            InputEvent::JUMPING,
+            InputEvent::JUMPING_PRESSED,
+            InputEvent::LEFT,
+            InputEvent::LEFT_PRESSED,
+            InputEvent::RIGHT,
+            InputEvent::RIGHT_PRESSED,
+            InputEvent::RUNNING_FAST,
+            InputEvent::RUNNING_FAST_PRESSED,
+    };
 
     Audio::instance().play(SFXType::MAIN_DUDE_WHIP);
 }
@@ -53,30 +66,6 @@ MainDudeBaseState *MainDudeThrowingState::update(MainDudeComponent& dude, uint32
                 return &dude._states.jumping;
             }
         }
-    }
-
-    if (input.left().value())
-    {
-        physics.set_x_velocity(physics.get_x_velocity() - MainDudeComponent::DEFAULT_DELTA_X);
-    }
-
-    if (input.right().value())
-    {
-        physics.set_x_velocity(physics.get_x_velocity() + MainDudeComponent::DEFAULT_DELTA_X);
-    }
-
-    if (input.jumping().changed() && input.jumping().value() && physics.is_bottom_collision())
-    {
-        physics.set_y_velocity(-MainDudeComponent::JUMP_SPEED);
-    }
-
-    if (input.running_fast().value())
-    {
-        physics.set_max_x_velocity(MainDudeComponent::MAX_RUNNING_VELOCITY_X);
-    }
-    else
-    {
-        physics.set_max_x_velocity(MainDudeComponent::DEFAULT_MAX_X_VELOCITY);
     }
 
     return this;

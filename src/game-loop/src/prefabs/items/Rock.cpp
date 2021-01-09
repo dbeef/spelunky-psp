@@ -1,13 +1,13 @@
-#include "EntityRegistry.hpp"
 #include "prefabs/items/Rock.hpp"
 
-#include "components/generic/SortRenderingLayersComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
+#include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
+#include "components/generic/ItemComponent.hpp"
 
-#include "TextureBank.hpp"
+#include "EntityRegistry.hpp"
 #include "TextureType.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
 
@@ -25,24 +25,22 @@ entt::entity prefabs::Rock::create(float pos_x_center, float pos_y_center)
     const float width = 0.5f;
     const float height = 0.5f;
 
-    PositionComponent position(pos_x_center, pos_y_center);
     QuadComponent quad(TextureType::COLLECTIBLES, width, height);
-    MeshComponent mesh;
-    PhysicsComponent physics(width, height);
-
     quad.frame_changed(CollectiblesSpritesheetFrames::ROCK);
-    mesh.rendering_layer = RenderingLayer::LAYER_4_PROPS;
-    mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
-    registry.emplace<PositionComponent>(entity, position);
+    PhysicsComponent physics(width, height);
+    physics.set_friction(0.02f);
+    physics.set_bounciness(0.4f);
+
+    ItemComponent item(ItemType::THROWABLE, ItemSlot::ACTIVE);
+    item.set_weight(2);
+
+    registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
-    registry.emplace<MeshComponent>(entity, mesh);
+    registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_2_ITEMS, CameraType::MODEL_VIEW_SPACE);
     registry.emplace<PhysicsComponent>(entity, physics);
-
-    {
-        const auto entity = registry.create();
-        registry.emplace<SortRenderingLayersComponent>(entity);
-    }
+    registry.emplace<ItemComponent>(entity, item);
+    registry.emplace<HorizontalOrientationComponent>(entity);
 
     return entity;
 }

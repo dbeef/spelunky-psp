@@ -22,7 +22,7 @@ public:
 private:
 
     bool _running = false;
-    bool _finished = false;
+    bool _finished = true;
     bool _loop = false;
 
     float _timer_ms = 0;

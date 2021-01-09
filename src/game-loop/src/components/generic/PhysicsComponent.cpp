@@ -128,6 +128,9 @@ void PhysicsComponent::update(uint32_t delta_time_ms, PositionComponent& positio
                 // Step on X axis
 
                 position.x_center += copysign(SMALLEST_POSITION_STEP, temp_velocity_x);
+                // FIXME: This is to prevent moving off-map. Think of a better solution.
+                position.x_center = std::clamp(position.x_center, 0.75f, 31.25f);
+
                 Level::instance().get_tile_batch().get_neighbouring_tiles(position.x_center, position.y_center, neighbours);
                 const auto* overlapping_tile = collisions::overlaps
                         (neighbours, position.x_center, position.y_center, _dimensions.width, _dimensions.height);
@@ -138,11 +141,15 @@ void PhysicsComponent::update(uint32_t delta_time_ms, PositionComponent& positio
                     {
                         _collisions.left = true;
                         position.x_center = overlapping_tile->x + MapTile::PHYSICAL_WIDTH + (get_width() / 2.0f);
+                        // FIXME: This is to prevent moving off-map. Think of a better solution.
+                        position.x_center = std::clamp(position.x_center, 0.75f, 31.25f);
                     }
                     else
                     {
                         position.x_center = overlapping_tile->x - (get_width() / 2.0f);
                         _collisions.right = true;
+                        // FIXME: This is to prevent moving off-map. Think of a better solution.
+                        position.x_center = std::clamp(position.x_center, 0.75f, 31.25f);
                     }
 
                     _velocity.x = -1 * _properties.bounciness * _velocity.x;
@@ -165,6 +172,8 @@ void PhysicsComponent::update(uint32_t delta_time_ms, PositionComponent& positio
                 // Step on Y axis
 
                 position.y_center += copysign(SMALLEST_POSITION_STEP, temp_velocity_y);
+                // FIXME: This is to prevent moving off-map. Think of a better solution.
+                position.y_center = std::clamp(position.y_center, 0.75f, 31.25f);
                 Level::instance().get_tile_batch().get_neighbouring_tiles(position.x_center,  position.y_center, neighbours);
                 const auto* overlapping_tile = collisions::overlaps(neighbours, position.x_center, position.y_center, _dimensions.width, _dimensions.height);
                 if (overlapping_tile)
@@ -175,11 +184,17 @@ void PhysicsComponent::update(uint32_t delta_time_ms, PositionComponent& positio
                     {
                         _collisions.upper = true;
                         position.y_center = overlapping_tile->y + MapTile::PHYSICAL_HEIGHT + (get_height() / 2);
+                        // FIXME: This is to prevent moving off-map. Think of a better solution.
+                        position.y_center = std::clamp(position.y_center, 0.75f, 31.25f);
+                        assert(position.y_center >= 0.0f && position.y_center <= 32.0f);
                     }
                     else
                     {
                         _collisions.bottom = true;
                         position.y_center = overlapping_tile->y - get_height() / 2;
+                        // FIXME: This is to prevent moving off-map. Think of a better solution.
+                        position.y_center = std::clamp(position.y_center, 0.75f, 31.25f);
+                        assert(position.y_center >= 0.0f && position.y_center <= 32.0f);
                     }
 
                     _velocity.y = -1 * _properties.bounciness * _velocity.y;
@@ -205,7 +220,7 @@ void PhysicsComponent::update(uint32_t delta_time_ms, PositionComponent& positio
         }
         else if (_gravity) // Apply gravity
         {
-            _velocity.y += GRAVITY;
+            _velocity.y += GRAVITY * _properties.gravity_modifier;
         }
     }
 }
@@ -214,7 +229,7 @@ PhysicsComponent::PhysicsComponent(float width, float height) : _dimensions{widt
 {
 }
 
-bool PhysicsComponent::is_collision(PhysicsComponent& other_physics, PositionComponent& other_position, PositionComponent& this_position)
+bool PhysicsComponent::is_collision(PhysicsComponent& other_physics, PositionComponent& other_position, PositionComponent& this_position) const
 {
     const float half_w = _dimensions.width / 2.0f;
     const float half_h = _dimensions.height / 2.0f;

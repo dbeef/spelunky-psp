@@ -15,10 +15,14 @@
 #include "components/specialized/MainDudeComponent.hpp"
 
 #include "system/RenderingSystem.hpp"
+#include "system/ItemSystem.hpp"
 #include "system/CollectibleSystem.hpp"
 #include "system/ScriptingSystem.hpp"
 #include "system/PhysicsSystem.hpp"
 #include "system/AnimationSystem.hpp"
+#include "system/InputSystem.hpp"
+#include "system/DisposingSystem.hpp"
+#include "system/ParticleSystem.hpp"
 
 #include "logger/log.h"
 #include "ModelViewCamera.hpp"
@@ -37,6 +41,10 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     auto& physics_system = game_loop._physics_system;
     auto& animation_system = game_loop._animation_system;
     auto& collectible_system = game_loop._collectible_system;
+    auto& input_system = game_loop._input_system;
+    auto& item_system = game_loop._item_system;
+    auto& disposing_system = game_loop._disposing_system;
+    auto& particle_system = game_loop._particle_system;
 
     // Adjust camera to follow main dude:
     auto& position = registry.get<PositionComponent>(_main_dude);
@@ -47,6 +55,7 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     model_view_camera.update_gl_modelview_matrix();
 
     rendering_system->update(delta_time_ms);
+    input_system->update(delta_time_ms);
 
     auto& pause = registry.get<PauseOverlayComponent>(_pause_overlay);
 
@@ -72,7 +81,10 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
         scripting_system->update(delta_time_ms);
         physics_system->update(delta_time_ms);
         animation_system->update(delta_time_ms);
+        item_system->update(delta_time_ms);
+        disposing_system->update(delta_time_ms);
         collectible_system->update(delta_time_ms);
+        particle_system->update(delta_time_ms);
     }
 
     auto& dude = registry.get<MainDudeComponent>(_main_dude);

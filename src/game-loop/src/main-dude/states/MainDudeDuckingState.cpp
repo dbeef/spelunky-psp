@@ -1,4 +1,5 @@
 #include "EntityRegistry.hpp"
+#include <components/generic/InputComponent.hpp>
 #include "main-dude/states/MainDudeDuckingState.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
 #include "Input.hpp"
@@ -10,6 +11,22 @@ void MainDudeDuckingState::enter(MainDudeComponent& dude)
 
     auto& animation = registry.get<AnimationComponent>(owner);
     auto& quad = registry.get<QuadComponent>(owner);
+    auto& input = registry.get<InputComponent>(owner);
+
+    input.allowed_events = {
+            InputEvent::LEFT,
+            InputEvent::LEFT_PRESSED,
+            InputEvent::RIGHT,
+            InputEvent::RIGHT_PRESSED,
+            InputEvent::JUMPING,
+            InputEvent::JUMPING_PRESSED,
+            InputEvent::THROWING,
+            InputEvent::THROWING_PRESSED,
+            InputEvent::OUT_BOMB,
+            InputEvent::OUT_BOMB_PRESSED,
+            InputEvent::OUT_ROPE,
+            InputEvent::OUT_ROPE_PRESSED,
+    };
 
     animation.stop();
     quad.frame_changed(MainDudeSpritesheetFrames::CRAWLING_LEFT_0_FIRST);
@@ -28,27 +45,22 @@ MainDudeBaseState* MainDudeDuckingState::update(MainDudeComponent& dude, uint32_
 
     if (input.left().value())
     {
-        physics.set_x_velocity(physics.get_x_velocity() - MainDudeComponent::DEFAULT_DELTA_X);
         return &dude._states.crawling;
     }
+
     if (input.right().value())
     {
-        physics.set_x_velocity(physics.get_x_velocity() + MainDudeComponent::DEFAULT_DELTA_X);
         return &dude._states.crawling;
     }
+
     if (input.jumping().changed() && input.jumping().value())
     {
-        physics.set_y_velocity(physics.get_y_velocity() - MainDudeComponent::JUMP_SPEED);
         return &dude._states.jumping;
     }
+
     if (!input.ducking().value())
     {
         return &dude._states.standing;
-    }
-
-    if (input.throwing().changed() && input.throwing().value())
-    {
-        return &dude._states.throwing;
     }
 
     if (input.up().value())

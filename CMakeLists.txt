@@ -19,7 +19,7 @@ if (SPELUNKY_PSP_PLATFORM_ANDROID)
     # calls the main function through JNI.
     add_library(Spelunky_PSP SHARED src/Main.cpp)
 else()
-    add_executable(Spelunky_PSP src/Main.cpp src/entity-registry/src/EntityRegistry.cpp src/entity-registry/interface/EntityRegistry.hpp)
+    add_executable(Spelunky_PSP src/Main.cpp)
 endif ()
 
 add_subdirectory(vendor)

@@ -1,6 +1,7 @@
 #include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudePushingState.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
+#include "components/generic/HorizontalOrientationComponent.hpp"
 #include "Input.hpp"
 
 void MainDudePushingState::enter(MainDudeComponent& dude)
@@ -25,12 +26,13 @@ MainDudeBaseState* MainDudePushingState::update(MainDudeComponent& dude, uint32_
     auto& physics = registry.get<PhysicsComponent>(owner);
     auto& quad = registry.get<QuadComponent>(owner);
     auto& position = registry.get<PositionComponent>(owner);
+    auto& orientation = registry.get<HorizontalOrientationComponent>(owner);
 
     if (input.left().value())
     {
         physics.set_x_velocity(physics.get_x_velocity() - MainDudeComponent::DEFAULT_DELTA_X);
     }
-    else if (dude._other.facing_left)
+    else if (orientation.orientation == HorizontalOrientation::LEFT)
     {
         return &dude._states.running;
     }
@@ -39,7 +41,7 @@ MainDudeBaseState* MainDudePushingState::update(MainDudeComponent& dude, uint32_
     {
         physics.set_x_velocity(physics.get_x_velocity() + MainDudeComponent::DEFAULT_DELTA_X);
     }
-    else if (!dude._other.facing_left)
+    else if (orientation.orientation == HorizontalOrientation::RIGHT)
     {
         return &dude._states.running;
     }
@@ -53,11 +55,6 @@ MainDudeBaseState* MainDudePushingState::update(MainDudeComponent& dude, uint32_
     if (input.ducking().value())
     {
         return &dude._states.ducking;
-    }
-
-    if (input.throwing().changed() && input.throwing().value())
-    {
-        return &dude._states.throwing;
     }
 
     if (!physics.is_left_collision() && !physics.is_right_collision())

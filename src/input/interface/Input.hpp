@@ -2,6 +2,9 @@
 
 #include "patterns/Singleton.hpp"
 #include "Toggle.hpp"
+#include "InputEvent.hpp"
+
+#include <vector>
 
 class Input : public Singleton<Input>
 {
@@ -28,10 +31,15 @@ public:
     inline const Toggle& ducking() const { return _toggles.ducking; }
     inline const Toggle& running_fast() const { return _toggles.running_fast; }
     inline const Toggle& throwing() const { return _toggles.throwing; }
+    inline const Toggle& out_bomb() const { return _toggles.out_bomb; }
+    inline const Toggle& out_rope() const { return _toggles.out_rope; }
+
+    inline const std::vector<InputEvent>& get_input_events() const { return _input_events; }
 
 private:
 
     Input() = default;
+    void fill_input_events();
 
     struct
     {
@@ -46,5 +54,9 @@ private:
         Toggle ducking{false};
         Toggle running_fast{false};
         Toggle throwing{false};
+        Toggle out_bomb{false};
+        Toggle out_rope{false};
     } _toggles;
+
+    std::vector<InputEvent> _input_events;
 };

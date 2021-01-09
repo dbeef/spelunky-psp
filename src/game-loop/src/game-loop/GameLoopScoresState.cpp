@@ -1,4 +1,3 @@
-#include <components/generic/SortRenderingLayersComponent.hpp>
 #include "game-loop/GameLoopScoresState.hpp"
 #include "game-loop/GameLoop.hpp"
 
@@ -16,6 +15,7 @@
 #include "system/ScriptingSystem.hpp"
 #include "system/PhysicsSystem.hpp"
 #include "system/AnimationSystem.hpp"
+#include "system/InputSystem.hpp"
 
 #include "logger/log.h"
 #include "ModelViewCamera.hpp"
@@ -32,8 +32,10 @@ GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t del
     auto& scripting_system = game_loop._scripting_system;
     auto& physics_system = game_loop._physics_system;
     auto& animation_system = game_loop._animation_system;
+    auto& input_system = game_loop._input_system;
 
     rendering_system->update(delta_time_ms);
+    input_system->update(delta_time_ms);
 
     auto& pause = registry.get<PauseOverlayComponent>(_pause_overlay);
 

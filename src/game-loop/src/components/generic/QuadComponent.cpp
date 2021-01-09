@@ -3,6 +3,7 @@
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
+#include "components/generic/HorizontalOrientationComponent.hpp"
 #include "EntityRegistry.hpp"
 
 QuadComponent::QuadComponent(TextureType texture_type, float quad_width, float quad_height)
@@ -38,4 +39,13 @@ void QuadComponent::update(entt::entity owner)
     mesh.indices = _quad.get_indices();
     mesh.indices_count = _quad.get_indices_count();
     mesh.texture_id = TextureBank::instance().get_texture(_texture_type);
+
+    if (registry.has<HorizontalOrientationComponent>(owner))
+    {
+        auto& orientation = registry.get<HorizontalOrientationComponent>(owner);
+
+        // All spritesheet frames are by default left-oriented:
+        set_vertical_flip(orientation.orientation == HorizontalOrientation::RIGHT);
+        frame_changed();
+    }
 }

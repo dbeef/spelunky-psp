@@ -1,19 +1,19 @@
-#include "EntityRegistry.hpp"
 #include "populator/Populator.hpp"
 #include "populator/Spawner.hpp"
+
 #include "components/specialized/LevelSummaryTracker.hpp"
+#include "components/generic/CollectibleComponent.hpp"
 
 #include "prefabs/collectibles/SingleGoldBar.hpp"
 #include "prefabs/collectibles/TripleGoldBar.hpp"
 #include "prefabs/collectibles/BigGem.hpp"
 #include "prefabs/items/Rock.hpp"
 #include "prefabs/items/Jar.hpp"
+#include "prefabs/items/Crate.hpp"
 #include "prefabs/items/Chest.hpp"
-#include "Level.hpp"
 
-#include <utility>
-#include <random>
-#include <components/generic/CollectibleComponent.hpp>
+#include "EntityRegistry.hpp"
+#include "Level.hpp"
 
 void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
 {
@@ -24,7 +24,8 @@ void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
     Spawner big_gem_spawner(3, 4);
     Spawner chest_spawner(3, 4);
     Spawner jar_spawner(3, 4);
-    Spawner rock_spawner(2, 4);
+    Spawner rock_spawner(2, 12);
+    Spawner crate_spawner(2, 4);
 
     std::vector<std::shared_ptr<GameEntity>> out{};
 
@@ -58,6 +59,11 @@ void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
                     {
                         chest_spawner.spawned();
                         prefabs::Chest::create(pos_x, pos_y);
+                    }
+                    else if (crate_spawner.can_spawn())
+                    {
+                        crate_spawner.spawned();
+                        prefabs::Crate::create(pos_x, pos_y);
                     }
                     else if (triple_gold_bar_spawner.can_spawn())
                     {

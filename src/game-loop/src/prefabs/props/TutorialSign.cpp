@@ -1,9 +1,10 @@
-#include "EntityRegistry.hpp"
 #include "prefabs/props/TutorialSign.hpp"
+
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
-#include "TextureBank.hpp"
+
+#include "EntityRegistry.hpp"
 #include "TextureType.hpp"
 #include "spritesheet-frames/MainMenuSpritesheetFrames.hpp"
 

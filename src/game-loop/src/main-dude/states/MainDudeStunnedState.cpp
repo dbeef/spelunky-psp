@@ -1,6 +1,7 @@
 #include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudeStunnedState.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
+#include <components/generic/InputComponent.hpp>
 #include "Input.hpp"
 #include "audio/Audio.hpp"
 
@@ -16,6 +17,9 @@ void MainDudeStunnedState::enter(MainDudeComponent& dude)
 
     auto& animation = registry.get<AnimationComponent>(owner);
     auto& physics = registry.get<PhysicsComponent>(owner);
+    auto& input = registry.get<InputComponent>(owner);
+
+    input.allowed_events = {};
 
     physics.set_friction(PhysicsComponent::get_default_friction() * 1.8f);
     animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::STUNNED_0_FIRST),
@@ -33,6 +37,8 @@ void MainDudeStunnedState::enter(MainDudeComponent& dude)
 
 MainDudeBaseState *MainDudeStunnedState::update(MainDudeComponent& dude, uint32_t delta_time_ms)
 {
+    // TODO: Depending on bottom collision, stunned state should change frame (see MainDudeDeadState).
+
     auto& registry = EntityRegistry::instance().get_registry();
     const auto& owner = dude._owner;
 

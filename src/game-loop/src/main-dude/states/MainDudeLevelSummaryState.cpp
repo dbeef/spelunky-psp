@@ -1,6 +1,7 @@
 #include "EntityRegistry.hpp"
 #include "main-dude/states/MainDudeLevelSummaryState.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
+#include <components/generic/InputComponent.hpp>
 #include "Input.hpp"
 
 void MainDudeLevelSummaryState::enter(MainDudeComponent& dude)
@@ -10,6 +11,9 @@ void MainDudeLevelSummaryState::enter(MainDudeComponent& dude)
 
     auto& animation = registry.get<AnimationComponent>(owner);
     auto& physics = registry.get<PhysicsComponent>(owner);
+    auto& input = registry.get<InputComponent>(owner);
+
+    input.allowed_events = {};
 
     physics.set_max_x_velocity(MainDudeComponent::DEFAULT_MAX_X_VELOCITY);
     animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::RUN_LEFT_0_FIRST),

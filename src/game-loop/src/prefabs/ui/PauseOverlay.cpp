@@ -1,11 +1,6 @@
-#include "EntityRegistry.hpp"
-#include <components/specialized/PauseOverlayComponent.hpp>
 #include "prefabs/ui/PauseOverlay.hpp"
-#include "components/generic/PositionComponent.hpp"
-#include "components/generic/QuadComponent.hpp"
-#include "TextureBank.hpp"
-#include "TextureType.hpp"
-#include "spritesheet-frames/MainMenuSpritesheetFrames.hpp"
+#include "components/specialized/PauseOverlayComponent.hpp"
+#include "EntityRegistry.hpp"
 
 entt::entity prefabs::PauseOverlay::create(const std::shared_ptr<Viewport>& viewport, PauseOverlayComponent::Type type)
 {

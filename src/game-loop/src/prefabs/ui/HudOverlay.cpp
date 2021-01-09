@@ -1,11 +1,6 @@
-#include "EntityRegistry.hpp"
-#include <prefabs/ui/HudOverlay.hpp>
+#include "prefabs/ui/HudOverlay.hpp"
 #include "components/specialized/HudOverlayComponent.hpp"
-#include "components/generic/PositionComponent.hpp"
-#include "components/generic/QuadComponent.hpp"
-#include "TextureBank.hpp"
-#include "TextureType.hpp"
-#include "spritesheet-frames/MainMenuSpritesheetFrames.hpp"
+#include "EntityRegistry.hpp"
 
 entt::entity prefabs::HudOverlay::create(std::shared_ptr<Viewport> viewport)
 {
