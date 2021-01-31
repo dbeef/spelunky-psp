@@ -11,9 +11,49 @@
 #include "prefabs/items/Jar.hpp"
 #include "prefabs/items/Crate.hpp"
 #include "prefabs/items/Chest.hpp"
+#include "prefabs/npc/Snake.hpp"
 
 #include "EntityRegistry.hpp"
 #include "Level.hpp"
+
+void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
+{
+    // TODO: Make use of LevelSummaryTracker to keep count of killed NPC's.
+
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    Spawner snake_spawner(3, 4);
+
+    std::vector<std::shared_ptr<GameEntity>> out{};
+
+    const auto& tile_batch = Level::instance().get_tile_batch();
+
+    for (int tile_x = 0; tile_x < Consts::LEVEL_WIDTH_TILES; tile_x++)
+    {
+        for (int tile_y = 0; tile_y < Consts::LEVEL_HEIGHT_TILES; tile_y++)
+        {
+            const auto npc_type = tile_batch.get_npc_type_spawned_at(tile_x, tile_y);
+
+            float pos_x = static_cast<float>(tile_x) + (MapTile::PHYSICAL_WIDTH / 2.0f);
+            float pos_y = static_cast<float>(tile_y) + (MapTile::PHYSICAL_HEIGHT / 2.0f);
+
+            switch (npc_type)
+            {
+                case NPCType::ANY:
+                {
+                    if (snake_spawner.can_spawn())
+                    {
+                        snake_spawner.spawned();
+                        prefabs::Snake::create(pos_x, pos_y);
+                    }
+                    break;
+                }
+                case NPCType::NOTHING: break;
+                default: assert(false);
+            }
+        }
+    }
+}
 
 void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
 {

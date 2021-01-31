@@ -93,6 +93,7 @@ add_library(GameLoop STATIC
 
         # Prefabs:
 
+        include/prefabs/npc/Snake.hpp
         include/prefabs/props/StartSign.hpp
         include/prefabs/props/ScoresSign.hpp
         include/prefabs/props/ResetSign.hpp
@@ -141,6 +142,7 @@ add_library(GameLoop STATIC
         include/prefabs/effects/ShotgunBlast.hpp
         include/prefabs/other/Bullet.hpp
 
+        src/prefabs/npc/Snake.cpp
         src/prefabs/props/QuitSign.cpp
         src/prefabs/props/ResetSign.cpp
         src/prefabs/props/ScoresSign.cpp
