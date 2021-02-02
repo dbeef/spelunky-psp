@@ -225,7 +225,7 @@ add_library(GameLoop STATIC
         interface/other/Inventory.hpp
         interface/other/InventoryEvent.hpp
         include/other/LootCollectedEvent.hpp
-        include/prefabs/npc/Bat.hpp src/prefabs/npc/Bat.cpp)
+        include/prefabs/npc/Bat.hpp src/prefabs/npc/Bat.cpp include/prefabs/npc/Caveman.hpp src/prefabs/npc/Caveman.cpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface

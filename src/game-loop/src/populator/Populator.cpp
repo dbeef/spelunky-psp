@@ -13,6 +13,7 @@
 #include "prefabs/items/Chest.hpp"
 #include "prefabs/npc/Snake.hpp"
 #include "prefabs/npc/Bat.hpp"
+#include "prefabs/npc/Caveman.hpp"
 
 #include "EntityRegistry.hpp"
 #include "Level.hpp"
@@ -25,6 +26,7 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
 
     Spawner snake_spawner(3, 4);
     Spawner bat_spawner(3, 4);
+    Spawner caveman_spawner(3, 4);
 
     std::vector<std::shared_ptr<GameEntity>> out{};
 
@@ -52,6 +54,11 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
                     {
                         bat_spawner.spawned();
                         prefabs::Bat::create(pos_x, pos_y);
+                    }
+                    else if (caveman_spawner.can_spawn())
+                    {
+                        caveman_spawner.spawned();
+                        prefabs::Caveman::create(pos_x, pos_y);
                     }
                     break;
                 }
