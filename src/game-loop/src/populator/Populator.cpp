@@ -12,6 +12,7 @@
 #include "prefabs/items/Crate.hpp"
 #include "prefabs/items/Chest.hpp"
 #include "prefabs/npc/Snake.hpp"
+#include "prefabs/npc/Bat.hpp"
 
 #include "EntityRegistry.hpp"
 #include "Level.hpp"
@@ -23,6 +24,7 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
     auto& registry = EntityRegistry::instance().get_registry();
 
     Spawner snake_spawner(3, 4);
+    Spawner bat_spawner(3, 4);
 
     std::vector<std::shared_ptr<GameEntity>> out{};
 
@@ -45,6 +47,11 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
                     {
                         snake_spawner.spawned();
                         prefabs::Snake::create(pos_x, pos_y);
+                    }
+                    else if (bat_spawner.can_spawn())
+                    {
+                        bat_spawner.spawned();
+                        prefabs::Bat::create(pos_x, pos_y);
                     }
                     break;
                 }

@@ -26,7 +26,6 @@ namespace
         void update(entt::entity owner, uint32_t delta_time_ms) override
         {
             auto& registry = EntityRegistry::instance().get_registry();
-            auto& physics = registry.get<PhysicsComponent>(owner);
 
             if (_walking_timer_ms > 0)
             {
@@ -117,7 +116,7 @@ entt::entity prefabs::Snake::create(float pos_x_center, float pos_y_center)
 
     const auto entity = registry.create();
 
-    const float width = 1.0f - (2.0f / 16.0f);
+    const float width = 1.0f;
     const float height = 1.0f;
 
     QuadComponent quad(TextureType::NPC, width, height);
@@ -127,7 +126,7 @@ entt::entity prefabs::Snake::create(float pos_x_center, float pos_y_center)
     registry.emplace<QuadComponent>(entity, quad);
     registry.emplace<AnimationComponent>(entity);
     registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_2_ITEMS, CameraType::MODEL_VIEW_SPACE);
-    registry.emplace<PhysicsComponent>(entity, width, height);
+    registry.emplace<PhysicsComponent>(entity, width -  (4.0f / 16.0f), height);
     registry.emplace<ScriptingComponent>(entity, std::make_shared<SnakeScript>());
     registry.emplace<HorizontalOrientationComponent>(entity);
 
