@@ -32,4 +32,17 @@ enum class NPCSpritesheetFrames : std::uint16_t
     CAVEMAN_BOUNCE,
     CAVEMAN_FALL,
     CAVEMAN_DEAD,
+    SPIKES,
+    SPIKES_BLOOD,
+    ARROW,
+    // A single frame each 20 degrees, making up 180:
+    ARROW_ANGLED_0_FIRST,
+    ARROW_ANGLED_1,
+    ARROW_ANGLED_2,
+    ARROW_ANGLED_3,
+    ARROW_ANGLED_4,
+    ARROW_ANGLED_5,
+    ARROW_ANGLED_6,
+    ARROW_ANGLED_7,
+    ARROW_ANGLED_8_LAST,
 };
