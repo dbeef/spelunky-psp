@@ -548,12 +548,17 @@ void TileBatch::get_neighbouring_tiles(float x, float y, MapTile *out_neighborin
 
 LootType TileBatch::get_loot_type_spawned_at(int x_tiles, int y_tiles) const
 {
+    if (x_tiles == 0 || x_tiles == (Consts::LEVEL_WIDTH_TILES - 1) || y_tiles == 0 || y_tiles == (Consts::LEVEL_HEIGHT_TILES - 1))
+    {
+        return LootType::NOTHING;
+    }
+
     // Decrease to not include margins around map to the calculation:
     x_tiles--;
     y_tiles--;
 
     // Inverse Y axis, as layout is stored with different notation: FIXME
-    y_tiles = Consts::LEVEL_HEIGHT_TILES - y_tiles;
+    y_tiles = (Consts::LEVEL_HEIGHT_TILES - 2) - y_tiles;
 
     if (x_tiles < 0 || y_tiles < 0)
     {
@@ -572,7 +577,7 @@ LootType TileBatch::get_loot_type_spawned_at(int x_tiles, int y_tiles) const
     // Get relative XY in scope of this particular room:
     int x_tiles_room = x_tiles % ROOM_WIDTH_TILES;
     // Inverse Y axis, as room layout is stored with different notation: FIXME
-    int y_tiles_room = static_cast<int>(2.0f + ROOM_HEIGHT_TILES - (y_tiles % ROOM_HEIGHT_TILES));
+    int y_tiles_room = static_cast<int>(ROOM_HEIGHT_TILES - (y_tiles % ROOM_HEIGHT_TILES));
 
     if (x_tiles_room >= Consts::ROOM_WIDTH_TILES || y_tiles_room >= Consts::ROOM_HEIGHT_TILES || x_tiles_room < 0 || y_tiles_room < 0)
     {
@@ -605,12 +610,17 @@ LootType TileBatch::get_loot_type_spawned_at(int x_tiles, int y_tiles) const
 // FIXME: Repeating tile coordinate calculation from function above.
 NPCType TileBatch::get_npc_type_spawned_at(int x_tiles, int y_tiles) const
 {
+    if (x_tiles == 0 || x_tiles == (Consts::LEVEL_WIDTH_TILES - 1) || y_tiles == 0 || y_tiles == (Consts::LEVEL_HEIGHT_TILES - 1))
+    {
+        return NPCType::NOTHING;
+    }
+
     // Decrease to not include margins around map to the calculation:
     x_tiles--;
     y_tiles--;
 
     // Inverse Y axis, as layout is stored with different notation: FIXME
-    y_tiles = Consts::LEVEL_HEIGHT_TILES - y_tiles;
+    y_tiles = (Consts::LEVEL_HEIGHT_TILES - 2) - y_tiles;
 
     if (x_tiles < 0 || y_tiles < 0)
     {
@@ -619,7 +629,7 @@ NPCType TileBatch::get_npc_type_spawned_at(int x_tiles, int y_tiles) const
 
     // Get room ID to which the XY points:
     int room_x = std::floor(x_tiles / ROOM_WIDTH_TILES);
-    int room_y = std::floor((y_tiles) / ROOM_HEIGHT_TILES);
+    int room_y = std::floor(y_tiles / ROOM_HEIGHT_TILES);
 
     if (room_x >= Consts::ROOMS_COUNT_WIDTH || room_y >= Consts::ROOMS_COUNT_HEIGHT || room_x < 0 || room_y < 0)
     {
@@ -629,7 +639,7 @@ NPCType TileBatch::get_npc_type_spawned_at(int x_tiles, int y_tiles) const
     // Get relative XY in scope of this particular room:
     int x_tiles_room = x_tiles % ROOM_WIDTH_TILES;
     // Inverse Y axis, as room layout is stored with different notation: FIXME
-    int y_tiles_room = static_cast<int>(2.0f + ROOM_HEIGHT_TILES - (y_tiles % ROOM_HEIGHT_TILES));
+    int y_tiles_room = static_cast<int>(ROOM_HEIGHT_TILES - (y_tiles % ROOM_HEIGHT_TILES));
 
     if (x_tiles_room >= Consts::ROOM_WIDTH_TILES || y_tiles_room >= Consts::ROOM_HEIGHT_TILES || x_tiles_room < 0 || y_tiles_room < 0)
     {
