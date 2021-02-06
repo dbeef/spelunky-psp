@@ -11,6 +11,7 @@
 #include "prefabs/items/Jar.hpp"
 #include "prefabs/items/Crate.hpp"
 #include "prefabs/items/Chest.hpp"
+#include "prefabs/traps/Spikes.hpp"
 #include "prefabs/npc/Snake.hpp"
 #include "prefabs/npc/Bat.hpp"
 #include "prefabs/npc/FakeSkeleton.hpp"
@@ -31,6 +32,7 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
     Spawner caveman_spawner(3, 4);
     Spawner fake_skeleton_spawner(3, 4);
     Spawner skeleton_spawner(3, 4);
+    Spawner spikes_spawner(3, 4);
 
     std::vector<std::shared_ptr<GameEntity>> out{};
 
@@ -69,10 +71,10 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
                         fake_skeleton_spawner.spawned();
                         prefabs::FakeSkeleton ::create(pos_x, pos_y);
                     }
-                    else if (skeleton_spawner.can_spawn())
+                    else if (spikes_spawner.can_spawn())
                     {
-                        skeleton_spawner.spawned();
-                        prefabs::Skeleton::create(pos_x, pos_y);
+                        spikes_spawner.spawned();
+                        prefabs::Spikes::create(pos_x, pos_y);
                     }
                     break;
                 }
