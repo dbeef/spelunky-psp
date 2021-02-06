@@ -225,7 +225,7 @@ add_library(GameLoop STATIC
         interface/other/Inventory.hpp
         interface/other/InventoryEvent.hpp
         include/other/LootCollectedEvent.hpp
-        include/prefabs/npc/Bat.hpp src/prefabs/npc/Bat.cpp include/prefabs/npc/Caveman.hpp src/prefabs/npc/Caveman.cpp include/prefabs/items/Arrow.hpp src/prefabs/items/Arrow.cpp)
+        include/prefabs/npc/Bat.hpp src/prefabs/npc/Bat.cpp include/prefabs/npc/Caveman.hpp src/prefabs/npc/Caveman.cpp include/prefabs/items/Arrow.hpp src/prefabs/items/Arrow.cpp include/prefabs/npc/FakeSkeleton.hpp src/prefabs/npc/FakeSkeleton.cpp include/prefabs/items/Skull.hpp src/prefabs/items/Skull.cpp include/prefabs/other/Bones.hpp src/prefabs/other/Bones.cpp include/prefabs/particles/BonesParticle.hpp src/prefabs/particles/BonesParticle.cpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface
