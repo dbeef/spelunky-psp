@@ -71,6 +71,11 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
                         fake_skeleton_spawner.spawned();
                         prefabs::FakeSkeleton ::create(pos_x, pos_y);
                     }
+                    else if (skeleton_spawner.can_spawn())
+                    {
+                        skeleton_spawner.spawned();
+                        prefabs::FakeSkeleton ::create(pos_x, pos_y);
+                    }
                     else if (spikes_spawner.can_spawn())
                     {
                         spikes_spawner.spawned();
