@@ -5,7 +5,8 @@
 enum class NPCType : std::uint16_t
 {
     NOTHING = 0,
-    ANY,
-    ARROW_TRAP_LEFT,
-    ARROW_TRAP_RIGHT
+    ANY = 1,
+    ARROW_TRAP_LEFT = 2,
+    ARROW_TRAP_RIGHT = 3,
+    SPIDER = 4
 };

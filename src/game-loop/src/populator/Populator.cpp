@@ -14,6 +14,7 @@
 #include "prefabs/traps/Spikes.hpp"
 #include "prefabs/traps/ArrowTrap.hpp"
 #include "prefabs/npc/Snake.hpp"
+#include "prefabs/npc/Spider.hpp"
 #include "prefabs/npc/Bat.hpp"
 #include "prefabs/npc/FakeSkeleton.hpp"
 #include "prefabs/npc/Skeleton.hpp"
@@ -34,6 +35,7 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
     Spawner fake_skeleton_spawner(3, 4);
     Spawner skeleton_spawner(3, 4);
     Spawner spikes_spawner(3, 4);
+    Spawner spider_spawner(3, 4);
 
     std::vector<std::shared_ptr<GameEntity>> out{};
 
@@ -50,6 +52,15 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
 
             switch (npc_type)
             {
+                case NPCType::SPIDER:
+                {
+                    if (spider_spawner.can_spawn())
+                    {
+                        spider_spawner.spawned();
+                        prefabs::Spider::create(pos_x, pos_y);
+                    }
+                    break;
+                }
                 case NPCType::ARROW_TRAP_LEFT:
                 {
                     prefabs::ArrowTrap::create(pos_x, pos_y, HorizontalOrientation::LEFT);
@@ -85,7 +96,7 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
                     else if (skeleton_spawner.can_spawn())
                     {
                         skeleton_spawner.spawned();
-                        prefabs::FakeSkeleton ::create(pos_x, pos_y);
+                        prefabs::Skeleton::create(pos_x, pos_y);
                     }
                     else if (spikes_spawner.can_spawn())
                     {
