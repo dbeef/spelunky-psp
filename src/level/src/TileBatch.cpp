@@ -642,13 +642,12 @@ NPCType TileBatch::get_npc_type_spawned_at(int x_tiles, int y_tiles) const
 
     switch(room_type)
     {
-        // FIXME: Add NPC room layout. Right now using loot layout as a workaround.
-        case RoomType::CLOSED: return static_cast<NPCType>(closed_rooms_loot[room_id][y_tiles_room][x_tiles_room]);
-        case RoomType::LEFT_RIGHT: return static_cast<NPCType>(left_right_rooms_loot[room_id][y_tiles_room][x_tiles_room]);
-        case RoomType::LEFT_RIGHT_DOWN: return static_cast<NPCType>(left_right_down_rooms_loot[room_id][y_tiles_room][x_tiles_room]);
-        case RoomType::LEFT_RIGHT_UP: return static_cast<NPCType>(left_right_up_rooms_loot[room_id][y_tiles_room][x_tiles_room]);
-        case RoomType::EXIT: return static_cast<NPCType>(exit_rooms_loot[room_id][y_tiles_room][x_tiles_room]);
-        case RoomType::ENTRANCE: return static_cast<NPCType>(entrance_room_loot[room_id][y_tiles_room][x_tiles_room]);
+        case RoomType::CLOSED: return static_cast<NPCType>(closed_rooms_npc[room_id][y_tiles_room][x_tiles_room]);
+        case RoomType::LEFT_RIGHT: return static_cast<NPCType>(left_right_rooms_npc[room_id][y_tiles_room][x_tiles_room]);
+        case RoomType::LEFT_RIGHT_DOWN: return static_cast<NPCType>(left_right_down_rooms_npc[room_id][y_tiles_room][x_tiles_room]);
+        case RoomType::LEFT_RIGHT_UP: return static_cast<NPCType>(left_right_up_rooms_npc[room_id][y_tiles_room][x_tiles_room]);
+        case RoomType::EXIT: return static_cast<NPCType>(exit_rooms_npc[room_id][y_tiles_room][x_tiles_room]);
+        case RoomType::ENTRANCE: return static_cast<NPCType>(entrance_room_npc[room_id][y_tiles_room][x_tiles_room]);
         case RoomType::SHOP_LEFT: break;
         case RoomType::SHOP_RIGHT:break;
         case RoomType::SHOP_LEFT_MUGSHOT:break;
