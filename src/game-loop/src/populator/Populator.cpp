@@ -12,6 +12,7 @@
 #include "prefabs/items/Crate.hpp"
 #include "prefabs/items/Chest.hpp"
 #include "prefabs/traps/Spikes.hpp"
+#include "prefabs/traps/ArrowTrap.hpp"
 #include "prefabs/npc/Snake.hpp"
 #include "prefabs/npc/Bat.hpp"
 #include "prefabs/npc/FakeSkeleton.hpp"
@@ -49,6 +50,16 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
 
             switch (npc_type)
             {
+                case NPCType::ARROW_TRAP_LEFT:
+                {
+                    prefabs::ArrowTrap::create(pos_x, pos_y, HorizontalOrientation::LEFT);
+                    break;
+                }
+                case NPCType::ARROW_TRAP_RIGHT:
+                {
+                    prefabs::ArrowTrap::create(pos_x, pos_y, HorizontalOrientation::RIGHT);
+                    break;
+                }
                 case NPCType::ANY:
                 {
                     if (snake_spawner.can_spawn())
