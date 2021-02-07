@@ -16,7 +16,7 @@
 
 namespace
 {
-    class ChestScript : public ScriptBase
+    class ChestScript final : public ScriptBase
     {
     public:
 

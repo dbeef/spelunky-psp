@@ -20,6 +20,7 @@ add_library(Level STATIC
         include/LeftRightUpRooms.hpp
         include/ShopRooms.hpp
         include/SplashScreenRooms.hpp
+        interface/NPCType.hpp
         )
 
 target_include_directories(Level

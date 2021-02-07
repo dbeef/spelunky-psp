@@ -20,7 +20,7 @@
 
 namespace
 {
-    class RopeScript : public ScriptBase
+    class RopeScript final : public ScriptBase
     {
     public:
 

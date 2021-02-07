@@ -73,6 +73,16 @@ namespace
         #include "generated/collectibles.json.hpp"
     }
 
+    namespace npc_png
+    {
+        #include "generated/npc.png.hpp"
+    }
+
+    namespace npc_json
+    {
+        #include "generated/npc.json.hpp"
+    }
+
     struct TextureInput
     {
         const char *data;
@@ -95,6 +105,7 @@ namespace
         out.push_back({hud_png::data, sizeof(hud_png::data), TextureType::HUD});
         out.push_back({font_png::data, sizeof(font_png::data), TextureType::FONT});
         out.push_back({collectibles_png::data, sizeof(collectibles_png::data), TextureType::COLLECTIBLES});
+        out.push_back({npc_png::data, sizeof(npc_png::data), TextureType::NPC});
         return out;
     }
 
@@ -107,6 +118,7 @@ namespace
         out.push_back({hud_json::data, TextureType::HUD});
         out.push_back({font_json::data, TextureType::FONT});
         out.push_back({collectibles_json::data, TextureType::COLLECTIBLES});
+        out.push_back({npc_json::data, TextureType::NPC});
         return out;
     }
 }

@@ -12,6 +12,7 @@
 #include "SplashScreenType.hpp"
 #include "RoomType.hpp"
 #include "LootType.hpp"
+#include "NPCType.hpp"
 
 #include <vector>
 #include "entt/entt.hpp"
@@ -63,6 +64,8 @@ public:
     MapTile *map_tiles[Consts::LEVEL_WIDTH_TILES][Consts::LEVEL_HEIGHT_TILES]{};
 
     LootType get_loot_type_spawned_at(int x_tiles, int y_tiles) const;
+
+    NPCType get_npc_type_spawned_at(int x_tiles, int y_tiles) const;
 
 private:
 

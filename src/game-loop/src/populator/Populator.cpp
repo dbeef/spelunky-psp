@@ -11,9 +11,106 @@
 #include "prefabs/items/Jar.hpp"
 #include "prefabs/items/Crate.hpp"
 #include "prefabs/items/Chest.hpp"
+#include "prefabs/traps/Spikes.hpp"
+#include "prefabs/traps/ArrowTrap.hpp"
+#include "prefabs/npc/Snake.hpp"
+#include "prefabs/npc/Spider.hpp"
+#include "prefabs/npc/Bat.hpp"
+#include "prefabs/npc/FakeSkeleton.hpp"
+#include "prefabs/npc/Skeleton.hpp"
+#include "prefabs/npc/Caveman.hpp"
 
 #include "EntityRegistry.hpp"
 #include "Level.hpp"
+
+void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
+{
+    // TODO: Make use of LevelSummaryTracker to keep count of killed NPC's.
+
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    Spawner snake_spawner(3, 4);
+    Spawner bat_spawner(3, 4);
+    Spawner caveman_spawner(3, 4);
+    Spawner fake_skeleton_spawner(3, 4);
+    Spawner skeleton_spawner(3, 4);
+    Spawner spikes_spawner(3, 4);
+    Spawner spider_spawner(3, 4);
+
+    std::vector<std::shared_ptr<GameEntity>> out{};
+
+    const auto& tile_batch = Level::instance().get_tile_batch();
+
+    for (int tile_x = 0; tile_x < Consts::LEVEL_WIDTH_TILES; tile_x++)
+    {
+        for (int tile_y = 0; tile_y < Consts::LEVEL_HEIGHT_TILES; tile_y++)
+        {
+            const auto npc_type = tile_batch.get_npc_type_spawned_at(tile_x, tile_y);
+
+            float pos_x = static_cast<float>(tile_x) + (MapTile::PHYSICAL_WIDTH / 2.0f);
+            float pos_y = static_cast<float>(tile_y) + (MapTile::PHYSICAL_HEIGHT / 2.0f);
+
+            switch (npc_type)
+            {
+                case NPCType::SPIDER:
+                {
+                    if (spider_spawner.can_spawn())
+                    {
+                        spider_spawner.spawned();
+                        prefabs::Spider::create(pos_x, pos_y);
+                    }
+                    break;
+                }
+                case NPCType::ARROW_TRAP_LEFT:
+                {
+                    prefabs::ArrowTrap::create(pos_x, pos_y, HorizontalOrientation::LEFT);
+                    break;
+                }
+                case NPCType::ARROW_TRAP_RIGHT:
+                {
+                    prefabs::ArrowTrap::create(pos_x, pos_y, HorizontalOrientation::RIGHT);
+                    break;
+                }
+                case NPCType::ANY:
+                {
+                    if (snake_spawner.can_spawn())
+                    {
+                        snake_spawner.spawned();
+                        prefabs::Snake::create(pos_x, pos_y);
+                    }
+                    else if (bat_spawner.can_spawn())
+                    {
+                        bat_spawner.spawned();
+                        prefabs::Bat::create(pos_x, pos_y);
+                    }
+                    else if (caveman_spawner.can_spawn())
+                    {
+                        caveman_spawner.spawned();
+                        prefabs::Caveman::create(pos_x, pos_y);
+                    }
+                    else if (fake_skeleton_spawner.can_spawn())
+                    {
+                        fake_skeleton_spawner.spawned();
+                        prefabs::FakeSkeleton ::create(pos_x, pos_y);
+                    }
+                    else if (skeleton_spawner.can_spawn())
+                    {
+                        skeleton_spawner.spawned();
+                        prefabs::Skeleton::create(pos_x, pos_y);
+                    }
+                    else if (spikes_spawner.can_spawn())
+                    {
+                        spikes_spawner.spawned();
+                        prefabs::Spikes::create(pos_x, pos_y);
+                    }
+                    break;
+                }
+                case NPCType::NOTHING: break;
+                default: assert(false);
+            }
+        }
+    }
+}
 
 void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
 {

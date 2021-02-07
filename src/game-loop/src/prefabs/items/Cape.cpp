@@ -16,7 +16,7 @@
 
 namespace
 {
-    class CapeScript : public ScriptBase
+    class CapeScript final : public ScriptBase
     {
     public:
         // TODO: Show icon when in inventory (but only in main-dude's inventory, not when i.e some other thing carries it)

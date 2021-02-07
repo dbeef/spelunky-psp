@@ -93,6 +93,12 @@ add_library(GameLoop STATIC
 
         # Prefabs:
 
+        include/prefabs/npc/Bat.hpp
+        include/prefabs/npc/Caveman.hpp
+        include/prefabs/npc/Skeleton.hpp
+        include/prefabs/npc/FakeSkeleton.hpp
+        include/prefabs/npc/Spider.hpp
+        include/prefabs/npc/Snake.hpp
         include/prefabs/props/StartSign.hpp
         include/prefabs/props/ScoresSign.hpp
         include/prefabs/props/ResetSign.hpp
@@ -121,6 +127,7 @@ add_library(GameLoop STATIC
         include/prefabs/particles/PoofParticle.hpp
         include/prefabs/particles/FlameTrailParticle.hpp
         include/prefabs/particles/FlameParticle.hpp
+        include/prefabs/particles/BonesParticle.hpp
         include/prefabs/particles/RopeCollectedParticle.hpp
         include/prefabs/particles/BombCollectedParticle.hpp
         include/prefabs/collectibles/GoldNugget.hpp
@@ -137,10 +144,16 @@ add_library(GameLoop STATIC
         include/prefabs/items/Whip.hpp
         include/prefabs/items/Crate.hpp
         include/prefabs/items/Cape.hpp
+        include/prefabs/items/Arrow.hpp
+        include/prefabs/items/Skull.hpp
         include/prefabs/effects/Explosion.hpp
         include/prefabs/effects/ShotgunBlast.hpp
         include/prefabs/other/Bullet.hpp
+        include/prefabs/other/Bones.hpp
+        include/prefabs/traps/Spikes.hpp
+        include/prefabs/traps/ArrowTrap.hpp
 
+        src/prefabs/npc/Snake.cpp
         src/prefabs/props/QuitSign.cpp
         src/prefabs/props/ResetSign.cpp
         src/prefabs/props/ScoresSign.cpp
@@ -171,6 +184,7 @@ add_library(GameLoop STATIC
         src/prefabs/particles/FlameParticle.cpp
         src/prefabs/particles/RopeCollectedParticle.cpp
         src/prefabs/particles/BombCollectedParticle.cpp
+        src/prefabs/particles/BonesParticle.cpp
         src/prefabs/collectibles/GoldNugget.cpp
         src/prefabs/collectibles/GoldChunk.cpp
         src/prefabs/collectibles/SmallGem.cpp
@@ -185,9 +199,19 @@ add_library(GameLoop STATIC
         src/prefabs/items/Whip.cpp
         src/prefabs/items/Crate.cpp
         src/prefabs/items/Cape.cpp
+        src/prefabs/items/Arrow.cpp
+        src/prefabs/items/Skull.cpp
         src/prefabs/effects/Explosion.cpp
         src/prefabs/effects/ShotgunBlast.cpp
         src/prefabs/other/Bullet.cpp
+        src/prefabs/other/Bones.cpp
+        src/prefabs/npc/Bat.cpp
+        src/prefabs/npc/Caveman.cpp
+        src/prefabs/npc/Spider.cpp
+        src/prefabs/npc/Skeleton.cpp
+        src/prefabs/npc/FakeSkeleton.cpp
+        src/prefabs/traps/Spikes.cpp
+        src/prefabs/traps/ArrowTrap.cpp
 
         # Systems:
 

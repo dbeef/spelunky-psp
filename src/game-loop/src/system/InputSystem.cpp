@@ -151,6 +151,7 @@ void InputSystem::update_items_pick_up_put_down()
             PhysicsComponent& carrier_physics,
             HorizontalOrientationComponent& carrier_orientation)
     {
+        // TODO: Should take into consideration InputComponent of entity with ItemCarrierComponent.
         const bool pick_up_or_put_down_intent = have_event(_input_events, InputEvent::DUCKING, InputEvent::THROWING_PRESSED);
         const bool open_intent = have_event(_input_events, InputEvent::UP, InputEvent::THROWING_PRESSED);
         const bool throw_intent = have_event(_input_events, InputEvent::THROWING_PRESSED);

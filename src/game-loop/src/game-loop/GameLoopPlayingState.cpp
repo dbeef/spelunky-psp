@@ -144,6 +144,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     death.disable_input();
 
     populator::generate_loot(game_loop._level_summary_tracker);
+    populator::generate_npc(game_loop._level_summary_tracker);
     game_loop._level_summary_tracker->entered_new_level();
 }
 

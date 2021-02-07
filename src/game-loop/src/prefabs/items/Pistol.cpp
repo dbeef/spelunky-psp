@@ -17,7 +17,7 @@
 
 namespace
 {
-    class PistolScript : public ScriptBase
+    class PistolScript final : public ScriptBase
     {
     public:
         void update(entt::entity owner, uint32_t delta_time_ms) override
