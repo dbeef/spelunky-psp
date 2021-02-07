@@ -23,7 +23,7 @@ namespace
     constexpr float x_speed = 0.02f;
     constexpr float y_speed = 0.02f;
 
-    class BatScript : public ScriptBase
+    class BatScript final : public ScriptBase
     {
     public:
 

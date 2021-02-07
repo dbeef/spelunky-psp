@@ -10,7 +10,7 @@
 
 namespace
 {
-    class RopeSpawnerScript : public ScriptBase
+    class RopeSpawnerScript final : public ScriptBase
     {
     public:
 

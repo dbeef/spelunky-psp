@@ -23,7 +23,7 @@ namespace
     constexpr uint32_t fast_blinking_ms = 2500;
     constexpr uint32_t explosion_ms = 3500;
 
-    class BombScript : public ScriptBase
+    class BombScript final : public ScriptBase
     {
     public:
 

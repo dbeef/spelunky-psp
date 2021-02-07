@@ -34,7 +34,7 @@ namespace
         return static_cast<JarLootType>(std::rand() % static_cast<int>(JarLootType::_SIZE));
     }
 
-    class JarScript : public ScriptBase
+    class JarScript final : public ScriptBase
     {
     public:
 

@@ -53,7 +53,7 @@ namespace
         return static_cast<CrateItemType>(std::rand() % static_cast<int>(CrateItemType::_SIZE));
     }
 
-    class CrateScript : public ScriptBase
+    class CrateScript final : public ScriptBase
     {
     public:
 

@@ -14,7 +14,7 @@
 
 namespace
 {
-    class BulletScript : public ScriptBase
+    class BulletScript final : public ScriptBase
     {
     public:
         void update(entt::entity owner, uint32_t delta_time_ms) override

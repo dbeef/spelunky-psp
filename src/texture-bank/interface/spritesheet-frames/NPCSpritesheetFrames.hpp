@@ -35,8 +35,7 @@ enum class NPCSpritesheetFrames : std::uint16_t
     SPIKES,
     SPIKES_BLOOD,
     ARROW,
-    // A single frame each 20 degrees, making up 180:
-    ARROW_ANGLED_0_FIRST,
+    ARROW_ANGLED_0_FIRST, // Each frame adds 20 degrees rotation, making up 180:
     ARROW_ANGLED_1,
     ARROW_ANGLED_2,
     ARROW_ANGLED_3,

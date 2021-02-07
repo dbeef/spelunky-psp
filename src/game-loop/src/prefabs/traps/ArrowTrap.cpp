@@ -16,7 +16,7 @@ namespace
     constexpr float activation_distance_x = 7;
     constexpr float activation_distance_y = 0.5f;
 
-    class ArrowTrapScript : public ScriptBase
+    class ArrowTrapScript final : public ScriptBase
     {
     public:
         explicit ArrowTrapScript(HorizontalOrientation orientation) : _orientation(orientation) {}

@@ -21,7 +21,7 @@ namespace
     constexpr float activation_distance_y = 7;
     constexpr uint32_t update_delta_ms = 20;
 
-    class SpiderScript : public ScriptBase
+    class SpiderScript final : public ScriptBase
     {
     public:
         void update(entt::entity owner, uint32_t delta_time_ms) override

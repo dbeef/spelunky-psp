@@ -20,7 +20,7 @@ namespace
     constexpr float activation_distance_x = 3.0f;
     constexpr float activation_distance_y = 0.5f;
 
-    class SkeletonScript : public ScriptBase
+    class SkeletonScript final : public ScriptBase
     {
     public:
         void update(entt::entity owner, uint32_t delta_time_ms) override

@@ -19,7 +19,7 @@ namespace
     constexpr uint32_t max_fuel_activations = 6;
     constexpr uint32_t fuel_regeneration_delta_ms = 500;
 
-    class JetpackScript : public ScriptBase
+    class JetpackScript final : public ScriptBase
     {
     public:
         // TODO: Show icon when in inventory (but only in main-dude's inventory, not when i.e some other thing carries it)

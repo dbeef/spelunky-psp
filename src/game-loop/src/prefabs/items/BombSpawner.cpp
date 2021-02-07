@@ -10,7 +10,7 @@
 
 namespace
 {
-    class BombSpawnerScript : public ScriptBase
+    class BombSpawnerScript final : public ScriptBase
     {
     public:
 

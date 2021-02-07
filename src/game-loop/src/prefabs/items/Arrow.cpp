@@ -16,7 +16,7 @@
 
 namespace
 {
-    class ArrowScript : public ScriptBase
+    class ArrowScript final : public ScriptBase
     {
     public:
 

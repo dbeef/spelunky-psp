@@ -25,18 +25,18 @@ namespace
         void update(entt::entity owner, uint32_t delta_time_ms) override
         {
             auto& registry = EntityRegistry::instance().get_registry();
-            auto& physics = registry.get<PhysicsComponent>(owner);
+            const auto& physics = registry.get<PhysicsComponent>(owner);
 
             if (physics.is_left_collision() || physics.is_right_collision() ||
                 physics.is_upper_collision() || physics.is_bottom_collision())
             {
                 if (std::fabs(_last_x_speed) > 0.15f || std::fabs(_last_y_speed) > 0.13f)
                 {
-                    auto& position = registry.get<PositionComponent>(owner);
+                    const auto& position = registry.get<PositionComponent>(owner);
                     prefabs::SmokePuffParticle::create(position.x_center, position.y_center);
                     registry.destroy(owner);
 
-                    auto bones_particle = prefabs::BonesParticle::create(position.x_center, position.y_center);
+                    const auto bones_particle = prefabs::BonesParticle::create(position.x_center, position.y_center);
                     auto& bones_particle_physics = registry.get<PhysicsComponent>(bones_particle);
 
                     _last_x_speed = std::clamp(_last_x_speed, -0.1f, 0.1f);

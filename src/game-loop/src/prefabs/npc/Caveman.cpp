@@ -19,7 +19,7 @@ namespace
     constexpr uint16_t max_waiting_time_ms = 3000;
     constexpr uint16_t max_walking_time_ms = 5000;
 
-    class CavemanScript : public ScriptBase
+    class CavemanScript final : public ScriptBase
     {
     public:
 
@@ -40,11 +40,11 @@ namespace
                 walk(owner);
             }
 
-            if (_waiting_timer_ms > 0)
+            if (_waiting_timer_ms >= 0)
             {
                 _waiting_timer_ms -= delta_time_ms;
 
-                if (_waiting_timer_ms <= 0)
+                if (_waiting_timer_ms < 0)
                 {
                     _walking_timer_ms = std::rand() % max_walking_time_ms;
                     start_animation(owner);
@@ -56,7 +56,7 @@ namespace
     private:
 
         int _walking_timer_ms = 0;
-        int _waiting_timer_ms = max_waiting_time_ms;
+        int _waiting_timer_ms = 0;
 
         static void walk(entt::entity owner)
         {

@@ -13,7 +13,7 @@
 
 namespace
 {
-    class SpikesScript : public ScriptBase
+    class SpikesScript final : public ScriptBase
     {
     public:
         void update(entt::entity owner, uint32_t delta_time_ms) override
