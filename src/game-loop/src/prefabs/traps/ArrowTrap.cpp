@@ -45,7 +45,26 @@ namespace
                     return;
                 }
 
-                // TODO: Should also take trap orientation into account.
+                switch (_orientation)
+                {
+                    case HorizontalOrientation::LEFT:
+                    {
+                        if (other_position.x_center > arrow_trap_position.x_center)
+                        {
+                            return;
+                        }
+                        break;
+                    }
+                    case HorizontalOrientation::RIGHT:
+                    {
+                        if (other_position.x_center < arrow_trap_position.x_center)
+                        {
+                            return;
+                        }
+                        break;
+                    }
+                }
+
                 float distance_x = std::fabs(other_position.x_center - arrow_trap_position.x_center);
                 float distance_y = std::fabs(other_position.y_center - arrow_trap_position.y_center);
 
