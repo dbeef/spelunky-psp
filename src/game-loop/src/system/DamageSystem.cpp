@@ -4,6 +4,8 @@
 #include "components/damage/HitpointComponent.hpp"
 #include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/damage/GiveProjectileDamageComponent.hpp"
+#include "components/damage/TakeMeleeDamageComponent.hpp"
+#include "components/damage/GiveMeleeDamageComponent.hpp"
 #include "EntityRegistry.hpp"
 #include "audio/Audio.hpp"
 
@@ -11,6 +13,43 @@ void DamageSystem::update(std::uint32_t delta_time_ms)
 {
     update_falling_damage();
     update_projectile_damage();
+    update_melee_damage();
+}
+
+void DamageSystem::update_melee_damage()
+{
+    auto &registry = EntityRegistry::instance().get_registry();
+    auto bodies = registry.view<TakeMeleeDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>();
+    auto melee_bodies = registry.view<GiveMeleeDamageComponent, PhysicsComponent, PositionComponent>();
+
+    auto give_melee_damage = [&bodies](GiveMeleeDamageComponent& give_damage,
+                                            PhysicsComponent& projectile_physics,
+                                            PositionComponent& projectile_position)
+    {
+        bodies.each([&projectile_physics, &projectile_position, &give_damage](
+                TakeMeleeDamageComponent& take_damage,
+                HitpointComponent& hitpoints,
+                PhysicsComponent& body_physics,
+                PositionComponent& body_position)
+        {
+            if (!body_physics.is_collision(projectile_physics, projectile_position, body_position))
+            {
+                return;
+            }
+
+            const MeleeDamage_t damage = give_damage.get_damage();
+
+            take_damage.notify(damage);
+            hitpoints.remove_hitpoints(damage);
+
+            if (hitpoints.get_hitpoints() <= 0)
+            {
+                hitpoints.notify({});
+            }
+        });
+    };
+
+    registry.view<GiveMeleeDamageComponent, PhysicsComponent, PositionComponent>().each(give_melee_damage);
 }
 
 void DamageSystem::update_projectile_damage()

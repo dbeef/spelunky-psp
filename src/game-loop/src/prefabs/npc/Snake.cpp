@@ -10,6 +10,7 @@
 #include "components/generic/ScriptingComponent.hpp"
 #include "components/damage/HitpointComponent.hpp"
 #include "components/damage/TakeProjectileDamageComponent.hpp"
+#include "components/damage/TakeMeleeDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -187,6 +188,7 @@ entt::entity prefabs::Snake::create(float pos_x_center, float pos_y_center)
     registry.emplace<HorizontalOrientationComponent>(entity);
     registry.emplace<HitpointComponent>(entity, hitpoints);
     registry.emplace<TakeProjectileDamageComponent>(entity);
+    registry.emplace<TakeMeleeDamageComponent>(entity);
 
     return entity;
 }

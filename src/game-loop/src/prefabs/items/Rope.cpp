@@ -1,6 +1,7 @@
 #include "prefabs/items/Rope.hpp"
 #include "prefabs/items/RopeChainElement.hpp"
 
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 #include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/ActivableComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
@@ -135,6 +136,7 @@ entt::entity prefabs::Rope::create(float pos_x_center, float pos_y_center)
     registry.emplace<ScriptingComponent>(entity, std::make_shared<RopeScript>());
     registry.emplace<HorizontalOrientationComponent>(entity);
     registry.emplace<ActivableComponent>(entity, activable);
+    registry.emplace<GiveProjectileDamageComponent>(entity, 1);
 
     return entity;
 }

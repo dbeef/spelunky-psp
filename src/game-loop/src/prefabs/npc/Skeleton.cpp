@@ -13,6 +13,7 @@
 #include "components/damage/TakeFallDamageComponent.hpp"
 #include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/damage/HitpointComponent.hpp"
+#include "components/damage/TakeMeleeDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -178,6 +179,7 @@ entt::entity prefabs::Skeleton::create(float pos_x_center, float pos_y_center)
     registry.emplace<HitpointComponent>(entity, hitpoints);
     registry.emplace<TakeFallDamageComponent>(entity, 1);
     registry.emplace<TakeProjectileDamageComponent>(entity);
+    registry.emplace<TakeMeleeDamageComponent>(entity);
 
     return entity;
 }
