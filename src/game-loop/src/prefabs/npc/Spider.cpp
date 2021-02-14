@@ -1,4 +1,5 @@
 #include "prefabs/npc/Spider.hpp"
+#include "prefabs/particles/BloodParticle.hpp"
 
 #include "components/specialized/MainDudeComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
@@ -8,6 +9,8 @@
 #include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
+#include "components/damage/HitpointComponent.hpp"
+#include "components/damage/TakeProjectileDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -20,10 +23,57 @@ namespace
     constexpr float activation_distance_x = 0.5f;
     constexpr float activation_distance_y = 7;
     constexpr uint32_t update_delta_ms = 20;
+   
+    class SpiderDeathObserver final : public Observer<DieEvent>
+    {
+    public:
+
+        explicit SpiderDeathObserver(entt::entity Spider) : _spider(Spider) {}
+
+        void on_notify(const DieEvent*) override
+        {
+            auto& registry = EntityRegistry::instance().get_registry();
+            auto& position = registry.get<PositionComponent>(_spider);
+
+            {
+                auto blood = prefabs::BloodParticle::create(position.x_center, position.y_center);
+                auto& physics = registry.get<PhysicsComponent>(blood);
+                physics.set_x_velocity(-0.1f);
+                physics.set_y_velocity(-0.1f);
+            }
+
+            {
+                auto blood = prefabs::BloodParticle::create(position.x_center, position.y_center);
+                auto& physics = registry.get<PhysicsComponent>(blood);
+                physics.set_x_velocity(0.0f);
+                physics.set_y_velocity(-0.1f);
+            }
+
+            {
+                auto blood = prefabs::BloodParticle::create(position.x_center, position.y_center);
+                auto& physics = registry.get<PhysicsComponent>(blood);
+                physics.set_x_velocity(0.1f);
+                physics.set_y_velocity(-0.1f);
+            }
+
+            registry.destroy(_spider);
+        }
+
+    private:
+        const entt::entity _spider;
+    };
 
     class SpiderScript final : public ScriptBase
     {
     public:
+
+        explicit SpiderScript(entt::entity spider) : _death_observer(spider) {}
+
+        SpiderDeathObserver* get_observer()
+        {
+            return &_death_observer;
+        }
+
         void update(entt::entity owner, uint32_t delta_time_ms) override
         {
             _update_timer_ms += delta_time_ms;
@@ -105,6 +155,7 @@ namespace
             }
         }
     private:
+        SpiderDeathObserver _death_observer;
         bool _triggered = false;
         bool _flipping_animation_finished = false;
         Point2D _dude_position;
@@ -135,13 +186,21 @@ entt::entity prefabs::Spider::create(float pos_x_center, float pos_y_center)
     physics.set_bounciness(0.6f);
     physics.disable_gravity();
 
+    auto spider_script = std::make_shared<SpiderScript>(entity);
+    ScriptingComponent script(spider_script);
+
+    HitpointComponent hitpoints(1);
+    hitpoints.add_observer(reinterpret_cast<Observer<DieEvent>*>(spider_script->get_observer()));
+
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
     registry.emplace<AnimationComponent>(entity);
     registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_2_ITEMS, CameraType::MODEL_VIEW_SPACE);
     registry.emplace<PhysicsComponent>(entity, physics);
-    registry.emplace<ScriptingComponent>(entity, std::make_shared<SpiderScript>());
+    registry.emplace<ScriptingComponent>(entity, spider_script);
     registry.emplace<HorizontalOrientationComponent>(entity);
+    registry.emplace<HitpointComponent>(entity, hitpoints);
+    registry.emplace<TakeProjectileDamageComponent>(entity);
 
     return entity;
 }

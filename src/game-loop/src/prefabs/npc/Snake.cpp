@@ -1,4 +1,5 @@
 #include "prefabs/npc/Snake.hpp"
+#include "prefabs/particles/BloodParticle.hpp"
 
 #include "components/generic/AnimationComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
@@ -7,6 +8,8 @@
 #include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
+#include "components/damage/HitpointComponent.hpp"
+#include "components/damage/TakeProjectileDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -19,9 +22,55 @@ namespace
     constexpr uint16_t max_waiting_time_ms = 3000;
     constexpr uint16_t max_walking_time_ms = 5000;
 
+    class SnakeDeathObserver final : public Observer<DieEvent>
+    {
+    public:
+
+        explicit SnakeDeathObserver(entt::entity snake) : _snake(snake) {}
+
+        void on_notify(const DieEvent*) override
+        {
+            auto& registry = EntityRegistry::instance().get_registry();
+            auto& position = registry.get<PositionComponent>(_snake);
+
+            {
+                auto blood = prefabs::BloodParticle::create(position.x_center, position.y_center);
+                auto& physics = registry.get<PhysicsComponent>(blood);
+                physics.set_x_velocity(-0.1f);
+                physics.set_y_velocity(-0.1f);
+            }
+
+            {
+                auto blood = prefabs::BloodParticle::create(position.x_center, position.y_center);
+                auto& physics = registry.get<PhysicsComponent>(blood);
+                physics.set_x_velocity(0.0f);
+                physics.set_y_velocity(-0.1f);
+            }
+
+            {
+                auto blood = prefabs::BloodParticle::create(position.x_center, position.y_center);
+                auto& physics = registry.get<PhysicsComponent>(blood);
+                physics.set_x_velocity(0.1f);
+                physics.set_y_velocity(-0.1f);
+            }
+
+            registry.destroy(_snake);
+        }
+
+    private:
+        const entt::entity _snake;
+    };
+    
     class SnakeScript final : public ScriptBase
     {
     public:
+
+        explicit SnakeScript(entt::entity snake) : _death_observer(snake) {}
+
+        SnakeDeathObserver* get_observer()
+        {
+            return &_death_observer;
+        }
 
         void update(entt::entity owner, uint32_t delta_time_ms) override
         {
@@ -55,6 +104,7 @@ namespace
 
     private:
 
+        SnakeDeathObserver _death_observer;
         int _walking_timer_ms = 0;
         int _waiting_timer_ms = 0;
 
@@ -122,13 +172,21 @@ entt::entity prefabs::Snake::create(float pos_x_center, float pos_y_center)
     QuadComponent quad(TextureType::NPC, width, height);
     quad.frame_changed(NPCSpritesheetFrames::SNAKE);
 
+    auto snake_script = std::make_shared<SnakeScript>(entity);
+    ScriptingComponent script(snake_script);
+
+    HitpointComponent hitpoints(1);
+    hitpoints.add_observer(reinterpret_cast<Observer<DieEvent>*>(snake_script->get_observer()));
+
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
     registry.emplace<AnimationComponent>(entity);
     registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_2_ITEMS, CameraType::MODEL_VIEW_SPACE);
     registry.emplace<PhysicsComponent>(entity, width - (4.0f / 16.0f), height - (4.0f / 16.0f));
-    registry.emplace<ScriptingComponent>(entity, std::make_shared<SnakeScript>());
+    registry.emplace<ScriptingComponent>(entity, script);
     registry.emplace<HorizontalOrientationComponent>(entity);
+    registry.emplace<HitpointComponent>(entity, hitpoints);
+    registry.emplace<TakeProjectileDamageComponent>(entity);
 
     return entity;
 }

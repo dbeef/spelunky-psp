@@ -11,6 +11,7 @@
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
 #include "components/damage/TakeFallDamageComponent.hpp"
+#include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/damage/HitpointComponent.hpp"
 
 #include "EntityRegistry.hpp"
@@ -176,6 +177,7 @@ entt::entity prefabs::Skeleton::create(float pos_x_center, float pos_y_center)
     registry.emplace<HorizontalOrientationComponent>(entity);
     registry.emplace<HitpointComponent>(entity, hitpoints);
     registry.emplace<TakeFallDamageComponent>(entity, 1);
+    registry.emplace<TakeProjectileDamageComponent>(entity);
 
     return entity;
 }

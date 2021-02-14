@@ -12,6 +12,7 @@
 #include "components/generic/ItemComponent.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "Level.hpp"
@@ -162,6 +163,7 @@ entt::entity prefabs::Bomb::create(float pos_x_center, float pos_y_center)
     registry.emplace<ScriptingComponent>(entity, std::make_shared<BombScript>());
     registry.emplace<HorizontalOrientationComponent>(entity);
     registry.emplace<ActivableComponent>(entity, activable);
+    registry.emplace<GiveProjectileDamageComponent>(entity, 1);
 
     return entity;
 }

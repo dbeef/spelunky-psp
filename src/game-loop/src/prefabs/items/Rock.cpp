@@ -1,5 +1,6 @@
 #include "prefabs/items/Rock.hpp"
 
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
@@ -41,6 +42,7 @@ entt::entity prefabs::Rock::create(float pos_x_center, float pos_y_center)
     registry.emplace<PhysicsComponent>(entity, physics);
     registry.emplace<ItemComponent>(entity, item);
     registry.emplace<HorizontalOrientationComponent>(entity);
+    registry.emplace<GiveProjectileDamageComponent>(entity, 1);
 
     return entity;
 }

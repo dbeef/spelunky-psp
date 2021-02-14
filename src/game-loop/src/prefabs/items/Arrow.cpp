@@ -7,6 +7,7 @@
 #include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -87,6 +88,7 @@ entt::entity prefabs::Arrow::create(float pos_x_center, float pos_y_center)
     registry.emplace<ItemComponent>(entity, item);
     registry.emplace<ScriptingComponent>(entity, std::make_shared<ArrowScript>());
     registry.emplace<HorizontalOrientationComponent>(entity);
+    registry.emplace<GiveProjectileDamageComponent>(entity, 2);
 
     return entity;
 }

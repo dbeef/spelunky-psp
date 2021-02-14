@@ -8,6 +8,7 @@
 #include "prefabs/particles/RopeCollectedParticle.hpp"
 #include "prefabs/particles/BombCollectedParticle.hpp"
 
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/HorizontalOrientationComponent.hpp"
@@ -145,6 +146,7 @@ entt::entity prefabs::Crate::create(float pos_x_center, float pos_y_center)
     registry.emplace<ScriptingComponent>(entity, std::make_shared<CrateScript>());
     registry.emplace<HorizontalOrientationComponent>(entity);
     registry.emplace<OpenableComponent>(entity);
+    registry.emplace<GiveProjectileDamageComponent>(entity, 1);
 
     return entity;
 }

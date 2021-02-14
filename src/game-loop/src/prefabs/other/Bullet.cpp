@@ -2,6 +2,7 @@
 #include "prefabs/particles/SmokePuffParticle.hpp"
 
 #include "components/generic/PhysicsComponent.hpp"
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 #include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
@@ -64,6 +65,7 @@ entt::entity prefabs::Bullet::create(float pos_x_center, float pos_y_center)
     registry.emplace<PhysicsComponent>(entity, physics);
     registry.emplace<HorizontalOrientationComponent>(entity);
     registry.emplace<ScriptingComponent>(entity, std::make_shared<BulletScript>());
+    registry.emplace<GiveProjectileDamageComponent>(entity, 1);
 
     return entity;
 }

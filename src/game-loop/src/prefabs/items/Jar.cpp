@@ -5,6 +5,7 @@
 #include "prefabs/collectibles/GoldChunk.hpp"
 #include "prefabs/collectibles/GoldNugget.hpp"
 
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 #include "components/generic/ItemComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
@@ -119,6 +120,7 @@ entt::entity prefabs::Jar::create(float pos_x_center, float pos_y_center)
     registry.emplace<ItemComponent>(entity, item);
     registry.emplace<ScriptingComponent>(entity, std::make_shared<JarScript>());
     registry.emplace<HorizontalOrientationComponent>(entity);
+    registry.emplace<GiveProjectileDamageComponent>(entity, 1);
 
     return entity;
 }
