@@ -11,6 +11,7 @@
 #include "system/ParticleSystem.hpp"
 #include "system/AnimationSystem.hpp"
 #include "system/ItemSystem.hpp"
+#include "system/DamageSystem.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -32,6 +33,7 @@ GameLoop::GameLoop(const std::shared_ptr<Viewport>& viewport)
     , _disposing_system(std::make_shared<DisposingSystem>())
     , _particle_system(std::make_shared<ParticleSystem>())
     , _item_system(std::make_shared<ItemSystem>())
+    , _damage_system(std::make_shared<DamageSystem>())
 {
     _states.current = &_states.started;
     _states.current->enter(*this);

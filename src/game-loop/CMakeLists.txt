@@ -247,7 +247,7 @@ add_library(GameLoop STATIC
         interface/other/Inventory.hpp
         interface/other/InventoryEvent.hpp
         include/other/LootCollectedEvent.hpp
-)
+        include/system/DamageSystem.hpp src/system/DamageSystem.cpp include/components/damage/TakeFallDamageComponent.hpp include/components/damage/HitpointComponent.hpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface

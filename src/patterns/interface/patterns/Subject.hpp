@@ -6,6 +6,8 @@
 #include <vector>
 #include <algorithm>
 
+// TODO: BlankEvent_t?
+
 template<class EventType>
 class Subject
 {
