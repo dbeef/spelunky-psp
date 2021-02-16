@@ -35,5 +35,11 @@ macro(add_android_dependencies)
 endmacro()
 
 macro(spelunky_psp_post_build_android)
-    # Nothing to be done post-build.
+    # Copy libhidapi that is supposed to be bundled with SDL2:
+    add_custom_command(TARGET Spelunky_PSP POST_BUILD
+        COMMAND echo Copying libhidapi.so...
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${SDL2_DIR}/../../libhidapi.so"
+                "$<TARGET_FILE_DIR:Spelunky_PSP>/libhidapi.so"
+    )
 endmacro()

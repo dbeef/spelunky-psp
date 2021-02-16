@@ -74,7 +74,7 @@ function from `libSpelunky_PSP.so` and call it through JNI. These files are comp
 as other Android-related boilerplate (AndroidManifest.xml, strings.xml, icons).
 From the moment of calling main function through JNI until return, the code will be executed in ordinary way as on other platforms.   
 
-Building requires Android NDK r15c, Android SDK and SDL 2.0.9 being crosscompiled in 2 architectures (armeabi-v7a/arm64-v8a).
+Building requires Android NDK r21e, Android SDK and SDL 2.0.14 being crosscompiled in 2 architectures (armeabi-v7a/arm64-v8a).
 To set-up building environment locally, you can reffer to the Dockerfile in the root of the repository. When set-up, call `scripts/build-android.sh`.
 
 Alternatively, you can build the image:

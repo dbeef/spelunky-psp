@@ -27,7 +27,7 @@ using cjson instead of [nlohmann/json](https://github.com/nlohmann/json).
 
 The only external dependency so far is SDL.
  
-SDL 1.2.15 / SDL_mixer 1.2 on PSP/Linux/Windows, SDL 2.0.9 on Android.
+SDL 1.2.15 / SDL_mixer 1.2 on PSP/Linux/Windows, SDL 2.0.14 on Android.
 
 Why SDL 1.2.15 instead of SDL2.x.x? At the time I started working on the Spelunky PSP, 
 the [PSP toolchain](https://github.com/pspdev/psptoolchain) shipped only this version, and I was happy to use it as
