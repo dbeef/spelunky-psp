@@ -3,6 +3,7 @@
 
 #include "components/specialized/MainDudeComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
+#include "components/generic/NpcTypeComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
@@ -28,13 +29,13 @@ namespace
     constexpr float x_speed = 0.02f;
     constexpr float y_speed = 0.02f;
 
-    class BatDeathObserver final : public Observer<DieEvent>
+    class BatDeathObserver final : public Observer<DeathEvent>
     {
     public:
 
         explicit BatDeathObserver(entt::entity Bat) : _bat(Bat) {}
 
-        void on_notify(const DieEvent*) override
+        void on_notify(const DeathEvent*) override
         {
             auto& registry = EntityRegistry::instance().get_registry();
             auto& position = registry.get<PositionComponent>(_bat);
@@ -58,8 +59,6 @@ namespace
 
                 physics.set_velocity(v_x, v_y);
             }
-
-            registry.destroy(_bat);
         }
 
     private:
@@ -220,7 +219,7 @@ entt::entity prefabs::Bat::create(float pos_x_center, float pos_y_center)
     ScriptingComponent script(bat_script);
 
     HitpointComponent hitpoints(1);
-    hitpoints.add_observer(reinterpret_cast<Observer<DieEvent>*>(bat_script->get_observer()));
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(bat_script->get_observer()));
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
@@ -233,6 +232,7 @@ entt::entity prefabs::Bat::create(float pos_x_center, float pos_y_center)
     registry.emplace<TakeProjectileDamageComponent>(entity);
     registry.emplace<TakeMeleeDamageComponent>(entity);
     registry.emplace<TakeJumpOnTopDamageComponent>(entity);
+    registry.emplace<NpcTypeComponent>(entity, NpcType::BAT);
 
     return entity;
 }

@@ -2,6 +2,7 @@
 #include "prefabs/particles/BloodParticle.hpp"
 
 #include "components/specialized/MainDudeComponent.hpp"
+#include "components/generic/NpcTypeComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
@@ -26,13 +27,13 @@ namespace
     constexpr float activation_distance_y = 7;
     constexpr uint32_t update_delta_ms = 20;
    
-    class SpiderDeathObserver final : public Observer<DieEvent>
+    class SpiderDeathObserver final : public Observer<DeathEvent>
     {
     public:
 
         explicit SpiderDeathObserver(entt::entity Spider) : _spider(Spider) {}
 
-        void on_notify(const DieEvent*) override
+        void on_notify(const DeathEvent*) override
         {
             auto& registry = EntityRegistry::instance().get_registry();
             auto& position = registry.get<PositionComponent>(_spider);
@@ -56,8 +57,6 @@ namespace
 
                 physics.set_velocity(v_x, v_y);
             }
-
-            registry.destroy(_spider);
         }
 
     private:
@@ -203,7 +202,7 @@ entt::entity prefabs::Spider::create(float pos_x_center, float pos_y_center, boo
     ScriptingComponent script(spider_script);
 
     HitpointComponent hitpoints(1);
-    hitpoints.add_observer(reinterpret_cast<Observer<DieEvent>*>(spider_script->get_observer()));
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(spider_script->get_observer()));
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
@@ -216,6 +215,7 @@ entt::entity prefabs::Spider::create(float pos_x_center, float pos_y_center, boo
     registry.emplace<TakeProjectileDamageComponent>(entity);
     registry.emplace<TakeMeleeDamageComponent>(entity);
     registry.emplace<TakeJumpOnTopDamageComponent>(entity);
+    registry.emplace<NpcTypeComponent>(entity, NpcType::SPIDER);
 
     if (triggered)
     {

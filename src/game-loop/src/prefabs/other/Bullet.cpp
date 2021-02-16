@@ -17,23 +17,18 @@
 
 namespace
 {
-    class BulletDeathObserver final : public Observer<DieEvent>
+    class BulletDeathObserver final : public Observer<DeathEvent>
     {
     public:
 
         explicit BulletDeathObserver(entt::entity bullet) :_bullet(bullet) {}
 
-        void on_notify(const DieEvent*) override
+        void on_notify(const DeathEvent*) override
         {
             auto& registry = EntityRegistry::instance().get_registry();
             auto& position = registry.get<PositionComponent>(_bullet);
 
             prefabs::SmokePuffParticle::create(position.x_center, position.y_center);
-
-            auto& hitpoints = registry.get<HitpointComponent>(_bullet);
-            hitpoints.remove_observer(this);
-
-            registry.destroy(_bullet);
         }
 
     private:
@@ -98,7 +93,7 @@ entt::entity prefabs::Bullet::create(float pos_x_center, float pos_y_center)
     ScriptingComponent script(bullet_script);
 
     HitpointComponent hitpoints(1);
-    hitpoints.add_observer(reinterpret_cast<Observer<DieEvent>*>(bullet_script->get_observer()));
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(bullet_script->get_observer()));
 
     GiveProjectileDamageComponent give_projectile_damage(2);
     give_projectile_damage.set_mutual(true);

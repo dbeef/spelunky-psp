@@ -2,6 +2,7 @@
 #include "prefabs/particles/BloodParticle.hpp"
 
 #include "components/generic/AnimationComponent.hpp"
+#include "components/generic/NpcTypeComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
@@ -24,13 +25,13 @@ namespace
     constexpr uint16_t max_waiting_time_ms = 3000;
     constexpr uint16_t max_walking_time_ms = 5000;
 
-    class SnakeDeathObserver final : public Observer<DieEvent>
+    class SnakeDeathObserver final : public Observer<DeathEvent>
     {
     public:
 
         explicit SnakeDeathObserver(entt::entity snake) : _snake(snake) {}
 
-        void on_notify(const DieEvent*) override
+        void on_notify(const DeathEvent*) override
         {
             auto& registry = EntityRegistry::instance().get_registry();
             auto& position = registry.get<PositionComponent>(_snake);
@@ -55,7 +56,8 @@ namespace
                 physics.set_velocity(v_x, v_y);
             }
 
-            registry.destroy(_snake);
+//            auto& hitpoints = registry.get<HitpointComponent>(_snake);
+//            hitpoints.remove_observer(this);
         }
 
     private:
@@ -176,7 +178,8 @@ entt::entity prefabs::Snake::create(float pos_x_center, float pos_y_center)
     auto snake_script = std::make_shared<SnakeScript>(entity);
     ScriptingComponent script(snake_script);
 
-    HitpointComponent hitpoints(1);hitpoints.add_observer(reinterpret_cast<Observer<DieEvent>*>(snake_script->get_observer()));
+    HitpointComponent hitpoints(1);
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(snake_script->get_observer()));
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
@@ -189,6 +192,7 @@ entt::entity prefabs::Snake::create(float pos_x_center, float pos_y_center)
     registry.emplace<TakeProjectileDamageComponent>(entity);
     registry.emplace<TakeMeleeDamageComponent>(entity);
     registry.emplace<TakeJumpOnTopDamageComponent>(entity);
+    registry.emplace<NpcTypeComponent>(entity, NpcType::SNAKE);
 
     return entity;
 }

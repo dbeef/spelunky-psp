@@ -49,6 +49,16 @@ void LevelSummaryTracker::on_notify(const LootCollectedEvent *event)
     _loot_collected_events.push_back(*event);
 }
 
+void LevelSummaryTracker::sort_npc_killed_events()
+{
+    std::sort(_npc_killed_events.begin(), _npc_killed_events.end(),
+              [](const NpcType &e1, const NpcType &e2)
+              {
+                  return static_cast<int>(e1) < static_cast<int>(e2);
+              }
+    );
+}
+
 void LevelSummaryTracker::sort_loot_collected_events()
 {
     std::sort(_loot_collected_events.begin(), _loot_collected_events.end(),
@@ -57,4 +67,9 @@ void LevelSummaryTracker::sort_loot_collected_events()
                   return static_cast<int>(e1) < static_cast<int>(e2);
               }
     );
+}
+
+void LevelSummaryTracker::on_notify(const DeathEvent* event)
+{
+    _npc_killed_events.push_back(event->npc_type);
 }

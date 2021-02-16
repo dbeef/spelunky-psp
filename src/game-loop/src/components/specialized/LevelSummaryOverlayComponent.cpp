@@ -1,18 +1,27 @@
 #include "components/specialized/LevelSummaryOverlayComponent.hpp"
 #include "components/specialized/LevelSummaryTracker.hpp"
+#include "components/generic/ScriptingComponent.hpp"
+#include "components/generic/PhysicsComponent.hpp"
+#include "components/generic/MeshComponent.hpp"
+#include "components/generic/PositionComponent.hpp"
+
+#include "prefabs/collectibles/SingleGoldBar.hpp"
+#include "prefabs/collectibles/TripleGoldBar.hpp"
+#include "prefabs/collectibles/GoldChunk.hpp"
+#include "prefabs/collectibles/GoldNugget.hpp"
+#include "prefabs/collectibles/BigGem.hpp"
+#include "prefabs/npc/Snake.hpp"
+#include "prefabs/npc/Spider.hpp"
+#include "prefabs/npc/Skeleton.hpp"
+#include "prefabs/npc/Bat.hpp"
+#include "prefabs/npc/Caveman.hpp"
+
+#include "EntityRegistry.hpp"
 
 #include <string>
 #include <sstream>
 #include <iomanip>
 #include <cmath>
-#include <components/generic/MeshComponent.hpp>
-#include <components/generic/PositionComponent.hpp>
-#include <prefabs/collectibles/SingleGoldBar.hpp>
-#include <prefabs/collectibles/TripleGoldBar.hpp>
-#include <prefabs/collectibles/BigGem.hpp>
-#include <components/generic/PhysicsComponent.hpp>
-
-#include "EntityRegistry.hpp"
 
 namespace
 {
@@ -122,7 +131,14 @@ LevelSummaryOverlayComponent::LevelSummaryOverlayComponent(const std::shared_ptr
         PositionComponent position;
         MeshComponent mesh;
 
-        text.set_text(KILLS_NONE_MSG);
+        if (tracker->get_npc_killed_events().empty())
+        {
+            text.set_text(KILLS_NONE_MSG);
+        }
+        else
+        {
+            text.set_text(KILLS_MSG);
+        }
 
         position.x_center = _viewport->get_width_world_units() * 0.16f;
         position.y_center = _viewport->get_height_world_units() * 0.360f;
@@ -149,6 +165,7 @@ LevelSummaryOverlayComponent::LevelSummaryOverlayComponent(const std::shared_ptr
     }
 
     _level_summary_tracker->sort_loot_collected_events();
+    _level_summary_tracker->sort_npc_killed_events()    ;
 }
 
 void LevelSummaryOverlayComponent::update(uint32_t delta_time_ms)
@@ -160,10 +177,10 @@ void LevelSummaryOverlayComponent::update(uint32_t delta_time_ms)
 
     const auto& loot_events = _level_summary_tracker->get_loot_collected_events();
 
-    int elements_appearing = std::floor<int>(static_cast<float>(_loot_appearing_timer) / 250.0f);
+    int elements_appearing = std::floor<int>(static_cast<float>(_loot_appearing_timer) / 150.0f);
     for (std::size_t index = _loot_spawned; index < elements_appearing && index < loot_events.size(); index++)
     {
-        auto& current_event = loot_events[index];
+        auto &current_event = loot_events[index];
         float x = 6.25f + (0.5 * index);
         float y = 3.25f;
 
@@ -188,9 +205,75 @@ void LevelSummaryOverlayComponent::update(uint32_t delta_time_ms)
                 registry.remove<PhysicsComponent>(entity);
                 break;
             }
-            default: assert(false);
+            case LootCollectedEvent::GOLD_CHUNK:
+            {
+                auto entity = prefabs::GoldChunk::create(x, y);
+                registry.remove<PhysicsComponent>(entity);
+                break;
+            }
+            case LootCollectedEvent::GOLD_NUGGET:
+            {
+                auto entity = prefabs::GoldNugget::create(x, y);
+                registry.remove<PhysicsComponent>(entity);
+                break;
+            }
         }
-
         _loot_spawned++;
+    }
+
+    if (_loot_spawned < loot_events.size())
+    {
+        return;
+    }
+
+    _kills_appearing_timer += delta_time_ms;
+    const auto& killed_events = _level_summary_tracker->get_npc_killed_events();
+
+    elements_appearing = std::floor<int>(static_cast<float>(_kills_appearing_timer) / 150.0f);
+    for (std::size_t index = _kills_spawned; index < elements_appearing && index < killed_events.size(); index++)
+    {
+        auto& current_event = killed_events[index];
+        float x = 6.75f + (0.5 * index);
+        float y = 4.25f;
+
+        switch (current_event)
+        {
+            case NpcType::SNAKE:
+            {
+                auto entity = prefabs::Snake::create(x, y);
+                registry.remove<PhysicsComponent>(entity);
+                registry.remove<ScriptingComponent>(entity);
+                break;
+            }
+            case NpcType::BAT:
+            {
+                auto entity = prefabs::Bat::create(x, y);
+                registry.remove<PhysicsComponent>(entity);
+                registry.remove<ScriptingComponent>(entity);
+                break;
+            }
+            case NpcType::SKELETON:
+            {
+                auto entity = prefabs::Skeleton::create(x, y);
+                registry.remove<PhysicsComponent>(entity);
+                registry.remove<ScriptingComponent>(entity);
+                break;
+            }
+            case NpcType::SPIDER:
+            {
+                auto entity = prefabs::Spider::create(x, y);
+                registry.remove<PhysicsComponent>(entity);
+                registry.remove<ScriptingComponent>(entity);
+                break;
+            }
+            case NpcType::CAVEMAN:
+            {
+                auto entity = prefabs::Caveman::create(x, y);
+                registry.remove<PhysicsComponent>(entity);
+                registry.remove<ScriptingComponent>(entity);
+                break;
+            }
+        }
+        _kills_spawned++;
     }
 }

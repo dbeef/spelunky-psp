@@ -22,13 +22,13 @@
 
 namespace
 {
-    class SkullDeathObserver final : public Observer<DieEvent>
+    class SkullDeathObserver final : public Observer<DeathEvent>
     {
     public:
 
         explicit SkullDeathObserver(entt::entity skull) : _skull(skull) {}
 
-        void on_notify(const DieEvent*) override
+        void on_notify(const DeathEvent*) override
         {
             auto& registry = EntityRegistry::instance().get_registry();
             const auto& position = registry.get<PositionComponent>(_skull);
@@ -49,8 +49,6 @@ namespace
                 auto& item_carrier = item.get_item_carrier();
                 item_carrier.put_down_active_item();
             }
-
-            registry.destroy(_skull);
         }
 
     private:
@@ -104,9 +102,9 @@ entt::entity prefabs::Skull::create(float pos_x_center, float pos_y_center)
     ScriptingComponent script(skull_script);
 
     HitpointComponent hitpoints(1);
-    hitpoints.add_observer(reinterpret_cast<Observer<DieEvent>*>(skull_script->get_observer()));
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(skull_script->get_observer()));
 
-    GiveProjectileDamageComponent give_projectile_damage(2);
+    GiveProjectileDamageComponent give_projectile_damage(1);
     give_projectile_damage.set_mutual(true);
 
     float critical_speed_x = 0.1f;

@@ -4,6 +4,7 @@
 
 #include "components/specialized/MainDudeComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
+#include "components/generic/NpcTypeComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
@@ -27,13 +28,13 @@ namespace
     constexpr float activation_distance_x = 3.0f;
     constexpr float activation_distance_y = 0.5f;
 
-    class SkeletonDeathObserver final : public Observer<DieEvent>
+    class SkeletonDeathObserver final : public Observer<DeathEvent>
     {
     public:
 
         explicit SkeletonDeathObserver(entt::entity skeleton) : _skeleton(skeleton) {}
 
-        void on_notify(const DieEvent*) override
+        void on_notify(const DeathEvent*) override
         {
             auto& registry = EntityRegistry::instance().get_registry();
             auto& position = registry.get<PositionComponent>(_skeleton);
@@ -45,7 +46,6 @@ namespace
             }
 
             prefabs::SmokePuffParticle::create(position.x_center, position.y_center);
-            registry.destroy(_skeleton);
         }
 
     private:
@@ -168,7 +168,7 @@ entt::entity prefabs::Skeleton::create(float pos_x_center, float pos_y_center)
     ScriptingComponent script(skeleton_script);
 
     HitpointComponent hitpoints(1);
-    hitpoints.add_observer(reinterpret_cast<Observer<DieEvent>*>(skeleton_script->get_observer()));
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(skeleton_script->get_observer()));
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
@@ -182,6 +182,7 @@ entt::entity prefabs::Skeleton::create(float pos_x_center, float pos_y_center)
     registry.emplace<TakeProjectileDamageComponent>(entity);
     registry.emplace<TakeMeleeDamageComponent>(entity);
     registry.emplace<TakeJumpOnTopDamageComponent>(entity);
+    registry.emplace<NpcTypeComponent>(entity, NpcType::SKELETON);
 
     return entity;
 }

@@ -1,11 +1,16 @@
 #pragma once
 
 #include "patterns/Subject.hpp"
+#include "other/NpcType.hpp"
 
-struct DieEvent {};
+struct DeathEvent
+{
+    NpcType npc_type;
+};
+
 using Hitpoint_t = int;
 
-class HitpointComponent : public Subject<DieEvent>
+class HitpointComponent : public Subject<DeathEvent>
 {
 public:
     explicit HitpointComponent(Hitpoint_t hitpoints) : _hitpoints(hitpoints) {}

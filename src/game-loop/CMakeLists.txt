@@ -260,7 +260,7 @@ add_library(GameLoop STATIC
         interface/other/Inventory.hpp
         interface/other/InventoryEvent.hpp
         include/other/LootCollectedEvent.hpp
-)
+        include/other/NpcType.hpp include/components/generic/NpcTypeComponent.hpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface

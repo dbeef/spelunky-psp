@@ -1,6 +1,7 @@
 #include "system/DamageSystem.hpp"
 #include "components/damage/TakeFallDamageComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
+#include "components/generic/NpcTypeComponent.hpp"
 #include "components/damage/HitpointComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
 #include "components/damage/GiveJumpOnTopDamage.hpp"
@@ -14,13 +15,20 @@
 
 namespace
 {
-    void remove_hitpoints(HitpointComponent& hitpoints, Hitpoint_t amount)
+    void remove_hitpoints(Hitpoint_t amount, entt::entity entity)
     {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& hitpoints = registry.get<HitpointComponent>(entity);
+
+        const NpcType npc_type = registry.has<NpcTypeComponent>(entity) ?
+                                 registry.get<NpcTypeComponent>(entity).npc_type : NpcType::NONE;
+
         hitpoints.remove_hitpoints(amount);
 
         if (hitpoints.get_hitpoints() <= 0)
         {
-            hitpoints.notify({});
+            hitpoints.notify({npc_type});
+            registry.destroy(entity);
         }
     }
 }
@@ -40,11 +48,12 @@ void DamageSystem::update_melee_damage()
     auto bodies = registry.view<TakeMeleeDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>();
     auto melee_bodies = registry.view<GiveMeleeDamageComponent, PhysicsComponent, PositionComponent>();
 
-    auto give_melee_damage = [&bodies](GiveMeleeDamageComponent& give_damage,
+    auto give_melee_damage = [&bodies, &registry](GiveMeleeDamageComponent& give_damage,
                                             PhysicsComponent& projectile_physics,
                                             PositionComponent& projectile_position)
     {
-        bodies.each([&projectile_physics, &projectile_position, &give_damage](
+        bodies.each([&](
+                entt::entity take_damage_entity,
                 TakeMeleeDamageComponent& take_damage,
                 HitpointComponent& hitpoints,
                 PhysicsComponent& body_physics,
@@ -56,14 +65,8 @@ void DamageSystem::update_melee_damage()
             }
 
             const MeleeDamage_t damage = give_damage.get_damage();
-
             take_damage.notify(damage);
-            hitpoints.remove_hitpoints(damage);
-
-            if (hitpoints.get_hitpoints() <= 0)
-            {
-                hitpoints.notify({});
-            }
+            remove_hitpoints(damage, take_damage_entity);
         });
     };
 
@@ -111,13 +114,13 @@ void DamageSystem::update_projectile_damage()
             const ProjectileDamage_t damage = give_damage.get_damage();
 
             take_damage.notify(damage);
-            remove_hitpoints(hitpoints, damage);
+            remove_hitpoints(damage, take_damage_entity);
 
             if (give_damage.is_mutual())
             {
                 if (registry.has<HitpointComponent>(give_damage_entity))
                 {
-                    remove_hitpoints(registry.get<HitpointComponent>(give_damage_entity), damage);
+                    remove_hitpoints(damage, give_damage_entity);
                 }
 
                 if (!registry.valid(give_damage_entity))
@@ -168,19 +171,16 @@ void DamageSystem::update_tile_collision_damage()
     auto &registry = EntityRegistry::instance().get_registry();
     auto bodies = registry.view<TakeFallDamageComponent, HitpointComponent, PhysicsComponent>();
 
-    auto give_tile_collision_damage = [](TakeTileCollisionDamageComponent& tile_collision_damage, HitpointComponent& hitpoints, PhysicsComponent& physics)
+    auto give_tile_collision_damage = [&registry](entt::entity tile_collision_entity,
+                                         TakeTileCollisionDamageComponent& tile_collision_damage,
+                                         HitpointComponent& hitpoints,
+                                         PhysicsComponent& physics)
     {
         const bool damage_taken = tile_collision_damage.update(physics);
         if (damage_taken)
         {
             const TileCollisionDamage_t damage = tile_collision_damage.get_tile_collision_damage();
-
-            hitpoints.remove_hitpoints(damage);
-
-            if (hitpoints.get_hitpoints() <= 0)
-            {
-                hitpoints.notify({});
-            }
+            remove_hitpoints(damage, tile_collision_entity);
         }
     };
 
@@ -193,10 +193,10 @@ void DamageSystem::update_jump_on_top_damage()
     auto bodies = registry.view<TakeJumpOnTopDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>();
     auto jumping_bodies = registry.view<GiveJumpOnTopDamageComponent, PhysicsComponent, PositionComponent>();
 
-    auto give_jump_on_top_damage = [&bodies](entt::entity give_damage_entity,
-                                             GiveJumpOnTopDamageComponent& give_damage,
-                                             PhysicsComponent& jumping_physics,
-                                             PositionComponent& jumping_position)
+    auto give_jump_on_top_damage = [&bodies, &registry](entt::entity give_damage_entity,
+                                                        GiveJumpOnTopDamageComponent& give_damage,
+                                                        PhysicsComponent& jumping_physics,
+                                                        PositionComponent& jumping_position)
     {
         if (jumping_physics.get_y_velocity() <= 0.0f)
         {
@@ -233,7 +233,7 @@ void DamageSystem::update_jump_on_top_damage()
 
             const JumpOnTopDamage_t damage = give_damage.get_damage();
             take_damage.notify(damage);
-            remove_hitpoints(hitpoints, damage);
+            remove_hitpoints(damage, take_damage_entity);
         });
     };
 

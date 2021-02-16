@@ -44,13 +44,13 @@ namespace
         return static_cast<JarLootType>(std::rand() % static_cast<int>(JarLootType::_SIZE));
     }
 
-    class JarDeathObserver final : public Observer<DieEvent>
+    class JarDeathObserver final : public Observer<DeathEvent>
     {
     public:
 
         explicit JarDeathObserver(entt::entity jar) : _jar(jar) {}
 
-        void on_notify(const DieEvent*) override
+        void on_notify(const DeathEvent*) override
         {
             auto& registry = EntityRegistry::instance().get_registry();
 
@@ -91,8 +91,6 @@ namespace
                 auto& item_carrier = item.get_item_carrier();
                 item_carrier.put_down_active_item();
             }
-
-            registry.destroy(_jar);
         }
 
     private:
@@ -150,7 +148,7 @@ entt::entity prefabs::Jar::create(float pos_x_center, float pos_y_center)
     give_projectile_damage.set_mutual(true);
 
     HitpointComponent hitpoints(1);
-    hitpoints.add_observer(reinterpret_cast<Observer<DieEvent>*>(jar_script->get_observer()));
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(jar_script->get_observer()));
 
     float critical_speed_x = 0.1f;
     float critical_speed_y = 0.1f;
