@@ -18,6 +18,7 @@ void RenderingSystem::update(std::uint32_t delta_time_ms)
     sort(); // FIXME: Sorting components every frame!
 
     // FIXME: Pointers to meshes may become invalidated after entity pool resize. Same as BombSpawner.cpp:31.
+    //        Temporary workaround at GameLoopStartedState.cpp:35 - reserving quads/meshes up-front.
     auto meshes = registry.view<MeshComponent>();
     meshes.each([this](MeshComponent &mesh)
     {

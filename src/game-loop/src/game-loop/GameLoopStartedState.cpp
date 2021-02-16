@@ -4,6 +4,10 @@
 #include "logger/log.h"
 #include "TextureBank.hpp"
 #include "audio/Audio.hpp"
+#include "EntityRegistry.hpp"
+
+#include "components/generic/MeshComponent.hpp"
+#include "components/generic/QuadComponent.hpp"
 
 GameLoopBaseState *GameLoopStartedState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -27,6 +31,10 @@ void GameLoopStartedState::enter(GameLoop& game_loop)
 
     TextureBank::instance().load_textures();
     TextureBank::instance().load_texture_regions();
+
+    auto& registry = EntityRegistry::instance().get_registry();
+    registry.reserve<MeshComponent>(256);
+    registry.reserve<QuadComponent>(256);
 
     _game_initialized = true;
 }
