@@ -84,6 +84,7 @@ add_library(GameLoop STATIC
         include/components/generic/AnimationComponent.hpp
         include/components/generic/MeshComponent.hpp
         include/components/generic/ActivableComponent.hpp
+        include/components/generic/NpcTypeComponent.hpp
         include/components/specialized/MainDudeComponent.hpp
         include/components/specialized/LevelSummaryTracker.hpp
         include/components/specialized/HudOverlayComponent.hpp
@@ -260,7 +261,8 @@ add_library(GameLoop STATIC
         interface/other/Inventory.hpp
         interface/other/InventoryEvent.hpp
         include/other/LootCollectedEvent.hpp
-        include/other/NpcType.hpp include/components/generic/NpcTypeComponent.hpp)
+        include/other/NpcType.hpp
+)
 
 target_include_directories(GameLoop
         PRIVATE include interface
