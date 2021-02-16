@@ -12,6 +12,7 @@
 #include "components/damage/HitpointComponent.hpp"
 #include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/damage/TakeMeleeDamageComponent.hpp"
+#include "components/damage/TakeJumpOnTopDamage.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -214,6 +215,7 @@ entt::entity prefabs::Spider::create(float pos_x_center, float pos_y_center, boo
     registry.emplace<HitpointComponent>(entity, hitpoints);
     registry.emplace<TakeProjectileDamageComponent>(entity);
     registry.emplace<TakeMeleeDamageComponent>(entity);
+    registry.emplace<TakeJumpOnTopDamageComponent>(entity);
 
     if (triggered)
     {

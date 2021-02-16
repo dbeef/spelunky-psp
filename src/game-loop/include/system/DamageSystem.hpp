@@ -11,4 +11,5 @@ private:
     static void update_tile_collision_damage();
     static void update_melee_damage();
     static void update_projectile_damage();
+    static void update_jump_on_top_damage();
 };

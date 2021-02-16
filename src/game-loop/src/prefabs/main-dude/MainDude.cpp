@@ -3,6 +3,7 @@
 #include "prefabs/items/RopeSpawner.hpp"
 #include "prefabs/items/Whip.hpp"
 
+#include "components/damage/GiveJumpOnTopDamage.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
@@ -47,6 +48,7 @@ namespace prefabs
         registry.emplace<InputComponent>(entity, input);
         registry.emplace<HorizontalOrientationComponent>(entity);
         registry.emplace<ItemCarrierComponent>(entity, item_carrier);
+        registry.emplace<GiveJumpOnTopDamageComponent>(entity, 1);
 
         // Initialization order is important in this case - MainDudeComponent must be the last to create.
         MainDudeComponent main_dude(entity);

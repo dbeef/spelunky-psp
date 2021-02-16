@@ -9,6 +9,7 @@
 #include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
+#include "components/damage/TakeJumpOnTopDamage.hpp"
 #include "components/damage/HitpointComponent.hpp"
 #include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/damage/TakeMeleeDamageComponent.hpp"
@@ -231,6 +232,7 @@ entt::entity prefabs::Bat::create(float pos_x_center, float pos_y_center)
     registry.emplace<HitpointComponent>(entity, hitpoints);
     registry.emplace<TakeProjectileDamageComponent>(entity);
     registry.emplace<TakeMeleeDamageComponent>(entity);
+    registry.emplace<TakeJumpOnTopDamageComponent>(entity);
 
     return entity;
 }
