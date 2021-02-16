@@ -34,25 +34,24 @@ namespace
             auto& registry = EntityRegistry::instance().get_registry();
             auto& position = registry.get<PositionComponent>(_snake);
 
+            for (std::size_t index = 0; index < 4; index++)
             {
-                auto blood = prefabs::BloodParticle::create(position.x_center, position.y_center);
-                auto& physics = registry.get<PhysicsComponent>(blood);
-                physics.set_x_velocity(-0.1f);
-                physics.set_y_velocity(-0.1f);
-            }
+                auto particle = prefabs::BloodParticle::create(position.x_center, position.y_center);
+                auto& physics = registry.get<PhysicsComponent>(particle);
 
-            {
-                auto blood = prefabs::BloodParticle::create(position.x_center, position.y_center);
-                auto& physics = registry.get<PhysicsComponent>(blood);
-                physics.set_x_velocity(0.0f);
-                physics.set_y_velocity(-0.1f);
-            }
+                float v_x = static_cast<float>(std::rand() % 2) / 15.0f;
+                float v_y = static_cast<float>(std::rand() % 2) / 10.0f;
 
-            {
-                auto blood = prefabs::BloodParticle::create(position.x_center, position.y_center);
-                auto& physics = registry.get<PhysicsComponent>(blood);
-                physics.set_x_velocity(0.1f);
-                physics.set_y_velocity(-0.1f);
+                if (std::rand() % 2)
+                {
+                    v_x += 0.1f;
+                }
+                else
+                {
+                    v_x -= 0.1f;
+                }
+
+                physics.set_velocity(v_x, v_y);
             }
 
             registry.destroy(_snake);
