@@ -90,6 +90,15 @@ add_library(GameLoop STATIC
         include/components/specialized/PauseOverlayComponent.hpp
         include/components/specialized/DeathOverlayComponent.hpp
         include/components/specialized/LevelSummaryOverlayComponent.hpp
+        include/components/damage/TakeFallDamageComponent.hpp
+        include/components/damage/HitpointComponent.hpp
+        include/components/damage/TakeProjectileDamageComponent.hpp
+        include/components/damage/GiveProjectileDamageComponent.hpp
+        include/components/damage/TakeMeleeDamageComponent.hpp
+        include/components/damage/GiveMeleeDamageComponent.hpp
+        include/components/damage/TakeTileCollisionDamageComponent.hpp
+        include/components/damage/TakeJumpOnTopDamage.hpp
+        include/components/damage/GiveJumpOnTopDamage.hpp
 
         # Prefabs:
 
@@ -130,6 +139,7 @@ add_library(GameLoop STATIC
         include/prefabs/particles/BonesParticle.hpp
         include/prefabs/particles/RopeCollectedParticle.hpp
         include/prefabs/particles/BombCollectedParticle.hpp
+        include/prefabs/particles/BloodParticle.hpp
         include/prefabs/collectibles/GoldNugget.hpp
         include/prefabs/collectibles/GoldChunk.hpp
         include/prefabs/collectibles/SmallGem.hpp
@@ -185,6 +195,7 @@ add_library(GameLoop STATIC
         src/prefabs/particles/RopeCollectedParticle.cpp
         src/prefabs/particles/BombCollectedParticle.cpp
         src/prefabs/particles/BonesParticle.cpp
+        src/prefabs/particles/BloodParticle.cpp
         src/prefabs/collectibles/GoldNugget.cpp
         src/prefabs/collectibles/GoldChunk.cpp
         src/prefabs/collectibles/SmallGem.cpp
@@ -225,6 +236,7 @@ add_library(GameLoop STATIC
         include/system/InputSystem.hpp
         include/system/DisposingSystem.hpp
         include/system/ItemSystem.hpp
+        include/system/DamageSystem.hpp
 
         src/system/ParticleSystem.cpp
         src/system/RenderingSystem.cpp
@@ -235,6 +247,7 @@ add_library(GameLoop STATIC
         src/system/InputSystem.cpp
         src/system/DisposingSystem.cpp
         src/system/ItemSystem.cpp
+        src/system/DamageSystem.cpp
 
         # Other:
 
@@ -247,7 +260,7 @@ add_library(GameLoop STATIC
         interface/other/Inventory.hpp
         interface/other/InventoryEvent.hpp
         include/other/LootCollectedEvent.hpp
-        include/system/DamageSystem.hpp src/system/DamageSystem.cpp include/components/damage/TakeFallDamageComponent.hpp include/components/damage/HitpointComponent.hpp include/components/damage/TakeProjectileDamageComponent.hpp include/components/damage/GiveProjectileDamageComponent.hpp include/prefabs/particles/BloodParticle.hpp src/prefabs/particles/BloodParticle.cpp include/components/damage/TakeMeleeDamageComponent.hpp include/components/damage/GiveMeleeDamageComponent.hpp include/components/damage/TakeTileCollisionDamageComponent.hpp include/components/damage/TakeJumpOnTopDamage.hpp include/components/damage/GiveJumpOnTopDamage.hpp)
+)
 
 target_include_directories(GameLoop
         PRIVATE include interface

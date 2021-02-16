@@ -22,11 +22,6 @@ public:
         return _falling_damage;
     }
 
-    void set_critical_speed(float critical_speed)
-    {
-        _critical_speed = critical_speed;
-    }
-
 private:
     FallDamage_t _falling_damage = 0;
     float _last_tick_y_velocity = 0.0f;
