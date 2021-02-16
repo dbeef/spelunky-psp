@@ -3,7 +3,12 @@
 #include "prefabs/particles/BonesParticle.hpp"
 
 #include "components/damage/GiveProjectileDamageComponent.hpp"
+#include "components/damage/HitpointComponent.hpp"
+#include "components/damage/TakeProjectileDamageComponent.hpp"
+#include "components/damage/TakeMeleeDamageComponent.hpp"
+#include "components/damage/TakeTileCollisionDamageComponent.hpp"
 #include "components/generic/ItemComponent.hpp"
+#include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
@@ -15,44 +20,59 @@
 #include "TextureType.hpp"
 #include "spritesheet-frames/NPCSpritesheetFrames.hpp"
 
-#include <cmath>
-#include <algorithm>
-
 namespace
 {
-    class SkullScript final : public ScriptBase
+    class SkullDeathObserver final : public Observer<DieEvent>
     {
     public:
-        void update(entt::entity owner, uint32_t delta_time_ms) override
+
+        explicit SkullDeathObserver(entt::entity skull) : _skull(skull) {}
+
+        void on_notify(const DieEvent*) override
         {
             auto& registry = EntityRegistry::instance().get_registry();
-            const auto& physics = registry.get<PhysicsComponent>(owner);
+            const auto& position = registry.get<PositionComponent>(_skull);
 
-            if (physics.is_left_collision() || physics.is_right_collision() ||
-                physics.is_upper_collision() || physics.is_bottom_collision())
+            prefabs::SmokePuffParticle::create(position.x_center, position.y_center);
+
+            const auto bones_particle = prefabs::BonesParticle::create(position.x_center, position.y_center);
+            auto& bones_particle_physics = registry.get<PhysicsComponent>(bones_particle);
+
+            bones_particle_physics.set_velocity(0.1f, -0.1f);
+
+            auto& hitpoints = registry.get<HitpointComponent>(_skull);
+            hitpoints.remove_observer(this);
+
+            auto& item = registry.get<ItemComponent>(_skull);
+            if (item.is_carried())
             {
-                if (std::fabs(_last_x_speed) > 0.15f || std::fabs(_last_y_speed) > 0.13f)
-                {
-                    const auto& position = registry.get<PositionComponent>(owner);
-                    prefabs::SmokePuffParticle::create(position.x_center, position.y_center);
-                    registry.destroy(owner);
-
-                    const auto bones_particle = prefabs::BonesParticle::create(position.x_center, position.y_center);
-                    auto& bones_particle_physics = registry.get<PhysicsComponent>(bones_particle);
-
-                    _last_x_speed = std::clamp(_last_x_speed, -0.1f, 0.1f);
-                    _last_y_speed = std::clamp(_last_y_speed, -0.1f, 0.1f);
-                    bones_particle_physics.set_velocity(-_last_x_speed, -_last_y_speed);
-                }
+                auto& item_carrier = item.get_item_carrier();
+                item_carrier.put_down_active_item();
             }
 
-            _last_x_speed = physics.get_x_velocity();
-            _last_y_speed = physics.get_y_velocity();
+            registry.destroy(_skull);
         }
 
     private:
-        float _last_x_speed = 0;
-        float _last_y_speed = 0;
+        const entt::entity _skull;
+    };
+    
+    class SkullScript final : public ScriptBase
+    {
+    public:
+        explicit SkullScript(entt::entity skull) : _death_observer(skull) {}
+
+        SkullDeathObserver* get_observer()
+        {
+            return &_death_observer;
+        }
+        
+        void update(entt::entity owner, uint32_t delta_time_ms) override
+        {
+        }
+
+    private:
+        SkullDeathObserver _death_observer;
     };
 }
 
@@ -80,14 +100,31 @@ entt::entity prefabs::Skull::create(float pos_x_center, float pos_y_center)
     item.set_weight(2);
     item.set_carrying_offset({0.0f, -1.0f/8.0f});
 
+    auto skull_script = std::make_shared<SkullScript>(entity);
+    ScriptingComponent script(skull_script);
+
+    HitpointComponent hitpoints(1);
+    hitpoints.add_observer(reinterpret_cast<Observer<DieEvent>*>(skull_script->get_observer()));
+
+    GiveProjectileDamageComponent give_projectile_damage(2);
+    give_projectile_damage.set_mutual(true);
+
+    float critical_speed_x = 0.1f;
+    float critical_speed_y = 0.1f;
+    TakeTileCollisionDamageComponent tile_collision_damage(1, critical_speed_x, critical_speed_y);
+
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
-    registry.emplace<ScriptingComponent>(entity, std::make_shared<SkullScript>());
+    registry.emplace<ScriptingComponent>(entity, script);
     registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_2_ITEMS, CameraType::MODEL_VIEW_SPACE);
     registry.emplace<PhysicsComponent>(entity, physics);
     registry.emplace<ItemComponent>(entity, item);
     registry.emplace<HorizontalOrientationComponent>(entity);
-    registry.emplace<GiveProjectileDamageComponent>(entity, 1);
+    registry.emplace<GiveProjectileDamageComponent>(entity, give_projectile_damage);
+    registry.emplace<TakeProjectileDamageComponent>(entity);
+    registry.emplace<TakeTileCollisionDamageComponent>(entity, tile_collision_damage);
+    registry.emplace<HitpointComponent>(entity, hitpoints);
+    registry.emplace<TakeMeleeDamageComponent>(entity);
 
     return entity;
 }

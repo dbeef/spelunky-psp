@@ -3,14 +3,29 @@
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/damage/HitpointComponent.hpp"
 #include "components/damage/TakeProjectileDamageComponent.hpp"
+#include "components/damage/TakeTileCollisionDamageComponent.hpp"
 #include "components/damage/GiveProjectileDamageComponent.hpp"
 #include "components/damage/TakeMeleeDamageComponent.hpp"
 #include "components/damage/GiveMeleeDamageComponent.hpp"
 #include "EntityRegistry.hpp"
 #include "audio/Audio.hpp"
 
+namespace
+{
+    void remove_hitpoints(HitpointComponent& hitpoints, Hitpoint_t amount)
+    {
+        hitpoints.remove_hitpoints(amount);
+
+        if (hitpoints.get_hitpoints() <= 0)
+        {
+            hitpoints.notify({});
+        }
+    }
+}
+
 void DamageSystem::update(std::uint32_t delta_time_ms)
 {
+    update_tile_collision_damage();
     update_falling_damage();
     update_projectile_damage();
     update_melee_damage();
@@ -58,22 +73,34 @@ void DamageSystem::update_projectile_damage()
     auto bodies = registry.view<TakeProjectileDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>();
     auto projectiles = registry.view<GiveProjectileDamageComponent, PhysicsComponent, PositionComponent>();
 
-    auto give_projectile_damage = [&bodies](GiveProjectileDamageComponent& give_damage,
-                                            PhysicsComponent& projectile_physics,
-                                            PositionComponent& projectile_position)
+    auto give_projectile_damage = [&bodies, &registry](entt::entity give_damage_entity,
+                                                       GiveProjectileDamageComponent& give_damage,
+                                                       PhysicsComponent& projectile_physics,
+                                                       PositionComponent& projectile_position)
     {
         if (projectile_physics.get_x_velocity() == 0.0f && projectile_physics.get_y_velocity() == 0.0f)
         {
             return;
         }
 
-        bodies.each([&projectile_physics, &projectile_position, &give_damage](
-                        TakeProjectileDamageComponent& take_damage,
-                        HitpointComponent& hitpoints,
-                        PhysicsComponent& body_physics,
-                        PositionComponent& body_position)
+        bodies.each([&](entt::entity take_damage_entity,
+                             TakeProjectileDamageComponent& take_damage,
+                             HitpointComponent& hitpoints,
+                             PhysicsComponent& body_physics,
+                             PositionComponent& body_position)
         {
+            if (!registry.valid(give_damage_entity))
+            {
+                // May become invalid if it gets destroyed by observer.
+                return;
+            }
+
             if (!body_physics.is_collision(projectile_physics, projectile_position, body_position))
+            {
+                return;
+            }
+
+            if (take_damage_entity == give_damage_entity)
             {
                 return;
             }
@@ -81,11 +108,26 @@ void DamageSystem::update_projectile_damage()
             const ProjectileDamage_t damage = give_damage.get_damage();
 
             take_damage.notify(damage);
-            hitpoints.remove_hitpoints(damage);
+            remove_hitpoints(hitpoints, damage);
 
-            if (hitpoints.get_hitpoints() <= 0)
+            if (give_damage.is_mutual())
             {
-                hitpoints.notify({});
+                if (registry.has<HitpointComponent>(give_damage_entity))
+                {
+                    remove_hitpoints(registry.get<HitpointComponent>(give_damage_entity), damage);
+                }
+
+                if (!registry.valid(give_damage_entity))
+                {
+                    // May become invalid if it gets destroyed by observer.
+                    return;
+                }
+                else
+                {
+                    // Update reference as may have become invalidated on registry resize:
+                    auto& give_damage = registry.get<GiveProjectileDamageComponent>(give_damage_entity);
+                    give_damage.notify(damage);
+                }
             }
         });
     };
@@ -116,4 +158,28 @@ void DamageSystem::update_falling_damage()
     };
 
     registry.view<TakeFallDamageComponent, HitpointComponent, PhysicsComponent>().each(give_fall_damage);
+}
+
+void DamageSystem::update_tile_collision_damage()
+{
+    auto &registry = EntityRegistry::instance().get_registry();
+    auto bodies = registry.view<TakeFallDamageComponent, HitpointComponent, PhysicsComponent>();
+
+    auto give_tile_collision_damage = [](TakeTileCollisionDamageComponent& tile_collision_damage, HitpointComponent& hitpoints, PhysicsComponent& physics)
+    {
+        const bool damage_taken = tile_collision_damage.update(physics);
+        if (damage_taken)
+        {
+            const TileCollisionDamage_t damage = tile_collision_damage.get_tile_collision_damage();
+
+            hitpoints.remove_hitpoints(damage);
+
+            if (hitpoints.get_hitpoints() <= 0)
+            {
+                hitpoints.notify({});
+            }
+        }
+    };
+
+    registry.view<TakeTileCollisionDamageComponent, HitpointComponent, PhysicsComponent>().each(give_tile_collision_damage);
 }

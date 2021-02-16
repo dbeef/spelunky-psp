@@ -68,7 +68,10 @@ namespace
     {
     public:
 
-        explicit SpiderScript(entt::entity spider) : _death_observer(spider) {}
+        explicit SpiderScript(entt::entity spider)
+            : _death_observer(spider)
+        {
+        }
 
         SpiderDeathObserver* get_observer()
         {
@@ -103,17 +106,7 @@ namespace
 
                     if (!_triggered)
                     {
-                        _triggered = true;
-
-                        auto &quad = registry.get<QuadComponent>(owner);
-                        auto &animation = registry.get<AnimationComponent>(owner);
-                        auto &physics = registry.get<PhysicsComponent>(owner);
-
-                        physics.enable_gravity();
-                        quad.frame_changed(NPCSpritesheetFrames::SPIDER_FLIP_0_FIRST);
-                        animation.start(static_cast<std::size_t>(NPCSpritesheetFrames::SPIDER_FLIP_0_FIRST),
-                                        static_cast<std::size_t>(NPCSpritesheetFrames::SPIDER_FLIP_8_LAST),
-                                        100, false);
+                        trigger(owner);
                     }
                 }
             });
@@ -155,7 +148,26 @@ namespace
                 }
             }
         }
+
+        void trigger(entt::entity owner)
+        {
+            _triggered = true;
+
+            auto& registry = EntityRegistry::instance().get_registry();
+
+            auto &quad = registry.get<QuadComponent>(owner);
+            auto &animation = registry.get<AnimationComponent>(owner);
+            auto &physics = registry.get<PhysicsComponent>(owner);
+
+            physics.enable_gravity();
+            quad.frame_changed(NPCSpritesheetFrames::SPIDER_FLIP_0_FIRST);
+            animation.start(static_cast<std::size_t>(NPCSpritesheetFrames::SPIDER_FLIP_0_FIRST),
+                            static_cast<std::size_t>(NPCSpritesheetFrames::SPIDER_FLIP_8_LAST),
+                            100, false);
+        }
+
     private:
+
         SpiderDeathObserver _death_observer;
         bool _triggered = false;
         bool _flipping_animation_finished = false;
@@ -170,7 +182,7 @@ entt::entity prefabs::Spider::create()
     return create(0, 0);
 }
 
-entt::entity prefabs::Spider::create(float pos_x_center, float pos_y_center)
+entt::entity prefabs::Spider::create(float pos_x_center, float pos_y_center, bool triggered)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
@@ -203,6 +215,11 @@ entt::entity prefabs::Spider::create(float pos_x_center, float pos_y_center)
     registry.emplace<HitpointComponent>(entity, hitpoints);
     registry.emplace<TakeProjectileDamageComponent>(entity);
     registry.emplace<TakeMeleeDamageComponent>(entity);
+
+    if (triggered)
+    {
+        spider_script->trigger(entity);
+    }
 
     return entity;
 }

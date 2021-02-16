@@ -36,7 +36,7 @@ entt::entity prefabs::BloodParticle::create(float pos_x_center, float pos_y_cent
     AnimationComponent animation;
     animation.start(static_cast<std::size_t>(CollectiblesSpritesheetFrames::BLOOD_TRAIL_0_FIRST),
                     static_cast<std::size_t>(CollectiblesSpritesheetFrames::BLOOD_TRAIL_6_LAST),
-                    110, false);
+                    110, true);
 
     MeshComponent mesh;
     mesh.rendering_layer = RenderingLayer::LAYER_3_DUDE;
@@ -52,7 +52,7 @@ entt::entity prefabs::BloodParticle::create(float pos_x_center, float pos_y_cent
     registry.emplace<MeshComponent>(entity, mesh);
     registry.emplace<PhysicsComponent>(entity, physics);
     registry.emplace<AnimationComponent>(entity, animation);
-    registry.emplace<TimeLimitComponent>(entity, 2500);
+    registry.emplace<TimeLimitComponent>(entity, 1500);
     registry.emplace<ParticleEmitterComponent>(entity, emitter);
 
     return entity;

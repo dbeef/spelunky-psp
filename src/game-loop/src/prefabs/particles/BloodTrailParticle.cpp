@@ -39,7 +39,7 @@ entt::entity prefabs::BloodTrailParticle::create(float pos_x_center, float pos_y
     registry.emplace<QuadComponent>(entity, quad);
     registry.emplace<MeshComponent>(entity, mesh);
     registry.emplace<AnimationComponent>(entity, animation);
-    registry.emplace<TimeLimitComponent>(entity, 750);
+    registry.emplace<TimeLimitComponent>(entity, 700);
 
     return entity;
 }

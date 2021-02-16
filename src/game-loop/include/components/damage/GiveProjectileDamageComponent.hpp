@@ -3,8 +3,9 @@
 #include "patterns/Subject.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 
+using MutualDamage_t = int;
 using ProjectileDamage_t = int;
-class GiveProjectileDamageComponent
+class GiveProjectileDamageComponent : public Subject<MutualDamage_t>
 {
 public:
     explicit GiveProjectileDamageComponent(ProjectileDamage_t damage_given)
@@ -14,6 +15,11 @@ public:
     void set_mutual(bool mutual)
     {
         _mutual = mutual;
+    }
+
+    bool is_mutual() const
+    {
+        return _mutual;
     }
 
     ProjectileDamage_t get_damage() const
