@@ -40,6 +40,8 @@ void Input::poll()
     _toggles.ducking.reset_changed();
     _toggles.running_fast.reset_changed();
     _toggles.throwing.reset_changed();
+    _toggles.out_bomb.reset_changed();
+    _toggles.out_rope.reset_changed();
 
     SDL_Event event{};
 
@@ -50,6 +52,7 @@ void Input::poll()
             const auto& key = event.key.keysym.sym;
             const bool v = event.type == SDL_EventType::SDL_KEYDOWN;
 
+            // FIXME: Weird keybindings due to no letter key events issued on Android's SDL2.
             if (key == SDLK_LEFT)
             {
                 _toggles.left.feed(v);
@@ -94,11 +97,11 @@ void Input::poll()
             {
                 _toggles.quit_requested.feed(v);
             }
-            else if (key == SDLK_z)
+            else if (key == SDLK_HOME)
             {
                 _toggles.out_bomb.feed(v);
             }
-            else if (key == SDLK_x)
+            else if (key == SDLK_END)
             {
                 _toggles.out_rope.feed(v);
             }
