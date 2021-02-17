@@ -22,6 +22,16 @@ struct Audio::Handles
     Mix_Chunk* coin = nullptr;
     Mix_Chunk* climb_1 = nullptr;
     Mix_Chunk* climb_2 = nullptr;
+    Mix_Chunk* arrow_trap = nullptr;
+    Mix_Chunk* bat = nullptr;
+    Mix_Chunk* chest_open = nullptr;
+    Mix_Chunk* explosion = nullptr;
+    Mix_Chunk* gem = nullptr;
+    Mix_Chunk* hit = nullptr;
+    Mix_Chunk* jetpack = nullptr;
+    Mix_Chunk* pickup = nullptr;
+    Mix_Chunk* shotgun = nullptr;
+    Mix_Chunk* _throw = nullptr;
 };
 
 Audio::Audio() : _handles(std::make_unique<Audio::Handles>()) {}
@@ -141,7 +151,6 @@ void Audio::tear_down_audio()
 
 void Audio::play(MusicType music)
 {
-    return;
     switch(music)
     {
         case MusicType::TITLE: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->title_music, 0); break;
@@ -152,7 +161,6 @@ void Audio::play(MusicType music)
 
 void Audio::play(SFXType sfx)
 {
-    return;
     switch(sfx)
     {
         case SFXType::MAIN_DUDE_JUMP: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->jump, 0); break;
@@ -163,6 +171,16 @@ void Audio::play(SFXType sfx)
         case SFXType::COIN: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->coin, 0); break;
         case SFXType::MAIN_DUDE_CLIMB_1: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->climb_1, 0); break;
         case SFXType::MAIN_DUDE_CLIMB_2: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->climb_2, 0); break;
+        case SFXType::ARROW_TRAP: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->arrow_trap, 0); break;
+        case SFXType::BAT: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->bat, 0); break;
+        case SFXType::CHEST_OPEN: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->chest_open, 0); break;
+        case SFXType::EXPLOSION: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->explosion, 0); break;
+        case SFXType::GEM: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->gem, 0); break;
+        case SFXType::HIT: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->hit, 0); break;
+        case SFXType::JETPACK: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->jetpack, 0); break;
+        case SFXType::PICKUP: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->pickup, 0); break;
+        case SFXType::SHOTGUN: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->shotgun, 0); break;
+        case SFXType::THROW: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->_throw, 0); break;
         default: assert(false); break;
     }
 }
@@ -206,6 +224,26 @@ void Audio::load()
     assert(_handles->climb_1);
     _handles->climb_2 = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_climb_2_wav())));
     assert(_handles->climb_2);
+    _handles->arrow_trap = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_arrow_trap_wav())));
+    assert(_handles->arrow_trap);
+    _handles->bat = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_bat_wav())));
+    assert(_handles->bat);
+    _handles->chest_open = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_chest_open_wav())));
+    assert(_handles->chest_open);
+    _handles->explosion = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_explosion_wav())));
+    assert(_handles->explosion);
+    _handles->gem = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_gem_wav())));
+    assert(_handles->gem);
+    _handles->hit = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_hit_wav())));
+    assert(_handles->hit);
+    _handles->jetpack = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_jetpack_wav())));
+    assert(_handles->jetpack);
+    _handles->pickup = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_pickup_wav())));
+    assert(_handles->pickup);
+    _handles->shotgun = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_shotgun_wav())));
+    assert(_handles->shotgun);
+    _handles->_throw = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_throw_wav())));
+    assert(_handles->_throw);
 }
 
 void Audio::unload()
@@ -222,4 +260,14 @@ void Audio::unload()
     Mix_FreeChunk(_handles->coin); _handles->coin = nullptr;
     Mix_FreeChunk(_handles->climb_1); _handles->climb_1 = nullptr;
     Mix_FreeChunk(_handles->climb_2); _handles->climb_2 = nullptr;
+    Mix_FreeChunk(_handles->arrow_trap); _handles->arrow_trap = nullptr;
+    Mix_FreeChunk(_handles->bat); _handles->bat = nullptr;
+    Mix_FreeChunk(_handles->chest_open); _handles->chest_open = nullptr;
+    Mix_FreeChunk(_handles->explosion); _handles->explosion = nullptr;
+    Mix_FreeChunk(_handles->gem); _handles->gem = nullptr;
+    Mix_FreeChunk(_handles->hit); _handles->hit = nullptr;
+    Mix_FreeChunk(_handles->jetpack); _handles->jetpack = nullptr;
+    Mix_FreeChunk(_handles->pickup); _handles->pickup = nullptr;
+    Mix_FreeChunk(_handles->shotgun); _handles->shotgun = nullptr;
+    Mix_FreeChunk(_handles->_throw); _handles->_throw = nullptr;
 }
