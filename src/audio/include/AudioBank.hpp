@@ -17,4 +17,14 @@ namespace audio_bank
     const char* get_coin_wav();
     const char* get_climb_1_wav();
     const char* get_climb_2_wav();
+    const char* get_arrow_trap_wav();
+    const char* get_bat_wav();
+    const char* get_chest_open_wav();
+    const char* get_explosion_wav();
+    const char* get_gem_wav();
+    const char* get_hit_wav();
+    const char* get_jetpack_wav();
+    const char* get_pickup_wav();
+    const char* get_shotgun_wav();
+    const char* get_throw_wav();
 };
