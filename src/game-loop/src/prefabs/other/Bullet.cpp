@@ -47,17 +47,6 @@ namespace
 
         void update(entt::entity owner, uint32_t delta_time_ms) override
         {
-            auto& registry = EntityRegistry::instance().get_registry();
-            auto& physics = registry.get<PhysicsComponent>(owner);
-
-            // TODO: Jar / Bullet / Bullet - destroyed on hit wall
-            if (physics.is_left_collision() || physics.is_right_collision() ||
-                physics.is_upper_collision() || physics.is_bottom_collision())
-            {
-                auto& position = registry.get<PositionComponent>(owner);
-                prefabs::SmokePuffParticle::create(position.x_center, position.y_center);
-                registry.destroy(owner);
-            }
         }
     private:
         BulletDeathObserver _death_observer;

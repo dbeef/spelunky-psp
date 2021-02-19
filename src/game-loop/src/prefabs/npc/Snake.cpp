@@ -55,9 +55,6 @@ namespace
 
                 physics.set_velocity(v_x, v_y);
             }
-
-//            auto& hitpoints = registry.get<HitpointComponent>(_snake);
-//            hitpoints.remove_observer(this);
         }
 
     private:

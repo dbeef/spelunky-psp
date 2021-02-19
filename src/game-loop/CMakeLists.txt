@@ -91,15 +91,15 @@ add_library(GameLoop STATIC
         include/components/specialized/PauseOverlayComponent.hpp
         include/components/specialized/DeathOverlayComponent.hpp
         include/components/specialized/LevelSummaryOverlayComponent.hpp
-        include/components/damage/TakeFallDamageComponent.hpp
         include/components/damage/HitpointComponent.hpp
-        include/components/damage/TakeProjectileDamageComponent.hpp
-        include/components/damage/GiveProjectileDamageComponent.hpp
-        include/components/damage/TakeMeleeDamageComponent.hpp
         include/components/damage/GiveMeleeDamageComponent.hpp
+        include/components/damage/GiveProjectileDamageComponent.hpp
+        include/components/damage/GiveJumpOnTopDamage.hpp
+        include/components/damage/TakeFallDamageComponent.hpp
+        include/components/damage/TakeProjectileDamageComponent.hpp
+        include/components/damage/TakeMeleeDamageComponent.hpp
         include/components/damage/TakeTileCollisionDamageComponent.hpp
         include/components/damage/TakeJumpOnTopDamage.hpp
-        include/components/damage/GiveJumpOnTopDamage.hpp
 
         # Prefabs:
 

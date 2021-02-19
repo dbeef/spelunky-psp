@@ -27,14 +27,6 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
-//    Spawner snake_spawner(10, 20);
-//    Spawner bat_spawner(3, 0);
-//    Spawner caveman_spawner(3, 0);
-//    Spawner fake_skeleton_spawner(3, 0);
-//    Spawner skeleton_spawner(3, 0);
-//    Spawner spikes_spawner(3, 0);
-//    Spawner spider_spawner(3, 0);
-
     Spawner snake_spawner(3, 4);
     Spawner bat_spawner(3, 4);
     Spawner caveman_spawner(3, 4);
