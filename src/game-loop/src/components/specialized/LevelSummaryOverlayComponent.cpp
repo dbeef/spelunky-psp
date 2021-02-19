@@ -165,7 +165,7 @@ LevelSummaryOverlayComponent::LevelSummaryOverlayComponent(const std::shared_ptr
     }
 
     _level_summary_tracker->sort_loot_collected_events();
-    _level_summary_tracker->sort_npc_killed_events()    ;
+    _level_summary_tracker->sort_npc_killed_events();
 }
 
 void LevelSummaryOverlayComponent::update(uint32_t delta_time_ms)
@@ -180,7 +180,7 @@ void LevelSummaryOverlayComponent::update(uint32_t delta_time_ms)
     int elements_appearing = std::floor<int>(static_cast<float>(_loot_appearing_timer) / 150.0f);
     for (std::size_t index = _loot_spawned; index < elements_appearing && index < loot_events.size(); index++)
     {
-        auto &current_event = loot_events[index];
+        auto& current_event = loot_events[index];
         float x = 6.25f + (0.5 * index);
         float y = 3.25f;
 

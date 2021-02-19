@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <vector>
 
+// FIXME: This is a leftover from before ECS rework. Make LevelSummarySystem + subsequent components instead.
 class LevelSummaryTracker : public Observer<InventoryEvent>,
                             public Observer<LootCollectedEvent>,
                             public Observer<DeathEvent>
