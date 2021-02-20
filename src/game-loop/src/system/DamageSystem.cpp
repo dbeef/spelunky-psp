@@ -115,6 +115,7 @@ void DamageSystem::update_projectile_damage()
 
             take_damage.notify(damage);
             remove_hitpoints(damage, take_damage_entity);
+            Audio::instance().play(SFXType::HIT);
 
             if (give_damage.is_mutual())
             {
@@ -155,6 +156,7 @@ void DamageSystem::update_falling_damage()
 
             fall_damage.notify(damage);
             hitpoints.remove_hitpoints(damage);
+            Audio::instance().play(SFXType::HIT);
 
             if (hitpoints.get_hitpoints() <= 0)
             {
@@ -181,6 +183,7 @@ void DamageSystem::update_tile_collision_damage()
         {
             const TileCollisionDamage_t damage = tile_collision_damage.get_tile_collision_damage();
             remove_hitpoints(damage, tile_collision_entity);
+            Audio::instance().play(SFXType::HIT);
         }
     };
 
@@ -234,6 +237,7 @@ void DamageSystem::update_jump_on_top_damage()
             const JumpOnTopDamage_t damage = give_damage.get_damage();
             take_damage.notify(damage);
             remove_hitpoints(damage, take_damage_entity);
+            Audio::instance().play(SFXType::HIT);
         });
     };
 

@@ -11,6 +11,7 @@
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
 
+#include "audio/Audio.hpp"
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
@@ -39,6 +40,8 @@ namespace
 
             if (activable.activated && _cooldown_timer_ms > 750)
             {
+                Audio::instance().play(SFXType::SHOTGUN);
+
                 _cooldown_timer_ms = 0;
                 auto bullet = prefabs::Bullet::create(position.x_center, position.y_center);
                 auto& bullet_physics = registry.get<PhysicsComponent>(bullet);

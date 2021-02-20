@@ -19,6 +19,7 @@
 #include "components/generic/ItemComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
 
+#include "audio/Audio.hpp"
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
@@ -68,6 +69,7 @@ namespace
                 return;
             }
 
+            Audio::instance().play(SFXType::PICKUP);
             auto& position = registry.get<PositionComponent>(owner);
 
             // TODO: Remove item out of hands if held

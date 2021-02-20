@@ -25,7 +25,16 @@ void CollectibleSystem::update(std::uint32_t delta_time_ms)
             {
                 if (dude_physics.is_collision(physics, position, dude_position))
                 {
-                    Audio::instance().play(SFXType::COIN);
+                    switch (collectible.event_type)
+                    {
+                        case LootCollectedEvent::SINGLE_GOLD_BAR:
+                        case LootCollectedEvent::TRIPLE_GOLD_BAR:
+                        case LootCollectedEvent::GOLD_NUGGET:
+                        case LootCollectedEvent::GOLD_CHUNK: Audio::instance().play(SFXType::COIN); break;
+                        case LootCollectedEvent::BIG_GEM:
+                        case LootCollectedEvent::SMALL_GEM: Audio::instance().play(SFXType::GEM); break;
+                    }
+
                     Inventory::instance().add_dollars(collectible.value_dollars);
                     collectible.notify(collectible.event_type);
                     registry.destroy(entity);

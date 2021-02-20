@@ -15,6 +15,7 @@
 #include "components/damage/GiveProjectileDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
+#include "audio/Audio.hpp"
 #include "Level.hpp"
 #include "TextureType.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
@@ -79,7 +80,8 @@ namespace
 
          static void explode(entt::entity owner)
          {
-             // TODO: Play SFX
+             Audio::instance().play(SFXType::EXPLOSION);
+
              // TODO: Shake camera
 
              auto& registry = EntityRegistry::instance().get_registry();
