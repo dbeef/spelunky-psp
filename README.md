@@ -1,4 +1,4 @@
-## Spelunky® Classic remake for the Sony PSP [![`Build status`](https://api.travis-ci.com/dbeef/spelunky-psp.svg?branch=master)](https://travis-ci.com/github/dbeef/spelunky-psp/) 
+## Spelunky® Classic remake for the Sony PSP [![`Build status`](https://github.com/dbeef/spelunky-psp/actions/workflows/build.yml/badge.svg)](https://github.com/dbeef/spelunky-psp/actions/workflows/build.yml)
 
 *Rewriting the game from scratch in C++17 and OpenGL 1.3 / ES 1.0, using CMake as a build system and SDL as a part of a platform abstraction layer, making it a truly multiplatform experience.*
 
