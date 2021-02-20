@@ -1,6 +1,9 @@
 #include "prefabs/other/Bullet.hpp"
 #include "prefabs/particles/SmokePuffParticle.hpp"
 
+#include "components/damage/HitpointComponent.hpp"
+#include "components/damage/TakeTileCollisionDamageComponent.hpp"
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
@@ -14,22 +17,39 @@
 
 namespace
 {
+    class BulletDeathObserver final : public Observer<DeathEvent>
+    {
+    public:
+
+        explicit BulletDeathObserver(entt::entity bullet) :_bullet(bullet) {}
+
+        void on_notify(const DeathEvent*) override
+        {
+            auto& registry = EntityRegistry::instance().get_registry();
+            auto& position = registry.get<PositionComponent>(_bullet);
+
+            prefabs::SmokePuffParticle::create(position.x_center, position.y_center);
+        }
+
+    private:
+        const entt::entity _bullet;
+    };
+
     class BulletScript final : public ScriptBase
     {
     public:
+        explicit BulletScript(entt::entity bullet) : _death_observer(bullet) {}
+
+        BulletDeathObserver* get_observer()
+        {
+            return &_death_observer;
+        }
+
         void update(entt::entity owner, uint32_t delta_time_ms) override
         {
-            auto& registry = EntityRegistry::instance().get_registry();
-            auto& physics = registry.get<PhysicsComponent>(owner);
-
-            if (physics.is_left_collision() || physics.is_right_collision() ||
-                physics.is_upper_collision() || physics.is_bottom_collision())
-            {
-                auto& position = registry.get<PositionComponent>(owner);
-                prefabs::SmokePuffParticle::create(position.x_center, position.y_center);
-                registry.destroy(owner);
-            }
         }
+    private:
+        BulletDeathObserver _death_observer;
     };
 }
 
@@ -58,12 +78,28 @@ entt::entity prefabs::Bullet::create(float pos_x_center, float pos_y_center)
     mesh.rendering_layer = RenderingLayer::LAYER_2_ITEMS;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
+    auto bullet_script = std::make_shared<BulletScript>(entity);
+    ScriptingComponent script(bullet_script);
+
+    HitpointComponent hitpoints(1);
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(bullet_script->get_observer()));
+
+    GiveProjectileDamageComponent give_projectile_damage(2);
+    give_projectile_damage.set_mutual(true);
+
+    float critical_speed_x = 0.1f;
+    float critical_speed_y = 0.1f;
+    TakeTileCollisionDamageComponent tile_collision_damage(1, critical_speed_x, critical_speed_y);
+
     registry.emplace<PositionComponent>(entity, position);
     registry.emplace<QuadComponent>(entity, quad);
     registry.emplace<MeshComponent>(entity, mesh);
     registry.emplace<PhysicsComponent>(entity, physics);
     registry.emplace<HorizontalOrientationComponent>(entity);
-    registry.emplace<ScriptingComponent>(entity, std::make_shared<BulletScript>());
+    registry.emplace<ScriptingComponent>(entity, script);
+    registry.emplace<GiveProjectileDamageComponent>(entity, give_projectile_damage);
+    registry.emplace<TakeTileCollisionDamageComponent>(entity, tile_collision_damage);
+    registry.emplace<HitpointComponent>(entity, hitpoints);
 
     return entity;
 }

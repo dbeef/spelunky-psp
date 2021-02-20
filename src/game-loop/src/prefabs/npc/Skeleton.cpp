@@ -1,13 +1,21 @@
  #include "prefabs/npc/Skeleton.hpp"
+ #include "prefabs/particles/BonesParticle.hpp"
+ #include "prefabs/particles/SmokePuffParticle.hpp"
 
 #include "components/specialized/MainDudeComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
+#include "components/generic/NpcTypeComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
+#include "components/damage/TakeFallDamageComponent.hpp"
+#include "components/damage/TakeProjectileDamageComponent.hpp"
+#include "components/damage/HitpointComponent.hpp"
+#include "components/damage/TakeMeleeDamageComponent.hpp"
+#include "components/damage/TakeJumpOnTopDamage.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -20,9 +28,41 @@ namespace
     constexpr float activation_distance_x = 3.0f;
     constexpr float activation_distance_y = 0.5f;
 
+    class SkeletonDeathObserver final : public Observer<DeathEvent>
+    {
+    public:
+
+        explicit SkeletonDeathObserver(entt::entity skeleton) : _skeleton(skeleton) {}
+
+        void on_notify(const DeathEvent*) override
+        {
+            auto& registry = EntityRegistry::instance().get_registry();
+            auto& position = registry.get<PositionComponent>(_skeleton);
+
+            auto bones = prefabs::BonesParticle::create(position.x_center, position.y_center);
+            {
+                auto& physics = registry.get<PhysicsComponent>(bones);
+                physics.set_y_velocity(-0.1f);
+            }
+
+            prefabs::SmokePuffParticle::create(position.x_center, position.y_center);
+        }
+
+    private:
+        const entt::entity _skeleton;
+    };
+
     class SkeletonScript final : public ScriptBase
     {
     public:
+
+        explicit SkeletonScript(entt::entity skeleton) : _death_observer(skeleton) {}
+
+        SkeletonDeathObserver* get_observer()
+        {
+            return &_death_observer;
+        }
+
         void update(entt::entity owner, uint32_t delta_time_ms) override
         {
             auto& registry = EntityRegistry::instance().get_registry();
@@ -99,6 +139,7 @@ namespace
             }
         }
     private:
+        SkeletonDeathObserver _death_observer;
         bool _started_transformation = false;
         bool _finished_transformation = false;
         HorizontalOrientation _orientation;
@@ -123,13 +164,25 @@ entt::entity prefabs::Skeleton::create(float pos_x_center, float pos_y_center)
     QuadComponent quad(TextureType::NPC, width, height);
     quad.frame_changed(NPCSpritesheetFrames::SKELETON_CREATE_0_FIRST);
 
+    auto skeleton_script = std::make_shared<SkeletonScript>(entity);
+    ScriptingComponent script(skeleton_script);
+
+    HitpointComponent hitpoints(1);
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(skeleton_script->get_observer()));
+
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
     registry.emplace<AnimationComponent>(entity);
     registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_2_ITEMS, CameraType::MODEL_VIEW_SPACE);
     registry.emplace<PhysicsComponent>(entity, width - (4.0f / 16.0f), height - (2.0f / 16.0f));
-    registry.emplace<ScriptingComponent>(entity, std::make_shared<SkeletonScript>());
+    registry.emplace<ScriptingComponent>(entity, script);
     registry.emplace<HorizontalOrientationComponent>(entity);
+    registry.emplace<HitpointComponent>(entity, hitpoints);
+    registry.emplace<TakeFallDamageComponent>(entity, 1);
+    registry.emplace<TakeProjectileDamageComponent>(entity);
+    registry.emplace<TakeMeleeDamageComponent>(entity);
+    registry.emplace<TakeJumpOnTopDamageComponent>(entity);
+    registry.emplace<NpcTypeComponent>(entity, NpcType::SKELETON);
 
     return entity;
 }

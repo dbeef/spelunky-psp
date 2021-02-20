@@ -25,8 +25,6 @@
 
 void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
 {
-    // TODO: Make use of LevelSummaryTracker to keep count of killed NPC's.
-
     auto& registry = EntityRegistry::instance().get_registry();
 
     Spawner snake_spawner(3, 4);
@@ -35,7 +33,7 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
     Spawner fake_skeleton_spawner(3, 4);
     Spawner skeleton_spawner(3, 4);
     Spawner spikes_spawner(3, 4);
-    Spawner spider_spawner(3, 4);
+    Spawner spider_spawner(3, 3);
 
     std::vector<std::shared_ptr<GameEntity>> out{};
 
@@ -58,6 +56,7 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
                     {
                         spider_spawner.spawned();
                         prefabs::Spider::create(pos_x, pos_y);
+
                     }
                     break;
                 }
@@ -76,27 +75,35 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
                     if (snake_spawner.can_spawn())
                     {
                         snake_spawner.spawned();
-                        prefabs::Snake::create(pos_x, pos_y);
+                        auto entity = prefabs::Snake::create(pos_x, pos_y);
+                        auto& hitpoints = registry.get<HitpointComponent>(entity);
+                        hitpoints.add_observer(tracker.get());
                     }
                     else if (bat_spawner.can_spawn())
                     {
                         bat_spawner.spawned();
-                        prefabs::Bat::create(pos_x, pos_y);
+                        auto entity = prefabs::Bat::create(pos_x, pos_y);
+                        auto& hitpoints = registry.get<HitpointComponent>(entity);
+                        hitpoints.add_observer(tracker.get());
                     }
                     else if (caveman_spawner.can_spawn())
                     {
                         caveman_spawner.spawned();
-                        prefabs::Caveman::create(pos_x, pos_y);
+                        auto entity = prefabs::Caveman::create(pos_x, pos_y);
+                        auto& hitpoints = registry.get<HitpointComponent>(entity);
+                        hitpoints.add_observer(tracker.get());
                     }
                     else if (fake_skeleton_spawner.can_spawn())
                     {
                         fake_skeleton_spawner.spawned();
-                        prefabs::FakeSkeleton ::create(pos_x, pos_y);
+                        prefabs::FakeSkeleton::create(pos_x, pos_y);
                     }
                     else if (skeleton_spawner.can_spawn())
                     {
                         skeleton_spawner.spawned();
-                        prefabs::Skeleton::create(pos_x, pos_y);
+                        auto entity = prefabs::Skeleton::create(pos_x, pos_y);
+                        auto& hitpoints = registry.get<HitpointComponent>(entity);
+                        hitpoints.add_observer(tracker.get());
                     }
                     else if (spikes_spawner.can_spawn())
                     {

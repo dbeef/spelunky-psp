@@ -9,6 +9,7 @@
 #include "components/generic/ItemComponent.hpp"
 #include "components/generic/OpenableComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -94,6 +95,7 @@ entt::entity prefabs::Chest::create(float pos_x_center, float pos_y_center)
     registry.emplace<ScriptingComponent>(entity, std::make_shared<ChestScript>());
     registry.emplace<HorizontalOrientationComponent>(entity);
     registry.emplace<OpenableComponent>(entity);
+    registry.emplace<GiveProjectileDamageComponent>(entity, 1);
 
     return entity;
 }

@@ -4,8 +4,16 @@
 #include "prefabs/collectibles/BigGem.hpp"
 #include "prefabs/collectibles/GoldChunk.hpp"
 #include "prefabs/collectibles/GoldNugget.hpp"
+#include "prefabs/npc/Spider.hpp"
+#include "prefabs/npc/Snake.hpp"
 
+#include "components/damage/GiveProjectileDamageComponent.hpp"
+#include "components/damage/HitpointComponent.hpp"
+#include "components/damage/TakeTileCollisionDamageComponent.hpp"
+#include "components/damage/TakeProjectileDamageComponent.hpp"
+#include "components/damage/TakeMeleeDamageComponent.hpp"
 #include "components/generic/ItemComponent.hpp"
+#include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
@@ -26,6 +34,8 @@ namespace
         BIG_GEM,
         GOLD_CHUNK,
         GOLD_NUGGET,
+        SPIDER,
+        SNAKE,
         _SIZE
     };
 
@@ -34,57 +44,76 @@ namespace
         return static_cast<JarLootType>(std::rand() % static_cast<int>(JarLootType::_SIZE));
     }
 
+    class JarDeathObserver final : public Observer<DeathEvent>
+    {
+    public:
+
+        explicit JarDeathObserver(entt::entity jar) : _jar(jar) {}
+
+        void on_notify(const DeathEvent*) override
+        {
+            auto& registry = EntityRegistry::instance().get_registry();
+
+            auto& position = registry.get<PositionComponent>(_jar);
+            prefabs::SmokePuffParticle::create(position.x_center, position.y_center);
+
+            switch (get_random_loot())
+            {
+                case JarLootType::BIG_GEM: prefabs::BigGem::create(position.x_center, position.y_center); break;
+                case JarLootType::GOLD_CHUNK: prefabs::GoldChunk::create(position.x_center, position.y_center); break;
+                case JarLootType::GOLD_NUGGET: prefabs::GoldNugget::create(position.x_center, position.y_center); break;
+                case JarLootType::SPIDER: prefabs::Spider::create(position.x_center, position.y_center, true); break;
+                case JarLootType::SNAKE: prefabs::Snake::create(position.x_center, position.y_center); break;
+                default: assert(false);
+            }
+
+            for (int index = 0; index < 5; ++index)
+            {
+                auto rubble = prefabs::RubbleSmallParticle::create(position.x_center, position.y_center);
+                auto& rubble_physics = registry.get<PhysicsComponent>(rubble);
+
+                float rubble_velocity_x = 0;
+                float rubble_velocity_y = 0;
+
+                rubble_velocity_x = static_cast<float>(std::rand() % 10) / 100.0f;
+                rubble_velocity_y = static_cast<float>(std::rand() % 10) / 100.0f;
+
+                rubble_physics.set_x_velocity(rubble_velocity_x);
+                rubble_physics.set_y_velocity(rubble_velocity_y);
+            }
+
+            auto& hitpoints = registry.get<HitpointComponent>(_jar);
+            hitpoints.remove_observer(this);
+
+            auto& item = registry.get<ItemComponent>(_jar);
+            if (item.is_carried())
+            {
+                auto& item_carrier = item.get_item_carrier();
+                item_carrier.put_down_active_item();
+            }
+        }
+
+    private:
+        const entt::entity _jar;
+    };
+
     class JarScript final : public ScriptBase
     {
     public:
 
+        explicit JarScript(entt::entity jar) : _death_observer(jar) {}
+
+        JarDeathObserver* get_observer()
+        {
+            return &_death_observer;
+        }
+
         void update(entt::entity owner, uint32_t delta_time_ms) override
         {
-            auto& registry = EntityRegistry::instance().get_registry();
-            auto& physics = registry.get<PhysicsComponent>(owner);
-
-            if (physics.is_left_collision() || physics.is_right_collision() ||
-                physics.is_upper_collision() || physics.is_bottom_collision())
-            {
-                if (std::fabs(_last_x_speed) > 0.15f || std::fabs(_last_y_speed) > 0.13f)
-                {
-                    auto& position = registry.get<PositionComponent>(owner);
-                    prefabs::SmokePuffParticle::create(position.x_center, position.y_center);
-
-                    switch (get_random_loot())
-                    {
-                        case JarLootType::BIG_GEM: prefabs::BigGem::create(position.x_center, position.y_center); break;
-                        case JarLootType::GOLD_CHUNK: prefabs::GoldChunk::create(position.x_center, position.y_center); break;
-                        case JarLootType::GOLD_NUGGET: prefabs::GoldNugget::create(position.x_center, position.y_center); break;
-                    }
-
-                    for (int index = 0; index < 5; ++index)
-                    {
-                        auto rubble = prefabs::RubbleSmallParticle::create(position.x_center, position.y_center);
-                        auto& rubble_physics = registry.get<PhysicsComponent>(rubble);
-
-                        float rubble_velocity_x = 0;
-                        float rubble_velocity_y = 0;
-
-                        rubble_velocity_x = static_cast<float>(std::rand() % 10) / 100.0f;
-                        rubble_velocity_y = static_cast<float>(std::rand() % 10) / 100.0f;
-
-                        rubble_physics.set_x_velocity(rubble_velocity_x);
-                        rubble_physics.set_y_velocity(rubble_velocity_y);
-
-                    }
-
-                    registry.destroy(owner);
-                }
-            }
-
-            _last_x_speed = physics.get_x_velocity();
-            _last_y_speed = physics.get_y_velocity();
         }
 
     private:
-        float _last_x_speed = 0;
-        float _last_y_speed = 0;
+        JarDeathObserver _death_observer;
     };
 }
 
@@ -112,13 +141,31 @@ entt::entity prefabs::Jar::create(float pos_x_center, float pos_y_center)
     item.set_weight(2);
     item.set_carrying_offset({0.0f, -1.0f/8.0f});
 
+    auto jar_script = std::make_shared<JarScript>(entity);
+    ScriptingComponent script(jar_script);
+
+    GiveProjectileDamageComponent give_projectile_damage(2);
+    give_projectile_damage.set_mutual(true);
+
+    HitpointComponent hitpoints(1);
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(jar_script->get_observer()));
+
+    float critical_speed_x = 0.1f;
+    float critical_speed_y = 0.1f;
+    TakeTileCollisionDamageComponent tile_collision_damage(1, critical_speed_x, critical_speed_y);
+
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
     registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_2_ITEMS, CameraType::MODEL_VIEW_SPACE);
     registry.emplace<PhysicsComponent>(entity, physics);
     registry.emplace<ItemComponent>(entity, item);
-    registry.emplace<ScriptingComponent>(entity, std::make_shared<JarScript>());
+    registry.emplace<ScriptingComponent>(entity, jar_script);
     registry.emplace<HorizontalOrientationComponent>(entity);
+    registry.emplace<TakeMeleeDamageComponent>(entity);
+    registry.emplace<TakeProjectileDamageComponent>(entity);
+    registry.emplace<GiveProjectileDamageComponent>(entity, give_projectile_damage);
+    registry.emplace<TakeTileCollisionDamageComponent>(entity, tile_collision_damage);
+    registry.emplace<HitpointComponent>(entity, hitpoints);
 
     return entity;
 }

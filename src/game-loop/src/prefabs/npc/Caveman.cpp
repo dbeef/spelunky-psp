@@ -1,5 +1,7 @@
 #include "prefabs/npc/Caveman.hpp"
+#include "prefabs/particles/BloodParticle.hpp"
 
+#include "components/generic/NpcTypeComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
@@ -7,6 +9,10 @@
 #include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
+#include "components/damage/HitpointComponent.hpp"
+#include "components/damage/TakeProjectileDamageComponent.hpp"
+#include "components/damage/TakeMeleeDamageComponent.hpp"
+#include "components/damage/TakeJumpOnTopDamage.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -19,9 +25,51 @@ namespace
     constexpr uint16_t max_waiting_time_ms = 3000;
     constexpr uint16_t max_walking_time_ms = 5000;
 
+    class CavemanDeathObserver final : public Observer<DeathEvent>
+    {
+    public:
+
+        explicit CavemanDeathObserver(entt::entity caveman) : _caveman(caveman) {}
+
+        void on_notify(const DeathEvent*) override
+        {
+            auto& registry = EntityRegistry::instance().get_registry();
+            auto& position = registry.get<PositionComponent>(_caveman);
+
+            for (std::size_t index = 0; index < 4; index++)
+            {
+                auto particle = prefabs::BloodParticle::create(position.x_center, position.y_center);
+                auto& physics = registry.get<PhysicsComponent>(particle);
+
+                float v_x = static_cast<float>(std::rand() % 2) / 15.0f;
+                float v_y = static_cast<float>(std::rand() % 2) / 10.0f;
+
+                if (std::rand() % 2)
+                {
+                    v_x += 0.1f;
+                }
+                else
+                {
+                    v_x -= 0.1f;
+                }
+
+                physics.set_velocity(v_x, v_y);
+            }
+        }
+
+    private:
+        const entt::entity _caveman;
+    };
+    
     class CavemanScript final : public ScriptBase
     {
     public:
+        explicit CavemanScript(entt::entity caveman) : _death_observer(caveman) {}
+
+        CavemanDeathObserver* get_observer()
+        {
+            return &_death_observer;
+        }
 
         void update(entt::entity owner, uint32_t delta_time_ms) override
         {
@@ -55,6 +103,7 @@ namespace
 
     private:
 
+        CavemanDeathObserver _death_observer;
         int _walking_timer_ms = 0;
         int _waiting_timer_ms = 0;
 
@@ -122,13 +171,24 @@ entt::entity prefabs::Caveman::create(float pos_x_center, float pos_y_center)
     QuadComponent quad(TextureType::NPC, width, height);
     quad.frame_changed(NPCSpritesheetFrames::CAVEMAN);
 
+    auto caveman_script = std::make_shared<CavemanScript>(entity);
+    ScriptingComponent script(caveman_script);
+
+    HitpointComponent hitpoints(1);
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(caveman_script->get_observer()));
+
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
     registry.emplace<AnimationComponent>(entity);
     registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_2_ITEMS, CameraType::MODEL_VIEW_SPACE);
     registry.emplace<PhysicsComponent>(entity, width -  (4.0f / 16.0f), height -  (2.0f / 16.0f));
-    registry.emplace<ScriptingComponent>(entity, std::make_shared<CavemanScript>());
+    registry.emplace<ScriptingComponent>(entity, script);
     registry.emplace<HorizontalOrientationComponent>(entity);
+    registry.emplace<TakeProjectileDamageComponent>(entity);
+    registry.emplace<TakeMeleeDamageComponent>(entity);
+    registry.emplace<HitpointComponent>(entity, hitpoints);
+    registry.emplace<TakeJumpOnTopDamageComponent>(entity);
+    registry.emplace<NpcTypeComponent>(entity, NpcType::CAVEMAN);
 
     return entity;
 }

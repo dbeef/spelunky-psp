@@ -21,6 +21,9 @@ public:
 
 private:
 
+    uint32_t _kills_appearing_timer = 0;
+    uint32_t _kills_spawned = 0;
+
     uint32_t _loot_appearing_timer = 0;
     uint32_t _loot_spawned = 0;
 

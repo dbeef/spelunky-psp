@@ -1,6 +1,8 @@
 #include "prefabs/npc/Spider.hpp"
+#include "prefabs/particles/BloodParticle.hpp"
 
 #include "components/specialized/MainDudeComponent.hpp"
+#include "components/generic/NpcTypeComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
@@ -8,6 +10,10 @@
 #include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
+#include "components/damage/HitpointComponent.hpp"
+#include "components/damage/TakeProjectileDamageComponent.hpp"
+#include "components/damage/TakeMeleeDamageComponent.hpp"
+#include "components/damage/TakeJumpOnTopDamage.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -20,10 +26,57 @@ namespace
     constexpr float activation_distance_x = 0.5f;
     constexpr float activation_distance_y = 7;
     constexpr uint32_t update_delta_ms = 20;
+   
+    class SpiderDeathObserver final : public Observer<DeathEvent>
+    {
+    public:
+
+        explicit SpiderDeathObserver(entt::entity Spider) : _spider(Spider) {}
+
+        void on_notify(const DeathEvent*) override
+        {
+            auto& registry = EntityRegistry::instance().get_registry();
+            auto& position = registry.get<PositionComponent>(_spider);
+
+            for (std::size_t index = 0; index < 4; index++)
+            {
+                auto particle = prefabs::BloodParticle::create(position.x_center, position.y_center);
+                auto& physics = registry.get<PhysicsComponent>(particle);
+
+                float v_x = static_cast<float>(std::rand() % 2) / 15.0f;
+                float v_y = static_cast<float>(std::rand() % 2) / 10.0f;
+
+                if (std::rand() % 2)
+                {
+                    v_x += 0.1f;
+                }
+                else
+                {
+                    v_x -= 0.1f;
+                }
+
+                physics.set_velocity(v_x, v_y);
+            }
+        }
+
+    private:
+        const entt::entity _spider;
+    };
 
     class SpiderScript final : public ScriptBase
     {
     public:
+
+        explicit SpiderScript(entt::entity spider)
+            : _death_observer(spider)
+        {
+        }
+
+        SpiderDeathObserver* get_observer()
+        {
+            return &_death_observer;
+        }
+
         void update(entt::entity owner, uint32_t delta_time_ms) override
         {
             _update_timer_ms += delta_time_ms;
@@ -52,17 +105,7 @@ namespace
 
                     if (!_triggered)
                     {
-                        _triggered = true;
-
-                        auto &quad = registry.get<QuadComponent>(owner);
-                        auto &animation = registry.get<AnimationComponent>(owner);
-                        auto &physics = registry.get<PhysicsComponent>(owner);
-
-                        physics.enable_gravity();
-                        quad.frame_changed(NPCSpritesheetFrames::SPIDER_FLIP_0_FIRST);
-                        animation.start(static_cast<std::size_t>(NPCSpritesheetFrames::SPIDER_FLIP_0_FIRST),
-                                        static_cast<std::size_t>(NPCSpritesheetFrames::SPIDER_FLIP_8_LAST),
-                                        100, false);
+                        trigger(owner);
                     }
                 }
             });
@@ -104,7 +147,27 @@ namespace
                 }
             }
         }
+
+        void trigger(entt::entity owner)
+        {
+            _triggered = true;
+
+            auto& registry = EntityRegistry::instance().get_registry();
+
+            auto &quad = registry.get<QuadComponent>(owner);
+            auto &animation = registry.get<AnimationComponent>(owner);
+            auto &physics = registry.get<PhysicsComponent>(owner);
+
+            physics.enable_gravity();
+            quad.frame_changed(NPCSpritesheetFrames::SPIDER_FLIP_0_FIRST);
+            animation.start(static_cast<std::size_t>(NPCSpritesheetFrames::SPIDER_FLIP_0_FIRST),
+                            static_cast<std::size_t>(NPCSpritesheetFrames::SPIDER_FLIP_8_LAST),
+                            100, false);
+        }
+
     private:
+
+        SpiderDeathObserver _death_observer;
         bool _triggered = false;
         bool _flipping_animation_finished = false;
         Point2D _dude_position;
@@ -118,7 +181,7 @@ entt::entity prefabs::Spider::create()
     return create(0, 0);
 }
 
-entt::entity prefabs::Spider::create(float pos_x_center, float pos_y_center)
+entt::entity prefabs::Spider::create(float pos_x_center, float pos_y_center, bool triggered)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
@@ -135,13 +198,29 @@ entt::entity prefabs::Spider::create(float pos_x_center, float pos_y_center)
     physics.set_bounciness(0.6f);
     physics.disable_gravity();
 
+    auto spider_script = std::make_shared<SpiderScript>(entity);
+    ScriptingComponent script(spider_script);
+
+    HitpointComponent hitpoints(1);
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(spider_script->get_observer()));
+
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
     registry.emplace<AnimationComponent>(entity);
     registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_2_ITEMS, CameraType::MODEL_VIEW_SPACE);
     registry.emplace<PhysicsComponent>(entity, physics);
-    registry.emplace<ScriptingComponent>(entity, std::make_shared<SpiderScript>());
+    registry.emplace<ScriptingComponent>(entity, spider_script);
     registry.emplace<HorizontalOrientationComponent>(entity);
+    registry.emplace<HitpointComponent>(entity, hitpoints);
+    registry.emplace<TakeProjectileDamageComponent>(entity);
+    registry.emplace<TakeMeleeDamageComponent>(entity);
+    registry.emplace<TakeJumpOnTopDamageComponent>(entity);
+    registry.emplace<NpcTypeComponent>(entity, NpcType::SPIDER);
+
+    if (triggered)
+    {
+        spider_script->trigger(entity);
+    }
 
     return entity;
 }

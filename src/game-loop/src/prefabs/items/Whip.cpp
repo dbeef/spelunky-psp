@@ -10,6 +10,7 @@
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
+#include "components/damage/GiveMeleeDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -98,6 +99,10 @@ namespace
             {
                 registry.remove<MeshComponent>(owner);
             }
+            if (registry.has<GiveMeleeDamageComponent>(owner))
+            {
+                registry.remove<GiveMeleeDamageComponent>(owner);
+            }
         }
         
         void show(entt::entity owner)
@@ -115,6 +120,7 @@ namespace
 
             registry.emplace<MeshComponent>(owner, mesh);
             registry.emplace<QuadComponent>(owner, quad);
+            registry.emplace<GiveMeleeDamageComponent>(owner, 1);
         }
     };
 }
