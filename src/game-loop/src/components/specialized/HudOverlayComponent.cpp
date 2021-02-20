@@ -124,7 +124,7 @@ void HudOverlayComponent::update_dollars()
             _texts.dollars_buffer = prefabs::Text::create();
             auto &text = registry.get<TextComponent>(_texts.dollars_buffer);
 
-            text.set_scale(0.5f);
+            text.set_scale(0.75f);
             text.set_yellow(true);
             text.set_text(to_string(Inventory::instance().get_dollars()));
         }
