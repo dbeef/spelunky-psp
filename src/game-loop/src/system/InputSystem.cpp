@@ -7,6 +7,7 @@
 #include "system/InputSystem.hpp"
 #include "EntityRegistry.hpp"
 #include "Input.hpp"
+#include "audio/Audio.hpp"
 
 #include <algorithm>
 
@@ -181,6 +182,7 @@ void InputSystem::update_items_pick_up_put_down()
             {
                 carrier.throw_active_item(carrier_orientation, carrier_physics);
                 consume(InputEvent::THROWING_PRESSED);
+                Audio::instance().play(SFXType::THROW);
             }
         }
     });

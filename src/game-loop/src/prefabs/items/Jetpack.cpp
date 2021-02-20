@@ -11,6 +11,7 @@
 #include "components/generic/ScriptingComponent.hpp"
 
 #include "EntityRegistry.hpp"
+#include "audio/Audio.hpp"
 #include "TextureType.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
 
@@ -51,6 +52,8 @@ namespace
             {
                 if (_activation_timer_ms > 150)
                 {
+                    Audio::instance().play(SFXType::JETPACK);
+
                     auto& carrier_physics = registry.get<PhysicsComponent>(item.get_item_carrier_entity());
                     if (!carrier_physics.is_bottom_collision())
                     {

@@ -15,6 +15,7 @@
 #include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/damage/TakeMeleeDamageComponent.hpp"
 
+#include "audio/Audio.hpp"
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
 #include "spritesheet-frames/NPCSpritesheetFrames.hpp"
@@ -108,6 +109,11 @@ namespace
 
                 if (_distance_x < activation_distance_x && _distance_y < activation_distance_y)
                 {
+                    if (!_flying)
+                    {
+                        Audio::instance().play(SFXType::BAT);
+                    }
+
                     _flying = true;
                     _triggered = true;
                     _dude_position = {dude_position.x_center, dude_position.y_center};

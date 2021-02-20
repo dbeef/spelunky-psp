@@ -8,6 +8,7 @@
 
 #include "spritesheet-frames/NPCSpritesheetFrames.hpp"
 #include "EntityRegistry.hpp"
+#include "audio/Audio.hpp"
 
 #include <cmath>
 
@@ -70,6 +71,7 @@ namespace
 
                 if (distance_x < activation_distance_x && distance_y < activation_distance_y)
                 {
+                    Audio::instance().play(SFXType::ARROW_TRAP);
                     triggered = true;
 
                     auto arrow = prefabs::Arrow::create(arrow_trap_position.x_center, arrow_trap_position.y_center);

@@ -11,6 +11,7 @@
 #include "components/generic/ScriptingComponent.hpp"
 #include "components/damage/GiveProjectileDamageComponent.hpp"
 
+#include "audio/Audio.hpp"
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
@@ -31,7 +32,8 @@ namespace
                 auto& quad = registry.get<QuadComponent>(owner);
                 quad.frame_changed(CollectiblesSpritesheetFrames::CHEST_OPENED);
 
-                // TODO: Play sound.
+                Audio::instance().play(SFXType::CHEST_OPEN);
+
                 // TODO: Cooldown for collectibles before they can be collected.
 
                 auto& position = registry.get<PositionComponent>(owner);
