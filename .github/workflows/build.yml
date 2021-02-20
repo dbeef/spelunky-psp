@@ -1,0 +1,40 @@
+name: Build Spelunky for various platforms
+on: [push]
+
+jobs:
+  build-android:
+    name: Build Spelunky for Android
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+        submodules: 'recursive'
+  build-linux:
+    name: Build Spelunky for Linux
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+        submodules: 'recursive'
+  build-psp:
+    name: Build Spelunky for PSP
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+        submodules: 'recursive'
+  build-windows:
+    name: Build Spelunky for Windows
+    runs-on: windows
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+        submodules: 'recursive'
