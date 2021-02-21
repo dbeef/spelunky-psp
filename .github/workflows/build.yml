@@ -5,6 +5,8 @@ on:
     - 'v*'
     branches:
     - '**'
+    pull_request:
+      types: [opened, synchronize, reopened]
 
 jobs:
   build-android:
