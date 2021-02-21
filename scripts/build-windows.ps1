@@ -5,6 +5,4 @@
 
 $ErrorActionPreference = "Stop"
 
-$PROC_COUNT = (Get-WmiObject -class Win32_ComputerSystem).numberoflogicalprocessors
-
-cmake --build "tmp/build-windows" --target install --config Release -j $PROC_COUNT
+cmake --build "tmp/build-windows" --target install --config Release -j $env:NUMBER_OF_PROCESSORS
