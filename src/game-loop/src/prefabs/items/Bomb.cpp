@@ -1,6 +1,9 @@
 #include "prefabs/items/Bomb.hpp"
 #include "prefabs/effects/Explosion.hpp"
 #include "prefabs/particles/FlameParticle.hpp"
+#include "prefabs/collectibles/GoldNugget.hpp"
+#include "prefabs/collectibles/GoldChunk.hpp"
+#include "prefabs/particles/RubbleSmallParticle.hpp"
 
 #include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/ActivableComponent.hpp"
@@ -83,12 +86,16 @@ namespace
              Audio::instance().play(SFXType::EXPLOSION);
 
              // TODO: Shake camera
+             // TODO: Destroy arrow traps/spikes
+             // TODO: Spiders/bats should check if the tile they are hanging on still exists
+             // TODO: Kill NPC's in range
 
              auto& registry = EntityRegistry::instance().get_registry();
 
              auto& position = registry.get<PositionComponent>(owner);
              prefabs::Explosion::create(position.x_center, position.y_center);
 
+             // TODO: Utility for spawning particles in an explosion manner
              for (std::size_t index = 0; index < 4; index++)
              {
                  auto particle = prefabs::FlameParticle::create(position.x_center, position.y_center);
@@ -117,7 +124,30 @@ namespace
              {
                  if (tile && tile->destroyable)
                  {
-                     // TODO: Spawn rubble particles on each destroyed tile.
+                     switch (tile->map_tile_type)
+                     {
+                         case MapTileType::CAVE_SOME_GOLD:
+                         {
+                             prefabs::GoldNugget::create(tile->get_center_x(), tile->get_center_y());
+                             break;
+                         }
+                         case MapTileType::CAVE_MUCH_GOLD:
+                         {
+                             prefabs::GoldChunk::create(tile->get_center_x(), tile->get_center_y());
+                             break;
+                         }
+                         case MapTileType::CAVE_ROCK:
+                         case MapTileType::CAVE_REGULAR:
+                         case MapTileType::CAVE_DOWN_ORIENTED:
+                         case MapTileType::CAVE_UP_ORIENTED:
+                         case MapTileType::CAVE_UP_DOWN_ORIENTED:
+                         {
+                             prefabs::RubbleSmallParticle::create(tile->get_center_x(), tile->get_center_y());
+                             break;
+                         }
+                         default: break;
+                     }
+
                      tile->collidable = false;
                      tile->map_tile_type = MapTileType::NOTHING;
                  }
