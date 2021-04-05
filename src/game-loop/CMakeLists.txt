@@ -262,6 +262,8 @@ add_library(GameLoop STATIC
         interface/other/InventoryEvent.hpp
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
+        include/other/ParticleGenerator.hpp
+        src/other/ParticleGenerator.cpp
 )
 
 target_include_directories(GameLoop
