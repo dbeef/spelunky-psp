@@ -34,6 +34,7 @@ With successful attempts to run it on such devices as Raspberry PI 3, Orange PI 
 * [Spelunky-PSP devlog #3](https://www.youtube.com/watch?v=mp09ItJAMJo)
 * [Software-implemented OpenGL - SpelunkyPSP on PocketGo case study](https://www.youtube.com/watch?v=NbYRNmjxoR8)
 * [Spelunky-PSP devlog #4](https://www.youtube.com/watch?v=GRuf4z4yyHU)
+* [PSP HDC 2021 - Spelunky PSP - First year of development](https://www.youtube.com/watch?v=45JVr3RiMQE)
   
 ### See my other Spelunky-related projects:
  
