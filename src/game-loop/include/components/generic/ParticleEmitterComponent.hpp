@@ -9,6 +9,8 @@ enum class ParticleType
     BOMB_COLLECTED,
     BLOOD_TRAIL,
     FLAME_TRAIL,
+    BLOOD,
+    FLAME,
 };
 
 struct ParticleEmitterComponent

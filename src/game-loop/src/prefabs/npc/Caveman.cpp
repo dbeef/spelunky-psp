@@ -1,5 +1,6 @@
 #include "prefabs/npc/Caveman.hpp"
 #include "prefabs/particles/BloodParticle.hpp"
+#include "other/ParticleGenerator.hpp"
 
 #include "components/generic/NpcTypeComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
@@ -36,25 +37,11 @@ namespace
             auto& registry = EntityRegistry::instance().get_registry();
             auto& position = registry.get<PositionComponent>(_caveman);
 
-            for (std::size_t index = 0; index < 4; index++)
-            {
-                auto particle = prefabs::BloodParticle::create(position.x_center, position.y_center);
-                auto& physics = registry.get<PhysicsComponent>(particle);
-
-                float v_x = static_cast<float>(std::rand() % 2) / 15.0f;
-                float v_y = static_cast<float>(std::rand() % 2) / 10.0f;
-
-                if (std::rand() % 2)
-                {
-                    v_x += 0.1f;
-                }
-                else
-                {
-                    v_x -= 0.1f;
-                }
-
-                physics.set_velocity(v_x, v_y);
-            }
+            ParticleGenerator().particle_type(ParticleType::BLOOD)
+                               .position(position.x_center, position.y_center)
+                               .max_velocity(0.25f, 0.25f)
+                               .quantity(4)
+                               .finalize();
         }
 
     private:
