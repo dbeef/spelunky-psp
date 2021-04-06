@@ -22,12 +22,14 @@ void MapTile::match_tile(MapTileType type)
         {
             collidable = false;
             destroyable = false;
+            climbable = true;
             break;
         }
         case MapTileType::LADDER_DECK:
         {
             collidable = false;
             destroyable = false;
+            climbable = true;
             break;
         }
         case MapTileType::ENTRANCE:

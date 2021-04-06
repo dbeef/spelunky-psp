@@ -1,9 +1,10 @@
-#include <prefabs/main-dude/MainDude.hpp>
+#include "prefabs/main-dude/MainDude.hpp"
 
 #include "NeighbouringTiles.hpp"
 #include "Level.hpp"
 #include "Collisions.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
+#include "components/generic/ClimbingComponent.hpp"
 #include "MapTileType.hpp"
 #include "CameraType.hpp"
 #include "Input.hpp"
@@ -32,11 +33,14 @@ MainDudeComponent::MainDudeComponent(entt::entity owner) : _owner(owner)
 
     _states.current = &_states.standing;
     _states.current->enter(*this);
+
+    _climbing_observer = std::make_shared<MainDudeClimbingObserver>(owner);
 }
 
 MainDudeComponent::MainDudeComponent(const MainDudeComponent& other) : _owner(other._owner)
 {
     _states.current = &_states.standing;
+    _climbing_observer = std::make_shared<MainDudeClimbingObserver>(other._owner);
 }
 
 void MainDudeComponent::update(uint32_t delta_time_ms)
@@ -81,6 +85,11 @@ MapTile* MainDudeComponent::is_overlaping_tile(MapTileType type, PhysicsComponen
 void MainDudeComponent::enter_standing_state()
 {
     enter_if_different(&_states.standing);
+}
+
+void MainDudeComponent::enter_climbing_state()
+{
+    enter_if_different(&_states.climbing);
 }
 
 void MainDudeComponent::enter_throwing_state()
@@ -153,5 +162,21 @@ void MainDudeComponent::enter_if_different(MainDudeBaseState* new_state)
         _states.current->exit(*this);
         _states.current = new_state;
         _states.current->enter(*this);
+    }
+}
+
+void MainDudeClimbingObserver::on_notify(const ClimbingEvent *event)
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+    auto& main_dude_component = registry.get<MainDudeComponent>(_main_dude);
+
+    switch (event->event_type)
+    {
+        case ClimbingEventType::STARTED_CLIMBING_LADDER:
+        case ClimbingEventType::STARTED_CLIMBING_ROPE:
+        {
+            main_dude_component.enter_climbing_state();
+            break;
+        }
     }
 }

@@ -5,6 +5,7 @@
 
 #include "components/damage/GiveJumpOnTopDamage.hpp"
 #include "components/generic/PositionComponent.hpp"
+#include "components/generic/ClimbingComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
 #include "components/generic/HorizontalOrientationComponent.hpp"
@@ -53,6 +54,14 @@ namespace prefabs
         // Initialization order is important in this case - MainDudeComponent must be the last to create.
         MainDudeComponent main_dude(entity);
         registry.emplace<MainDudeComponent>(entity, main_dude);
+
+        // FIXME: Rework MainDudeComponent to be simply scripting component; this is prone to component relocation:
+        {
+            auto& main_dude_component = registry.get<MainDudeComponent>(entity);
+            ClimbingComponent climbing;
+            climbing.add_observer(reinterpret_cast<Observer<ClimbingEvent> *>(main_dude_component.get_observer()));
+            registry.emplace<ClimbingComponent>(entity, climbing);
+        }
 
         {
             auto& carrier = registry.get<ItemCarrierComponent>(entity);

@@ -26,15 +26,26 @@
 #include "main-dude/states/MainDudeStunnedState.hpp"
 #include "main-dude/MainDudeEvent.hpp"
 
+#include "components/generic/PhysicsComponent.hpp"
+#include "components/generic/PositionComponent.hpp"
+#include "components/generic/QuadComponent.hpp"
+#include "components/generic/AnimationComponent.hpp"
+#include "components/generic/ClimbingComponent.hpp"
+
 #include <vector>
-#include <components/generic/PhysicsComponent.hpp>
-#include <components/generic/PositionComponent.hpp>
-#include <components/generic/QuadComponent.hpp>
-#include <components/generic/AnimationComponent.hpp>
+#include <memory>
 
 class MainDudeBaseState;
 class Input;
 class MapTile;
+
+struct MainDudeClimbingObserver : Observer<ClimbingEvent>
+{
+    explicit MainDudeClimbingObserver(entt::entity main_dude) : _main_dude(main_dude) {};
+
+    void on_notify(const ClimbingEvent* event) override;
+    const entt::entity _main_dude;
+};
 
 class MainDudeComponent : public Subject<MainDudeEvent>
 {
@@ -49,8 +60,14 @@ public:
     void enter_dead_state();
     void enter_standing_state();
     void enter_throwing_state();
+    void enter_climbing_state();
 
     bool entered_door() const { return _other.entered_door; }
+
+    MainDudeClimbingObserver* get_observer()
+    {
+        return _climbing_observer.get();
+    }
 
 private:
 
@@ -106,6 +123,8 @@ private:
     } _other;
 
     entt::entity _owner = entt::null;
+
+    std::shared_ptr<MainDudeClimbingObserver> _climbing_observer;
 
     static constexpr float DEFAULT_DELTA_X = 0.01f;
     static constexpr float DEFAULT_MAX_X_VELOCITY = 0.050f;

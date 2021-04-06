@@ -265,6 +265,7 @@ add_library(GameLoop STATIC
         include/other/ParticleGenerator.hpp
         src/other/ParticleGenerator.cpp
         interface/other/ItemType.hpp
+        include/components/generic/ClimbingComponent.hpp
 )
 
 target_include_directories(GameLoop
