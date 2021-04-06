@@ -114,7 +114,7 @@ entt::entity prefabs::Arrow::create(float pos_x_center, float pos_y_center)
     physics.set_friction(0.02f);
     physics.set_bounciness(0.25f);
 
-    ItemComponent item(ItemType::THROWABLE, ItemSlot::ACTIVE);
+    ItemComponent item(ItemType::ARROW, ItemApplication::THROWABLE, ItemSlot::ACTIVE);
     item.set_weight(1.0f);
 
     auto arrow_script = std::make_shared<ArrowScript>(entity);

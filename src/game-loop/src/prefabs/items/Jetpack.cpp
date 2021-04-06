@@ -104,7 +104,7 @@ entt::entity prefabs::Jetpack::create(float pos_x_center, float pos_y_center)
     ActivableComponent activable;
     activable.activate_combination = { InputEvent::JUMPING_PRESSED };
 
-    ItemComponent item(ItemType::ACTIVABLE, ItemSlot::BACK);
+    ItemComponent item(ItemType::JETPACK, ItemApplication::ACTIVABLE, ItemSlot::BACK);
     item.set_carrying_offset({-0.4f, -0.2f});
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);

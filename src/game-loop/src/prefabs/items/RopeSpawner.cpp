@@ -48,7 +48,7 @@ entt::entity prefabs::RopeSpawner::create()
     ActivableComponent activable;
     activable.activate_combination = { InputEvent::OUT_ROPE_PRESSED };
 
-    registry.emplace<ItemComponent>(entity, ItemType::ACTIVABLE, ItemSlot::OTHER);
+    registry.emplace<ItemComponent>(entity, ItemType::ROPE_SPAWNER, ItemApplication::ACTIVABLE, ItemSlot::OTHER);
     registry.emplace<ScriptingComponent>(entity, std::make_shared<RopeSpawnerScript>());
     registry.emplace<ActivableComponent>(entity, activable);
 

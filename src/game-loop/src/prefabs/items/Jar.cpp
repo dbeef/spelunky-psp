@@ -137,7 +137,7 @@ entt::entity prefabs::Jar::create(float pos_x_center, float pos_y_center)
     PhysicsComponent physics(width, height);
     physics.set_friction(0.02f);
 
-    ItemComponent item(ItemType::THROWABLE, ItemSlot::ACTIVE);
+    ItemComponent item(ItemType::JAR, ItemApplication::THROWABLE, ItemSlot::ACTIVE);
     item.set_weight(2);
     item.set_carrying_offset({0.0f, -1.0f/8.0f});
 

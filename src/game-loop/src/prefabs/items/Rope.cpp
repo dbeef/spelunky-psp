@@ -121,7 +121,7 @@ entt::entity prefabs::Rope::create(float pos_x_center, float pos_y_center)
     QuadComponent quad(TextureType::COLLECTIBLES, width, height);
     quad.frame_changed(CollectiblesSpritesheetFrames::ROPE_ITEM);
 
-    ItemComponent item(ItemType::ACTIVABLE, ItemSlot::ACTIVE);
+    ItemComponent item(ItemType::ROPE, ItemApplication::ACTIVABLE, ItemSlot::ACTIVE);
     item.set_weight(2);
     item.set_carrying_offset({0.1f, 0.0f});
 

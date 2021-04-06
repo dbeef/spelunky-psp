@@ -85,7 +85,7 @@ entt::entity prefabs::Chest::create(float pos_x_center, float pos_y_center)
     physics.set_friction(0.02f);
     physics.set_bounciness(0.25f);
 
-    ItemComponent item(ItemType::OPENABLE, ItemSlot::ACTIVE);
+    ItemComponent item(ItemType::CHEST, ItemApplication::OPENABLE, ItemSlot::ACTIVE);
     item.set_weight(5);
     item.set_carrying_offset({0.0f, -0.3f});
 

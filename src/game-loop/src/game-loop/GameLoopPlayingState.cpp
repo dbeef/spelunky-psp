@@ -13,6 +13,7 @@
 #include "components/specialized/DeathOverlayComponent.hpp"
 #include "components/specialized/LevelSummaryTracker.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
+#include "components/generic/ItemCarrierComponent.hpp"
 
 #include "system/RenderingSystem.hpp"
 #include "system/DamageSystem.hpp"
@@ -148,6 +149,8 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
     populator::generate_loot(game_loop._level_summary_tracker);
     populator::generate_npc(game_loop._level_summary_tracker);
+    populator::generate_inventory_items(_main_dude);
+
     game_loop._level_summary_tracker->entered_new_level();
 }
 
@@ -157,8 +160,13 @@ void GameLoopPlayingState::exit(GameLoop& game_loop)
     Audio::instance().stop();
 
     auto& dude = registry.get<MainDudeComponent>(_main_dude);
-    dude.remove_observer(this);
+    auto& dude_item_carrier_component = registry.get<ItemCarrierComponent>(_main_dude);
 
+    // Save collected item types in inventory which is persistent between the levels:
+    auto& inventory = Inventory::instance();
+    inventory.set_items(dude_item_carrier_component.get_items());
+
+    dude.remove_observer(this);
     registry.clear();
 }
 

@@ -33,7 +33,7 @@ entt::entity prefabs::Rock::create(float pos_x_center, float pos_y_center)
     physics.set_friction(0.02f);
     physics.set_bounciness(0.4f);
 
-    ItemComponent item(ItemType::THROWABLE, ItemSlot::ACTIVE);
+    ItemComponent item(ItemType::ROCK, ItemApplication::THROWABLE, ItemSlot::ACTIVE);
     item.set_weight(2);
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);

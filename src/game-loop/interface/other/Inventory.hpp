@@ -3,8 +3,10 @@
 #include "patterns/Singleton.hpp"
 #include "patterns/Subject.hpp"
 #include "other/InventoryEvent.hpp"
+#include "other/ItemType.hpp"
 
 #include <cstdint>
+#include <vector>
 
 class Inventory : public Singleton<Inventory>, public Subject<InventoryEvent>
 {
@@ -23,9 +25,15 @@ public:
     void add_dollars(uint16_t amount);
     void remove_hearts(uint16_t amount);
 
+    const std::vector<ItemType>& get_items() const;
+    void set_items(const std::vector<ItemType>& items);
+    void clear_items();
+
 private:
 
     Inventory();
+
+    std::vector<ItemType> _items;
 
     int16_t _hearts;
     int16_t _ropes;

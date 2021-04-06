@@ -178,7 +178,7 @@ void InputSystem::update_items_pick_up_put_down()
         {
             auto& item = carrier.get_active_item();
 
-            if (!open_intent && throw_intent && item.get_type() != ItemType::ACTIVABLE)
+            if (!open_intent && throw_intent && item.get_application() != ItemApplication::ACTIVABLE)
             {
                 carrier.throw_active_item(carrier_orientation, carrier_physics);
                 consume(InputEvent::THROWING_PRESSED);
@@ -264,7 +264,7 @@ void InputSystem::update_items_open()
                 if (registry.has<ItemComponent>(openable_entity))
                 {
                     auto& item = registry.get<ItemComponent>(openable_entity);
-                    item.set_type(ItemType::THROWABLE);
+                    item.set_type(ItemApplication::THROWABLE);
                 }
 
                 return;

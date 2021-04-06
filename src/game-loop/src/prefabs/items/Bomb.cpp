@@ -41,7 +41,7 @@ namespace
 
             if (_armed)
             {
-                item.set_type(ItemType::THROWABLE);
+                item.set_type(ItemApplication::THROWABLE);
                 _armed_timer_ms += delta_time_ms;
                 if (_armed_timer_ms >= explosion_ms)
                 {
@@ -166,7 +166,7 @@ entt::entity prefabs::Bomb::create(float pos_x_center, float pos_y_center)
     physics.set_friction(0.01f);
     physics.set_bounciness(0.35f);
 
-    ItemComponent item(ItemType::ACTIVABLE, ItemSlot::ACTIVE);
+    ItemComponent item(ItemType::BOMB, ItemApplication::ACTIVABLE, ItemSlot::ACTIVE);
     item.set_weight(2);
     item.set_carrying_offset({0.1f, 0.0f});
 

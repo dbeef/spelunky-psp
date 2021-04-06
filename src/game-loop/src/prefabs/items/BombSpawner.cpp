@@ -48,7 +48,7 @@ entt::entity prefabs::BombSpawner::create()
     ActivableComponent activable;
     activable.activate_combination = { InputEvent::OUT_BOMB_PRESSED };
 
-    registry.emplace<ItemComponent>(entity, ItemType::ACTIVABLE, ItemSlot::OTHER);
+    registry.emplace<ItemComponent>(entity, ItemType::BOMB_SPAWNER, ItemApplication::ACTIVABLE, ItemSlot::OTHER);
     registry.emplace<ScriptingComponent>(entity, std::make_shared<BombSpawnerScript>());
     registry.emplace<ActivableComponent>(entity, activable);
 

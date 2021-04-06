@@ -1,3 +1,4 @@
+#include "populator/Populator.hpp"
 #include "prefabs/main-dude/MainDude.hpp"
 #include "prefabs/ui/LevelSummaryOverlay.hpp"
 
@@ -11,6 +12,7 @@
 #include "system/ScriptingSystem.hpp"
 #include "system/PhysicsSystem.hpp"
 #include "system/AnimationSystem.hpp"
+#include "system/ItemSystem.hpp"
 
 #include "EntityRegistry.hpp"
 #include "logger/log.h"
@@ -27,11 +29,13 @@ GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32
     auto& scripting_system = game_loop._scripting_system;
     auto& physics_system = game_loop._physics_system;
     auto& animation_system = game_loop._animation_system;
+    auto& item_system = game_loop._item_system;
 
     rendering_system->update(delta_time_ms);
     scripting_system->update(delta_time_ms);
     physics_system->update(delta_time_ms);
     animation_system->update(delta_time_ms);
+    item_system->update(delta_time_ms);
 
     auto& dude = registry.get<MainDudeComponent>(_main_dude);
 
@@ -76,6 +80,8 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     _main_dude = prefabs::MainDude::create(pos_x, pos_y);
     auto& dude = registry.get<MainDudeComponent>(_main_dude);
     dude.enter_level_summary_state();
+
+    populator::generate_inventory_items(_main_dude);
 
     rendering_system->sort();
 }

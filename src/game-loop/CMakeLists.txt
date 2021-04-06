@@ -264,6 +264,7 @@ add_library(GameLoop STATIC
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
         src/other/ParticleGenerator.cpp
+        interface/other/ItemType.hpp
 )
 
 target_include_directories(GameLoop
