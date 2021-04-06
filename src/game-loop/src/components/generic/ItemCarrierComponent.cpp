@@ -211,12 +211,12 @@ std::vector<ItemType> ItemCarrierComponent::get_items() const
 
     std::vector<ItemType> out;
     std::vector<entt::entity> item_entities =
-            {
-                    _slots.active_item,
-                    _slots.passive_item_feet,
-                    _slots.passive_item_hands,
-                    _slots.passive_item_back
-            };
+    {
+            _slots.active_item,
+            _slots.passive_item_feet,
+            _slots.passive_item_hands,
+            _slots.passive_item_back
+    };
     std::copy(_slots.other.begin(), _slots.other.end(), std::back_inserter(item_entities));
 
     for (const auto& entity : item_entities)
