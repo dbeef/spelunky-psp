@@ -204,3 +204,31 @@ bool ItemCarrierComponent::is_carried(entt::entity item_entity) const
            item_entity == _slots.active_item ||
            std::find(_slots.other.begin(), _slots.other.end(), item_entity) != _slots.other.end();
 }
+
+std::vector<ItemType> ItemCarrierComponent::get_items() const
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    std::vector<ItemType> out;
+    std::vector<entt::entity> item_entities =
+            {
+                    _slots.active_item,
+                    _slots.passive_item_feet,
+                    _slots.passive_item_hands,
+                    _slots.passive_item_back
+            };
+    std::copy(_slots.other.begin(), _slots.other.end(), std::back_inserter(item_entities));
+
+    for (const auto& entity : item_entities)
+    {
+        if (entity == entt::null)
+        {
+            continue;
+        }
+
+        auto &item_component = registry.get<ItemComponent>(entity);
+        out.push_back(item_component.get_type());
+    }
+
+    return out;
+}

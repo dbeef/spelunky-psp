@@ -4,10 +4,12 @@
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/HorizontalOrientationComponent.hpp"
+#include "other/ItemType.hpp"
 #include "EntityRegistry.hpp"
 #include "entt/entt.hpp"
 
 #include <vector>
+#include <algorithm>
 
 class ItemCarrierComponent
 {
@@ -27,6 +29,8 @@ public:
 
     void update_carried_items_positions(PositionComponent& position);
     void update_carried_items_orientation(HorizontalOrientationComponent& orientation);
+
+    std::vector<ItemType> get_items() const;
 
 private:
 

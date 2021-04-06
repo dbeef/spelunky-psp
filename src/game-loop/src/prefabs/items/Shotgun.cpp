@@ -105,7 +105,7 @@ entt::entity prefabs::Shotgun::create(float pos_x_center, float pos_y_center)
     ActivableComponent activable;
     activable.activate_combination = { InputEvent::THROWING_PRESSED };
 
-    ItemComponent item(ItemType::ACTIVABLE, ItemSlot::ACTIVE);
+    ItemComponent item(ItemType::SHOTGUN, ItemApplication::ACTIVABLE, ItemSlot::ACTIVE);
     item.set_carrying_offset({0.1f, 0.1f});
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);

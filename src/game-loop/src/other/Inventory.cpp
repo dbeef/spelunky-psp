@@ -13,6 +13,7 @@ void Inventory::set_starting_inventory()
     _bombs = 4;
     _ropes = 4;
     _dollars = 0;
+    _items.clear();
 }
 
 void Inventory::remove_hearts(uint16_t amount)
@@ -25,4 +26,19 @@ void Inventory::add_dollars(uint16_t amount)
 {
     _dollars += amount;
     notify(InventoryEvent::DOLLARS_COUNT_CHANGED);
+}
+
+const std::vector<ItemType> &Inventory::get_items() const
+{
+    return _items;
+}
+
+void Inventory::set_items(const std::vector<ItemType> &items)
+{
+    _items = items;
+}
+
+void Inventory::clear_items()
+{
+    _items.clear();
 }

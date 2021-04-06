@@ -17,6 +17,7 @@
 #include "system/AnimationSystem.hpp"
 #include "system/InputSystem.hpp"
 
+#include "populator/Populator.hpp"
 #include "logger/log.h"
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
@@ -85,6 +86,9 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
     model_view_camera.set_x_not_rounded(game_loop._viewport->get_width_world_units() / 4.0f);
     model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
     model_view_camera.update_gl_modelview_matrix();
+
+    auto& inventory = Inventory::instance();
+    inventory.clear_items();
 
     MapTile* entrance = nullptr;
     Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::EXIT, entrance);

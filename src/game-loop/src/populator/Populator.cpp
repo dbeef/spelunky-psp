@@ -3,6 +3,8 @@
 
 #include "components/specialized/LevelSummaryTracker.hpp"
 #include "components/generic/CollectibleComponent.hpp"
+#include "components/generic/ItemCarrierComponent.hpp"
+#include "components/generic/PositionComponent.hpp"
 
 #include "prefabs/collectibles/SingleGoldBar.hpp"
 #include "prefabs/collectibles/TripleGoldBar.hpp"
@@ -11,6 +13,18 @@
 #include "prefabs/items/Jar.hpp"
 #include "prefabs/items/Crate.hpp"
 #include "prefabs/items/Chest.hpp"
+#include "prefabs/items/Arrow.hpp"
+#include "prefabs/items/Rope.hpp"
+#include "prefabs/items/Pistol.hpp"
+#include "prefabs/items/Bomb.hpp"
+#include "prefabs/items/Cape.hpp"
+#include "prefabs/items/Shotgun.hpp"
+#include "prefabs/items/Skull.hpp"
+#include "prefabs/items/Rock.hpp"
+#include "prefabs/items/Jar.hpp"
+#include "prefabs/items/Crate.hpp"
+#include "prefabs/items/Chest.hpp"
+#include "prefabs/items/Jetpack.hpp"
 #include "prefabs/traps/Spikes.hpp"
 #include "prefabs/traps/ArrowTrap.hpp"
 #include "prefabs/npc/Snake.hpp"
@@ -22,6 +36,42 @@
 
 #include "EntityRegistry.hpp"
 #include "Level.hpp"
+
+void populator::generate_inventory_items(entt::entity main_dude)
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    auto& inventory = Inventory::instance();
+    auto& dude_item_carrier_component = registry.get<ItemCarrierComponent>(main_dude);
+
+    for (const auto& item_type : inventory.get_items())
+    {
+        entt::entity item = entt::null;
+
+        switch (item_type)
+        {
+            case ItemType::ARROW: item = prefabs::Arrow::create(); break;
+            case ItemType::BOMB: item = prefabs::Bomb::create(); break;
+            case ItemType::CAPE: item = prefabs::Cape::create(); break;
+            case ItemType::CHEST: item = prefabs::Chest::create(); break;
+            case ItemType::CRATE: item = prefabs::Crate::create(); break;
+            case ItemType::JAR: item = prefabs::Jar::create(); break;
+            case ItemType::JETPACK: item = prefabs::Jetpack::create(); break;
+            case ItemType::PISTOL: item = prefabs::Pistol::create(); break;
+            case ItemType::ROCK: item = prefabs::Rock::create(); break;
+            case ItemType::ROPE: item = prefabs::Rope::create(); break;
+            case ItemType::SHOTGUN: item = prefabs::Shotgun::create(); break;
+            case ItemType::SKULL: item = prefabs::Skull::create(); break;
+            // These items are added by default when creating main dude instance:
+            case ItemType::WHIP:
+            case ItemType::BOMB_SPAWNER:
+            case ItemType::ROPE_SPAWNER:
+            default: continue;
+        }
+
+        dude_item_carrier_component.pick_up_item(item, main_dude);
+    }
+}
 
 void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
 {

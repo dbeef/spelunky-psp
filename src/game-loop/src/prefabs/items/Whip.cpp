@@ -141,7 +141,7 @@ entt::entity prefabs::Whip::create(float pos_x_center, float pos_y_center)
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<PhysicsComponent>(entity, width, height);
-    registry.emplace<ItemComponent>(entity, ItemType::ACTIVABLE, ItemSlot::OTHER);
+    registry.emplace<ItemComponent>(entity, ItemType::WHIP, ItemApplication::ACTIVABLE, ItemSlot::OTHER);
     registry.emplace<ScriptingComponent>(entity, std::make_shared<WhipScript>());
     registry.emplace<HorizontalOrientationComponent>(entity);
     registry.emplace<ActivableComponent>(entity, activable);

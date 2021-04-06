@@ -1,9 +1,10 @@
 #pragma once
 
+#include "other/ItemType.hpp"
 #include "entt/entt.hpp"
 #include "Point2D.hpp"
 
-enum class ItemType
+enum class ItemApplication
 {
     THROWABLE,
     ACTIVABLE,
@@ -26,8 +27,9 @@ class ItemComponent
 public:
 
     ItemComponent() = default;
-    ItemComponent(ItemType type, ItemSlot slot)
+    ItemComponent(ItemType type, ItemApplication application, ItemSlot slot)
         : _type(type)
+        , _application(application)
         , _slot(slot)
     {}
 
@@ -43,15 +45,17 @@ public:
     void set_weight(float weight_kilos) { _weight_kilos = weight_kilos; };
     float get_weight_kilos() const { return _weight_kilos; };
 
-    ItemSlot get_slot() const { return _slot; }
     ItemType get_type() const { return _type; }
+    ItemSlot get_slot() const { return _slot; }
+    ItemApplication get_application() const { return _application; }
 
     void set_slot(ItemSlot slot) { _slot = slot; }
-    void set_type(ItemType type) { _type = type; }
+    void set_type(ItemApplication application) { _application = application; }
 
 private:
 
     ItemType _type{};
+    ItemApplication _application{};
     ItemSlot _slot{};
     entt::entity _carrier = entt::null;
     Point2D _carrying_offset = {0.0f, 0.0f};

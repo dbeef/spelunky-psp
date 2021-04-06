@@ -13,4 +13,5 @@ namespace populator
 {
     void generate_loot(std::shared_ptr<LevelSummaryTracker>&);
     void generate_npc(std::shared_ptr<LevelSummaryTracker>&);
+    void generate_inventory_items(entt::entity main_dude);
 }
