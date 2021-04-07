@@ -85,6 +85,7 @@ add_library(GameLoop STATIC
         include/components/generic/MeshComponent.hpp
         include/components/generic/ActivableComponent.hpp
         include/components/generic/NpcTypeComponent.hpp
+        include/components/generic/ClimbingComponent.hpp
         include/components/specialized/MainDudeComponent.hpp
         include/components/specialized/LevelSummaryTracker.hpp
         include/components/specialized/HudOverlayComponent.hpp
@@ -256,16 +257,15 @@ add_library(GameLoop STATIC
         include/populator/Populator.hpp
         include/populator/Spawner.hpp
 
+        src/other/ParticleGenerator.cpp
         src/other/Inventory.cpp
         interface/other/PhysicsComponentType.hpp
         interface/other/Inventory.hpp
         interface/other/InventoryEvent.hpp
+        interface/other/ItemType.hpp
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
-        src/other/ParticleGenerator.cpp
-        interface/other/ItemType.hpp
-        include/components/generic/ClimbingComponent.hpp
 )
 
 target_include_directories(GameLoop
