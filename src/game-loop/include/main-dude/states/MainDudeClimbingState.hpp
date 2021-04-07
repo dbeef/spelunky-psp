@@ -2,7 +2,7 @@
 
 #include "main-dude/states/MainDudeBaseState.hpp"
 
-class MainDudeClimbingLadderState : public MainDudeBaseState
+class MainDudeClimbingState : public MainDudeBaseState
 {
 public:
 

@@ -9,7 +9,7 @@
 #include "MapTileType.hpp"
 
 #include "main-dude/states/MainDudeRunningState.hpp"
-#include "main-dude/states/MainDudeClimbingLadderState.hpp"
+#include "main-dude/states/MainDudeClimbingState.hpp"
 #include "main-dude/states/MainDudeExitingState.hpp"
 #include "main-dude/states/MainDudeStandingState.hpp"
 #include "main-dude/states/MainDudePushingState.hpp"
@@ -26,15 +26,29 @@
 #include "main-dude/states/MainDudeStunnedState.hpp"
 #include "main-dude/MainDudeEvent.hpp"
 
+#include "components/generic/PhysicsComponent.hpp"
+#include "components/generic/PositionComponent.hpp"
+#include "components/generic/QuadComponent.hpp"
+#include "components/generic/AnimationComponent.hpp"
+#include "components/generic/ClimbingComponent.hpp"
+
 #include <vector>
-#include <components/generic/PhysicsComponent.hpp>
-#include <components/generic/PositionComponent.hpp>
-#include <components/generic/QuadComponent.hpp>
-#include <components/generic/AnimationComponent.hpp>
+#include <memory>
 
 class MainDudeBaseState;
 class Input;
 class MapTile;
+
+class MainDudeClimbingObserver : Observer<ClimbingEvent>
+{
+public:
+    explicit MainDudeClimbingObserver(entt::entity main_dude) : _main_dude(main_dude) {};
+    void on_notify(const ClimbingEvent* event) override;
+    ClimbingEvent get_last_event() const { return _last_event; }
+private:
+    const entt::entity _main_dude;
+    ClimbingEvent _last_event{};
+};
 
 class MainDudeComponent : public Subject<MainDudeEvent>
 {
@@ -49,8 +63,14 @@ public:
     void enter_dead_state();
     void enter_standing_state();
     void enter_throwing_state();
+    void enter_climbing_state();
 
     bool entered_door() const { return _other.entered_door; }
+
+    MainDudeClimbingObserver* get_climbing_observer()
+    {
+        return _climbing_observer.get();
+    }
 
 private:
 
@@ -72,7 +92,7 @@ private:
     friend class MainDudeThrowingState;
     friend class MainDudeExitingState;
     friend class MainDudeLevelSummaryState;
-    friend class MainDudeClimbingLadderState;
+    friend class MainDudeClimbingState;
     friend class MainDudeCliffHangingState;
     friend class MainDudeLookingUpState;
     friend class MainDudeRunningLookingUpState;
@@ -90,7 +110,7 @@ private:
         MainDudeJumpingState jumping;
         MainDudeThrowingState throwing;
         MainDudeExitingState exiting;
-        MainDudeClimbingLadderState climbing;
+        MainDudeClimbingState climbing;
         MainDudeCliffHangingState cliff_hanging;
         MainDudeLookingUpState looking_up;
         MainDudeRunningLookingUpState running_looking_up;
@@ -106,6 +126,8 @@ private:
     } _other;
 
     entt::entity _owner = entt::null;
+
+    std::shared_ptr<MainDudeClimbingObserver> _climbing_observer;
 
     static constexpr float DEFAULT_DELTA_X = 0.01f;
     static constexpr float DEFAULT_MAX_X_VELOCITY = 0.050f;

@@ -86,16 +86,6 @@ MainDudeBaseState *MainDudeRunningState::update(MainDudeComponent& dude, uint32_
             return &dude._states.exiting;
         }
 
-        const auto* ladder_tile = dude.is_overlaping_tile(MapTileType::LADDER, physics, position);
-        const auto* ladder_deck_tile = dude.is_overlaping_tile(MapTileType::LADDER_DECK, physics, position);
-
-        if (ladder_tile || ladder_deck_tile)
-        {
-            const auto* tile = ladder_tile ? ladder_tile : ladder_deck_tile;
-            position.x_center = tile->x + quad.get_quad_width() / 2;
-            return &dude._states.climbing;
-        }
-
         return &dude._states.running_looking_up;
     }
 

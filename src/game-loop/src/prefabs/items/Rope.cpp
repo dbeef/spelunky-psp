@@ -21,14 +21,21 @@
 
 namespace
 {
+    const float max_distance_up = MapTile::PHYSICAL_HEIGHT * 8.0f;
+
     class RopeScript final : public ScriptBase
     {
     public:
+
+        explicit RopeScript(Point2D throw_origin) : _throw_origin(throw_origin)
+        {
+        }
 
         void update(entt::entity owner, uint32_t delta_time_ms) override
         {
             auto& registry = EntityRegistry::instance().get_registry();
             auto& item = registry.get<ItemComponent>(owner);
+            auto& position = registry.get<PositionComponent>(owner);
 
             if (!_thrown)
             {
@@ -38,8 +45,6 @@ namespace
                     auto &carrier = item.get_item_carrier();
                     carrier.put_down_active_item();
                     registry.remove<ActivableComponent>(owner);
-
-                    auto& position = registry.get<PositionComponent>(owner);
 
                     position.x_center = std::floor(position.x_center) + MapTile::PHYSICAL_WIDTH / 2;
                     position.y_center = std::floor(position.y_center) + MapTile::PHYSICAL_HEIGHT / 2;
@@ -51,7 +56,7 @@ namespace
             {
                 auto& physics = registry.get<PhysicsComponent>(owner);
 
-                if (physics.is_upper_collision())
+                if (physics.is_upper_collision() || std::fabs(_throw_origin.y - position.y_center) >= max_distance_up)
                 {
                     auto& quad = registry.get<QuadComponent>(owner);
                     quad.frame_changed(CollectiblesSpritesheetFrames::ROPE_ENDING);
@@ -69,17 +74,26 @@ namespace
                 _spawning_timer_ms += delta_time_ms;
                 if (_spawning_timer_ms > 30)
                 {
-                    auto& position = registry.get<PositionComponent>(owner);
-
                     float element_x_center = position.x_center;
                     float element_y_center = position.y_center;
 
                     element_y_center += 0.5f * MapTile::PHYSICAL_HEIGHT * (_spawned_rope_chain_elements + 1);
 
-                    if (Level::instance().get_tile_batch().map_tiles[static_cast<int>(element_x_center)][static_cast<int>(element_y_center)]->collidable)
+                    auto* overlapped_tile = Level::instance().get_tile_batch().map_tiles[static_cast<int>(element_x_center)][static_cast<int>(element_y_center)];
+
+                    if (overlapped_tile->collidable)
                     {
                         _dispatched_rope_chain = true;
                         return;
+                    }
+
+                    if (_spawned_rope_chain_elements != 0)
+                    {
+                        Point2D new_chain_position(element_x_center, element_y_center);
+                        if (new_chain_position == _last_spawned_chain)
+                        {
+                            return;
+                        }
                     }
 
                     _spawned_rope_chain_elements++;
@@ -90,11 +104,16 @@ namespace
                     }
 
                     prefabs::RopeChainElement::create(element_x_center, element_y_center);
+                    overlapped_tile->climbable = true;
                     _spawning_timer_ms = 0;
+                    _last_spawned_chain = Point2D(element_x_center, element_y_center);
                 }
             }
         }
     private:
+        Point2D _throw_origin;
+        Point2D _last_spawned_chain;
+
         uint8_t _spawned_rope_chain_elements = 0;
         uint32_t _spawning_timer_ms = 0;
 
@@ -133,7 +152,7 @@ entt::entity prefabs::Rope::create(float pos_x_center, float pos_y_center)
     registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_2_ITEMS, CameraType::MODEL_VIEW_SPACE);
     registry.emplace<PhysicsComponent>(entity, width, height);
     registry.emplace<ItemComponent>(entity, item);
-    registry.emplace<ScriptingComponent>(entity, std::make_shared<RopeScript>());
+    registry.emplace<ScriptingComponent>(entity, std::make_shared<RopeScript>(Point2D(pos_x_center, pos_y_center)));
     registry.emplace<HorizontalOrientationComponent>(entity);
     registry.emplace<ActivableComponent>(entity, activable);
     registry.emplace<GiveProjectileDamageComponent>(entity, 1);

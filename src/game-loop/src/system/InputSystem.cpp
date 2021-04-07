@@ -4,10 +4,13 @@
 #include "components/generic/ItemComponent.hpp"
 #include "components/generic/OpenableComponent.hpp"
 #include "components/generic/ActivableComponent.hpp"
+#include "components/generic/ClimbingComponent.hpp"
+
 #include "system/InputSystem.hpp"
 #include "EntityRegistry.hpp"
 #include "Input.hpp"
 #include "audio/Audio.hpp"
+#include "Level.hpp"
 
 #include <algorithm>
 
@@ -21,6 +24,19 @@ namespace
     constexpr float CRAWLING_DELTA_X = 0.008f;
     constexpr float CLIMBING_VELOCITY_Y = 0.025f;
     constexpr float JUMP_SPEED = 0.165f;
+
+    bool is_end_of_ladder(MapTile *tile)
+    {
+        if (tile->y - 1 >= 0)
+        {
+            auto* tile_above = Level::instance().get_tile_batch().map_tiles[tile->x][tile->y - 1];
+            return !tile_above->climbable;
+        }
+        else
+        {
+            return true;
+        }
+    }
 
     entt::entity find_overlaping_items(PositionComponent& carrier_position, PhysicsComponent& carrier_physics, ItemCarrierComponent& carrier)
     {
@@ -57,7 +73,7 @@ void InputSystem::update_controllable_bodies()
     auto &registry = EntityRegistry::instance().get_registry();
     const auto controllable_bodies = registry.view<InputComponent, PhysicsComponent>();
 
-    controllable_bodies.each([&](InputComponent &controllable_input, PhysicsComponent &controllable_physics)
+    controllable_bodies.each([&](entt::entity entity, InputComponent &controllable_input, PhysicsComponent &controllable_physics)
     {
         for (const auto &allowed_event : controllable_input.allowed_events)
         {
@@ -114,23 +130,50 @@ void InputSystem::update_controllable_bodies()
                     }
                     continue;
                 }
-                // FIXME: ClimbingSystem?
-                //case InputEvent::UP:
-                //{
-                //    if (consume(InputEvent::UP))
-                //    {
-                //        physics_component.set_y_velocity(-0.025f);
-                //    }
-                //    continue;
-                //}
-                //case InputEvent::DOWN
-                //{
-                //    if (consume(InputEvent::DOWN))
-                //    {
-                //        physics_component.set_y_velocity(0.025f);
-                //    }
-                //    continue;
-                //}
+                case InputEvent::UP:
+                case InputEvent::DOWN:
+                {
+                    if (registry.has<ClimbingComponent>(entity))
+                    {
+                        auto& position = registry.get<PositionComponent>(entity);
+                        auto* overlapped_tile = Level::instance().get_tile_batch().map_tiles[static_cast<int>(position.x_center)][static_cast<int>(position.y_center)];
+
+                        if (overlapped_tile->climbable)
+                        {
+                            if (consume(allowed_event))
+                            {
+                                const float climbing_velocity = allowed_event == InputEvent::UP ? -0.04 : 0.04;
+
+                                controllable_physics.set_y_velocity(climbing_velocity);
+                                controllable_physics.set_x_velocity(0);
+                                position.x_center = overlapped_tile->get_center_x();
+
+                                auto& climbing_component = registry.get<ClimbingComponent>(entity);
+
+                                if (allowed_event == InputEvent::UP && is_end_of_ladder(overlapped_tile))
+                                {
+                                    controllable_physics.set_y_velocity(0);
+                                }
+
+                                switch(overlapped_tile->map_tile_type)
+                                {
+                                    case MapTileType::LADDER:
+                                    case MapTileType::LADDER_DECK:
+                                    {
+                                        climbing_component.notify({ClimbingEventType::STARTED_CLIMBING_LADDER});
+                                        break;
+                                    }
+                                    default:
+                                    {
+                                        climbing_component.notify({ClimbingEventType::STARTED_CLIMBING_ROPE});
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
                 default: continue;
             }
         }

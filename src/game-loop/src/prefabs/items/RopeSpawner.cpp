@@ -26,7 +26,10 @@ namespace
 
                 if (!item_carrier.has_active_item())
                 {
-                    auto rope = prefabs::Rope::create();
+                    auto item_carrier_entity = item.get_item_carrier_entity();
+                    auto item_carrier_position = registry.get<PositionComponent>(item_carrier_entity);
+
+                    auto rope = prefabs::Rope::create(item_carrier_position.x_center, item_carrier_position.y_center);
 
                     // References may become invalid after creating new components (pool resize) - refreshing:
                     item = registry.get<ItemComponent>(owner);

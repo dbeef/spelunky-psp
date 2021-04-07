@@ -23,7 +23,7 @@ add_library(GameLoop STATIC
         src/main-dude/MainDudeComponent.cpp
         src/main-dude/states/MainDudeStandingState.cpp
         src/main-dude/states/MainDudeCliffHangingState.cpp
-        src/main-dude/states/MainDudeClimbingLadderState.cpp
+        src/main-dude/states/MainDudeClimbingState.cpp
         src/main-dude/states/MainDudeLevelSummaryState.cpp
         src/main-dude/states/MainDudeExitingState.cpp
         src/main-dude/states/MainDudeThrowingState.cpp
@@ -38,7 +38,7 @@ add_library(GameLoop STATIC
         src/main-dude/states/MainDudeDeadState.cpp
         src/main-dude/states/MainDudeStunnedState.cpp
         include/main-dude/states/MainDudeBaseState.hpp
-        include/main-dude/states/MainDudeClimbingLadderState.hpp
+        include/main-dude/states/MainDudeClimbingState.hpp
         include/main-dude/states/MainDudeLevelSummaryState.hpp
         include/main-dude/states/MainDudeRunningState.hpp
         include/main-dude/states/MainDudeStandingState.hpp
@@ -85,6 +85,7 @@ add_library(GameLoop STATIC
         include/components/generic/MeshComponent.hpp
         include/components/generic/ActivableComponent.hpp
         include/components/generic/NpcTypeComponent.hpp
+        include/components/generic/ClimbingComponent.hpp
         include/components/specialized/MainDudeComponent.hpp
         include/components/specialized/LevelSummaryTracker.hpp
         include/components/specialized/HudOverlayComponent.hpp
@@ -256,15 +257,15 @@ add_library(GameLoop STATIC
         include/populator/Populator.hpp
         include/populator/Spawner.hpp
 
+        src/other/ParticleGenerator.cpp
         src/other/Inventory.cpp
         interface/other/PhysicsComponentType.hpp
         interface/other/Inventory.hpp
         interface/other/InventoryEvent.hpp
+        interface/other/ItemType.hpp
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
-        src/other/ParticleGenerator.cpp
-        interface/other/ItemType.hpp
 )
 
 target_include_directories(GameLoop
