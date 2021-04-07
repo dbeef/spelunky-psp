@@ -40,7 +40,7 @@ MainDudeComponent::MainDudeComponent(entt::entity owner) : _owner(owner)
 MainDudeComponent::MainDudeComponent(const MainDudeComponent& other) : _owner(other._owner)
 {
     _states.current = &_states.standing;
-    _climbing_observer = std::make_shared<MainDudeClimbingObserver>(other._owner);
+    _climbing_observer = other._climbing_observer;
 }
 
 void MainDudeComponent::update(uint32_t delta_time_ms)
@@ -170,7 +170,9 @@ void MainDudeClimbingObserver::on_notify(const ClimbingEvent *event)
     auto& registry = EntityRegistry::instance().get_registry();
     auto& main_dude_component = registry.get<MainDudeComponent>(_main_dude);
 
-    switch (event->event_type)
+    _last_event = *event;
+
+    switch (_last_event.event_type)
     {
         case ClimbingEventType::STARTED_CLIMBING_LADDER:
         case ClimbingEventType::STARTED_CLIMBING_ROPE:

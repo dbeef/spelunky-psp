@@ -1,12 +1,12 @@
 #include "EntityRegistry.hpp"
 #include "Level.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
-#include "main-dude/states/MainDudeClimbingLadderState.hpp"
+#include "main-dude/states/MainDudeClimbingState.hpp"
 #include "components/generic/InputComponent.hpp"
 #include "Input.hpp"
 #include "audio/Audio.hpp"
 
-void MainDudeClimbingLadderState::enter(MainDudeComponent& dude)
+void MainDudeClimbingState::enter(MainDudeComponent& dude)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     const auto& owner = dude._owner;
@@ -34,13 +34,29 @@ void MainDudeClimbingLadderState::enter(MainDudeComponent& dude)
     physics.set_x_velocity(0);
     physics.set_y_velocity(0);
     physics.disable_gravity();
-    quad.frame_changed(MainDudeSpritesheetFrames::CLIMBING_LADDER_0_FIRST);
-    animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::CLIMBING_LADDER_0_FIRST),
-                    static_cast<std::size_t>(MainDudeSpritesheetFrames::CLIMBING_LADDER_5_LAST),
-    75, true);
+
+    switch (dude.get_climbing_observer()->get_last_event().event_type)
+    {
+        case ClimbingEventType::STARTED_CLIMBING_LADDER:
+        {
+            quad.frame_changed(MainDudeSpritesheetFrames::CLIMBING_LADDER_0_FIRST);
+            animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::CLIMBING_LADDER_0_FIRST),
+                            static_cast<std::size_t>(MainDudeSpritesheetFrames::CLIMBING_LADDER_5_LAST),
+                            75, true);
+            break;
+        }
+        case ClimbingEventType::STARTED_CLIMBING_ROPE:
+        {
+            quad.frame_changed(MainDudeSpritesheetFrames::CLIMBING_ROPE_0_FIRST);
+            animation.start(static_cast<std::size_t>(MainDudeSpritesheetFrames::CLIMBING_ROPE_0_FIRST),
+                            static_cast<std::size_t>(MainDudeSpritesheetFrames::CLIMBING_ROPE_11_LAST),
+                            75, true);
+            break;
+        }
+    }
 }
 
-MainDudeBaseState* MainDudeClimbingLadderState::update(MainDudeComponent& dude, uint32_t delta_time_ms)
+MainDudeBaseState* MainDudeClimbingState::update(MainDudeComponent& dude, uint32_t delta_time_ms)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     const auto& owner = dude._owner;
@@ -55,7 +71,7 @@ MainDudeBaseState* MainDudeClimbingLadderState::update(MainDudeComponent& dude, 
     if (input.jumping().changed() && input.jumping().value())
     {
         // FIXME: InputSystem checks for bottom collision which is not true in this case
-        physics.set_y_velocity(physics.get_y_velocity() - MainDudeComponent::JUMP_SPEED);
+        physics.set_y_velocity(-MainDudeComponent::JUMP_SPEED);
         return &dude._states.jumping;
     }
 
@@ -108,7 +124,7 @@ MainDudeBaseState* MainDudeClimbingLadderState::update(MainDudeComponent& dude, 
     return this;
 }
 
-void MainDudeClimbingLadderState::exit(MainDudeComponent& dude)
+void MainDudeClimbingState::exit(MainDudeComponent& dude)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     const auto& owner = dude._owner;
@@ -117,7 +133,7 @@ void MainDudeClimbingLadderState::exit(MainDudeComponent& dude)
     physics.enable_gravity();
 }
 
-void MainDudeClimbingLadderState::play_sound()
+void MainDudeClimbingState::play_sound()
 {
     if (_climbing_ladder_sound_playing)
     {

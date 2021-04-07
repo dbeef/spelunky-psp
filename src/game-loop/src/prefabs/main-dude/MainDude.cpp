@@ -55,13 +55,9 @@ namespace prefabs
         MainDudeComponent main_dude(entity);
         registry.emplace<MainDudeComponent>(entity, main_dude);
 
-        // FIXME: Rework MainDudeComponent to be simply scripting component; this is prone to component relocation:
-        {
-            auto& main_dude_component = registry.get<MainDudeComponent>(entity);
-            ClimbingComponent climbing;
-            climbing.add_observer(reinterpret_cast<Observer<ClimbingEvent> *>(main_dude_component.get_observer()));
-            registry.emplace<ClimbingComponent>(entity, climbing);
-        }
+        ClimbingComponent climbing;
+        climbing.add_observer(reinterpret_cast<Observer<ClimbingEvent> *>(main_dude.get_climbing_observer()));
+        registry.emplace<ClimbingComponent>(entity, climbing);
 
         {
             auto& carrier = registry.get<ItemCarrierComponent>(entity);
