@@ -31,6 +31,9 @@ public:
     float get_quad_width() const { return _quad_dimensions.width; }
     float get_quad_height() const { return _quad_dimensions.height; }
 
+    void set_quad_width(float width) { _quad_dimensions.width = width; }
+    void set_quad_height(float height) { _quad_dimensions.height = height; }
+
     Quad& get_quad() { return _quad; }
 
     void set_vertical_flip(bool v) { _vertical_flip = v; }

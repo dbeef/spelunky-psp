@@ -1,5 +1,7 @@
 #include "main-dude/MainDudeObservers.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
+#include "components/generic/BlinkingComponent.hpp"
+#include "components/damage/GiveNpcTouchDamageComponent.hpp"
 #include "EntityRegistry.hpp"
 #include "other/Inventory.hpp"
 
@@ -31,6 +33,14 @@ void MainDudeNpcDamageObserver::on_notify(const NpcDamage_t *event)
     if (Inventory::instance().get_hearts() == 0)
     {
         main_dude_component.enter_dead_state();
+    }
+    else if (!registry.has<BlinkingComponent>(_main_dude))
+    {
+        const int interval_ms = 50;
+        const int total_time = GiveNpcTouchDamageComponent::TOP_COOLDOWN_MS;
+        const int remove_on_done = true;
+
+        registry.emplace<BlinkingComponent>(_main_dude, interval_ms, total_time, remove_on_done);
     }
 }
 

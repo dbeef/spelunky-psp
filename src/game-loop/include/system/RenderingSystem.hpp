@@ -24,6 +24,7 @@ private:
     void use_camera(CameraType camera_type);
     void use_model_view_camera();
     void use_screen_space_camera();
+    void update_blinking(std::uint32_t delta_time_ms) const;
 
     struct
     {

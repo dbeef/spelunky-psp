@@ -88,6 +88,7 @@ add_library(GameLoop STATIC
         include/components/generic/ActivableComponent.hpp
         include/components/generic/NpcTypeComponent.hpp
         include/components/generic/ClimbingComponent.hpp
+        include/components/generic/BlinkingComponent.hpp
         include/components/specialized/MainDudeComponent.hpp
         include/components/specialized/LevelSummaryTracker.hpp
         include/components/specialized/HudOverlayComponent.hpp

@@ -5,16 +5,17 @@
 #include "graphics_utils/DebugGlCall.hpp"
 #include "components/generic/TextComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
-#include "components/generic/PositionComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
+#include "components/generic/BlinkingComponent.hpp"
 
 void RenderingSystem::update(std::uint32_t delta_time_ms)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
-    registry.view<QuadComponent>().each([&registry](entt::entity e, QuadComponent &quad) { quad.update(e); });
-    registry.view<TextComponent>().each([&registry](entt::entity e, TextComponent &text) { text.update(e); });
+    registry.view<QuadComponent>().each([](entt::entity e, QuadComponent &quad) { quad.update(e); });
+    registry.view<TextComponent>().each([](entt::entity e, TextComponent &text) { text.update(e); });
 
+    update_blinking(delta_time_ms);
     sort(); // FIXME: Sorting components every frame!
 
     // FIXME: Pointers to meshes may become invalidated after entity pool resize. Same as BombSpawner.cpp:31.
@@ -89,5 +90,46 @@ RenderingSystem::RenderingSystem(const std::shared_ptr<Viewport> &viewport)
     _cameras.model_view.calculate_coefficients();
     _cameras.screen_space.calculate_coefficients();
     use_camera(CameraType::SCREEN_SPACE);
+}
+
+void RenderingSystem::update_blinking(std::uint32_t delta_time_ms) const
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+    registry.view<BlinkingComponent, QuadComponent>().each([&](entt::entity e,
+                                                               BlinkingComponent& blinking,
+                                                               QuadComponent& quad)
+   {
+       // In case changed:
+
+       if (quad.get_quad_width() != 0.0f)
+       {
+           blinking.set_original_quad_width(quad.get_quad_width());
+       }
+
+       if (quad.get_quad_height() != 0.0f)
+       {
+           blinking.set_original_quad_height(quad.get_quad_height());
+       }
+
+       blinking.update(delta_time_ms);
+
+       // Now actual blinking:
+
+       if (blinking.is_transparent() && !blinking.is_for_removal())
+       {
+           quad.set_quad_width(0.0f);
+           quad.set_quad_height(0.0f);
+       }
+       else
+       {
+           quad.set_quad_width(blinking.get_original_quad_width());
+           quad.set_quad_height(blinking.get_original_quad_height());
+       }
+
+       if (blinking.is_for_removal())
+       {
+           registry.remove<BlinkingComponent>(e);
+       }
+   });
 }
 

@@ -271,9 +271,6 @@ void DamageSystem::update_npc_touch_damage(std::uint32_t delta_time_ms)
                                            PhysicsComponent& give_damage_physics,
                                            PositionComponent& give_damage_position)
         {
-            // TODO: Rendering system should somehow render just-taken-damage entity as half-transparent or blinking
-            //       between 0 to 1 opacity
-
             if (give_damage.cooldown_ms > 0)
             {
                 give_damage.cooldown_ms -= delta_time_ms;
