@@ -284,7 +284,7 @@ void DamageSystem::update_npc_touch_damage(std::uint32_t delta_time_ms)
             {
                 take_damage_hitpoints.remove_hitpoints(default_npc_touch_damage);
                 take_damage.notify(default_npc_touch_damage);
-                give_damage.cooldown = GiveNpcTouchDamageComponent::TOP_COOLDOWN;
+                give_damage.cooldown = GiveNpcTouchDamageComponent::TOP_COOLDOWN_MS;
 
                 if (take_damage_hitpoints.get_hitpoints() <= 0)
                 {
