@@ -274,9 +274,9 @@ void DamageSystem::update_npc_touch_damage(std::uint32_t delta_time_ms)
             // TODO: Rendering system should somehow render just-taken-damage entity as half-transparent or blinking
             //       between 0 to 1 opacity
 
-            if (give_damage.cooldown > 0)
+            if (give_damage.cooldown_ms > 0)
             {
-                give_damage.cooldown -= delta_time_ms;
+                give_damage.cooldown_ms -= delta_time_ms;
                 return;
             }
 
@@ -284,7 +284,7 @@ void DamageSystem::update_npc_touch_damage(std::uint32_t delta_time_ms)
             {
                 take_damage_hitpoints.remove_hitpoints(default_npc_touch_damage);
                 take_damage.notify(default_npc_touch_damage);
-                give_damage.cooldown = GiveNpcTouchDamageComponent::TOP_COOLDOWN_MS;
+                give_damage.cooldown_ms = GiveNpcTouchDamageComponent::TOP_COOLDOWN_MS;
 
                 if (take_damage_hitpoints.get_hitpoints() <= 0)
                 {

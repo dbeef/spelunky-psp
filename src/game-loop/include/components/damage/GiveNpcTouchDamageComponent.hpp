@@ -6,6 +6,6 @@
 using NpcDamage_t = int;
 struct GiveNpcTouchDamageComponent : public Subject<NpcDamage_t>
 {
-    static const int TOP_COOLDOWN_MS = 500;
-    int cooldown = TOP_COOLDOWN_MS;
+    static const int TOP_COOLDOWN_MS = 750;
+    int cooldown_ms = TOP_COOLDOWN_MS;
 };
