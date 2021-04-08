@@ -20,6 +20,7 @@ add_library(GameLoop STATIC
 
         # Main dude:
 
+        src/main-dude/MainDudeObservers.cpp
         src/main-dude/MainDudeComponent.cpp
         src/main-dude/states/MainDudeStandingState.cpp
         src/main-dude/states/MainDudeCliffHangingState.cpp
@@ -55,6 +56,7 @@ add_library(GameLoop STATIC
         include/main-dude/states/MainDudeDeadState.hpp
         include/main-dude/states/MainDudeStunnedState.hpp
         include/main-dude/MainDudeEvent.hpp
+        include/main-dude/MainDudeObservers.hpp
 
         # Components:
 
@@ -86,12 +88,15 @@ add_library(GameLoop STATIC
         include/components/generic/ActivableComponent.hpp
         include/components/generic/NpcTypeComponent.hpp
         include/components/generic/ClimbingComponent.hpp
+        include/components/generic/BlinkingComponent.hpp
         include/components/specialized/MainDudeComponent.hpp
         include/components/specialized/LevelSummaryTracker.hpp
         include/components/specialized/HudOverlayComponent.hpp
         include/components/specialized/PauseOverlayComponent.hpp
         include/components/specialized/DeathOverlayComponent.hpp
         include/components/specialized/LevelSummaryOverlayComponent.hpp
+        include/components/damage/TakeNpcTouchDamageComponent.hpp
+        include/components/damage/GiveNpcTouchDamageComponent.hpp
         include/components/damage/HitpointComponent.hpp
         include/components/damage/GiveMeleeDamageComponent.hpp
         include/components/damage/GiveProjectileDamageComponent.hpp

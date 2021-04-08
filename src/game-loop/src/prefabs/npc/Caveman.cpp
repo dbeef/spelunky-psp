@@ -14,6 +14,7 @@
 #include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/damage/TakeMeleeDamageComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
+#include "components/damage/GiveNpcTouchDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -176,6 +177,7 @@ entt::entity prefabs::Caveman::create(float pos_x_center, float pos_y_center)
     registry.emplace<HitpointComponent>(entity, hitpoints);
     registry.emplace<TakeJumpOnTopDamageComponent>(entity);
     registry.emplace<NpcTypeComponent>(entity, NpcType::CAVEMAN);
+    registry.emplace<GiveNpcTouchDamageComponent>(entity);
 
     return entity;
 }

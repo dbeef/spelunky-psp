@@ -15,6 +15,7 @@
 #include "components/damage/HitpointComponent.hpp"
 #include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/damage/TakeMeleeDamageComponent.hpp"
+#include "components/damage/GiveNpcTouchDamageComponent.hpp"
 
 #include "audio/Audio.hpp"
 #include "EntityRegistry.hpp"
@@ -226,6 +227,7 @@ entt::entity prefabs::Bat::create(float pos_x_center, float pos_y_center)
     registry.emplace<TakeMeleeDamageComponent>(entity);
     registry.emplace<TakeJumpOnTopDamageComponent>(entity);
     registry.emplace<NpcTypeComponent>(entity, NpcType::BAT);
+    registry.emplace<GiveNpcTouchDamageComponent>(entity);
 
     return entity;
 }

@@ -8,7 +8,13 @@ class TakeFallDamageComponent : public Subject<FallDamage_t>
 {
 public:
     TakeFallDamageComponent() = default;
-    explicit TakeFallDamageComponent(FallDamage_t falling_damage) : _falling_damage(falling_damage) {}
+    explicit TakeFallDamageComponent(FallDamage_t falling_damage)
+        : _falling_damage(falling_damage)
+    {}
+    TakeFallDamageComponent(FallDamage_t falling_damage, float critical_spped)
+        : _falling_damage(falling_damage)
+        , _critical_speed(critical_spped)
+    {}
 
     bool update(const PhysicsComponent& physics)
     {
