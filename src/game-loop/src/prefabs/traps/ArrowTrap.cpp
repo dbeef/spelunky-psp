@@ -74,7 +74,7 @@ namespace
                     Audio::instance().play(SFXType::ARROW_TRAP);
                     triggered = true;
 
-                    auto arrow = prefabs::Arrow::create(arrow_trap_position.x_center, arrow_trap_position.y_center);
+                    auto arrow = prefabs::Arrow::create(arrow_trap_position.x_center, arrow_trap_position.y_center, owner);
                     auto& arrow_physics = registry.get<PhysicsComponent>(arrow);
                     auto& arrow_position = registry.get<PositionComponent>(arrow);
                     switch (_orientation)

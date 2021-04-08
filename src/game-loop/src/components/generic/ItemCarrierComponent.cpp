@@ -1,4 +1,5 @@
 #include "components/generic/ItemCarrierComponent.hpp"
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 
 #include <cassert>
 #include <cmath>
@@ -82,6 +83,12 @@ void ItemCarrierComponent::put_down_active_item()
     auto& item = registry.get<ItemComponent>(_slots.active_item);
     auto& physics = registry.get<PhysicsComponent>(_slots.active_item);
 
+    if (registry.has<GiveProjectileDamageComponent>(_slots.active_item))
+    {
+        auto& projectile_damage_component = registry.get<GiveProjectileDamageComponent>(_slots.active_item);
+        projectile_damage_component.set_last_throw_source(item.get_item_carrier_entity());
+    }
+
     item.reset_carrier();
     physics.enable_gravity();
 
@@ -98,6 +105,12 @@ void ItemCarrierComponent::throw_active_item(HorizontalOrientationComponent carr
 
     auto& item = registry.get<ItemComponent>(_slots.active_item);
     auto& physics = registry.get<PhysicsComponent>(_slots.active_item);
+
+    if (registry.has<GiveProjectileDamageComponent>(_slots.active_item))
+    {
+        auto& projectile_damage_component = registry.get<GiveProjectileDamageComponent>(_slots.active_item);
+        projectile_damage_component.set_last_throw_source(item.get_item_carrier_entity());
+    }
 
     item.reset_carrier();
     physics.enable_gravity();

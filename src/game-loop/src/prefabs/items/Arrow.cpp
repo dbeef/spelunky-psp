@@ -100,6 +100,11 @@ entt::entity prefabs::Arrow::create()
 
 entt::entity prefabs::Arrow::create(float pos_x_center, float pos_y_center)
 {
+    return create(pos_x_center, pos_y_center, entt::null);
+}
+
+entt::entity prefabs::Arrow::create(float pos_x_center, float pos_y_center, entt::entity throw_source)
+{
     auto& registry = EntityRegistry::instance().get_registry();
 
     const auto entity = registry.create();
@@ -120,7 +125,7 @@ entt::entity prefabs::Arrow::create(float pos_x_center, float pos_y_center)
     auto arrow_script = std::make_shared<ArrowScript>(entity);
     ScriptingComponent script(arrow_script);
 
-    GiveProjectileDamageComponent give_projectile_damage(2);
+    GiveProjectileDamageComponent give_projectile_damage(2, throw_source);
     give_projectile_damage.set_mutual(true);
     give_projectile_damage.add_observer(reinterpret_cast<Observer<MutualDamage_t>*>(arrow_script->get_observer()));
 
@@ -135,3 +140,4 @@ entt::entity prefabs::Arrow::create(float pos_x_center, float pos_y_center)
 
     return entity;
 }
+
