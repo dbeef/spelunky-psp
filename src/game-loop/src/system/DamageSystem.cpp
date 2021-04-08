@@ -259,42 +259,47 @@ void DamageSystem::update_explosion_damage()
 {
     auto &registry = EntityRegistry::instance().get_registry();
 
-    auto bodies_taking_damage = registry.view<TakeExplosionDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>();
+    auto bodies = registry.view<PhysicsComponent, PositionComponent>();
     auto bodies_giving_damage = registry.view<GiveExplosionDamageComponent, ZoneComponent, PositionComponent>();
 
-    auto give_explosion_damage = [&](entt::entity,
+    auto give_explosion_damage = [&](entt::entity give_damage_entity,
                                      GiveExplosionDamageComponent& give_damage,
                                      ZoneComponent& give_damage_zone,
                                      PositionComponent& give_damage_position)
     {
         // Check if this body overlaps any body that takes explosion damage:
-        bodies_taking_damage.each([&](entt::entity take_damage_entity,
-                                           TakeExplosionDamageComponent& take_damage,
-                                           HitpointComponent& take_damage_hitpoints,
-                                           PhysicsComponent& take_damage_physics,
-                                           PositionComponent& take_damage_position)
+        bodies.each([&](entt::entity body_entity,
+                             PhysicsComponent& body_physics,
+                             PositionComponent& body_position)
         {
-            if (take_damage_physics.is_collision(give_damage_zone, give_damage_position, take_damage_position))
-            {
-                take_damage_hitpoints.remove_hitpoints(take_damage_hitpoints.get_hitpoints() + 1);
-                take_damage_hitpoints.notify({});
 
-                // FIXME: What if it is i.e caveman? Cavemen don't disappear upon death.
-                // Only remove if it was an NPC:
-                if (registry.has<NpcTypeComponent>(take_damage_entity))
+            if (body_physics.is_collision(give_damage_zone, give_damage_position, body_position))
+            {
+                if (registry.has<TakeExplosionDamageComponent>(body_entity))
                 {
-                    registry.destroy(take_damage_entity);
+                    auto& take_damage_hitpoints = registry.get<HitpointComponent>(body_entity);
+
+                    take_damage_hitpoints.remove_hitpoints(take_damage_hitpoints.get_hitpoints() + 1);
+                    take_damage_hitpoints.notify({});
+
+                    // Only remove if it was an NPC:
+                    if (registry.has<NpcTypeComponent>(body_entity))
+                    {
+                        // FIXME: What if it is i.e caveman? Cavemen don't disappear upon death - should implement a
+                        //        cleanup method that would be called in the end of DamageSystem update method
+                        registry.destroy(body_entity);
+                    }
                 }
 
                 // Calculate direction vector and set velocity outwards explosion:
-                float x_direction = give_damage_position.x_center - take_damage_position.x_center;
-                float y_direction = give_damage_position.y_center - take_damage_position.y_center;
+                float x_direction = give_damage_position.x_center - body_position.x_center;
+                float y_direction = give_damage_position.y_center - body_position.y_center;
 
                 const float x_velocity = -std::copysign(0.1f, x_direction);
                 const float y_velocity = -std::copysign(0.1f, y_direction);
 
-                take_damage_physics.set_x_velocity(x_velocity);
-                take_damage_physics.set_y_velocity(y_velocity);
+                body_physics.set_x_velocity(x_velocity);
+                body_physics.set_y_velocity(y_velocity);
             }
         });
     };
