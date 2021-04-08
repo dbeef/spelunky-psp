@@ -257,7 +257,6 @@ void DamageSystem::update_npc_touch_damage(std::uint32_t delta_time_ms)
 
     auto &registry = EntityRegistry::instance().get_registry();
 
-    // FIXME: Can these 2 collections overlap?
     auto bodies_taking_damage = registry.view<TakeNpcTouchDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>();
     auto bodies_giving_damage = registry.view<GiveNpcTouchDamageComponent, PhysicsComponent, PositionComponent>();
 

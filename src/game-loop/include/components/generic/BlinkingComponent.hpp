@@ -32,6 +32,11 @@ public:
         return _remove_when_done && _timer_total_ms >= _total_time_ms;
     }
 
+    void reset_timer()
+    {
+        _timer_total_ms = 0;
+    }
+
     void set_original_quad_width(float width) { _original_quad_width = width; }
     void set_original_quad_height(float height) { _original_quad_height = height; }
 

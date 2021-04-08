@@ -42,6 +42,11 @@ void MainDudeNpcDamageObserver::on_notify(const NpcDamage_t *event)
 
         registry.emplace<BlinkingComponent>(_main_dude, interval_ms, total_time, remove_on_done);
     }
+    else
+    {
+        auto& blinking_component = registry.get<BlinkingComponent>(_main_dude);
+        blinking_component.reset_timer();
+    }
 }
 
 void MainDudeDeathObserver::on_notify(const DeathEvent *event)
