@@ -1,9 +1,10 @@
 #include "system/DamageSystem.hpp"
-
-#include "components/specialized/MainDudeComponent.hpp"
+#include "EntityRegistry.hpp"
+#include "audio/Audio.hpp"
 #include "components/damage/TakeFallDamageComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/NpcTypeComponent.hpp"
+#include "components/generic/ZoneComponent.hpp"
 #include "components/damage/HitpointComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
 #include "components/damage/GiveJumpOnTopDamage.hpp"
@@ -14,10 +15,10 @@
 #include "components/damage/GiveMeleeDamageComponent.hpp"
 #include "components/damage/TakeNpcTouchDamageComponent.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
+#include "components/damage/GiveExplosionDamageComponent.hpp"
+#include "components/damage/TakeExplosionDamageComponent.hpp"
 
-#include "EntityRegistry.hpp"
-#include "audio/Audio.hpp"
-#include "other/Inventory.hpp"
+#include <cmath>
 
 namespace
 {
@@ -47,6 +48,7 @@ void DamageSystem::update(std::uint32_t delta_time_ms)
     update_melee_damage();
     update_jump_on_top_damage();
     update_npc_touch_damage(delta_time_ms);
+    update_explosion_damage();
 }
 
 void DamageSystem::update_melee_damage()
@@ -251,6 +253,61 @@ void DamageSystem::update_jump_on_top_damage()
     registry.view<GiveJumpOnTopDamageComponent, PhysicsComponent, PositionComponent>().each(give_jump_on_top_damage);
 }
 
+void DamageSystem::update_explosion_damage()
+{
+    auto &registry = EntityRegistry::instance().get_registry();
+
+    auto bodies = registry.view<PhysicsComponent, PositionComponent>();
+    auto bodies_giving_damage = registry.view<GiveExplosionDamageComponent, ZoneComponent, PositionComponent>();
+
+    auto give_explosion_damage = [&](entt::entity give_damage_entity,
+                                     GiveExplosionDamageComponent& give_damage,
+                                     ZoneComponent& give_damage_zone,
+                                     PositionComponent& give_damage_position)
+    {
+        bodies.each([&](entt::entity body_entity,
+                             PhysicsComponent& body_physics,
+                             PositionComponent& body_position)
+        {
+
+            if (body_physics.is_collision(give_damage_zone, give_damage_position, body_position))
+            {
+                // Calculate direction vector and set velocity outwards explosion:
+                float x_direction = give_damage_position.x_center - body_position.x_center;
+                float y_direction = give_damage_position.y_center - body_position.y_center;
+
+                const float x_velocity = -copysign(0.1f, x_direction);
+                const float y_velocity = -copysign(0.1f, y_direction);
+
+                body_physics.set_x_velocity(x_velocity);
+                body_physics.set_y_velocity(y_velocity);
+
+                // Give damage if supported:
+                if (registry.has<TakeExplosionDamageComponent>(body_entity))
+                {
+                    auto& take_damage_hitpoints = registry.get<HitpointComponent>(body_entity);
+                    auto& take_damage_explosion = registry.get<TakeExplosionDamageComponent>(body_entity);
+
+                    take_damage_hitpoints.remove_hitpoints(take_damage_hitpoints.get_hitpoints() + 1);
+                    take_damage_hitpoints.notify({});
+                    take_damage_explosion.notify({});
+
+                    // Only remove if it was an NPC:
+                    if (registry.has<NpcTypeComponent>(body_entity))
+                    {
+                        // FIXME: What if it is i.e caveman? Cavemen don't disappear upon death - should implement a
+                        //        cleanup method that would be called in the end of DamageSystem update method, plus
+                        //        additional flag indicating that entity can be disposed.
+                        registry.destroy(body_entity);
+                    }
+                }
+            }
+        });
+    };
+
+    bodies_giving_damage.each(give_explosion_damage);
+}
+
 void DamageSystem::update_npc_touch_damage(std::uint32_t delta_time_ms)
 {
     const NpcDamage_t default_npc_touch_damage = 1;
@@ -290,5 +347,6 @@ void DamageSystem::update_npc_touch_damage(std::uint32_t delta_time_ms)
         });
     };
 
+    // FIXME: This should be reversed - bodies giving damage looking for bodies taking damage
     registry.view<TakeNpcTouchDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>().each(give_tile_collision_damage);
 }

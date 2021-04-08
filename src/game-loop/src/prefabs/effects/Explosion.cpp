@@ -5,9 +5,10 @@
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
 #include "components/generic/TimeLimitComponent.hpp"
+#include "components/generic/ZoneComponent.hpp"
+#include "components/damage/GiveExplosionDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
-#include "TextureBank.hpp"
 #include "TextureType.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
 
@@ -22,8 +23,11 @@ entt::entity prefabs::Explosion::create(float pos_x_center, float pos_y_center)
 
     const auto entity = registry.create();
 
+    const float width = 4.0f;
+    const float height = 4.0f;
+
     PositionComponent position(pos_x_center, pos_y_center);
-    QuadComponent quad(TextureType::COLLECTIBLES, 4, 4);
+    QuadComponent quad(TextureType::COLLECTIBLES, width, height);
     MeshComponent mesh;
     AnimationComponent animation;
 
@@ -41,6 +45,8 @@ entt::entity prefabs::Explosion::create(float pos_x_center, float pos_y_center)
     registry.emplace<MeshComponent>(entity, mesh);
     registry.emplace<AnimationComponent>(entity, animation);
     registry.emplace<TimeLimitComponent>(entity, 400);
+    registry.emplace<ZoneComponent>(entity, width, height);
+    registry.emplace<GiveExplosionDamageComponent>(entity);
 
     return entity;
 }

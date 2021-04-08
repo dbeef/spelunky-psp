@@ -86,6 +86,7 @@ add_library(GameLoop STATIC
         include/components/generic/AnimationComponent.hpp
         include/components/generic/MeshComponent.hpp
         include/components/generic/ActivableComponent.hpp
+        include/components/generic/ZoneComponent.hpp
         include/components/generic/NpcTypeComponent.hpp
         include/components/generic/ClimbingComponent.hpp
         include/components/generic/BlinkingComponent.hpp
@@ -106,6 +107,8 @@ add_library(GameLoop STATIC
         include/components/damage/TakeMeleeDamageComponent.hpp
         include/components/damage/TakeTileCollisionDamageComponent.hpp
         include/components/damage/TakeJumpOnTopDamage.hpp
+        include/components/damage/GiveExplosionDamageComponent.hpp
+        include/components/damage/TakeExplosionDamageComponent.hpp
 
         # Prefabs:
 

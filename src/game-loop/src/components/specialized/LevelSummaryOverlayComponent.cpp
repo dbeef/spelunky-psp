@@ -230,10 +230,13 @@ void LevelSummaryOverlayComponent::update(uint32_t delta_time_ms)
     const auto& killed_events = _level_summary_tracker->get_npc_killed_events();
 
     elements_appearing = std::floor<int>(static_cast<float>(_kills_appearing_timer) / 150.0f);
+
+    std::size_t added_icons = 0;
+
     for (std::size_t index = _kills_spawned; index < elements_appearing && index < killed_events.size(); index++)
     {
         auto& current_event = killed_events[index];
-        float x = 6.75f + (0.5 * index);
+        float x = 6.75f + (0.5 * added_icons);
         float y = 4.25f;
 
         switch (current_event)
@@ -275,5 +278,6 @@ void LevelSummaryOverlayComponent::update(uint32_t delta_time_ms)
             }
         }
         _kills_spawned++;
+        added_icons++;
     }
 }

@@ -15,6 +15,7 @@
 #include "components/damage/TakeMeleeDamageComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
+#include "components/damage/TakeExplosionDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -179,6 +180,7 @@ entt::entity prefabs::Snake::create(float pos_x_center, float pos_y_center)
     registry.emplace<TakeJumpOnTopDamageComponent>(entity);
     registry.emplace<NpcTypeComponent>(entity, NpcType::SNAKE);
     registry.emplace<GiveNpcTouchDamageComponent>(entity);
+    registry.emplace<TakeExplosionDamageComponent>(entity);
 
     return entity;
 }

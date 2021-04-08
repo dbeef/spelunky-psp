@@ -229,6 +229,18 @@ PhysicsComponent::PhysicsComponent(float width, float height) : _dimensions{widt
 {
 }
 
+bool PhysicsComponent::is_collision(ZoneComponent& other_zone, PositionComponent& other_position, PositionComponent& this_position) const
+{
+    const float half_w = _dimensions.width / 2.0f;
+    const float half_h = _dimensions.height / 2.0f;
+
+    const float other_half_w = other_zone.width / 2.0f;
+    const float other_half_h = other_zone.height / 2.0f;
+
+    return this_position.x_center + half_w > other_position.x_center - other_half_w && this_position.x_center - half_w < other_position.x_center + other_half_w &&
+           this_position.y_center + half_h > other_position.y_center - other_half_h && this_position.y_center - half_h < other_position.y_center + other_half_h;
+}
+
 bool PhysicsComponent::is_collision(PhysicsComponent& other_physics, PositionComponent& other_position, PositionComponent& this_position) const
 {
     const float half_w = _dimensions.width / 2.0f;

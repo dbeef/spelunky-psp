@@ -2,6 +2,7 @@
 #include "components/specialized/MainDudeComponent.hpp"
 #include "components/generic/BlinkingComponent.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
+#include "components/generic/ParticleEmitterComponent.hpp"
 #include "EntityRegistry.hpp"
 #include "other/Inventory.hpp"
 
@@ -21,6 +22,24 @@ void MainDudeClimbingObserver::on_notify(const ClimbingEvent *event)
             break;
         }
     }
+}
+
+void MainDudeExplosionDamageObserver::on_notify(const ExplosionDamageTakenEvent *event)
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    if (registry.has<ParticleEmitterComponent>(_main_dude))
+    {
+        return;
+    }
+
+    ParticleEmitterComponent particle_emitter;
+
+    particle_emitter.interval_ms = 250;
+    particle_emitter.particle_type = ParticleType::FLAME_TRAIL;
+    particle_emitter.time_since_last_emission_ms = 0;
+
+    registry.emplace<ParticleEmitterComponent>(_main_dude, particle_emitter);
 }
 
 void MainDudeNpcDamageObserver::on_notify(const NpcDamage_t *event)

@@ -1,5 +1,4 @@
 #include "prefabs/npc/Bat.hpp"
-#include "prefabs/particles/BloodParticle.hpp"
 #include "other/ParticleGenerator.hpp"
 
 #include "components/specialized/MainDudeComponent.hpp"
@@ -16,6 +15,7 @@
 #include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/damage/TakeMeleeDamageComponent.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
+#include "components/damage/TakeExplosionDamageComponent.hpp"
 
 #include "audio/Audio.hpp"
 #include "EntityRegistry.hpp"
@@ -228,6 +228,7 @@ entt::entity prefabs::Bat::create(float pos_x_center, float pos_y_center)
     registry.emplace<TakeJumpOnTopDamageComponent>(entity);
     registry.emplace<NpcTypeComponent>(entity, NpcType::BAT);
     registry.emplace<GiveNpcTouchDamageComponent>(entity);
+    registry.emplace<TakeExplosionDamageComponent>(entity);
 
     return entity;
 }
