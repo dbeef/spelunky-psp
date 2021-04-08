@@ -15,6 +15,7 @@
 #include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/damage/TakeMeleeDamageComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
+#include "components/damage/GiveNpcTouchDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -203,6 +204,7 @@ entt::entity prefabs::Spider::create(float pos_x_center, float pos_y_center, boo
     registry.emplace<TakeMeleeDamageComponent>(entity);
     registry.emplace<TakeJumpOnTopDamageComponent>(entity);
     registry.emplace<NpcTypeComponent>(entity, NpcType::SPIDER);
+    registry.emplace<GiveNpcTouchDamageComponent>(entity);
 
     if (triggered)
     {

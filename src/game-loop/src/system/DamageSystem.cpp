@@ -1,4 +1,6 @@
 #include "system/DamageSystem.hpp"
+
+#include "components/specialized/MainDudeComponent.hpp"
 #include "components/damage/TakeFallDamageComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/NpcTypeComponent.hpp"
@@ -10,8 +12,12 @@
 #include "components/damage/GiveProjectileDamageComponent.hpp"
 #include "components/damage/TakeMeleeDamageComponent.hpp"
 #include "components/damage/GiveMeleeDamageComponent.hpp"
+#include "components/damage/TakeNpcTouchDamageComponent.hpp"
+#include "components/damage/GiveNpcTouchDamageComponent.hpp"
+
 #include "EntityRegistry.hpp"
 #include "audio/Audio.hpp"
+#include "other/Inventory.hpp"
 
 namespace
 {
@@ -40,6 +46,7 @@ void DamageSystem::update(std::uint32_t delta_time_ms)
     update_projectile_damage();
     update_melee_damage();
     update_jump_on_top_damage();
+    update_npc_touch_damage(delta_time_ms);
 }
 
 void DamageSystem::update_melee_damage()
@@ -242,4 +249,50 @@ void DamageSystem::update_jump_on_top_damage()
     };
 
     registry.view<GiveJumpOnTopDamageComponent, PhysicsComponent, PositionComponent>().each(give_jump_on_top_damage);
+}
+
+void DamageSystem::update_npc_touch_damage(std::uint32_t delta_time_ms)
+{
+    const NpcDamage_t default_npc_touch_damage = 1;
+
+    auto &registry = EntityRegistry::instance().get_registry();
+
+    // FIXME: Can these 2 collections overlap?
+    auto bodies_taking_damage = registry.view<TakeNpcTouchDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>();
+    auto bodies_giving_damage = registry.view<GiveNpcTouchDamageComponent, PhysicsComponent, PositionComponent>();
+
+    auto give_tile_collision_damage = [&](entt::entity take_damage_entity,
+                                          TakeNpcTouchDamageComponent& take_damage,
+                                          HitpointComponent& take_damage_hitpoints,
+                                          PhysicsComponent& take_damage_physics,
+                                          PositionComponent& take_damage_position)
+    {
+        bodies_giving_damage.each([&](GiveNpcTouchDamageComponent& give_damage,
+                                           PhysicsComponent& give_damage_physics,
+                                           PositionComponent& give_damage_position)
+        {
+            // TODO: Rendering system should somehow render just-taken-damage entity as half-transparent or blinking
+            //       between 0 to 1 opacity
+
+            if (give_damage.cooldown > 0)
+            {
+                give_damage.cooldown -= delta_time_ms;
+                return;
+            }
+
+            if (take_damage_physics.is_collision(give_damage_physics, give_damage_position, take_damage_position))
+            {
+                take_damage_hitpoints.remove_hitpoints(default_npc_touch_damage);
+                take_damage.notify(default_npc_touch_damage);
+                give_damage.cooldown = GiveNpcTouchDamageComponent::TOP_COOLDOWN;
+
+                if (take_damage_hitpoints.get_hitpoints() <= 0)
+                {
+                    take_damage_hitpoints.notify({});
+                }
+            }
+        });
+    };
+
+    registry.view<TakeNpcTouchDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>().each(give_tile_collision_damage);
 }

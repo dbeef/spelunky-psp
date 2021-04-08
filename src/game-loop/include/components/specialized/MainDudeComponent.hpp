@@ -25,12 +25,7 @@
 #include "main-dude/states/MainDudeDeadState.hpp"
 #include "main-dude/states/MainDudeStunnedState.hpp"
 #include "main-dude/MainDudeEvent.hpp"
-
-#include "components/generic/PhysicsComponent.hpp"
-#include "components/generic/PositionComponent.hpp"
-#include "components/generic/QuadComponent.hpp"
-#include "components/generic/AnimationComponent.hpp"
-#include "components/generic/ClimbingComponent.hpp"
+#include "main-dude/MainDudeObservers.hpp"
 
 #include <vector>
 #include <memory>
@@ -38,17 +33,6 @@
 class MainDudeBaseState;
 class Input;
 class MapTile;
-
-class MainDudeClimbingObserver : Observer<ClimbingEvent>
-{
-public:
-    explicit MainDudeClimbingObserver(entt::entity main_dude) : _main_dude(main_dude) {};
-    void on_notify(const ClimbingEvent* event) override;
-    ClimbingEvent get_last_event() const { return _last_event; }
-private:
-    const entt::entity _main_dude;
-    ClimbingEvent _last_event{};
-};
 
 class MainDudeComponent : public Subject<MainDudeEvent>
 {
@@ -64,12 +48,28 @@ public:
     void enter_standing_state();
     void enter_throwing_state();
     void enter_climbing_state();
+    void enter_stunned_state();
 
     bool entered_door() const { return _other.entered_door; }
 
     MainDudeClimbingObserver* get_climbing_observer()
     {
         return _climbing_observer.get();
+    }
+
+    MainDudeFallObserver* get_fall_observer()
+    {
+        return _fall_observer.get();
+    }
+
+    MainDudeDeathObserver* get_death_observer()
+    {
+        return _death_observer.get();
+    }
+
+    MainDudeNpcDamageObserver* get_npc_damage_observer()
+    {
+        return _npc_damage_observer.get();
     }
 
 private:
@@ -128,10 +128,12 @@ private:
     entt::entity _owner = entt::null;
 
     std::shared_ptr<MainDudeClimbingObserver> _climbing_observer;
+    std::shared_ptr<MainDudeFallObserver> _fall_observer;
+    std::shared_ptr<MainDudeDeathObserver> _death_observer;
+    std::shared_ptr<MainDudeNpcDamageObserver> _npc_damage_observer;
 
     static constexpr float DEFAULT_DELTA_X = 0.01f;
     static constexpr float DEFAULT_MAX_X_VELOCITY = 0.050f;
-    static constexpr float DEFAULT_MAX_Y_VELOCITY = 0.39f;
 
     static constexpr float MAX_RUNNING_VELOCITY_X = 0.15f;
     static constexpr float MAX_CRAWLING_VELOCITY_X = 0.008f;

@@ -3,7 +3,6 @@
 #include "prefabs/items/RopeSpawner.hpp"
 #include "prefabs/items/Whip.hpp"
 
-#include "components/damage/GiveJumpOnTopDamage.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/ClimbingComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
@@ -12,10 +11,20 @@
 #include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/InputComponent.hpp"
+#include "components/damage/HitpointComponent.hpp"
+#include "components/damage/TakeNpcTouchDamageComponent.hpp"
+#include "components/damage/GiveJumpOnTopDamage.hpp"
+#include "components/damage/TakeFallDamageComponent.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
+#include "other/Inventory.hpp"
+
+namespace
+{
+    static constexpr float DEFAULT_MAX_Y_VELOCITY = 0.39f;
+}
 
 namespace prefabs
 {
@@ -47,6 +56,7 @@ namespace prefabs
         registry.emplace<PhysicsComponent>(entity, physics);
         registry.emplace<MeshComponent>(entity, mesh);
         registry.emplace<InputComponent>(entity, input);
+        registry.emplace<HitpointComponent>(entity, Inventory::instance().get_hearts());
         registry.emplace<HorizontalOrientationComponent>(entity);
         registry.emplace<ItemCarrierComponent>(entity, item_carrier);
         registry.emplace<GiveJumpOnTopDamageComponent>(entity, 1);
@@ -58,6 +68,14 @@ namespace prefabs
         ClimbingComponent climbing;
         climbing.add_observer(reinterpret_cast<Observer<ClimbingEvent> *>(main_dude.get_climbing_observer()));
         registry.emplace<ClimbingComponent>(entity, climbing);
+
+        TakeFallDamageComponent take_fall_damage(1, DEFAULT_MAX_Y_VELOCITY);
+        take_fall_damage.add_observer(reinterpret_cast<Observer<FallDamage_t> *>(main_dude.get_fall_observer()));
+        registry.emplace<TakeFallDamageComponent>(entity, take_fall_damage);
+
+        TakeNpcTouchDamageComponent take_npc_damage;
+        take_npc_damage.add_observer(reinterpret_cast<Observer<NpcDamage_t> *>(main_dude.get_npc_damage_observer()));
+        registry.emplace<TakeNpcTouchDamageComponent>(entity, take_npc_damage);
 
         {
             auto& carrier = registry.get<ItemCarrierComponent>(entity);

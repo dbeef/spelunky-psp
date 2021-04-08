@@ -35,12 +35,18 @@ MainDudeComponent::MainDudeComponent(entt::entity owner) : _owner(owner)
     _states.current->enter(*this);
 
     _climbing_observer = std::make_shared<MainDudeClimbingObserver>(owner);
+    _fall_observer = std::make_shared<MainDudeFallObserver>(owner);
+    _death_observer = std::make_shared<MainDudeDeathObserver>(owner);
+    _npc_damage_observer = std::make_shared<MainDudeNpcDamageObserver>(owner);
 }
 
 MainDudeComponent::MainDudeComponent(const MainDudeComponent& other) : _owner(other._owner)
 {
     _states.current = &_states.standing;
     _climbing_observer = other._climbing_observer;
+    _fall_observer = other._fall_observer;
+    _death_observer = other._death_observer;
+    _npc_damage_observer = other._npc_damage_observer;
 }
 
 void MainDudeComponent::update(uint32_t delta_time_ms)
@@ -85,6 +91,11 @@ MapTile* MainDudeComponent::is_overlaping_tile(MapTileType type, PhysicsComponen
 void MainDudeComponent::enter_standing_state()
 {
     enter_if_different(&_states.standing);
+}
+
+void MainDudeComponent::enter_stunned_state()
+{
+    enter_if_different(&_states.stunned);
 }
 
 void MainDudeComponent::enter_climbing_state()
@@ -162,23 +173,5 @@ void MainDudeComponent::enter_if_different(MainDudeBaseState* new_state)
         _states.current->exit(*this);
         _states.current = new_state;
         _states.current->enter(*this);
-    }
-}
-
-void MainDudeClimbingObserver::on_notify(const ClimbingEvent *event)
-{
-    auto& registry = EntityRegistry::instance().get_registry();
-    auto& main_dude_component = registry.get<MainDudeComponent>(_main_dude);
-
-    _last_event = *event;
-
-    switch (_last_event.event_type)
-    {
-        case ClimbingEventType::STARTED_CLIMBING_LADDER:
-        case ClimbingEventType::STARTED_CLIMBING_ROPE:
-        {
-            main_dude_component.enter_climbing_state();
-            break;
-        }
     }
 }

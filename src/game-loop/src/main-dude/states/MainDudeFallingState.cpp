@@ -83,20 +83,7 @@ MainDudeBaseState* MainDudeFallingState::update(MainDudeComponent& dude, uint32_
 
     if (physics.is_bottom_collision())
     {
-        if (_last_y_speed >= MainDudeComponent::DEFAULT_MAX_Y_VELOCITY)
-        {
-            Inventory::instance().remove_hearts(1);
-
-            if (Inventory::instance().get_hearts() == 0)
-            {
-                return &dude._states.dead;
-            }
-            else
-            {
-                return &dude._states.stunned;
-            }
-        }
-        else if (physics.get_x_velocity() == 0.0f)
+        if (physics.get_x_velocity() == 0.0f)
         {
             return &dude._states.standing;
         }

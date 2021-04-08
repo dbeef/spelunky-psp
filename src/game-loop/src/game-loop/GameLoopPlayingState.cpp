@@ -189,7 +189,11 @@ void GameLoopPlayingState::on_notify(const MainDudeEvent* event)
             pause.hide(registry);
             pause.disable_input();
 
-            registry.destroy(_hud);
+            // FIXME
+            if (registry.valid(_hud))
+            {
+                registry.destroy(_hud);
+            }
             _hud = entt::null;
 
             break;
