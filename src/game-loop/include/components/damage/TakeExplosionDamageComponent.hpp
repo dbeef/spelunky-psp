@@ -2,7 +2,10 @@
 
 #include "patterns/Subject.hpp"
 
-class TakeExplosionDamageComponent
+struct ExplosionDamageTakenEvent
 {
-    // TODO: Explosion notification? i.e could flame main dude in notification handler by attaching flame particle
+};
+
+class TakeExplosionDamageComponent : public Subject<ExplosionDamageTakenEvent>
+{
 };

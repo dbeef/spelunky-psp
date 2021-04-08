@@ -72,6 +72,11 @@ public:
         return _npc_damage_observer.get();
     }
 
+    MainDudeExplosionDamageObserver* get_explosion_damage_observer()
+    {
+        return _explosion_observer.get();
+    }
+
 private:
 
     void enter_if_different(MainDudeBaseState*);
@@ -131,6 +136,7 @@ private:
     std::shared_ptr<MainDudeFallObserver> _fall_observer;
     std::shared_ptr<MainDudeDeathObserver> _death_observer;
     std::shared_ptr<MainDudeNpcDamageObserver> _npc_damage_observer;
+    std::shared_ptr<MainDudeExplosionDamageObserver> _explosion_observer;
 
     static constexpr float DEFAULT_DELTA_X = 0.01f;
     static constexpr float DEFAULT_MAX_X_VELOCITY = 0.050f;

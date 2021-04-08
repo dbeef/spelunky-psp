@@ -38,6 +38,7 @@ MainDudeComponent::MainDudeComponent(entt::entity owner) : _owner(owner)
     _fall_observer = std::make_shared<MainDudeFallObserver>(owner);
     _death_observer = std::make_shared<MainDudeDeathObserver>(owner);
     _npc_damage_observer = std::make_shared<MainDudeNpcDamageObserver>(owner);
+    _explosion_observer = std::make_shared<MainDudeExplosionDamageObserver>(owner);
 }
 
 MainDudeComponent::MainDudeComponent(const MainDudeComponent& other) : _owner(other._owner)
@@ -47,6 +48,7 @@ MainDudeComponent::MainDudeComponent(const MainDudeComponent& other) : _owner(ot
     _fall_observer = other._fall_observer;
     _death_observer = other._death_observer;
     _npc_damage_observer = other._npc_damage_observer;
+    _explosion_observer = other._explosion_observer;
 }
 
 void MainDudeComponent::update(uint32_t delta_time_ms)
