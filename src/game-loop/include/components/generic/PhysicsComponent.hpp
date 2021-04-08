@@ -2,6 +2,7 @@
 
 #include "other/PhysicsComponentType.hpp"
 #include "PositionComponent.hpp"
+#include "ZoneComponent.hpp"
 
 #include <cstdint>
 #include <functional>
@@ -14,6 +15,7 @@ public:
     PhysicsComponent() = default;
 
     bool is_collision(PhysicsComponent& other_physics, PositionComponent& other_position, PositionComponent& this_position) const;
+    bool is_collision(ZoneComponent& other_zone, PositionComponent& other_position, PositionComponent& this_position) const;
 
     void update(uint32_t delta_time_ms,PositionComponent& position);
 

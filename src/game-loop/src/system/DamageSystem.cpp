@@ -4,6 +4,7 @@
 #include "components/damage/TakeFallDamageComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/NpcTypeComponent.hpp"
+#include "components/generic/ZoneComponent.hpp"
 #include "components/damage/HitpointComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
 #include "components/damage/GiveJumpOnTopDamage.hpp"
@@ -14,6 +15,8 @@
 #include "components/damage/GiveMeleeDamageComponent.hpp"
 #include "components/damage/TakeNpcTouchDamageComponent.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
+#include "components/damage/GiveExplosionDamageComponent.hpp"
+#include "components/damage/TakeExplosionDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "audio/Audio.hpp"
@@ -47,6 +50,7 @@ void DamageSystem::update(std::uint32_t delta_time_ms)
     update_melee_damage();
     update_jump_on_top_damage();
     update_npc_touch_damage(delta_time_ms);
+    update_explosion_damage();
 }
 
 void DamageSystem::update_melee_damage()
@@ -251,6 +255,53 @@ void DamageSystem::update_jump_on_top_damage()
     registry.view<GiveJumpOnTopDamageComponent, PhysicsComponent, PositionComponent>().each(give_jump_on_top_damage);
 }
 
+void DamageSystem::update_explosion_damage()
+{
+    auto &registry = EntityRegistry::instance().get_registry();
+
+    auto bodies_taking_damage = registry.view<TakeExplosionDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>();
+    auto bodies_giving_damage = registry.view<GiveExplosionDamageComponent, ZoneComponent, PositionComponent>();
+
+    auto give_explosion_damage = [&](entt::entity,
+                                     GiveExplosionDamageComponent& give_damage,
+                                     ZoneComponent& give_damage_zone,
+                                     PositionComponent& give_damage_position)
+    {
+        // Check if this body overlaps any body that takes explosion damage:
+        bodies_taking_damage.each([&](entt::entity take_damage_entity,
+                                           TakeExplosionDamageComponent& take_damage,
+                                           HitpointComponent& take_damage_hitpoints,
+                                           PhysicsComponent& take_damage_physics,
+                                           PositionComponent& take_damage_position)
+        {
+            if (take_damage_physics.is_collision(give_damage_zone, give_damage_position, take_damage_position))
+            {
+                take_damage_hitpoints.remove_hitpoints(take_damage_hitpoints.get_hitpoints() + 1);
+                take_damage_hitpoints.notify({});
+
+                // FIXME: What if it is i.e caveman? Cavemen don't disappear upon death.
+                // Only remove if it was an NPC:
+                if (registry.has<NpcTypeComponent>(take_damage_entity))
+                {
+                    registry.destroy(take_damage_entity);
+                }
+
+                // Calculate direction vector and set velocity outwards explosion:
+                float x_direction = give_damage_position.x_center - take_damage_position.x_center;
+                float y_direction = give_damage_position.y_center - take_damage_position.y_center;
+
+                const float x_velocity = -std::copysign(0.1f, x_direction);
+                const float y_velocity = -std::copysign(0.1f, y_direction);
+
+                take_damage_physics.set_x_velocity(x_velocity);
+                take_damage_physics.set_y_velocity(y_velocity);
+            }
+        });
+    };
+
+    bodies_giving_damage.each(give_explosion_damage);
+}
+
 void DamageSystem::update_npc_touch_damage(std::uint32_t delta_time_ms)
 {
     const NpcDamage_t default_npc_touch_damage = 1;
@@ -290,5 +341,6 @@ void DamageSystem::update_npc_touch_damage(std::uint32_t delta_time_ms)
         });
     };
 
+    // FIXME: This should be reversed - bodies giving damage looking for bodies taking damage
     registry.view<TakeNpcTouchDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>().each(give_tile_collision_damage);
 }

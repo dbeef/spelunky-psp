@@ -13,4 +13,5 @@ private:
     static void update_projectile_damage();
     static void update_jump_on_top_damage();
     static void update_npc_touch_damage(std::uint32_t delta_time_ms);
+    static void update_explosion_damage();
 };

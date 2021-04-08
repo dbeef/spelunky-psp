@@ -271,7 +271,7 @@ add_library(GameLoop STATIC
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
-)
+        include/components/generic/ZoneComponent.hpp include/components/damage/GiveExplosionDamageComponent.hpp include/components/damage/TakeExplosionDamageComponent.hpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface

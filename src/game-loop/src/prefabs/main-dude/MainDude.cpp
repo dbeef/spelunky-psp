@@ -14,6 +14,7 @@
 #include "components/damage/HitpointComponent.hpp"
 #include "components/damage/TakeNpcTouchDamageComponent.hpp"
 #include "components/damage/GiveJumpOnTopDamage.hpp"
+#include "components/damage/TakeExplosionDamageComponent.hpp"
 #include "components/damage/TakeFallDamageComponent.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
 
@@ -33,7 +34,8 @@ namespace prefabs
         return create(0, 0);
     }
 
-    entt::entity MainDude::create(float pos_x_center, float pos_y_center) {
+    entt::entity MainDude::create(float pos_x_center, float pos_y_center)
+    {
         auto &registry = EntityRegistry::instance().get_registry();
 
         const auto entity = registry.create();
@@ -56,14 +58,18 @@ namespace prefabs
         registry.emplace<PhysicsComponent>(entity, physics);
         registry.emplace<MeshComponent>(entity, mesh);
         registry.emplace<InputComponent>(entity, input);
-        registry.emplace<HitpointComponent>(entity, Inventory::instance().get_hearts());
         registry.emplace<HorizontalOrientationComponent>(entity);
         registry.emplace<ItemCarrierComponent>(entity, item_carrier);
         registry.emplace<GiveJumpOnTopDamageComponent>(entity, 1);
+        registry.emplace<TakeExplosionDamageComponent>(entity);
 
         // Initialization order is important in this case - MainDudeComponent must be the last to create.
         MainDudeComponent main_dude(entity);
         registry.emplace<MainDudeComponent>(entity, main_dude);
+
+        HitpointComponent hitpoints(Inventory::instance().get_hearts());
+        hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent> *>(main_dude.get_death_observer()));
+        registry.emplace<HitpointComponent>(entity, hitpoints);
 
         ClimbingComponent climbing;
         climbing.add_observer(reinterpret_cast<Observer<ClimbingEvent> *>(main_dude.get_climbing_observer()));
