@@ -1,6 +1,6 @@
 #include "system/DamageSystem.hpp"
-
-#include "components/specialized/MainDudeComponent.hpp"
+#include "EntityRegistry.hpp"
+#include "audio/Audio.hpp"
 #include "components/damage/TakeFallDamageComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/NpcTypeComponent.hpp"
@@ -18,9 +18,7 @@
 #include "components/damage/GiveExplosionDamageComponent.hpp"
 #include "components/damage/TakeExplosionDamageComponent.hpp"
 
-#include "EntityRegistry.hpp"
-#include "audio/Audio.hpp"
-#include "other/Inventory.hpp"
+#include <cmath>
 
 namespace
 {
@@ -295,8 +293,8 @@ void DamageSystem::update_explosion_damage()
                 float x_direction = give_damage_position.x_center - body_position.x_center;
                 float y_direction = give_damage_position.y_center - body_position.y_center;
 
-                const float x_velocity = -std::copysign(0.1f, x_direction);
-                const float y_velocity = -std::copysign(0.1f, y_direction);
+                const float x_velocity = -copysign(0.1f, x_direction);
+                const float y_velocity = -copysign(0.1f, y_direction);
 
                 body_physics.set_x_velocity(x_velocity);
                 body_physics.set_y_velocity(y_velocity);
