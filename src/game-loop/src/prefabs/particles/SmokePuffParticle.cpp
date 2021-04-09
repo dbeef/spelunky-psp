@@ -32,7 +32,7 @@ entt::entity prefabs::SmokePuffParticle::create(float pos_x_center, float pos_y_
                     static_cast<std::size_t>(CollectiblesSpritesheetFrames::SMOKE_PUFF_7_LAST),
                     75, false);
 
-    mesh.rendering_layer = RenderingLayer::LAYER_3_DUDE;
+    mesh.rendering_layer = RenderingLayer::LAYER_4_DUDE;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     registry.emplace<PositionComponent>(entity, position);

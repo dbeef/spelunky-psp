@@ -31,7 +31,7 @@ entt::entity prefabs::GoldNugget::create(float pos_x_center, float pos_y_center)
     CollectibleComponent collectible(500, LootCollectedEvent::GOLD_NUGGET);
 
     quad.frame_changed(CollectiblesSpritesheetFrames::GOLD_NUGGET);
-    mesh.rendering_layer = RenderingLayer::LAYER_4_PROPS;
+    mesh.rendering_layer = RenderingLayer::LAYER_5_PROPS;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     registry.emplace<PositionComponent>(entity, position);

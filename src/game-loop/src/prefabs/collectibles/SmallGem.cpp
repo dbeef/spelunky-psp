@@ -33,7 +33,7 @@ entt::entity prefabs::SmallGem::create(float pos_x_center, float pos_y_center)
     std::uint16_t frame_index = static_cast<std::uint16_t>(CollectiblesSpritesheetFrames::DIAMOND_SMALL) + std::rand() % 3;
 
     quad.frame_changed(static_cast<CollectiblesSpritesheetFrames>(frame_index));
-    mesh.rendering_layer = RenderingLayer::LAYER_4_PROPS;
+    mesh.rendering_layer = RenderingLayer::LAYER_5_PROPS;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     registry.emplace<PositionComponent>(entity, position);

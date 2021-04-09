@@ -32,7 +32,7 @@ entt::entity prefabs::ItemCollectedParticle::create(float pos_x_center, float po
                     static_cast<std::size_t>(CollectiblesSpritesheetFrames::ITEM_COLLECTED_1_LAST),
                     200, true);
 
-    mesh.rendering_layer = RenderingLayer::LAYER_4_PROPS;
+    mesh.rendering_layer = RenderingLayer::LAYER_5_PROPS;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     registry.emplace<PositionComponent>(entity, position);

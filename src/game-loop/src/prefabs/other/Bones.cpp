@@ -29,7 +29,7 @@ entt::entity prefabs::Bones::create(float pos_x_center, float pos_y_center)
     MeshComponent mesh;
 
     quad.frame_changed(NPCSpritesheetFrames::BONES);
-    mesh.rendering_layer = RenderingLayer::LAYER_3_DUDE;
+    mesh.rendering_layer = RenderingLayer::LAYER_4_DUDE;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     registry.emplace<PositionComponent>(entity, position);

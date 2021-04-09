@@ -473,7 +473,7 @@ entt::entity TileBatch::add_render_entity(entt::registry &registry)
     mesh_component.indices = _indices.data();
     mesh_component.indices_count = _indices.size();
     mesh_component.texture_id = TextureBank::instance().get_texture(TextureType::CAVE_LEVEL_TILES);
-    mesh_component.rendering_layer = RenderingLayer::LAYER_5_TILES;
+    mesh_component.rendering_layer = RenderingLayer::LAYER_6_TILES;
     mesh_component.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     registry.emplace<MeshComponent>(entity, mesh_component);

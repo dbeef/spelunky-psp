@@ -42,7 +42,7 @@ void PauseOverlayComponent::update(entt::registry& registry)
                                         _viewport->get_height_world_units());
                 MeshComponent mesh;
 
-                mesh.rendering_layer = RenderingLayer::LAYER_2_ITEMS;
+                mesh.rendering_layer = RenderingLayer::LAYER_1_OVERLAY;
                 mesh.camera_type = CameraType::SCREEN_SPACE;
                 quad.frame_changed<HUDSpritesheetFrames>(HUDSpritesheetFrames::HALF_OPAQUE_TILE);
 
@@ -59,6 +59,7 @@ void PauseOverlayComponent::update(entt::registry& registry)
                 PositionComponent position;
                 MeshComponent mesh;
 
+                text_pause.set_layer(RenderingLayer::LAYER_0_OVERLAY_TEXT);
                 text_pause.set_scale(2.0f);
                 text_pause.set_text(PAUSED_MSG);
                 position.x_center = (_viewport->get_width_world_units() / 2.0f) -
@@ -82,6 +83,7 @@ void PauseOverlayComponent::update(entt::registry& registry)
 
                 const std::string available_controls = get_available_controls_msg();
 
+                text_controls.set_layer(RenderingLayer::LAYER_0_OVERLAY_TEXT);
                 text_controls.set_text(available_controls);
                 position.x_center = (_viewport->get_width_world_units() / 2.0f) -
                                     (text_controls.get_width() / 2.0f) +

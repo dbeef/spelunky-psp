@@ -55,7 +55,7 @@ void TextComponent::update(entt::entity owner)
     mesh_component.indices = _indices.data();
     mesh_component.indices_count = _indices.size();
     mesh_component.texture_id = TextureBank::instance().get_texture(TextureType::FONT);
-    mesh_component.rendering_layer = RenderingLayer::LAYER_1_UI_TEXT;
+    mesh_component.rendering_layer = _properties.layer;
     mesh_component.camera_type = CameraType::SCREEN_SPACE;
 
     _dirty = false;

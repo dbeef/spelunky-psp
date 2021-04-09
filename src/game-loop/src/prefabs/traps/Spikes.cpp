@@ -48,7 +48,7 @@ entt::entity prefabs::Spikes::create(float pos_x_center, float pos_y_center)
     physics.disable_gravity();
 
     quad.frame_changed(NPCSpritesheetFrames::SPIKES);
-    mesh.rendering_layer = RenderingLayer::LAYER_2_ITEMS;
+    mesh.rendering_layer = RenderingLayer::LAYER_3_ITEMS;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     registry.emplace<PositionComponent>(entity, position);

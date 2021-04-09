@@ -33,7 +33,7 @@ entt::entity prefabs::ShotgunBlast::create(float pos_x_center, float pos_y_cente
                     static_cast<std::size_t>(CollectiblesSpritesheetFrames::SHOTGUN_BLAST_9_LAST),
                     40, false);
 
-    mesh.rendering_layer = RenderingLayer::LAYER_2_ITEMS;
+    mesh.rendering_layer = RenderingLayer::LAYER_3_ITEMS;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     registry.emplace<PositionComponent>(entity, position);

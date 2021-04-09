@@ -39,7 +39,7 @@ entt::entity prefabs::BloodParticle::create(float pos_x_center, float pos_y_cent
                     110, true);
 
     MeshComponent mesh;
-    mesh.rendering_layer = RenderingLayer::LAYER_3_DUDE;
+    mesh.rendering_layer = RenderingLayer::LAYER_4_DUDE;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     ParticleEmitterComponent emitter;

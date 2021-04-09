@@ -171,7 +171,7 @@ entt::entity prefabs::Snake::create(float pos_x_center, float pos_y_center)
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
     registry.emplace<AnimationComponent>(entity);
-    registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_2_ITEMS, CameraType::MODEL_VIEW_SPACE);
+    registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_3_ITEMS, CameraType::MODEL_VIEW_SPACE);
     registry.emplace<PhysicsComponent>(entity, width - (4.0f / 16.0f), height - (4.0f / 16.0f));
     registry.emplace<ScriptingComponent>(entity, script);
     registry.emplace<HorizontalOrientationComponent>(entity);
