@@ -6,6 +6,9 @@
 #include "components/generic/ScriptingComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
+#include "components/damage/TakeExplosionDamageComponent.hpp"
+#include "components/damage/HitpointComponent.hpp"
+#include "components/damage/GiveSpikesDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -54,6 +57,9 @@ entt::entity prefabs::Spikes::create(float pos_x_center, float pos_y_center)
     registry.emplace<PhysicsComponent>(entity, physics);
     registry.emplace<HorizontalOrientationComponent>(entity);
     registry.emplace<ScriptingComponent>(entity, std::make_shared<SpikesScript>());
+    registry.emplace<HitpointComponent>(entity, 1, true);
+    registry.emplace<TakeExplosionDamageComponent>(entity);
+    registry.emplace<GiveSpikesDamageComponent>(entity);
 
     return entity;
 }

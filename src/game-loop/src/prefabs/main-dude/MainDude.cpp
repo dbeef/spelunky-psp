@@ -17,6 +17,7 @@
 #include "components/damage/TakeExplosionDamageComponent.hpp"
 #include "components/damage/TakeFallDamageComponent.hpp"
 #include "components/damage/TakeProjectileDamageComponent.hpp"
+#include "components/damage/TakeSpikesDamageComponent.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
 
 #include "EntityRegistry.hpp"
@@ -89,6 +90,10 @@ namespace prefabs
         TakeProjectileDamageComponent take_projectile_damage;
         take_projectile_damage.add_observer(reinterpret_cast<Observer<ProjectileDamage_t> *>(main_dude.get_projectile_damage_observer()));
         registry.emplace<TakeProjectileDamageComponent>(entity, take_projectile_damage);
+
+        TakeSpikesDamageComponent take_spikes_damage;
+        take_spikes_damage.add_observer(reinterpret_cast<Observer<SpikesDamageEvent> *>(main_dude.get_spikes_damage_observer()));
+        registry.emplace<TakeSpikesDamageComponent>(entity, take_spikes_damage);
 
         {
             auto& carrier = registry.get<ItemCarrierComponent>(entity);

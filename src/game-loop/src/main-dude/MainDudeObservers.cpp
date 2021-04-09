@@ -42,6 +42,14 @@ void MainDudeProjectileDamageObserver::on_notify(const ProjectileDamage_t *event
     main_dude_component.enter_stunned_state();
 }
 
+void MainDudeSpikesDamageObserver::on_notify(const SpikesDamageEvent *event)
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+    auto& hitpoints = registry.get<HitpointComponent>(_main_dude);
+
+    Inventory::instance().remove_hearts(hitpoints.get_hitpoints());
+}
+
 void MainDudeExplosionDamageObserver::on_notify(const ExplosionDamageTakenEvent *event)
 {
     auto& registry = EntityRegistry::instance().get_registry();

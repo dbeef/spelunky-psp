@@ -16,6 +16,7 @@
 #include "components/damage/TakeJumpOnTopDamage.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
 #include "components/damage/TakeExplosionDamageComponent.hpp"
+#include "components/damage/TakeSpikesDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -180,6 +181,7 @@ entt::entity prefabs::Caveman::create(float pos_x_center, float pos_y_center)
     registry.emplace<NpcTypeComponent>(entity, NpcType::CAVEMAN);
     registry.emplace<GiveNpcTouchDamageComponent>(entity);
     registry.emplace<TakeExplosionDamageComponent>(entity);
+    registry.emplace<TakeSpikesDamageComponent>(entity);
 
     return entity;
 }
