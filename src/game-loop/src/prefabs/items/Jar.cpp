@@ -147,7 +147,7 @@ entt::entity prefabs::Jar::create(float pos_x_center, float pos_y_center)
     GiveProjectileDamageComponent give_projectile_damage(2);
     give_projectile_damage.set_mutual(true);
 
-    HitpointComponent hitpoints(1);
+    HitpointComponent hitpoints(1, true);
     hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(jar_script->get_observer()));
 
     float critical_speed_x = 0.1f;

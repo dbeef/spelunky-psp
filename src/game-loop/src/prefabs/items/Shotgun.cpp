@@ -55,19 +55,19 @@ namespace
                 }
 
                 {
-                    auto bullet = prefabs::Bullet::create(position.x_center + (bullet_x_pos_offset * 0.33f), position.y_center);
+                    auto bullet = prefabs::Bullet::create(position.x_center + (bullet_x_pos_offset * 0.33f), position.y_center, item.get_item_carrier_entity());
                     auto& bullet_physics = registry.get<PhysicsComponent>(bullet);
                     bullet_physics.set_velocity(bullet_velocity_x, bullet_velocity_y);
                 }
 
                 {
-                    auto bullet = prefabs::Bullet::create(position.x_center + (bullet_x_pos_offset * 0.66f), position.y_center);
+                    auto bullet = prefabs::Bullet::create(position.x_center + (bullet_x_pos_offset * 0.66f), position.y_center, item.get_item_carrier_entity());
                     auto& bullet_physics = registry.get<PhysicsComponent>(bullet);
                     bullet_physics.set_velocity(bullet_velocity_x, bullet_velocity_y + 0.015f);
                 }
 
                 {
-                    auto bullet = prefabs::Bullet::create(position.x_center + (bullet_x_pos_offset * 1.00f), position.y_center);
+                    auto bullet = prefabs::Bullet::create(position.x_center + (bullet_x_pos_offset * 1.00f), position.y_center, item.get_item_carrier_entity());
                     auto& bullet_physics = registry.get<PhysicsComponent>(bullet);
                     bullet_physics.set_velocity(bullet_velocity_x, bullet_velocity_y - 0.015f);
                 }

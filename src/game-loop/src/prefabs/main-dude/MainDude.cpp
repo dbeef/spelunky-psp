@@ -16,6 +16,7 @@
 #include "components/damage/GiveJumpOnTopDamage.hpp"
 #include "components/damage/TakeExplosionDamageComponent.hpp"
 #include "components/damage/TakeFallDamageComponent.hpp"
+#include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
 
 #include "EntityRegistry.hpp"
@@ -62,11 +63,10 @@ namespace prefabs
         registry.emplace<ItemCarrierComponent>(entity, item_carrier);
         registry.emplace<GiveJumpOnTopDamageComponent>(entity, 1);
 
-        // Initialization order is important in this case - MainDudeComponent must be the last to create.
         MainDudeComponent main_dude(entity);
         registry.emplace<MainDudeComponent>(entity, main_dude);
 
-        HitpointComponent hitpoints(Inventory::instance().get_hearts());
+        HitpointComponent hitpoints(Inventory::instance().get_hearts(), false);
         hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent> *>(main_dude.get_death_observer()));
         registry.emplace<HitpointComponent>(entity, hitpoints);
 
@@ -85,6 +85,10 @@ namespace prefabs
         TakeExplosionDamageComponent take_explosion_damage;
         take_explosion_damage.add_observer(reinterpret_cast<Observer<ExplosionDamageTakenEvent> *>(main_dude.get_explosion_damage_observer()));
         registry.emplace<TakeExplosionDamageComponent>(entity, take_explosion_damage);
+
+        TakeProjectileDamageComponent take_projectile_damage;
+        take_projectile_damage.add_observer(reinterpret_cast<Observer<ProjectileDamage_t> *>(main_dude.get_projectile_damage_observer()));
+        registry.emplace<TakeProjectileDamageComponent>(entity, take_projectile_damage);
 
         {
             auto& carrier = registry.get<ItemCarrierComponent>(entity);

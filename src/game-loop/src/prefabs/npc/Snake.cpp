@@ -164,7 +164,7 @@ entt::entity prefabs::Snake::create(float pos_x_center, float pos_y_center)
     auto snake_script = std::make_shared<SnakeScript>(entity);
     ScriptingComponent script(snake_script);
 
-    HitpointComponent hitpoints(1);
+    HitpointComponent hitpoints(1, true);
     hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(snake_script->get_observer()));
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);

@@ -5,6 +5,7 @@
 #include "components/generic/ParticleEmitterComponent.hpp"
 #include "EntityRegistry.hpp"
 #include "other/Inventory.hpp"
+#include "other/ParticleGenerator.hpp"
 
 void MainDudeClimbingObserver::on_notify(const ClimbingEvent *event)
 {
@@ -22,6 +23,23 @@ void MainDudeClimbingObserver::on_notify(const ClimbingEvent *event)
             break;
         }
     }
+}
+
+void MainDudeProjectileDamageObserver::on_notify(const ProjectileDamage_t *event)
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+    auto& main_dude_component = registry.get<MainDudeComponent>(_main_dude);
+    auto& position = registry.get<PositionComponent>(_main_dude);
+
+    Inventory::instance().remove_hearts(*event);
+
+    ParticleGenerator().particle_type(ParticleType::BLOOD)
+            .position(position.x_center, position.y_center)
+            .max_velocity(0.25f, 0.25f)
+            .quantity(4)
+            .finalize();
+
+    main_dude_component.enter_stunned_state();
 }
 
 void MainDudeExplosionDamageObserver::on_notify(const ExplosionDamageTakenEvent *event)
@@ -72,9 +90,16 @@ void MainDudeDeathObserver::on_notify(const DeathEvent *event)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     auto& main_dude_component = registry.get<MainDudeComponent>(_main_dude);
+    auto& position = registry.get<PositionComponent>(_main_dude);
 
     main_dude_component.notify(MainDudeEvent::DIED);
     main_dude_component.enter_dead_state();
+
+    ParticleGenerator().particle_type(ParticleType::BLOOD)
+            .position(position.x_center, position.y_center)
+            .max_velocity(0.25f, 0.25f)
+            .quantity(4)
+            .finalize();
 }
 
 void MainDudeFallObserver::on_notify(const FallDamage_t *event)

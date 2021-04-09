@@ -6,6 +6,7 @@
 #include "components/generic/AnimationComponent.hpp"
 #include "components/generic/ClimbingComponent.hpp"
 #include "components/damage/TakeFallDamageComponent.hpp"
+#include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/damage/TakeNpcTouchDamageComponent.hpp"
 #include "components/damage/TakeExplosionDamageComponent.hpp"
 #include "components/damage/HitpointComponent.hpp"
@@ -53,6 +54,15 @@ class MainDudeExplosionDamageObserver : Observer<ExplosionDamageTakenEvent>
 public:
     explicit MainDudeExplosionDamageObserver(entt::entity main_dude) : _main_dude(main_dude) {};
     void on_notify(const ExplosionDamageTakenEvent * event) override;
+private:
+    const entt::entity _main_dude;
+};
+
+class MainDudeProjectileDamageObserver : Observer<ProjectileDamage_t>
+{
+public:
+    explicit MainDudeProjectileDamageObserver(entt::entity main_dude) : _main_dude(main_dude) {};
+    void on_notify(const ProjectileDamage_t * event) override;
 private:
     const entt::entity _main_dude;
 };

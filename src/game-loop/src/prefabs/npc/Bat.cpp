@@ -212,7 +212,7 @@ entt::entity prefabs::Bat::create(float pos_x_center, float pos_y_center)
     auto bat_script = std::make_shared<BatScript>(entity);
     ScriptingComponent script(bat_script);
 
-    HitpointComponent hitpoints(1);
+    HitpointComponent hitpoints(1, true);
     hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(bat_script->get_observer()));
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);

@@ -190,7 +190,7 @@ entt::entity prefabs::Spider::create(float pos_x_center, float pos_y_center, boo
     auto spider_script = std::make_shared<SpiderScript>(entity);
     ScriptingComponent script(spider_script);
 
-    HitpointComponent hitpoints(1);
+    HitpointComponent hitpoints(1, true);
     hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(spider_script->get_observer()));
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);

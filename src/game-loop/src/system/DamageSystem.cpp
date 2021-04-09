@@ -35,7 +35,11 @@ namespace
         if (hitpoints.get_hitpoints() <= 0)
         {
             hitpoints.notify({npc_type});
-            registry.destroy(entity);
+
+            if (hitpoints.is_disposed_when_zero())
+            {
+                registry.destroy(entity);
+            }
         }
     }
 }
@@ -110,6 +114,11 @@ void DamageSystem::update_projectile_damage()
                 return;
             }
 
+            if (give_damage.is_last_throw_source(take_damage_entity))
+            {
+                return;
+            }
+
             if (!body_physics.is_collision(projectile_physics, projectile_position, body_position))
             {
                 return;
@@ -125,6 +134,11 @@ void DamageSystem::update_projectile_damage()
             take_damage.notify(damage);
             remove_hitpoints(damage, take_damage_entity);
             Audio::instance().play(SFXType::HIT);
+
+            // Set same horizontal direction as projectile:
+            body_physics.set_x_velocity(0.5f * projectile_physics.get_x_velocity());
+            // Make it point slightly upwards:
+            body_physics.set_y_velocity(-0.1f);
 
             if (give_damage.is_mutual())
             {

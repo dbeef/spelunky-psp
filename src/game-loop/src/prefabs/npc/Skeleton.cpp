@@ -169,7 +169,7 @@ entt::entity prefabs::Skeleton::create(float pos_x_center, float pos_y_center)
     auto skeleton_script = std::make_shared<SkeletonScript>(entity);
     ScriptingComponent script(skeleton_script);
 
-    HitpointComponent hitpoints(1);
+    HitpointComponent hitpoints(1, true);
     hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(skeleton_script->get_observer()));
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);

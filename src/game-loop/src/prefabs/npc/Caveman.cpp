@@ -163,7 +163,7 @@ entt::entity prefabs::Caveman::create(float pos_x_center, float pos_y_center)
     auto caveman_script = std::make_shared<CavemanScript>(entity);
     ScriptingComponent script(caveman_script);
 
-    HitpointComponent hitpoints(1);
+    HitpointComponent hitpoints(1, true);
     hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(caveman_script->get_observer()));
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);

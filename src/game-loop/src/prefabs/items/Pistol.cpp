@@ -43,7 +43,7 @@ namespace
                 Audio::instance().play(SFXType::SHOTGUN);
 
                 _cooldown_timer_ms = 0;
-                auto bullet = prefabs::Bullet::create(position.x_center, position.y_center);
+                auto bullet = prefabs::Bullet::create(position.x_center, position.y_center, item.get_item_carrier_entity());
                 auto& bullet_physics = registry.get<PhysicsComponent>(bullet);
 
                 float offset = 0;
