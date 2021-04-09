@@ -24,6 +24,12 @@ public:
 
     void add_dollars(uint16_t amount);
     void remove_hearts(uint16_t amount);
+    
+    void remove_bombs(uint16_t amount);
+    void add_bombs(uint16_t amount);
+    
+    void remove_ropes(uint16_t amount);
+    void add_ropes(uint16_t amount);
 
     const std::vector<ItemType>& get_items() const;
     void set_items(const std::vector<ItemType>& items);

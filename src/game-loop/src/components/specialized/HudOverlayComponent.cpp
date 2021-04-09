@@ -93,6 +93,18 @@ void HudOverlayComponent::on_notify(const InventoryEvent * event)
             text.set_text(to_string(Inventory::instance().get_hearts()));
             break;
         }
+        case InventoryEvent::ROPES_COUNT_CHANGED:
+        {
+            auto& text = registry.get<TextComponent>(_texts.ropes);
+            text.set_text(to_string(Inventory::instance().get_ropes()));
+            break;
+        }
+        case InventoryEvent::BOMBS_COUNT_CHANGED:
+        {
+            auto& text = registry.get<TextComponent>(_texts.bombs);
+            text.set_text(to_string(Inventory::instance().get_bombs()));
+            break;
+        }
         case InventoryEvent::DOLLARS_COUNT_CHANGED:
         {
             _dollars_buffer_count += Inventory::instance().get_dollars() - _dollars_count_previously;
@@ -197,13 +209,13 @@ void HudOverlayComponent::create_children()
     {
         const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 1) + prefabs::HudIcon::getIconSizeWorldUnits();
         const float y = BASE_POS_Y - (prefabs::HudIcon::getIconSizeWorldUnits() * 0.425);
-        _texts.ropes = prefabs::Text::create(x, y, to_string(Inventory::instance().get_ropes()));
+        _texts.bombs = prefabs::Text::create(x, y, to_string(Inventory::instance().get_bombs()));
     }
 
     {
         const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 2) + prefabs::HudIcon::getIconSizeWorldUnits();
         const float y = BASE_POS_Y - (prefabs::HudIcon::getIconSizeWorldUnits() * 0.425);
-        _texts.bombs = prefabs::Text::create(x, y, to_string(Inventory::instance().get_bombs()));
+        _texts.ropes = prefabs::Text::create(x, y, to_string(Inventory::instance().get_ropes()));
     }
 
     {

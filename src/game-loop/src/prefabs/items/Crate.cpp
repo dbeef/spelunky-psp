@@ -22,6 +22,7 @@
 #include "audio/Audio.hpp"
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
+#include "other/Inventory.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
 
 #include <cassert>
@@ -72,7 +73,6 @@ namespace
             Audio::instance().play(SFXType::PICKUP);
             auto& position = registry.get<PositionComponent>(owner);
 
-            // TODO: Remove item out of hands if held
             switch (get_random_loot())
             {
                 case CrateLootType::ITEM:
@@ -90,11 +90,13 @@ namespace
                 }
                 case CrateLootType::ROPE:
                 {
+                    Inventory::instance().add_ropes(4);
                     prefabs::RopeCollectedParticle::create(position.x_center, position.y_center - 1.0f);
                     break;
                 }
                 case CrateLootType::BOMBS:
                 {
+                    Inventory::instance().add_bombs(4);
                     prefabs::BombCollectedParticle::create(position.x_center, position.y_center - 1.0f);
                     break;
                 }

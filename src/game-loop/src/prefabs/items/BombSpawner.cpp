@@ -7,6 +7,7 @@
 #include "components/generic/ItemCarrierComponent.hpp"
 
 #include "EntityRegistry.hpp"
+#include "other/Inventory.hpp"
 
 namespace
 {
@@ -24,6 +25,31 @@ namespace
                 auto& item = registry.get<ItemComponent>(owner);
                 auto& item_carrier = item.get_item_carrier();
 
+                // TODO: Spawning bombs should be limited to the amount in inventory (same for ropes)
+                //       Problem - how to do it in generic way, i.e to not hard-wire it to main dude inventory?
+                //
+                // Main dude could subscribe on inventory event to know when amount of bombs changed,
+                // then it could check if the item he has is a bomb spawner and update its own counter?
+                //
+                // OR
+                //
+                // BombSpawner should be removed/added to main dude inventory dynamically (on inventory event),
+                // instead of once forever until main dude disposed - but then removing bomb should also notify inventory
+                //
+                //
+                // So far Inventory is a singleton (to save state between the levels)
+                // How about Inventory singleton + InventoryComponent that would mirror it plus enable easy access
+                // for Bomb/Rope spawner through subject/observer?
+                //
+                // OR
+                //
+                // Just don't over-engineer and hard-wire it as technically main dude is the only thing in the
+                // game that can spawn bombs / ropes:
+                if (Inventory::instance().get_bombs() == 0)
+                {
+                    return;
+                }
+
                 if (!item_carrier.has_active_item())
                 {
                     auto bomb = prefabs::Bomb::create();
@@ -33,6 +59,8 @@ namespace
                     item_carrier = item.get_item_carrier();
 
                     item_carrier.pick_up_item(bomb, item.get_item_carrier_entity());
+
+                    Inventory::instance().remove_bombs(1);
                 }
             }
         }

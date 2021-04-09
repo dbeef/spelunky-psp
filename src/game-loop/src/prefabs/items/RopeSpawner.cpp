@@ -7,6 +7,7 @@
 #include "components/generic/ItemCarrierComponent.hpp"
 
 #include "EntityRegistry.hpp"
+#include "other/Inventory.hpp"
 
 namespace
 {
@@ -24,6 +25,11 @@ namespace
                 auto& item = registry.get<ItemComponent>(owner);
                 auto& item_carrier = item.get_item_carrier();
 
+                if (Inventory::instance().get_ropes() == 0)
+                {
+                    return;
+                }
+
                 if (!item_carrier.has_active_item())
                 {
                     auto item_carrier_entity = item.get_item_carrier_entity();
@@ -36,6 +42,7 @@ namespace
                     item_carrier = item.get_item_carrier();
 
                     item_carrier.pick_up_item(rope, item.get_item_carrier_entity());
+                    Inventory::instance().remove_ropes(1);
                 }
             }
         }

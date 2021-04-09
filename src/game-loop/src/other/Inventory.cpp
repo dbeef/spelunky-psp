@@ -28,6 +28,30 @@ void Inventory::add_dollars(uint16_t amount)
     notify(InventoryEvent::DOLLARS_COUNT_CHANGED);
 }
 
+void Inventory::add_bombs(uint16_t amount)
+{
+    _bombs += amount;
+    notify(InventoryEvent::BOMBS_COUNT_CHANGED);
+}
+
+void Inventory::remove_bombs(uint16_t amount)
+{
+    _bombs -= amount;
+    notify(InventoryEvent::BOMBS_COUNT_CHANGED);
+}
+
+void Inventory::add_ropes(uint16_t amount)
+{
+    _ropes += amount;
+    notify(InventoryEvent::ROPES_COUNT_CHANGED);
+}
+
+void Inventory::remove_ropes(uint16_t amount)
+{
+    _ropes -= amount;
+    notify(InventoryEvent::ROPES_COUNT_CHANGED);
+}
+
 const std::vector<ItemType> &Inventory::get_items() const
 {
     return _items;
