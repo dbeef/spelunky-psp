@@ -39,7 +39,6 @@ void MainDudeProjectileDamageObserver::on_notify(const ProjectileDamage_t *event
             .quantity(4)
             .finalize();
 
-    // FIXME: Not sure if stunned in original game, verify this
     main_dude_component.enter_stunned_state();
 }
 
