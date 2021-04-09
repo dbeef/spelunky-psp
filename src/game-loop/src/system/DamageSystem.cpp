@@ -302,18 +302,8 @@ void DamageSystem::update_explosion_damage()
                     auto& take_damage_hitpoints = registry.get<HitpointComponent>(body_entity);
                     auto& take_damage_explosion = registry.get<TakeExplosionDamageComponent>(body_entity);
 
-                    take_damage_hitpoints.remove_hitpoints(take_damage_hitpoints.get_hitpoints() + 1);
-                    take_damage_hitpoints.notify({});
+                    remove_hitpoints(take_damage_hitpoints.get_hitpoints(), body_entity);
                     take_damage_explosion.notify({});
-
-                    // Only remove if it was an NPC:
-                    if (registry.has<NpcTypeComponent>(body_entity))
-                    {
-                        // FIXME: What if it is i.e caveman? Cavemen don't disappear upon death - should implement a
-                        //        cleanup method that would be called in the end of DamageSystem update method, plus
-                        //        additional flag indicating that entity can be disposed.
-                        registry.destroy(body_entity);
-                    }
                 }
             }
         });
