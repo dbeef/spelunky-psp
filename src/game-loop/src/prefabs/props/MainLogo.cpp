@@ -24,7 +24,7 @@ entt::entity prefabs::MainLogo::create(float pos_x_center, float pos_y_center)
     MeshComponent mesh;
 
     quad.frame_changed(MainMenuSpritesheetFrames::MAIN_LOGO);
-    mesh.rendering_layer = RenderingLayer::LAYER_4_PROPS;
+    mesh.rendering_layer = RenderingLayer::LAYER_5_PROPS;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     registry.emplace<PositionComponent>(entity, position);

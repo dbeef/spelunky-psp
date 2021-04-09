@@ -31,7 +31,7 @@ entt::entity prefabs::GoldChunk::create(float pos_x_center, float pos_y_center)
     CollectibleComponent collectible(100, LootCollectedEvent::GOLD_CHUNK);
 
     quad.frame_changed(CollectiblesSpritesheetFrames::GOLD_CHUNK);
-    mesh.rendering_layer = RenderingLayer::LAYER_4_PROPS;
+    mesh.rendering_layer = RenderingLayer::LAYER_5_PROPS;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     registry.emplace<PositionComponent>(entity, position);

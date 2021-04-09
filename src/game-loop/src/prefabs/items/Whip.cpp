@@ -110,7 +110,7 @@ namespace
             auto& registry = EntityRegistry::instance().get_registry();
 
             MeshComponent mesh;
-            mesh.rendering_layer = RenderingLayer::LAYER_2_ITEMS;
+            mesh.rendering_layer = RenderingLayer::LAYER_3_ITEMS;
             mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
             QuadComponent quad(TextureType::COLLECTIBLES, width, height);

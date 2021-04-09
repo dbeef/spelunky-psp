@@ -52,7 +52,7 @@ namespace prefabs
 
         MeshComponent mesh;
         mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
-        mesh.rendering_layer = RenderingLayer::LAYER_3_DUDE;
+        mesh.rendering_layer = RenderingLayer::LAYER_4_DUDE;
 
         registry.emplace<PositionComponent>(entity, position);
         registry.emplace<QuadComponent>(entity, quad);

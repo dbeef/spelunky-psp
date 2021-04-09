@@ -4,9 +4,11 @@
 
 enum class RenderingLayer : std::uint16_t
 {
-    LAYER_5_TILES,
-    LAYER_4_PROPS,
-    LAYER_3_DUDE,
-    LAYER_2_ITEMS,
-    LAYER_1_UI_TEXT,
+    LAYER_6_TILES,
+    LAYER_5_PROPS,
+    LAYER_4_DUDE,
+    LAYER_3_ITEMS,
+    LAYER_2_HUD,
+    LAYER_1_OVERLAY,
+    LAYER_0_OVERLAY_TEXT,
 };

@@ -20,6 +20,6 @@ struct MeshComponent
     IndexType* indices = nullptr;
     std::size_t indices_count = 0;
     TextureID texture_id = 0;
-    RenderingLayer rendering_layer = RenderingLayer::LAYER_4_PROPS;
+    RenderingLayer rendering_layer = RenderingLayer::LAYER_5_PROPS;
     CameraType camera_type = CameraType::SCREEN_SPACE;
 };

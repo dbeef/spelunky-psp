@@ -41,7 +41,7 @@ entt::entity prefabs::FlameTrailParticle::create(float pos_x_center, float pos_y
                     static_cast<std::size_t>(CollectiblesSpritesheetFrames::FLAME_TRAIL_4_LAST),
                     110, false);
 
-    mesh.rendering_layer = RenderingLayer::LAYER_3_DUDE;
+    mesh.rendering_layer = RenderingLayer::LAYER_4_DUDE;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     registry.emplace<PositionComponent>(entity, position);

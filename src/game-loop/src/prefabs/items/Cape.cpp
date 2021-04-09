@@ -108,7 +108,7 @@ entt::entity prefabs::Cape::create(float pos_x_center, float pos_y_center)
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
-    registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_4_PROPS, CameraType::MODEL_VIEW_SPACE);
+    registry.emplace<MeshComponent>(entity, RenderingLayer::LAYER_5_PROPS, CameraType::MODEL_VIEW_SPACE);
     registry.emplace<PhysicsComponent>(entity, physics);
     registry.emplace<ItemComponent>(entity, item);
     registry.emplace<ScriptingComponent>(entity, std::make_shared<CapeScript>());

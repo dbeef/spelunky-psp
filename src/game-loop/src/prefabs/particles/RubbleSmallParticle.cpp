@@ -31,7 +31,7 @@ entt::entity prefabs::RubbleSmallParticle::create(float pos_x_center, float pos_
 
     quad.frame_changed<CollectiblesSpritesheetFrames>(CollectiblesSpritesheetFrames::RUBBLE_SMALL);
 
-    mesh.rendering_layer = RenderingLayer::LAYER_3_DUDE;
+    mesh.rendering_layer = RenderingLayer::LAYER_4_DUDE;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     registry.emplace<PositionComponent>(entity, position);

@@ -31,7 +31,7 @@ entt::entity prefabs::TripleGoldBar::create(float pos_x_center, float pos_y_cent
     CollectibleComponent collectible(1000, LootCollectedEvent::TRIPLE_GOLD_BAR);
 
     quad.frame_changed(CollectiblesSpritesheetFrames::TRIPLE_GOLD_BAR);
-    mesh.rendering_layer = RenderingLayer::LAYER_4_PROPS;
+    mesh.rendering_layer = RenderingLayer::LAYER_5_PROPS;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     registry.emplace<PositionComponent>(entity, position);

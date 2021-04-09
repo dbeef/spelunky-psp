@@ -75,7 +75,7 @@ entt::entity prefabs::Bullet::create(float pos_x_center, float pos_y_center, ent
     physics.disable_gravity();
 
     quad.frame_changed(CollectiblesSpritesheetFrames::BULLET);
-    mesh.rendering_layer = RenderingLayer::LAYER_2_ITEMS;
+    mesh.rendering_layer = RenderingLayer::LAYER_3_ITEMS;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;
 
     auto bullet_script = std::make_shared<BulletScript>(entity);
