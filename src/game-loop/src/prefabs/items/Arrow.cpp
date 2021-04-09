@@ -98,11 +98,6 @@ entt::entity prefabs::Arrow::create()
     return create(0, 0);
 }
 
-entt::entity prefabs::Arrow::create(float pos_x_center, float pos_y_center)
-{
-    return create(pos_x_center, pos_y_center, entt::null);
-}
-
 entt::entity prefabs::Arrow::create(float pos_x_center, float pos_y_center, entt::entity throw_source)
 {
     auto& registry = EntityRegistry::instance().get_registry();
