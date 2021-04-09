@@ -1,6 +1,7 @@
 #include "system/DamageSystem.hpp"
 #include "EntityRegistry.hpp"
 #include "audio/Audio.hpp"
+
 #include "components/damage/TakeFallDamageComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/NpcTypeComponent.hpp"
@@ -17,6 +18,8 @@
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
 #include "components/damage/GiveExplosionDamageComponent.hpp"
 #include "components/damage/TakeExplosionDamageComponent.hpp"
+#include "components/damage/GiveSpikesDamageComponent.hpp"
+#include "components/damage/TakeSpikesDamageComponent.hpp"
 
 #include <cmath>
 
@@ -53,6 +56,7 @@ void DamageSystem::update(std::uint32_t delta_time_ms)
     update_jump_on_top_damage();
     update_npc_touch_damage(delta_time_ms);
     update_explosion_damage();
+    update_spikes_damage();
 }
 
 void DamageSystem::update_melee_damage()
@@ -265,6 +269,41 @@ void DamageSystem::update_jump_on_top_damage()
     };
 
     registry.view<GiveJumpOnTopDamageComponent, PhysicsComponent, PositionComponent>().each(give_jump_on_top_damage);
+}
+
+void DamageSystem::update_spikes_damage()
+{
+    const float treshold_speed = 0.1f;
+
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    auto spikes = registry.view<GiveSpikesDamageComponent, PhysicsComponent, PositionComponent>();
+    auto bodies = registry.view<TakeSpikesDamageComponent, PhysicsComponent, PositionComponent>();
+
+    auto give_spike_damage = [&](entt::entity spike_entity,
+                                 GiveSpikesDamageComponent& spike_damage,
+                                 PhysicsComponent& spike_physics,
+                                 PositionComponent& spike_position)
+    {
+        bodies.each([&](entt::entity body_entity,
+                             TakeSpikesDamageComponent& body_damage,
+                             PhysicsComponent& body_physics,
+                             PositionComponent& body_position)
+        {
+            if (body_physics.get_y_velocity() < treshold_speed)
+            {
+                return;
+            }
+
+            if (spike_physics.is_collision(body_physics, body_position, spike_position))
+            {
+                auto& hitpoints = registry.get<HitpointComponent>(body_entity);
+                remove_hitpoints(hitpoints.get_hitpoints(), body_entity);
+            }
+        });
+    };
+
+    spikes.each(give_spike_damage);
 }
 
 void DamageSystem::update_explosion_damage()

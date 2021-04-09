@@ -8,6 +8,7 @@
 #include "components/generic/MeshComponent.hpp"
 #include "components/damage/TakeExplosionDamageComponent.hpp"
 #include "components/damage/HitpointComponent.hpp"
+#include "components/damage/GiveSpikesDamageComponent.hpp"
 
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -58,13 +59,7 @@ entt::entity prefabs::Spikes::create(float pos_x_center, float pos_y_center)
     registry.emplace<ScriptingComponent>(entity, std::make_shared<SpikesScript>());
     registry.emplace<HitpointComponent>(entity, 1, true);
     registry.emplace<TakeExplosionDamageComponent>(entity);
-
-    // TODO: Spikes should take explosion damage (but without arrow-trap's checking for tile, only hitpoint component)
-    //       ^ DONE
-
-    // TODO: Spikes should give melee damage to every entity that collides with it AND has positive vertical speed (some treshold?)
-    //       New kind of component? [Give/Take]SpikeDamageComponent?
-    //       Threshold speed could make cape item save from killing by spikes - like in the original game
+    registry.emplace<GiveSpikesDamageComponent>(entity);
 
     return entity;
 }

@@ -109,6 +109,8 @@ add_library(GameLoop STATIC
         include/components/damage/TakeJumpOnTopDamage.hpp
         include/components/damage/GiveExplosionDamageComponent.hpp
         include/components/damage/TakeExplosionDamageComponent.hpp
+        include/components/damage/GiveSpikesDamageComponent.hpp
+        include/components/damage/TakeSpikesDamageComponent.hpp
 
         # Prefabs:
 
