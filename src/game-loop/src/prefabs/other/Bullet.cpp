@@ -58,7 +58,7 @@ entt::entity prefabs::Bullet::create()
     return create(0, 0);
 }
 
-entt::entity prefabs::Bullet::create(float pos_x_center, float pos_y_center)
+entt::entity prefabs::Bullet::create(float pos_x_center, float pos_y_center, entt::entity projectile_source)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
@@ -81,10 +81,10 @@ entt::entity prefabs::Bullet::create(float pos_x_center, float pos_y_center)
     auto bullet_script = std::make_shared<BulletScript>(entity);
     ScriptingComponent script(bullet_script);
 
-    HitpointComponent hitpoints(1);
+    HitpointComponent hitpoints(1, true);
     hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(bullet_script->get_observer()));
 
-    GiveProjectileDamageComponent give_projectile_damage(2);
+    GiveProjectileDamageComponent give_projectile_damage(2, projectile_source);
     give_projectile_damage.set_mutual(true);
 
     float critical_speed_x = 0.1f;

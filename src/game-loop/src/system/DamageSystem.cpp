@@ -36,10 +36,7 @@ namespace
         {
             hitpoints.notify({npc_type});
 
-            // FIXME: This workaround breaks jars/bullets/skull behavior, as they are neither NPC's nor main dude
-            //        - some flag indicating that entity can be removed after reaching 0 hitpoints?
-
-            if (registry.has<NpcTypeComponent>(entity))
+            if (hitpoints.is_disposed_when_zero())
             {
                 registry.destroy(entity);
             }

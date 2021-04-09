@@ -66,7 +66,7 @@ namespace prefabs
         MainDudeComponent main_dude(entity);
         registry.emplace<MainDudeComponent>(entity, main_dude);
 
-        HitpointComponent hitpoints(Inventory::instance().get_hearts());
+        HitpointComponent hitpoints(Inventory::instance().get_hearts(), false);
         hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent> *>(main_dude.get_death_observer()));
         registry.emplace<HitpointComponent>(entity, hitpoints);
 

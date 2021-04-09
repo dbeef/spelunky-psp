@@ -101,7 +101,7 @@ entt::entity prefabs::Skull::create(float pos_x_center, float pos_y_center)
     auto skull_script = std::make_shared<SkullScript>(entity);
     ScriptingComponent script(skull_script);
 
-    HitpointComponent hitpoints(1);
+    HitpointComponent hitpoints(1, true);
     hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(skull_script->get_observer()));
 
     GiveProjectileDamageComponent give_projectile_damage(1);

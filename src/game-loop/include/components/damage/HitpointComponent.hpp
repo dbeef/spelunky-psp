@@ -13,7 +13,11 @@ using Hitpoint_t = int;
 class HitpointComponent : public Subject<DeathEvent>
 {
 public:
-    explicit HitpointComponent(Hitpoint_t hitpoints) : _hitpoints(hitpoints) {}
+    explicit HitpointComponent(Hitpoint_t hitpoints, bool dispose_when_zero)
+        : _hitpoints(hitpoints)
+        , _dispose_when_zero(dispose_when_zero)
+    {}
+
     HitpointComponent() = default;
 
     void remove_hitpoints(Hitpoint_t hitpoints)
@@ -26,6 +30,9 @@ public:
         return _hitpoints;
     }
 
+    bool is_disposed_when_zero() const { return _dispose_when_zero; }
+
 private:
     Hitpoint_t _hitpoints = 0;
+    bool _dispose_when_zero = false;
 };
