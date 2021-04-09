@@ -63,18 +63,6 @@ namespace prefabs
         registry.emplace<ItemCarrierComponent>(entity, item_carrier);
         registry.emplace<GiveJumpOnTopDamageComponent>(entity, 1);
 
-        // FIXME: How to differentiate between projectiles that the main dude has just thrown,
-        //        and the ones from outside, i.e from arrow trap?
-        //
-        //        a) add offset immediately after throwing a projectile so there would be no collision
-        //        b) when checking collisions, ignore projectiles moving away?
-        //        c) give a high velocity treshold?
-        //        d) carry some indicator (i.e component) that would store source of projectile (i.e arrow trop, main dude, nothing)
-        //
-        //        b) save entity id of thrown projectile and ignore it when checking collision
-        //        c) short cooldown just after throwing something?
-
-        // Initialization order is important in this case - MainDudeComponent must be the last to create.
         MainDudeComponent main_dude(entity);
         registry.emplace<MainDudeComponent>(entity, main_dude);
 

@@ -37,6 +37,8 @@ namespace
             hitpoints.notify({npc_type});
 
             // FIXME: This workaround breaks jars/bullets/skull behavior, as they are neither NPC's nor main dude
+            //        - some flag indicating that entity can be removed after reaching 0 hitpoints?
+
             if (registry.has<NpcTypeComponent>(entity))
             {
                 registry.destroy(entity);
@@ -136,13 +138,13 @@ void DamageSystem::update_projectile_damage()
             remove_hitpoints(damage, take_damage_entity);
             Audio::instance().play(SFXType::HIT);
 
+            // Set same horizontal direction as projectile:
+            body_physics.set_x_velocity(0.5f * projectile_physics.get_x_velocity());
+            // Make it point slightly upwards:
+            body_physics.set_y_velocity(-0.1f);
+
             if (give_damage.is_mutual())
             {
-                // Set same horizontal direction as projectile:
-                body_physics.set_x_velocity(0.5f * projectile_physics.get_x_velocity());
-                // Make it point slightly upwards:
-                body_physics.set_y_velocity(-0.1f);
-
                 if (registry.has<HitpointComponent>(give_damage_entity))
                 {
                     remove_hitpoints(damage, give_damage_entity);
