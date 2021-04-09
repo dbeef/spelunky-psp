@@ -115,6 +115,7 @@ entt::entity prefabs::ArrowTrap::create(float pos_x_center, float pos_y_center, 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<PhysicsComponent>(entity, physics);
     registry.emplace<ScriptingComponent>(entity, std::make_shared<ArrowTrapScript>(orientation));
+    // TODO: HitpointComponent + TakeExplosionDamageComponent
 
     return entity;
 }
