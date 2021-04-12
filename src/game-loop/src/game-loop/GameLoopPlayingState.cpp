@@ -144,6 +144,11 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     auto& dude = registry.get<MainDudeComponent>(_main_dude);
     dude.add_observer(this);
 
+    // Subscribe HUD on main-dude's ItemCarrierComponent events:
+    auto& hud_component = registry.get<HudOverlayComponent>(_hud);
+    auto& item_component = registry.get<ItemCarrierComponent>(_main_dude);
+    item_component.add_observer(hud_component.get_item_observer());
+
     auto& death = registry.get<DeathOverlayComponent>(_death_overlay);
     death.disable_input();
 
@@ -191,6 +196,7 @@ void GameLoopPlayingState::on_notify(const MainDudeEvent* event)
 
             if (registry.valid(_hud))
             {
+                // TODO: Unsubscribe on main-dude's ItemCarrierComponent
                 registry.destroy(_hud);
             }
             _hud = entt::null;

@@ -7,11 +7,25 @@
 #include "other/ItemType.hpp"
 #include "EntityRegistry.hpp"
 #include "entt/entt.hpp"
+#include "patterns/Subject.hpp"
 
 #include <vector>
 #include <algorithm>
 
-class ItemCarrierComponent
+struct ItemCarrierEvent
+{
+    enum class EventType
+    {
+        EQUIPPED,
+        DROPPED
+    };
+
+    EventType event_type;
+    ItemType item_type;
+};
+
+// TODO: ItemCarrierComponent should be a Subject<ItemCarrierComponent>, so Inventory could subscribe to it, and in turn notify HUD
+class ItemCarrierComponent : public Subject<ItemCarrierEvent>
 {
 public:
 

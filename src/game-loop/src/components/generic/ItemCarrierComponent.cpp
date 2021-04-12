@@ -73,6 +73,8 @@ void ItemCarrierComponent::pick_up_item(entt::entity item, entt::entity carrier)
         auto &physics = registry.get<PhysicsComponent>(item);
         physics.disable_gravity();
     }
+
+    notify({ItemCarrierEvent::EventType::EQUIPPED, item_component.get_type()});
 }
 
 void ItemCarrierComponent::put_down_active_item()
@@ -93,6 +95,8 @@ void ItemCarrierComponent::put_down_active_item()
     physics.enable_gravity();
 
     _slots.active_item = entt::null;
+
+    notify({ItemCarrierEvent::EventType::DROPPED, item.get_type()});
 }
 
 void ItemCarrierComponent::throw_active_item(HorizontalOrientationComponent carrier_orientation, PhysicsComponent &carrier_physics)
@@ -127,6 +131,8 @@ void ItemCarrierComponent::throw_active_item(HorizontalOrientationComponent carr
     }
 
     _slots.active_item = entt::null;
+
+    notify({ItemCarrierEvent::EventType::DROPPED, item.get_type()});
 }
 
 void ItemCarrierComponent::update_carried_items_positions(PositionComponent &position)
