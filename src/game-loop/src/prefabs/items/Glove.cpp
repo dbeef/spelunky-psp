@@ -52,7 +52,6 @@ entt::entity prefabs::Glove::create(float pos_x_center, float pos_y_center)
     QuadComponent quad(TextureType::COLLECTIBLES, width, height);
     quad.frame_changed(CollectiblesSpritesheetFrames::GLOVE);
 
-    // TODO: Rendering item icon in HUD (optionally)
     // TODO: Component for storing properties modified by passive items
     ItemComponent item(ItemType::GLOVE, ItemApplication::PASSIVE, ItemSlot::HANDS);
 

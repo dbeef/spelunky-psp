@@ -52,7 +52,6 @@ entt::entity prefabs::SpikeShoes::create(float pos_x_center, float pos_y_center)
     QuadComponent quad(TextureType::COLLECTIBLES, width, height);
     quad.frame_changed(CollectiblesSpritesheetFrames::SPIKE_SHOES);
 
-    // TODO: Rendering item icon in HUD (optionally)
     // TODO: Component for storing properties modified by passive items
     ItemComponent item(ItemType::SPIKE_SHOES, ItemApplication::PASSIVE, ItemSlot::FEET);
 

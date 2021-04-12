@@ -52,7 +52,6 @@ entt::entity prefabs::Mitt::create(float pos_x_center, float pos_y_center)
     QuadComponent quad(TextureType::COLLECTIBLES, width, height);
     quad.frame_changed(CollectiblesSpritesheetFrames::MITT);
 
-    // TODO: Rendering item icon in HUD (optionally)
     // TODO: Component for storing properties modified by passive items
     ItemComponent item(ItemType::MITT, ItemApplication::PASSIVE, ItemSlot::HANDS);
 

@@ -4,21 +4,6 @@
 #include <cassert>
 #include <cmath>
 
-namespace
-{
-    void place_passive_item(entt::entity& slot, entt::entity item)
-    {
-        auto& registry = EntityRegistry::instance().get_registry();
-
-        if (slot != entt::null)
-        {
-            registry.destroy(slot);
-        }
-
-        slot = item;
-    }
-}
-
 ItemComponent &ItemCarrierComponent::get_active_item() const
 {
     assert(has_active_item());
@@ -74,7 +59,7 @@ void ItemCarrierComponent::pick_up_item(entt::entity item, entt::entity carrier)
         physics.disable_gravity();
     }
 
-    notify({ItemCarrierEvent::EventType::EQUIPPED, item_component.get_type()});
+    notify({ItemCarrierEvent::EventType::ADDED, item_component.get_type()});
 }
 
 void ItemCarrierComponent::put_down_active_item()
@@ -96,7 +81,7 @@ void ItemCarrierComponent::put_down_active_item()
 
     _slots.active_item = entt::null;
 
-    notify({ItemCarrierEvent::EventType::DROPPED, item.get_type()});
+    notify({ItemCarrierEvent::EventType::REMOVED, item.get_type()});
 }
 
 void ItemCarrierComponent::throw_active_item(HorizontalOrientationComponent carrier_orientation, PhysicsComponent &carrier_physics)
@@ -132,7 +117,7 @@ void ItemCarrierComponent::throw_active_item(HorizontalOrientationComponent carr
 
     _slots.active_item = entt::null;
 
-    notify({ItemCarrierEvent::EventType::DROPPED, item.get_type()});
+    notify({ItemCarrierEvent::EventType::REMOVED, item.get_type()});
 }
 
 void ItemCarrierComponent::update_carried_items_positions(PositionComponent &position)
@@ -278,4 +263,18 @@ entt::entity ItemCarrierComponent::get_item(ItemType item_type) const
     }
 
     return entt::null;
+}
+
+void ItemCarrierComponent::place_passive_item(entt::entity &slot, entt::entity item)
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    if (slot != entt::null)
+    {
+        auto& item_component = registry.get<ItemComponent>(slot);
+        notify({ItemCarrierEvent::EventType::REMOVED, item_component.get_type()});
+        registry.destroy(slot);
+    }
+
+    slot = item;
 }

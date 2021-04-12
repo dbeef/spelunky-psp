@@ -16,8 +16,8 @@ struct ItemCarrierEvent
 {
     enum class EventType
     {
-        EQUIPPED,
-        DROPPED
+        ADDED,
+        REMOVED
     };
 
     EventType event_type;
@@ -61,4 +61,5 @@ private:
     void set_item_position(PositionComponent& position, entt::entity item);
     void set_item_orientation(HorizontalOrientationComponent& orientation, entt::entity item);
     std::vector<entt::entity> get_all_carried_items() const;
+    void place_passive_item(entt::entity& slot, entt::entity item);
 };

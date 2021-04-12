@@ -31,6 +31,13 @@ namespace
     }
 }
 
+Point2D HudOverlayItemObserver::get_item_icon_position(std::size_t index) const
+{
+    const auto pos_x = static_cast<float>(_viewport->get_width_world_units() * 0.05f) + ((index + 1) * ICONS_OFFSET_WORLD_UNITS * 0.5f);
+    const auto pos_y = static_cast<float>(_viewport->get_height_world_units() * 0.05f) + ICONS_OFFSET_WORLD_UNITS * 0.5f;
+    return {pos_x, pos_y};
+}
+
 void HudOverlayComponent::update(uint32_t delta_time_ms)
 {
     _dollars_buffer_count_timer += delta_time_ms;
@@ -98,31 +105,28 @@ void HudOverlayItemObserver::on_notify(const ItemCarrierEvent * event)
     assert(_viewport);
 
     auto& registry = EntityRegistry::instance().get_registry();
-
-    const auto pos_x = static_cast<float>(_viewport->get_width_world_units() * 0.05f) + ((_displayed_items + 1) * ICONS_OFFSET_WORLD_UNITS * 0.5f);
-    const auto pos_y = static_cast<float>(_viewport->get_height_world_units() * 0.05f) + ICONS_OFFSET_WORLD_UNITS * 0.5f;
+    const auto new_icon_position = get_item_icon_position(_displayed_items);
 
     switch (event->event_type)
     {
-        case ItemCarrierEvent::EventType::EQUIPPED:
+        case ItemCarrierEvent::EventType::ADDED:
         {
             if (displays_item(event->item_type))
             {
                 return;
             }
 
-            entt::entity entity = entt::null;
+            entt::entity entity;
 
             switch (event->item_type)
             {
-                // TODO: Icons for jetpack and cape are different than their item quads - add them and display here
-                //       What's more, most of items have separate images for icons. How to address this?
-                //       Just a new prefab, like SomethingIcon, i.e JetpackIcon, MittIcon...? If so, how to differentiate,
-                //       just by a switch case here match a prefab with item type?
-                case ItemType::SPIKE_SHOES: entity = prefabs::SpikeShoes::create(pos_x, pos_y); break;
-                case ItemType::SPRING_SHOES: entity = prefabs::SpringShoes::create(pos_x, pos_y); break;
-                case ItemType::MITT: entity = prefabs::Mitt::create(pos_x, pos_y); break;
-                case ItemType::GLOVE: entity = prefabs::Glove::create(pos_x, pos_y); break;
+                // TODO: Could also add a compass in this MR
+                case ItemType::SPIKE_SHOES: entity = prefabs::HudIcon::create(new_icon_position.x, new_icon_position.y, HUDSpritesheetFrames::SPIKE_SHOES_ICON); break;
+                case ItemType::SPRING_SHOES: entity = prefabs::HudIcon::create(new_icon_position.x, new_icon_position.y, HUDSpritesheetFrames::SPRING_SHOES_ICON); break;
+                case ItemType::MITT: entity = prefabs::HudIcon::create(new_icon_position.x, new_icon_position.y, HUDSpritesheetFrames::MITT_ICON); break;
+                case ItemType::GLOVE: entity = prefabs::HudIcon::create(new_icon_position.x, new_icon_position.y, HUDSpritesheetFrames::GLOVES_ICON); break;
+                case ItemType::JETPACK: entity = prefabs::HudIcon::create(new_icon_position.x, new_icon_position.y, HUDSpritesheetFrames::JETPACK_ICON); break;
+                case ItemType::CAPE: entity = prefabs::HudIcon::create(new_icon_position.x, new_icon_position.y, HUDSpritesheetFrames::CAPE_ICON); break;
                 default:
                 {
                     // Don't display anything in case of any other items
@@ -130,36 +134,57 @@ void HudOverlayItemObserver::on_notify(const ItemCarrierEvent * event)
                 }
             }
 
-            // Remove needless components:
-            registry.remove<ScriptingComponent>(entity);
-            registry.remove<ItemComponent>(entity);
-            registry.remove<PhysicsComponent>(entity);
-
-            // Edit the mesh component to display in screen-space instead of model-view space:
-            auto& mesh = registry.get<MeshComponent>(entity);
-            mesh.camera_type = CameraType::SCREEN_SPACE;
-            mesh.rendering_layer = RenderingLayer::LAYER_2_HUD;
-
-            // Slightly change the scale:
-            auto& quad = registry.get<QuadComponent>(entity);
-            quad.set_quad_width(quad.get_quad_width() * 0.75f);
-            quad.set_quad_height(quad.get_quad_height() * 0.75f);
-
-            _children.push_back({ItemType::SPIKE_SHOES, entity});
+            _children.push_back({event->item_type, entity});
             _displayed_items++;
+
+            std::sort(_children.begin(), _children.end(), [](const auto& lhs, const auto& rhs)
+            {
+                return static_cast<int>(lhs.first) > static_cast<int>(rhs.second);
+            });
 
             break;
         }
-        case ItemCarrierEvent::EventType::DROPPED: // TODO: Rename to "removed"
+        case ItemCarrierEvent::EventType::REMOVED:
         {
             if (!displays_item(event->item_type))
             {
                 return;
             }
 
+            const auto iter = std::remove_if(_children.begin(), _children.end(), [event, &registry](const auto type_entity_pair)
+            {
+                const auto& icon_entity = type_entity_pair.second;
+                if (event->item_type == type_entity_pair.first)
+                {
+                    registry.destroy(icon_entity);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            });
+
+            assert(iter != _children.end());
+            _children.erase(iter);
             _displayed_items--;
 
-            // TODO: Hide icon of removed item
+            // Re-calculate positions for each existing icon:
+
+            std::size_t index = 0;
+
+            for (auto& type_entity_pair : _children)
+            {
+                const auto pos_recalculated = get_item_icon_position(index);
+
+                auto& entity = type_entity_pair.second;
+                auto& position_component = registry.get<PositionComponent>(entity);
+                position_component.x_center = pos_recalculated.x;
+                position_component.y_center = pos_recalculated.y;
+
+                index++;
+            }
+
             break;
         }
     }

@@ -26,6 +26,7 @@ public:
     int get_displayed_items() const { return _displayed_items; }
 private:
     bool displays_item(ItemType) const;
+    Point2D get_item_icon_position(std::size_t index) const;
     int _displayed_items = 0;
     std::vector<std::pair<ItemType, entt::entity>> _children;
     std::shared_ptr<Viewport> _viewport;
