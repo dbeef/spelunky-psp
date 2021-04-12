@@ -168,6 +168,11 @@ add_library(GameLoop STATIC
         include/prefabs/items/Cape.hpp
         include/prefabs/items/Arrow.hpp
         include/prefabs/items/Skull.hpp
+        include/prefabs/items/SpikeShoes.hpp
+        include/prefabs/items/SpringShoes.hpp
+        include/prefabs/items/SpringShoes.hpp
+        include/prefabs/items/Mitt.hpp
+        include/prefabs/items/Glove.hpp
         include/prefabs/effects/Explosion.hpp
         include/prefabs/effects/ShotgunBlast.hpp
         include/prefabs/other/Bullet.hpp
@@ -211,6 +216,10 @@ add_library(GameLoop STATIC
         src/prefabs/collectibles/GoldNugget.cpp
         src/prefabs/collectibles/GoldChunk.cpp
         src/prefabs/collectibles/SmallGem.cpp
+        src/prefabs/items/SpikeShoes.cpp
+        src/prefabs/items/SpringShoes.cpp
+        src/prefabs/items/Mitt.cpp
+        src/prefabs/items/Glove.cpp
         src/prefabs/items/Jetpack.cpp
         src/prefabs/items/BombSpawner.cpp
         src/prefabs/items/Bomb.cpp
