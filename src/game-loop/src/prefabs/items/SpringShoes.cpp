@@ -54,7 +54,7 @@ entt::entity prefabs::SpringShoes::create(float pos_x_center, float pos_y_center
 
     // TODO: Rendering item icon in HUD (optionally)
     // TODO: Component for storing properties modified by passive items
-    ItemComponent item(ItemType::SPRING_SHOES, ItemApplication::PASSIVE, ItemSlot::OTHER);
+    ItemComponent item(ItemType::SPRING_SHOES, ItemApplication::PASSIVE, ItemSlot::FEET);
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
