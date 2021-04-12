@@ -29,6 +29,7 @@
 
 #include <vector>
 #include <memory>
+#include <components/generic/ItemCarrierComponent.hpp>
 
 class MainDudeBaseState;
 class Input;
@@ -93,6 +94,9 @@ private:
     MapTile* is_overlaping_tile(MapTileType, PhysicsComponent& physics, PositionComponent& position) const;
 
     // Returns true on successful request.
+    bool hang_off_cliff_left_gloves(ItemCarrierComponent& items, PhysicsComponent& physics, PositionComponent& position);
+    bool hang_off_cliff_right_gloves(ItemCarrierComponent& items, PhysicsComponent& physics, PositionComponent& position);
+
     bool hang_off_cliff_left(PhysicsComponent& physics, PositionComponent& position);
     bool hang_off_cliff_right(PhysicsComponent& physics, PositionComponent& position);
 

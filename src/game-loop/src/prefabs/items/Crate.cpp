@@ -44,13 +44,13 @@ namespace
 
     enum class CrateItemType : uint8_t
     {
-        JETPACK = 0,
-        CAPE,
-        PISTOL,
-        SHOTGUN,
-        SPIKE_SHOES,
-        SPRING_SHOES,
-        MITT,
+        //JETPACK = 0,
+        //CAPE,
+        //PISTOL,
+        //SHOTGUN,
+        //SPIKE_SHOES,
+        //SPRING_SHOES,
+        //MITT,
         GLOVE,
         _SIZE
     };
@@ -88,13 +88,13 @@ namespace
                 {
                     switch (get_random_item())
                     {
-                        case CrateItemType::JETPACK: prefabs::Jetpack::create(position.x_center, position.y_center); break;
-                        case CrateItemType::CAPE: prefabs::Cape::create(position.x_center, position.y_center); break;
-                        case CrateItemType::PISTOL: prefabs::Pistol::create(position.x_center, position.y_center); break;
-                        case CrateItemType::SHOTGUN: prefabs::Shotgun::create(position.x_center, position.y_center); break;
-                        case CrateItemType::SPIKE_SHOES: prefabs::SpikeShoes::create(position.x_center, position.y_center); break;
-                        case CrateItemType::SPRING_SHOES: prefabs::SpringShoes::create(position.x_center, position.y_center); break;
-                        case CrateItemType::MITT: prefabs::Mitt::create(position.x_center, position.y_center); break;
+                        //case CrateItemType::JETPACK: prefabs::Jetpack::create(position.x_center, position.y_center); break;
+                        //case CrateItemType::CAPE: prefabs::Cape::create(position.x_center, position.y_center); break;
+                        //case CrateItemType::PISTOL: prefabs::Pistol::create(position.x_center, position.y_center); break;
+                        //case CrateItemType::SHOTGUN: prefabs::Shotgun::create(position.x_center, position.y_center); break;
+                        //case CrateItemType::SPIKE_SHOES: prefabs::SpikeShoes::create(position.x_center, position.y_center); break;
+                        //case CrateItemType::SPRING_SHOES: prefabs::SpringShoes::create(position.x_center, position.y_center); break;
+                        //case CrateItemType::MITT: prefabs::Mitt::create(position.x_center, position.y_center); break;
                         case CrateItemType::GLOVE: prefabs::Glove::create(position.x_center, position.y_center); break;
                     }
 

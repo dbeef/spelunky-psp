@@ -53,6 +53,27 @@ entt::entity prefabs::SpringShoes::create(float pos_x_center, float pos_y_center
     quad.frame_changed(CollectiblesSpritesheetFrames::SPRING_SHOES);
 
     // TODO: Component for storing properties modified by passive items
+    //
+    //       What properties can be modified by items:
+    //       * Jumping velocity (spring shoes)
+    //       * Item throw velocity (mitt)
+    //       * Max jumping damage (spike shoes)
+    //       * Climbing walls on every surface, not only on cliffs (gloves)
+    //
+    // This new component would store base modifiers for all of these + would account modifiers of all items held?
+    // Maybe not create new component, but place it in existing ItemCarrierComponent?
+    //
+    // Throwing an item implies ItemCarrierComponent, so seems logical to place throwing velocity modifier there,
+    // but the rest does not fit
+    //
+    // Maybe no special components nor extending existing ones, just make ItemCarrierComponent expose interface
+    // for checking presence of specific item, and let specific systems check for its presence?
+    //
+    // i.e input system would be interested if gloves are held
+    //
+    // on the other hand, querying for presence of an item each time may give small time penalty, whilst saving
+    // all modifiers upon item added/removed wouldn't
+
     ItemComponent item(ItemType::SPRING_SHOES, ItemApplication::PASSIVE, ItemSlot::FEET);
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);

@@ -126,6 +126,7 @@ void MainDudeComponent::enter_level_summary_state()
 
 bool MainDudeComponent::hang_off_cliff_right(PhysicsComponent& physics, PositionComponent& position)
 {
+
     if (physics.is_right_collision())
     {
         MapTile *neighbours[9] = {nullptr};
@@ -136,8 +137,32 @@ bool MainDudeComponent::hang_off_cliff_right(PhysicsComponent& physics, Position
         auto* right_upper_tile = neighbours[static_cast<int>(NeighbouringTiles::RIGHT_UP)];
 
         if (right_tile && right_tile->collidable && (!right_upper_tile || !right_upper_tile->collidable) &&
-                // Main dude's center must be in margin of a quarter of a tile from its beginning:
-                (position.y_center >= right_tile->y + 0.25f))
+            // Main dude's center must be in margin of a quarter of a tile from its beginning:
+            (position.y_center >= right_tile->y + 0.25f))
+        {
+            position.x_center = right_tile->x - (physics.get_width() / 2.0f);
+            position.y_center = right_tile->y + 0.5f;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool MainDudeComponent::hang_off_cliff_right_gloves(ItemCarrierComponent& items, PhysicsComponent& physics, PositionComponent& position)
+{
+    const auto& modifiers = items.get_modifiers();
+
+    if (modifiers.can_climb_vertical_surfaces)
+    {
+        MapTile *neighbours[9] = {nullptr};
+
+        Level::instance().get_tile_batch().get_neighbouring_tiles(position.x_center, position.y_center, neighbours);
+
+        auto* right_tile = neighbours[static_cast<int>(NeighbouringTiles::RIGHT_MIDDLE)];
+        auto* right_upper_tile = neighbours[static_cast<int>(NeighbouringTiles::RIGHT_UP)];
+
+        if (right_tile->collidable && right_upper_tile->collidable)
         {
             position.x_center = right_tile->x - (physics.get_width() / 2.0f);
             position.y_center = right_tile->y + 0.5f;
@@ -155,16 +180,41 @@ bool MainDudeComponent::hang_off_cliff_left(PhysicsComponent& physics, PositionC
         MapTile *neighbours[9] = {nullptr};
 
         Level::instance().get_tile_batch().get_neighbouring_tiles(position.x_center, position.y_center, neighbours);
-      
+
         auto* left_tile = neighbours[static_cast<int>(NeighbouringTiles::LEFT_MIDDLE)];
         auto* left_upper_tile = neighbours[static_cast<int>(NeighbouringTiles::LEFT_UP)];
-      
+
         if (left_tile && left_tile->collidable && (!left_upper_tile || !left_upper_tile->collidable) &&
-                // Main dude's center must be in margin of a quarter of a tile from its beginning:
-                (position.y_center >= left_tile->y + 0.25f))
+            // Main dude's center must be in margin of a quarter of a tile from its beginning:
+            (position.y_center >= left_tile->y + 0.25f))
         {
             position.x_center = left_tile->x + MapTile::PHYSICAL_WIDTH + (physics.get_width() / 2.0f);
             position.y_center = left_tile->y + (MapTile::PHYSICAL_HEIGHT / 2.0f);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool MainDudeComponent::hang_off_cliff_left_gloves(ItemCarrierComponent& items, PhysicsComponent& physics, PositionComponent& position)
+{
+    const auto& modifiers = items.get_modifiers();
+
+    if (modifiers.can_climb_vertical_surfaces)
+    {
+        MapTile *neighbours[9] = {nullptr};
+
+        Level::instance().get_tile_batch().get_neighbouring_tiles(position.x_center, position.y_center, neighbours);
+
+        auto* left_tile = neighbours[static_cast<int>(NeighbouringTiles::LEFT_MIDDLE)];
+        auto* left_upper_tile = neighbours[static_cast<int>(NeighbouringTiles::LEFT_UP)];
+
+        if (left_tile->collidable && left_upper_tile->collidable)
+        {
+            position.x_center = left_tile->x + MapTile::PHYSICAL_WIDTH + (physics.get_width() / 2.0f);
+            position.y_center = left_tile->y + (MapTile::PHYSICAL_HEIGHT / 2.0f);
+
             return true;
         }
     }

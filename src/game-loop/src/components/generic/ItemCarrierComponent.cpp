@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <algorithm>
 
 ItemComponent &ItemCarrierComponent::get_active_item() const
 {
@@ -60,6 +61,7 @@ void ItemCarrierComponent::pick_up_item(entt::entity item, entt::entity carrier)
     }
 
     notify({ItemCarrierEvent::EventType::ADDED, item_component.get_type()});
+    recalculate_modifiers();
 }
 
 void ItemCarrierComponent::put_down_active_item()
@@ -277,4 +279,22 @@ void ItemCarrierComponent::place_passive_item(entt::entity &slot, entt::entity i
     }
 
     slot = item;
+}
+
+void ItemCarrierComponent::recalculate_modifiers()
+{
+    const auto items = get_items();
+
+    _modifiers.can_climb_vertical_surfaces = has_item(ItemType::GLOVE, items);
+    _modifiers.additional_jump_on_top_damage = has_item(ItemType::SPIKE_SHOES, items) ? 1 : 0;
+    _modifiers.additional_throw_x_velocity = has_item(ItemType::MITT, items) ? 0.1f : 0.0f;
+    _modifiers.additional_jump_y_velocity = has_item(ItemType::SPRING_SHOES, items) ? 0.1f : 0.0f;
+}
+
+bool ItemCarrierComponent::has_item(ItemType type, const std::vector<ItemType>& items) const
+{
+    return std::any_of(items.begin(), items.end(), [type](const auto& item_type)
+    {
+            return type == item_type;
+    });
 }

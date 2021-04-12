@@ -12,6 +12,14 @@
 #include <vector>
 #include <algorithm>
 
+struct ItemDependentModifiers
+{
+    bool can_climb_vertical_surfaces = false;
+    float additional_throw_x_velocity = 0;
+    float additional_jump_y_velocity = 0;
+    int additional_jump_on_top_damage = 0;
+};
+
 struct ItemCarrierEvent
 {
     enum class EventType
@@ -44,10 +52,13 @@ public:
     void update_carried_items_positions(PositionComponent& position);
     void update_carried_items_orientation(HorizontalOrientationComponent& orientation);
 
+    const ItemDependentModifiers& get_modifiers() const { return _modifiers; }
     std::vector<ItemType> get_items() const;
     entt::entity get_item(ItemType) const;
 
 private:
+
+    ItemDependentModifiers _modifiers;
 
     struct
     {
@@ -62,4 +73,6 @@ private:
     void set_item_orientation(HorizontalOrientationComponent& orientation, entt::entity item);
     std::vector<entt::entity> get_all_carried_items() const;
     void place_passive_item(entt::entity& slot, entt::entity item);
+    bool has_item(ItemType, const std::vector<ItemType>&) const;
+    void recalculate_modifiers();
 };
