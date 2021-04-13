@@ -107,7 +107,7 @@ void ItemCarrierComponent::throw_active_item(HorizontalOrientationComponent carr
     physics.enable_gravity();
     physics.set_y_velocity(-0.085);
 
-    const float base_x_velocity = 0.5f;
+    const float base_x_velocity = 0.5f + _modifiers.additional_throw_x_velocity;
     const float velocity = (base_x_velocity / item.get_weight_kilos()) + std::fabs(carrier_physics.get_x_velocity());
 
     switch (carrier_orientation.orientation)
@@ -287,8 +287,8 @@ void ItemCarrierComponent::recalculate_modifiers()
 
     _modifiers.can_climb_vertical_surfaces = has_item(ItemType::GLOVE, items);
     _modifiers.additional_jump_on_top_damage = has_item(ItemType::SPIKE_SHOES, items) ? 1 : 0;
-    _modifiers.additional_throw_x_velocity = has_item(ItemType::MITT, items) ? 0.1f : 0.0f;
-    _modifiers.additional_jump_y_velocity = has_item(ItemType::SPRING_SHOES, items) ? 0.1f : 0.0f;
+    _modifiers.additional_throw_x_velocity = has_item(ItemType::MITT, items) ? 0.2f : 0.0f;
+    _modifiers.additional_jump_y_velocity = has_item(ItemType::SPRING_SHOES, items) ? 0.05f : 0.0f;
 }
 
 bool ItemCarrierComponent::has_item(ItemType type, const std::vector<ItemType>& items) const
