@@ -100,8 +100,6 @@ HudOverlayComponent::HudOverlayComponent(std::shared_ptr<Viewport> viewport) : _
 
 void HudOverlayItemObserver::on_notify(const ItemCarrierEvent * event)
 {
-    // TODO: Should re-create the icons upon entering a new level
-
     assert(_viewport);
 
     auto& registry = EntityRegistry::instance().get_registry();
@@ -120,7 +118,6 @@ void HudOverlayItemObserver::on_notify(const ItemCarrierEvent * event)
 
             switch (event->item_type)
             {
-                // TODO: Could also add a compass in this MR
                 case ItemType::SPIKE_SHOES: entity = prefabs::HudIcon::create(new_icon_position.x, new_icon_position.y, HUDSpritesheetFrames::SPIKE_SHOES_ICON); break;
                 case ItemType::SPRING_SHOES: entity = prefabs::HudIcon::create(new_icon_position.x, new_icon_position.y, HUDSpritesheetFrames::SPRING_SHOES_ICON); break;
                 case ItemType::MITT: entity = prefabs::HudIcon::create(new_icon_position.x, new_icon_position.y, HUDSpritesheetFrames::MITT_ICON); break;

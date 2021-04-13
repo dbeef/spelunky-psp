@@ -18,6 +18,10 @@
 #include "prefabs/items/Pistol.hpp"
 #include "prefabs/items/Bomb.hpp"
 #include "prefabs/items/Cape.hpp"
+#include "prefabs/items/SpringShoes.hpp"
+#include "prefabs/items/SpikeShoes.hpp"
+#include "prefabs/items/Mitt.hpp"
+#include "prefabs/items/Glove.hpp"
 #include "prefabs/items/Shotgun.hpp"
 #include "prefabs/items/Skull.hpp"
 #include "prefabs/items/Rock.hpp"
@@ -62,6 +66,10 @@ void populator::generate_inventory_items(entt::entity main_dude)
             case ItemType::ROPE: item = prefabs::Rope::create(); break;
             case ItemType::SHOTGUN: item = prefabs::Shotgun::create(); break;
             case ItemType::SKULL: item = prefabs::Skull::create(); break;
+            case ItemType::MITT: item = prefabs::Mitt::create(); break;
+            case ItemType::GLOVE: item = prefabs::Glove::create(); break;
+            case ItemType::SPIKE_SHOES: item = prefabs::SpikeShoes::create(); break;
+            case ItemType::SPRING_SHOES: item = prefabs::SpringShoes::create(); break;
             // These items are added by default when creating main dude instance:
             case ItemType::WHIP:
             case ItemType::BOMB_SPAWNER:

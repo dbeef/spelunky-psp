@@ -32,7 +32,6 @@ struct ItemCarrierEvent
     ItemType item_type;
 };
 
-// TODO: ItemCarrierComponent should be a Subject<ItemCarrierComponent>, so Inventory could subscribe to it, and in turn notify HUD
 class ItemCarrierComponent : public Subject<ItemCarrierEvent>
 {
 public:
