@@ -96,4 +96,5 @@ enum class CollectiblesSpritesheetFrames : std::uint16_t
     MITT,
     SPRING_SHOES,
     SPIKE_SHOES,
+    COMPASS,
 };
