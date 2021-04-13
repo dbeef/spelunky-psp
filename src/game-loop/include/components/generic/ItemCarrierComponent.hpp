@@ -28,6 +28,7 @@ struct ItemCarrierEvent
         REMOVED
     };
 
+    entt::entity item;
     EventType event_type;
     ItemType item_type;
 };

@@ -21,4 +21,5 @@ enum class ItemType
     SPRING_SHOES,
     MITT,
     GLOVE,
+    COMPASS,
 };

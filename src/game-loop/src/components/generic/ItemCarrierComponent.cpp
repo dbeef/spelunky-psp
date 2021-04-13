@@ -60,7 +60,7 @@ void ItemCarrierComponent::pick_up_item(entt::entity item, entt::entity carrier)
         physics.disable_gravity();
     }
 
-    notify({ItemCarrierEvent::EventType::ADDED, item_component.get_type()});
+    notify({item, ItemCarrierEvent::EventType::ADDED, item_component.get_type()});
     recalculate_modifiers();
 }
 
@@ -81,9 +81,8 @@ void ItemCarrierComponent::put_down_active_item()
     item.reset_carrier();
     physics.enable_gravity();
 
+    notify({_slots.active_item, ItemCarrierEvent::EventType::REMOVED, item.get_type()});
     _slots.active_item = entt::null;
-
-    notify({ItemCarrierEvent::EventType::REMOVED, item.get_type()});
 }
 
 void ItemCarrierComponent::throw_active_item(HorizontalOrientationComponent carrier_orientation, PhysicsComponent &carrier_physics)
@@ -117,9 +116,8 @@ void ItemCarrierComponent::throw_active_item(HorizontalOrientationComponent carr
         default: assert(false);
     }
 
+    notify({_slots.active_item, ItemCarrierEvent::EventType::REMOVED, item.get_type()});
     _slots.active_item = entt::null;
-
-    notify({ItemCarrierEvent::EventType::REMOVED, item.get_type()});
 }
 
 void ItemCarrierComponent::update_carried_items_positions(PositionComponent &position)
@@ -274,7 +272,7 @@ void ItemCarrierComponent::place_passive_item(entt::entity &slot, entt::entity i
     if (slot != entt::null)
     {
         auto& item_component = registry.get<ItemComponent>(slot);
-        notify({ItemCarrierEvent::EventType::REMOVED, item_component.get_type()});
+        notify({item, ItemCarrierEvent::EventType::REMOVED, item_component.get_type()});
         registry.destroy(slot);
     }
 

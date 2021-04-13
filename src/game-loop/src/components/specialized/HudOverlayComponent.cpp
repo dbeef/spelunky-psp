@@ -124,6 +124,16 @@ void HudOverlayItemObserver::on_notify(const ItemCarrierEvent * event)
                 case ItemType::GLOVE: entity = prefabs::HudIcon::create(new_icon_position.x, new_icon_position.y, HUDSpritesheetFrames::GLOVES_ICON); break;
                 case ItemType::JETPACK: entity = prefabs::HudIcon::create(new_icon_position.x, new_icon_position.y, HUDSpritesheetFrames::JETPACK_ICON); break;
                 case ItemType::CAPE: entity = prefabs::HudIcon::create(new_icon_position.x, new_icon_position.y, HUDSpritesheetFrames::CAPE_ICON); break;
+                case ItemType::COMPASS:
+                {
+                    entity = prefabs::HudIcon::create(new_icon_position.x, new_icon_position.y, HUDSpritesheetFrames::COMPASS_ICON);
+                    // Subscribe on compass events:
+                    const auto& compass_entity = event->item;
+                    auto& compass_scripting_component = registry.get<ScriptingComponent>(compass_entity);
+                    auto* compass_script = reinterpret_cast<prefabs::CompassScript*>(compass_scripting_component.script.get());
+                    compass_script->add_observer(reinterpret_cast<Observer<prefabs::CompassArrow>*>(_compass_arrow_observer.get()));
+                    break;
+                }
                 default:
                 {
                     // Don't display anything in case of any other items
@@ -203,6 +213,7 @@ HudOverlayItemObserver::~HudOverlayItemObserver()
 
 HudOverlayItemObserver::HudOverlayItemObserver(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
 {
+    _compass_arrow_observer = std::make_shared<HudCompassArrowObserver>(_viewport);
 }
 
 bool HudOverlayItemObserver::displays_item(ItemType type) const
@@ -211,6 +222,72 @@ bool HudOverlayItemObserver::displays_item(ItemType type) const
     {
         return item_entity_pair.first == type;
     });
+}
+
+void HudCompassArrowObserver::on_notify(const prefabs::CompassArrow* arrow)
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    if (_arrow != entt::null)
+    {
+        registry.destroy(_arrow);
+        _arrow = entt::null;
+    }
+
+    switch (*arrow)
+    {
+        case prefabs::CompassArrow::NONE: break;
+        case prefabs::CompassArrow::LEFT:
+        {
+            const float pos_x = 0 + prefabs::HudIcon::getIconSizeWorldUnits();
+            const float pos_y = _viewport->get_height_world_units() / 2;
+            _arrow = prefabs::HudIcon::create(pos_x, pos_y, HUDSpritesheetFrames::COMPASS_ARROW_LEFT);
+            break;
+        }
+        case prefabs::CompassArrow::RIGHT:
+        {
+            const float pos_x = _viewport->get_width_world_units() - prefabs::HudIcon::getIconSizeWorldUnits();
+            const float pos_y = _viewport->get_height_world_units() / 2;
+            _arrow = prefabs::HudIcon::create(pos_x, pos_y, HUDSpritesheetFrames::COMPASS_ARROW_RIGHT);
+            break;
+        }
+        case prefabs::CompassArrow::DOWN:
+        {
+            const float pos_x = _viewport->get_width_world_units() / 2;
+            const float pos_y = _viewport->get_height_world_units() - prefabs::HudIcon::getIconSizeWorldUnits();
+            _arrow = prefabs::HudIcon::create(pos_x, pos_y, HUDSpritesheetFrames::COMPASS_ARROW_DOWN);
+            break;
+        }
+        case prefabs::CompassArrow::LEFT_BOTTOM:
+        {
+            const float pos_x = 0 + prefabs::HudIcon::getIconSizeWorldUnits();
+            const float pos_y = _viewport->get_height_world_units() - prefabs::HudIcon::getIconSizeWorldUnits();
+            _arrow = prefabs::HudIcon::create(pos_x, pos_y, HUDSpritesheetFrames::COMPASS_ARROW_LEFT_BOTTOM);
+            break;
+        }
+        case prefabs::CompassArrow::RIGHT_BOTTOM:
+        {
+            const float pos_x = _viewport->get_width_world_units() - prefabs::HudIcon::getIconSizeWorldUnits();
+            const float pos_y = _viewport->get_height_world_units() - prefabs::HudIcon::getIconSizeWorldUnits();
+            _arrow = prefabs::HudIcon::create(pos_x, pos_y, HUDSpritesheetFrames::COMPASS_ARROW_RIGHT_BOTTOM);
+            break;
+        }
+        default: assert(false);
+    }
+}
+
+HudCompassArrowObserver::~HudCompassArrowObserver()
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    if (_arrow != entt::null)
+    {
+        registry.destroy(_arrow);
+    }
+}
+
+HudCompassArrowObserver::HudCompassArrowObserver(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
+{
 }
 
 void HudOverlayComponent::on_notify(const InventoryEvent * event)

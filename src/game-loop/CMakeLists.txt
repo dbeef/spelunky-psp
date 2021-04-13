@@ -165,6 +165,7 @@ add_library(GameLoop STATIC
         include/prefabs/items/RopeChainElement.hpp
         include/prefabs/items/Whip.hpp
         include/prefabs/items/Crate.hpp
+        include/prefabs/items/Compass.hpp
         include/prefabs/items/Cape.hpp
         include/prefabs/items/Arrow.hpp
         include/prefabs/items/Skull.hpp
@@ -217,6 +218,7 @@ add_library(GameLoop STATIC
         src/prefabs/collectibles/GoldChunk.cpp
         src/prefabs/collectibles/SmallGem.cpp
         src/prefabs/items/SpikeShoes.cpp
+        src/prefabs/items/Compass.cpp
         src/prefabs/items/SpringShoes.cpp
         src/prefabs/items/Mitt.cpp
         src/prefabs/items/Glove.cpp
