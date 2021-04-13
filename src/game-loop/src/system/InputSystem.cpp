@@ -125,7 +125,15 @@ void InputSystem::update_controllable_bodies()
                         if (controllable_physics.is_bottom_collision())
                         {
                             consume(InputEvent::JUMPING, InputEvent::JUMPING_PRESSED);
-                            controllable_physics.set_y_velocity(-JUMP_SPEED);
+
+                            auto total_jump_speed = JUMP_SPEED;
+
+                            if (registry.has<ItemCarrierComponent>(entity))
+                            {
+                                total_jump_speed += registry.get<ItemCarrierComponent>(entity).get_modifiers().additional_jump_y_velocity;
+                            }
+
+                            controllable_physics.set_y_velocity(-total_jump_speed);
                         }
                     }
                     continue;
