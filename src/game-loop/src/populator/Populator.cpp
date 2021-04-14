@@ -5,6 +5,7 @@
 #include "components/generic/CollectibleComponent.hpp"
 #include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
+#include "components/generic/SaleableComponent.hpp"
 
 #include "prefabs/collectibles/SingleGoldBar.hpp"
 #include "prefabs/collectibles/TripleGoldBar.hpp"
@@ -212,7 +213,11 @@ void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
                 case LootType::SHOP_ITEM:
                 {
                     // FIXME: Just a placeholder for now:
-                    prefabs::Shotgun::create(pos_x, pos_y);
+                    auto entity = prefabs::Shotgun::create(pos_x, pos_y);
+                    // Add SaleableComponent to it:
+                    //SaleableComponent saleable(0, entt::null, entity);
+                    //saleable.add_animation();
+                    registry.emplace<SaleableComponent>(entity, 0, entt::null, entity);
                     break;
                 }
                 case LootType::ANY:

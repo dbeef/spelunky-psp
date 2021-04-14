@@ -75,25 +75,25 @@ namespace prefabs
         climbing.add_observer(reinterpret_cast<Observer<ClimbingEvent> *>(main_dude.get_climbing_observer()));
         registry.emplace<ClimbingComponent>(entity, climbing);
 
-        TakeFallDamageComponent take_fall_damage(1, DEFAULT_MAX_Y_VELOCITY);
-        take_fall_damage.add_observer(reinterpret_cast<Observer<FallDamage_t> *>(main_dude.get_fall_observer()));
-        registry.emplace<TakeFallDamageComponent>(entity, take_fall_damage);
-
-        TakeNpcTouchDamageComponent take_npc_damage;
-        take_npc_damage.add_observer(reinterpret_cast<Observer<NpcDamage_t> *>(main_dude.get_npc_damage_observer()));
-        registry.emplace<TakeNpcTouchDamageComponent>(entity, take_npc_damage);
+        //TakeFallDamageComponent take_fall_damage(1, DEFAULT_MAX_Y_VELOCITY);
+        //take_fall_damage.add_observer(reinterpret_cast<Observer<FallDamage_t> *>(main_dude.get_fall_observer()));
+        //registry.emplace<TakeFallDamageComponent>(entity, take_fall_damage);
+//
+        //TakeNpcTouchDamageComponent take_npc_damage;
+        //take_npc_damage.add_observer(reinterpret_cast<Observer<NpcDamage_t> *>(main_dude.get_npc_damage_observer()));
+        //registry.emplace<TakeNpcTouchDamageComponent>(entity, take_npc_damage);
 
         TakeExplosionDamageComponent take_explosion_damage;
         take_explosion_damage.add_observer(reinterpret_cast<Observer<ExplosionDamageTakenEvent> *>(main_dude.get_explosion_damage_observer()));
         registry.emplace<TakeExplosionDamageComponent>(entity, take_explosion_damage);
 
-        TakeProjectileDamageComponent take_projectile_damage;
-        take_projectile_damage.add_observer(reinterpret_cast<Observer<ProjectileDamage_t> *>(main_dude.get_projectile_damage_observer()));
-        registry.emplace<TakeProjectileDamageComponent>(entity, take_projectile_damage);
+        //TakeProjectileDamageComponent take_projectile_damage;
+        //take_projectile_damage.add_observer(reinterpret_cast<Observer<ProjectileDamage_t> *>(main_dude.get_projectile_damage_observer()));
+        //registry.emplace<TakeProjectileDamageComponent>(entity, take_projectile_damage);
 
-        TakeSpikesDamageComponent take_spikes_damage;
-        take_spikes_damage.add_observer(reinterpret_cast<Observer<SpikesDamageEvent> *>(main_dude.get_spikes_damage_observer()));
-        registry.emplace<TakeSpikesDamageComponent>(entity, take_spikes_damage);
+        //TakeSpikesDamageComponent take_spikes_damage;
+        //take_spikes_damage.add_observer(reinterpret_cast<Observer<SpikesDamageEvent> *>(main_dude.get_spikes_damage_observer()));
+        //registry.emplace<TakeSpikesDamageComponent>(entity, take_spikes_damage);
 
         {
             auto& carrier = registry.get<ItemCarrierComponent>(entity);

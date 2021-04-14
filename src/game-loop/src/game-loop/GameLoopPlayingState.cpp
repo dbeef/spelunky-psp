@@ -127,11 +127,11 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
     // Update main dude:
     MapTile *entrance = nullptr;
-    Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
+    Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::SHOP_SIGN_RARE, entrance);
     assert(entrance);
 
     float pos_x = entrance->x + (MapTile::PHYSICAL_WIDTH / 2.0f);
-    float pos_y = entrance->y + (MapTile::PHYSICAL_HEIGHT / 2.0f);
+    float pos_y = entrance->y + (MapTile::PHYSICAL_HEIGHT / 2.0f) + MapTile::PHYSICAL_HEIGHT;
 
     // Update main dude:
     _main_dude = prefabs::MainDude::create(pos_x, pos_y);
