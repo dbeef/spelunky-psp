@@ -9,7 +9,7 @@ Inventory::Inventory()
 
 void Inventory::set_starting_inventory()
 {
-    _hearts = 4;
+    _hearts = 100;
     _bombs = 4;
     _ropes = 4;
     _dollars = 0;

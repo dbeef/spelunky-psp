@@ -34,6 +34,7 @@
 #include "prefabs/npc/FakeSkeleton.hpp"
 #include "prefabs/npc/Skeleton.hpp"
 #include "prefabs/npc/Caveman.hpp"
+#include "prefabs/npc/Shopkeeper.hpp"
 
 #include "EntityRegistry.hpp"
 #include "Level.hpp"
@@ -114,6 +115,11 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
                         prefabs::Spider::create(pos_x, pos_y);
 
                     }
+                    break;
+                }
+                case NPCType::SHOPKEEPER:
+                {
+                    prefabs::Shopkeeper::create(pos_x, pos_y);
                     break;
                 }
                 case NPCType::ARROW_TRAP_LEFT:
