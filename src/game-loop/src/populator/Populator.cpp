@@ -209,6 +209,12 @@ void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
             switch (loot_type)
             {
                 case LootType::NOTHING: break;
+                case LootType::SHOP_ITEM:
+                {
+                    // FIXME: Just a placeholder for now:
+                    prefabs::Shotgun::create(pos_x, pos_y);
+                    break;
+                }
                 case LootType::ANY:
                 {
                     if (rock_spawner.can_spawn())
