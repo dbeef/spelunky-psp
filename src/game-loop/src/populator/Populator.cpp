@@ -217,7 +217,7 @@ void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
                     // Add SaleableComponent to it:
                     //SaleableComponent saleable(0, entt::null, entity);
                     //saleable.add_animation();
-                    registry.emplace<SaleableComponent>(entity, 0, entt::null, entity);
+                    registry.emplace<SaleableComponent>(entity, 1000, entt::null, entity);
                     break;
                 }
                 case LootType::ANY:

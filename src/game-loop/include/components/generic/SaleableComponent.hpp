@@ -41,15 +41,14 @@ public:
     SaleableComponent(SaleableComponent&& other) noexcept
     {
         *this = std::move(other);
+        add_animation();
     }
 
     SaleableComponent& operator=(SaleableComponent&& other) noexcept
     {
-        _dollar_sign_animation = other._dollar_sign_animation;
-        other._dollar_sign_animation = entt::null;
-
         _parent_item = other._parent_item;
         _parent_shopkeeper = other._parent_shopkeeper;
+        _price_dollars = other._price_dollars;
 
         return *this;
     }
@@ -74,10 +73,10 @@ public:
     void add_animation()
     {
         // FIXME: Move semantics
-        //if (_dollar_sign_animation != entt::null)
-        //{
-        //    return;
-        //}
+        if (_dollar_sign_animation != entt::null)
+        {
+            return;
+        }
 
         assert(_parent_item != entt::null);
 
@@ -99,6 +98,8 @@ public:
 
     entt::entity get_parent_item() const { return _parent_item; }
     entt::entity get_dollar_sign_animation() const { return _dollar_sign_animation; }
+
+    int get_price_dollars() const { return _price_dollars; }
 
 private:
     entt::entity _parent_shopkeeper = entt::null;

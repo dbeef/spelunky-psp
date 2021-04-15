@@ -32,6 +32,7 @@ public:
     uint16_t get_ropes() const { return _ropes; }
     uint16_t get_bombs() const { return _bombs; }
 
+    void remove_dollars(uint16_t amount);
     void add_dollars(uint16_t amount);
     void remove_hearts(uint16_t amount);
     

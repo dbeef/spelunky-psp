@@ -264,7 +264,6 @@ entt::entity ItemCarrierComponent::get_item(ItemType item_type) const
 
     return entt::null;
 }
-
 void ItemCarrierComponent::place_passive_item(entt::entity &slot, entt::entity item)
 {
     auto& registry = EntityRegistry::instance().get_registry();
@@ -295,4 +294,16 @@ bool ItemCarrierComponent::has_item(ItemType type, const std::vector<ItemType>& 
     {
             return type == item_type;
     });
+
+std::vector<entt::entity> ItemCarrierComponent::get_item_entities() const
+{
+    std::vector<entt::entity> item_entities =
+            {
+                    _slots.active_item,
+                    _slots.passive_item_feet,
+                    _slots.passive_item_hands,
+                    _slots.passive_item_back
+            };
+    std::copy(_slots.other.begin(), _slots.other.end(), std::back_inserter(item_entities));
+    return item_entities;
 }

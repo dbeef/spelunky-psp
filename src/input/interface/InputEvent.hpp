@@ -28,4 +28,5 @@ enum class InputEvent
     OUT_BOMB_PRESSED,
     OUT_ROPE,
     OUT_ROPE_PRESSED,
+    ACCEPT_TRANSACTION
 };

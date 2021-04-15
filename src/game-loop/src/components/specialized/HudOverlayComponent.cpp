@@ -41,6 +41,18 @@ void HudOverlayComponent::update(uint32_t delta_time_ms)
              update_dollars();
         }
     }
+
+    _prompt_visibility_cooldown_ms -= delta_time_ms;
+    if (_prompt_visibility_cooldown_ms < 0)
+    {
+        _prompt_visibility_cooldown_ms = 0;
+        if (_texts.prompt != entt::null)
+        {
+            auto& registry = EntityRegistry::instance().get_registry();
+            registry.destroy(_texts.prompt);
+            _texts.prompt = entt::null;
+        }
+    }
 }
 
 
@@ -82,6 +94,28 @@ HudOverlayComponent::HudOverlayComponent(std::shared_ptr<Viewport> viewport) : _
     _item_observer = std::make_shared<HudOverlayItemObserver>(_viewport);
 }
 
+void HudOverlayComponent::on_notify(const ShoppingTransactionEvent * event)
+{
+    // TODO: HudOverlayComponent should have a cooldown for the prompt visibility
+
+    if (_texts.prompt == entt::null)
+    {
+        _texts.prompt = prefabs::Text::create(0, 0, "");
+        _prompt_visibility_cooldown_ms = 2000;
+    }
+
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    auto& prompt_text = registry.get<TextComponent>(_texts.prompt);
+    prompt_text.set_text(event->message);
+
+    auto& position = registry.get<PositionComponent>(_texts.prompt);
+    position.x_center = (_viewport->get_width_world_units() / 2.0f) -
+                        (prompt_text.get_width() / 2.0f) +
+                        (prompt_text.get_font_width() / 2.0f);
+    position.y_center = _viewport->get_height_world_units() * 0.9f;
+}
+
 void HudOverlayComponent::on_notify(const InventoryEvent * event)
 {
     auto& registry = EntityRegistry::instance().get_registry();
@@ -108,7 +142,18 @@ void HudOverlayComponent::on_notify(const InventoryEvent * event)
         }
         case InventoryEvent::DOLLARS_COUNT_CHANGED:
         {
-            _dollars_buffer_count += Inventory::instance().get_dollars() - _dollars_count_previously;
+            int diff = Inventory::instance().get_dollars() - _dollars_count_previously;
+
+            if (diff > 0)
+            {
+                _dollars_buffer_count += Inventory::instance().get_dollars() - _dollars_count_previously;
+            }
+            else
+            {
+                // Negative dollars balance i.e due to shopping transaction:
+                _dollars_count = Inventory::instance().get_dollars();
+            }
+
             _dollars_count_previously = Inventory::instance().get_dollars();
             update_dollars();
             break;
@@ -238,6 +283,7 @@ void HudOverlayComponent::dispose_children()
     auto& registry = EntityRegistry::instance().get_registry();
 
     // Check if valid, since registry may destroy these entities before destroying the HudOverlayComponent:
+    if (registry.valid(_texts.prompt)) registry.destroy(_texts.prompt);
     if (registry.valid(_texts.dollars)) registry.destroy(_texts.dollars);
     if (registry.valid(_texts.hearts)) registry.destroy(_texts.hearts);
     if (registry.valid(_texts.ropes)) registry.destroy(_texts.ropes);

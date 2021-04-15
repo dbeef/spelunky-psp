@@ -131,7 +131,12 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     // Update main dude:
     MapTile *entrance = nullptr;
     Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::SHOP_SIGN_RARE, entrance);
-    assert(entrance);
+    //assert(entrance);
+
+    if (!entrance)
+    {
+        Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::ENTRANCE, entrance);
+    }
 
     float pos_x = entrance->x + (MapTile::PHYSICAL_WIDTH / 2.0f);
     float pos_y = entrance->y + (MapTile::PHYSICAL_HEIGHT / 2.0f) + MapTile::PHYSICAL_HEIGHT;
@@ -160,6 +165,29 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     populator::generate_inventory_items(_main_dude);
 
     game_loop._level_summary_tracker->entered_new_level();
+
+    // Subscribe HUD on main-dude's wallet:
+
+    auto& item_carrier = registry.get<ItemCarrierComponent>(_main_dude);
+    const auto carried_items = item_carrier.get_item_entities();
+    for (const auto& carried_item : carried_items)
+    {
+        if (carried_item == entt::null)
+        {
+            continue;
+        }
+
+        auto& item = registry.get<ItemComponent>(carried_item);
+        if (item.get_type() == ItemType::WALLET)
+        {
+            auto& scripting_component = registry.get<ScriptingComponent>(carried_item);
+            auto* wallet_script = reinterpret_cast<prefabs::WalletScript*>(scripting_component.script.get());
+
+            auto& hud_overlay = registry.get<HudOverlayComponent>(_hud);
+            // TODO: HudOverlayComponent should have a shared_ptr observer:
+            wallet_script->add_observer(static_cast<Observer<ShoppingTransactionEvent>*>(&hud_overlay));
+        }
+    }
 }
 
 void GameLoopPlayingState::exit(GameLoop& game_loop)

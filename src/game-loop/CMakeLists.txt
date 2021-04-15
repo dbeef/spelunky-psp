@@ -289,7 +289,7 @@ add_library(GameLoop STATIC
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
-        include/prefabs/npc/Shopkeeper.hpp src/prefabs/npc/Shopkeeper.cpp include/prefabs/npc/ShopkeeperStates.hpp src/prefabs/npc/ShopkeeperStates.cpp include/prefabs/npc/ShopkeeperScript.hpp src/prefabs/npc/ShopkeeperScript.cpp include/components/generic/SaleableComponent.hpp include/system/ShoppingSystem.hpp src/system/ShoppingSystem.cpp)
+        include/prefabs/npc/Shopkeeper.hpp src/prefabs/npc/Shopkeeper.cpp include/prefabs/npc/ShopkeeperStates.hpp src/prefabs/npc/ShopkeeperStates.cpp include/prefabs/npc/ShopkeeperScript.hpp src/prefabs/npc/ShopkeeperScript.cpp include/components/generic/SaleableComponent.hpp include/system/ShoppingSystem.hpp src/system/ShoppingSystem.cpp include/prefabs/items/Wallet.hpp src/prefabs/items/Wallet.cpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface

@@ -1,6 +1,7 @@
 #include "prefabs/main-dude/MainDude.hpp"
 #include "prefabs/items/BombSpawner.hpp"
 #include "prefabs/items/RopeSpawner.hpp"
+#include "prefabs/items/Wallet.hpp"
 #include "prefabs/items/Whip.hpp"
 
 #include "components/generic/PositionComponent.hpp"
@@ -109,6 +110,7 @@ namespace prefabs
             carrier.pick_up_item(bomb_spawner_entity, entity);
             carrier.pick_up_item(rope_spawner_entity, entity);
             carrier.pick_up_item(prefabs::Whip::create(pos_x_center, pos_y_center), entity);
+            carrier.pick_up_item(prefabs::Wallet::create(), entity);
 
             auto& inventory = Inventory::instance();
             bomb_spawner_script->add_observer(&inventory);
