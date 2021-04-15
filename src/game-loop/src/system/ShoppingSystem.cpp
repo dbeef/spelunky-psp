@@ -50,23 +50,38 @@ namespace
 
 void ShoppingSystem::update(std::uint32_t delta_time_ms)
 {
+    update_dollar_sign_positions();
+    update_transactions();
+    update_items_out_of_shop();
+}
+
+void ShoppingSystem::update_dollar_sign_positions()
+{
     auto& registry = EntityRegistry::instance().get_registry();
     auto saleable_items = registry.view<ItemComponent, SaleableComponent, PositionComponent>();
 
     saleable_items.each([&registry](entt::entity item_for_sale_entity,
-                                         ItemComponent& item,
-                                         SaleableComponent& item_saleable,
-                                         PositionComponent& item_position)
+                                    ItemComponent& item,
+                                    SaleableComponent& item_saleable,
+                                    PositionComponent& item_position)
     {
-        // Update dollar sign positions:
-
         if (item_saleable.get_dollar_sign_animation() != entt::null)
         {
             item_saleable.update_position(item_position);
         }
+    });
+}
 
-        // Check if item is in hands:
+void ShoppingSystem::update_transactions()
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+    auto saleable_items = registry.view<ItemComponent, SaleableComponent, PositionComponent>();
 
+    saleable_items.each([&registry](entt::entity item_for_sale_entity,
+                                    ItemComponent& item,
+                                    SaleableComponent& item_saleable,
+                                    PositionComponent& item_position)
+    {
         if (item.is_carried())
         {
             auto& item_carrier = registry.get<ItemCarrierComponent>(item.get_item_carrier_entity());
@@ -115,4 +130,9 @@ void ShoppingSystem::update(std::uint32_t delta_time_ms)
             }
         }
     });
+}
+
+void ShoppingSystem::update_items_out_of_shop()
+{
+    // TODO: Check if item with SaleableComponent is out of shop zone, if so, change state of shopkeeper to "angry"
 }

@@ -40,6 +40,7 @@ void Input::poll()
     _toggles.throwing.reset_changed();
     _toggles.out_bomb.reset_changed();
     _toggles.out_rope.reset_changed();
+    _toggles.purchase.reset_changed();
 
     SDL_Event event{};
 
@@ -85,6 +86,10 @@ void Input::poll()
             else if (key == SDLK_z)
             {
                 _toggles.out_bomb.feed(v);
+            }
+            else if (key == SDLK_p)
+            {
+                _toggles.purchase.feed(v);
             }
             else if (key == SDLK_x)
             {
