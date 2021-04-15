@@ -20,6 +20,7 @@
 #include "system/ItemSystem.hpp"
 #include "system/CollectibleSystem.hpp"
 #include "system/ScriptingSystem.hpp"
+#include "system/ShoppingSystem.hpp"
 #include "system/PhysicsSystem.hpp"
 #include "system/AnimationSystem.hpp"
 #include "system/InputSystem.hpp"
@@ -48,6 +49,7 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     auto& disposing_system = game_loop._disposing_system;
     auto& particle_system = game_loop._particle_system;
     auto& damage_system = game_loop._damage_system;
+    auto& shopping_system = game_loop._shopping_system;
 
     // Adjust camera to follow main dude:
     auto& position = registry.get<PositionComponent>(_main_dude);
@@ -89,6 +91,7 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
         collectible_system->update(delta_time_ms);
         particle_system->update(delta_time_ms);
         damage_system->update(delta_time_ms);
+        shopping_system->update(delta_time_ms);
     }
 
     auto& dude = registry.get<MainDudeComponent>(_main_dude);

@@ -3,10 +3,22 @@
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
-#include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
+#include "components/generic/PositionComponent.hpp"
 
+#include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
 #include "EntityRegistry.hpp"
 #include "entt/entt.hpp"
+
+// TODO: HUD should subscribe to saleable components? Saleable component / ShoppingSystem would check if saleable
+//       item is held, and if so, would notify all observers?
+//
+// Maybe it should be the other way around, HUD observing the Wallet passive item, and Wallet checking for saleable
+// items in active slot of ItemCarrierComponent?
+
+struct SaleableItemPickedUpEvent
+{
+    const char* msg;
+};
 
 class SaleableComponent
 {
@@ -51,6 +63,14 @@ public:
         }
     }
 
+    void update_position(PositionComponent& parent_item_position) const
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& dollar_animation_position = registry.get<PositionComponent>(_dollar_sign_animation);
+        dollar_animation_position.x_center = parent_item_position.x_center;
+        dollar_animation_position.y_center = parent_item_position.y_center - height;
+    }
+
     void add_animation()
     {
         // FIXME: Move semantics
@@ -60,9 +80,6 @@ public:
         //}
 
         assert(_parent_item != entt::null);
-
-        const float width = 8.0 / 16.0f;
-        const float height = 10.0 / 16.0f;
 
         auto& registry = EntityRegistry::instance().get_registry();
         auto& parent_item_position = registry.get<PositionComponent>(_parent_item);
@@ -80,9 +97,15 @@ public:
         registry.emplace<AnimationComponent>(_dollar_sign_animation, animation);
     }
 
+    entt::entity get_parent_item() const { return _parent_item; }
+    entt::entity get_dollar_sign_animation() const { return _dollar_sign_animation; }
+
 private:
     entt::entity _parent_shopkeeper = entt::null;
     entt::entity _parent_item = entt::null;
     entt::entity _dollar_sign_animation = entt::null;
     int _price_dollars = 0;
+
+    const float width = 8.0 / 16.0f;
+    const float height = 10.0 / 16.0f;
 };
