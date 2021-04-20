@@ -44,7 +44,7 @@ void Quad::write()
         // (0.5, 0.5) offset to make quad center to be at 0.0 origin:
         out.x = ((in.x - 0.5f) * _scale.x) + _translation.x;
         out.y = ((in.y - 0.5f) * _scale.y) + _translation.y;
-        out.z = ((in.y - 0.5f) * _scale.z) + _translation.z;
+        out.z = ((in.z - 0.5f) * _scale.z) + _translation.z;
 
         out.u = in.u;
         out.v = in.v;

@@ -30,9 +30,9 @@ void QuadComponent::update(entt::entity owner)
     auto& position = registry.get<PositionComponent>(owner);
     auto& mesh = registry.get<MeshComponent>(owner);
 
-    if (static_cast<int>(mesh.rendering_layer) < static_cast<int>(RenderingLayer::LAYER_4_DUDE))
+    if (static_cast<int>(mesh.rendering_layer) <= static_cast<int>(RenderingLayer::LAYER_4_DUDE))
     {
-        _quad.set_translation(position.x_center, position.y_center, -0.5f);
+        _quad.set_translation(position.x_center, position.y_center, +0.5f);
     }
     else
     {
