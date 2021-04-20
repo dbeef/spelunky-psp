@@ -2,6 +2,7 @@
 // Created by xdbeef on 04.03.18.
 //
 
+#include "Cube.hpp"
 #include <cmath>
 #include <random>
 #include <cstdlib>
@@ -435,6 +436,10 @@ TileBatch::~TileBatch()
 
 void TileBatch::batch_vertices()
 {
+    // assuming MeshComponents removed
+    _cubes = {};
+    _quads = {};
+
     _mesh.clear();
     _indices.clear();
 
@@ -452,13 +457,30 @@ void TileBatch::batch_vertices()
             auto tile_type = static_cast<int>(t->map_tile_type);
             const auto &tile = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, tile_type);
 
-            const auto mesh = tile.get_quad_vertices(x, y);
-            const auto indices = tile.get_quad_indices(tile_counter);
+            if (t->collidable)
+            {
+                Quad base_quad;
+                tile.set_quad_xy(base_quad);
+                tile.set_quad_uv(base_quad);
+                tile.set_quad_indices(base_quad);
+                base_quad.set_translation(x, y);
+                base_quad.set_scale(1.0f,1.0f,1.0f);
+                _quads.push_back(base_quad);
 
-            std::copy(mesh.begin(), mesh.end(), std::back_inserter(_mesh));
-            std::copy(indices.begin(), indices.end(), std::back_inserter(_indices));
+                Cube cube(base_quad);
+                cube.write();
+                _cubes.push_back(cube);
+            }
+            else
+            {
+                const auto mesh = tile.get_quad_vertices(x, y);
+                const auto indices = tile.get_quad_indices(tile_counter);
 
-            tile_counter++;
+                std::copy(mesh.begin(), mesh.end(), std::back_inserter(_mesh));
+                std::copy(indices.begin(), indices.end(), std::back_inserter(_indices));
+
+                tile_counter++;
+            }
         }
     }
 }
@@ -667,4 +689,49 @@ NPCType TileBatch::get_npc_type_spawned_at(int x_tiles, int y_tiles) const
     }
 
     return NPCType::NOTHING;
+}
+
+std::vector<entt::entity> TileBatch::add_cube_entities(entt::registry &registry)
+{
+    std::vector<entt::entity> out;
+
+    // Sanity check:
+//    for (auto& quad : _quads)
+//    {
+//        quad.write();
+//
+//        const auto entity = registry.create();
+//
+//        MeshComponent mesh_component;
+//
+//        mesh_component.vertices = quad.get_vertices_transformed();
+//        mesh_component.indices = quad.get_indices();
+//        assert(mesh_component.indices != nullptr);
+//        mesh_component.indices_count = Quad::get_indices_count();
+//        mesh_component.texture_id = TextureBank::instance().get_texture(TextureType::CAVE_LEVEL_TILES);
+//        mesh_component.rendering_layer = RenderingLayer::LAYER_6_TILES;
+//        mesh_component.camera_type = CameraType::MODEL_VIEW_SPACE;
+//
+//        registry.emplace<MeshComponent>(entity, mesh_component);
+//        out.push_back(entity);
+//    }
+
+    for (auto& cube : _cubes)
+    {
+        const auto entity = registry.create();
+
+        MeshComponent mesh_component;
+
+        mesh_component.vertices = reinterpret_cast<Vertex*>(cube.get_vertices_transformed().data());
+        mesh_component.indices = reinterpret_cast<IndexType*>(cube.get_indices().data());
+        mesh_component.indices_count = cube.get_indices().size();
+        mesh_component.texture_id = TextureBank::instance().get_texture(TextureType::CAVE_LEVEL_TILES);
+        mesh_component.rendering_layer = RenderingLayer::LAYER_5_PROPS;
+        mesh_component.camera_type = CameraType::MODEL_VIEW_SPACE;
+
+        registry.emplace<MeshComponent>(entity, mesh_component);
+        out.push_back(entity);
+    }
+
+    return out;
 }

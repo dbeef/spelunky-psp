@@ -8,6 +8,7 @@
 namespace graphics_utils
 {
     void look_at(float x, float y);
+    void look_at_screen_space(float x, float y);
 }
 
 #endif //RESOURCE_COMPILER_LOOKAT_HPP

@@ -5,6 +5,7 @@
 #ifndef SPELUNKYDS_LEVELGENERATOR_H
 #define SPELUNKYDS_LEVELGENERATOR_H
 
+#include "Cube.hpp"
 #include "Vertex.hpp"
 #include "IndexType.hpp"
 
@@ -58,6 +59,7 @@ public:
     void batch_vertices();
 
     entt::entity add_render_entity(entt::registry &registry);
+    std::vector<entt::entity> add_cube_entities(entt::registry &registry);
 
     void get_neighbouring_tiles(float x, float y, MapTile *out_neighboring_tiles[9]) const;
 
@@ -66,6 +68,8 @@ public:
     LootType get_loot_type_spawned_at(int x_tiles, int y_tiles) const;
 
     NPCType get_npc_type_spawned_at(int x_tiles, int y_tiles) const;
+
+    const std::vector<Cube>& get_cubes() const { return _cubes; }
 
 private:
 
@@ -78,6 +82,8 @@ private:
 
     std::vector<Vertex> _mesh;
     std::vector<IndexType> _indices;
+    std::vector<Cube> _cubes;
+    std::vector<Quad> _quads;
 
     RoomType _layout[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
     int _layout_room_ids[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};

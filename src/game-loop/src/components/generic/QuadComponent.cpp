@@ -28,12 +28,19 @@ void QuadComponent::update(entt::entity owner)
     }
 
     auto& position = registry.get<PositionComponent>(owner);
+    auto& mesh = registry.get<MeshComponent>(owner);
 
-    _quad.set_translation(position.x_center, position.y_center);
+    if (static_cast<int>(mesh.rendering_layer) < static_cast<int>(RenderingLayer::LAYER_4_DUDE))
+    {
+        _quad.set_translation(position.x_center, position.y_center, -0.5f);
+    }
+    else
+    {
+        _quad.set_translation(position.x_center, position.y_center, 0.0f);
+    }
+
     _quad.set_scale(_quad_dimensions.width, _quad_dimensions.height);
     _quad.write();
-
-    auto& mesh = registry.get<MeshComponent>(owner);
 
     mesh.vertices = _quad.get_vertices_transformed();
     mesh.indices = _quad.get_indices();

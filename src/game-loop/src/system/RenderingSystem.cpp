@@ -27,7 +27,7 @@ void RenderingSystem::update(std::uint32_t delta_time_ms)
 
         // Interleaving vertex attributes instead of separate buffers for small performance boost from data locality:
         const auto *vertices = reinterpret_cast<const char *>(mesh.vertices);
-        const auto *uvs = vertices + 2 * sizeof(float);
+        const auto *uvs = vertices + 3 * sizeof(float);
 
         assert(vertices);
 
@@ -36,7 +36,7 @@ void RenderingSystem::update(std::uint32_t delta_time_ms)
 
         DebugGlCall(glBindTexture(GL_TEXTURE_2D, mesh.texture_id));
 
-        DebugGlCall(glVertexPointer(2, GL_FLOAT, stride, vertices));
+        DebugGlCall(glVertexPointer(3, GL_FLOAT, stride, vertices));
         DebugGlCall(glTexCoordPointer(2, GL_FLOAT, stride, uvs));
 
         DebugGlCall(glDrawElements(GL_TRIANGLES, mesh.indices_count, GL_UNSIGNED_SHORT, mesh.indices));

@@ -9,7 +9,7 @@ add_library(RenderingTypes STATIC
         interface/Quad.hpp
         interface/Vertex.hpp
         interface/IndexType.hpp
-        interface/CameraType.hpp)
+        interface/CameraType.hpp interface/Cube.hpp src/Cube.cpp)
 
 target_include_directories(RenderingTypes
         PRIVATE include interface
@@ -28,6 +28,7 @@ target_link_libraries(RenderingTypes
     PRIVATE
         Logger
         GraphicsUtils
+        glm
         )
 
 if (SPELUNKY_PSP_PLATFORM_LINUX)

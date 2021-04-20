@@ -91,25 +91,25 @@ bool Video::setup_gl()
     DebugGlCall(glEnableClientState(GL_TEXTURE_COORD_ARRAY)); // For glTexCoordPointer
 
     // Disable, as it is not used and may affect performance:
-    DebugGlCall(glDisableClientState(GL_COLOR_ARRAY));
-    DebugGlCall(glDisableClientState(GL_EDGE_FLAG_ARRAY));
-    DebugGlCall(glDisableClientState(GL_NORMAL_ARRAY));
-    DebugGlCall(glDisableClientState(GL_INDEX_ARRAY));
-
-    DebugGlCall(glDisable(GL_FOG));
-    DebugGlCall(glDisable(GL_LIGHTING));
-    DebugGlCall(glDisable(GL_CULL_FACE));
-    DebugGlCall(glDisable(GL_ALPHA_TEST));
-    DebugGlCall(glDisable(GL_COLOR_LOGIC_OP));
-    DebugGlCall(glDisable(GL_DITHER));
-    DebugGlCall(glDisable(GL_STENCIL_TEST));
-    DebugGlCall(glDisable(GL_DEPTH_TEST));
-    DebugGlCall(glDisable(GL_POINT_SMOOTH));
-    DebugGlCall(glDisable(GL_LINE_SMOOTH));
-    DebugGlCall(glDisable(GL_SCISSOR_TEST));
-    DebugGlCall(glDisable(GL_COLOR_MATERIAL));
-    DebugGlCall(glDisable(GL_NORMALIZE));
-    DebugGlCall(glDisable(GL_RESCALE_NORMAL));
+    //DebugGlCall(glDisableClientState(GL_COLOR_ARRAY));
+    //DebugGlCall(glDisableClientState(GL_EDGE_FLAG_ARRAY));
+    //DebugGlCall(glDisableClientState(GL_NORMAL_ARRAY));
+    //DebugGlCall(glDisableClientState(GL_INDEX_ARRAY));
+//
+    //DebugGlCall(glDisable(GL_FOG));
+    //DebugGlCall(glDisable(GL_LIGHTING));
+    //DebugGlCall(glDisable(GL_CULL_FACE));
+    //DebugGlCall(glDisable(GL_ALPHA_TEST));
+    //DebugGlCall(glDisable(GL_COLOR_LOGIC_OP));
+    //DebugGlCall(glDisable(GL_DITHER));
+    //DebugGlCall(glDisable(GL_STENCIL_TEST));
+    //DebugGlCall(glDisable(GL_DEPTH_TEST));
+    //DebugGlCall(glDisable(GL_POINT_SMOOTH));
+    //DebugGlCall(glDisable(GL_LINE_SMOOTH));
+    //DebugGlCall(glDisable(GL_SCISSOR_TEST));
+    //DebugGlCall(glDisable(GL_COLOR_MATERIAL));
+    //DebugGlCall(glDisable(GL_RESCALE_NORMAL));
+    //DebugGlCall(glDisable(GL_NORMALIZE));
 
     log_info("Exiting Video::setup_gl, success.");
     return true;

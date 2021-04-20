@@ -11,13 +11,29 @@
 
 #include "glad/glad.h"
 
-void graphics_utils::look_at(float x, float y)
+void graphics_utils::look_at_screen_space(float x, float y)
 {
     DebugGlCall(glMatrixMode(GL_MODELVIEW));
     DebugGlCall(glLoadIdentity());
     DebugGlCall(glTranslatef(0, 0, 0));
 
     const glm::vec3 eye = {x, y, 1.0f};
+    const glm::vec3 center = {x, y, 0.0f};
+    const glm::vec3 up = {0.0f, 1.0f, 0.0f};
+
+    const auto M = glm::lookAt(eye, center, up);
+
+    DebugGlCall(glMultMatrixf(glm::value_ptr(M)));
+    DebugGlCall(glTranslatef(-eye[0], -eye[1], -eye[2]));
+}
+
+void graphics_utils::look_at(float x, float y)
+{
+    DebugGlCall(glMatrixMode(GL_MODELVIEW));
+    DebugGlCall(glLoadIdentity());
+    DebugGlCall(glTranslatef(0.0f, 0.0f, 10.0f));
+
+    const glm::vec3 eye = {8.0f, 8.0f, 8.0f};
     const glm::vec3 center = {x, y, 0.0f};
     const glm::vec3 up = {0.0f, 1.0f, 0.0f};
 

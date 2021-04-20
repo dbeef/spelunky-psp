@@ -42,7 +42,8 @@ void ScreenSpaceCamera::update_gl_modelview_matrix() const
     const float screen_center_camera_space_x = screen_center_x / 2.0f;
     const float screen_center_camera_space_y = screen_center_y / 2.0f;
 
-    graphics_utils::look_at(screen_center_camera_space_x, screen_center_camera_space_y);
+    graphics_utils::look_at_screen_space(screen_center_camera_space_x, screen_center_camera_space_y);
+    //graphics_utils::look_at(screen_center_camera_space_x, screen_center_camera_space_y);
 }
 
 void ScreenSpaceCamera::update_gl_projection_matrix() const

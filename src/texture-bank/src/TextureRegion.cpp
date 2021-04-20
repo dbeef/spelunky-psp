@@ -83,6 +83,7 @@ std::vector<Vertex> TextureRegion::get_quad_vertices(float x, float y, bool vfli
         Vertex v;
         v.x = positions_normalized[index][0] + x;
         v.y = positions_normalized[index][1] + y;
+        v.z = 0;
 
         if (hflip)
         {

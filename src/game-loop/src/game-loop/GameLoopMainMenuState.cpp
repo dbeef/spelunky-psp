@@ -118,6 +118,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU);
     Level::instance().get_tile_batch().generate_cave_background();
     Level::instance().get_tile_batch().batch_vertices();
+    Level::instance().get_tile_batch().add_cube_entities(registry);
     Level::instance().get_tile_batch().add_render_entity(registry);
 
     // Splash screens are copied into the [0, 0] position (left-upper corner), center on them:

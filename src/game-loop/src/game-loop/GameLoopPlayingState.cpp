@@ -124,6 +124,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     Level::instance().get_tile_batch().generate_cave_background();
     Level::instance().get_tile_batch().batch_vertices();
     Level::instance().get_tile_batch().add_render_entity(registry);
+    Level::instance().get_tile_batch().add_cube_entities(registry);
 
     // Update main dude:
     MapTile *entrance = nullptr;
