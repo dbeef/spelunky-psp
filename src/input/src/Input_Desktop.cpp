@@ -107,3 +107,48 @@ void Input::poll()
 
     fill_input_events();
 }
+
+AccelerometerInput& Input::get_accelerometer_input()
+{
+    // Dummy implementation on desktop:
+
+    _input.x += (_toggles.left.value()) * 0.01f;
+    _input.x -= (_toggles.right.value()) * 0.01f;
+
+    _input.y += (_toggles.up.value()) * 0.01f;
+    _input.y -= (_toggles.down.value()) * 0.01f;
+
+    _input.z += (_toggles.throwing.value()) * 0.01f;
+    _input.z -= (_toggles.jumping.value()) * 0.01f;
+
+    if (_input.x > 2.0f)
+    {
+        _input.x = 2.0f;
+    }
+    
+    if (_input.x < -2.0f)
+    {
+        _input.x = -2.0f;
+    }
+    if (_input.y > 2.0f)
+    {
+        _input.y = 2.0f;
+    }
+    
+    if (_input.y < -2.0f)
+    {
+        _input.y = -2.0f;
+    }
+    if (_input.z > 2.0f)
+    {
+        _input.z = 2.0f;
+    }
+    
+    if (_input.z < -2.0f)
+    {
+        _input.z = -2.0f;
+    }
+    
+
+    return _input;
+}

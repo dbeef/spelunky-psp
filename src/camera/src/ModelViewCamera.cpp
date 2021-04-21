@@ -9,8 +9,8 @@
 
 ModelViewCamera::ModelViewCamera(std::shared_ptr<Viewport> viewport)
     : _viewport(std::move(viewport))
-    , _bounding_x(2.f)
-    , _bounding_y(1.3f)
+    , _bounding_x(0.0f)
+    , _bounding_y(0.0f)
     , _bounding_x_half(_bounding_x / 2)
     , _bounding_y_half(_bounding_y / 2)
 { }
@@ -53,6 +53,14 @@ void ModelViewCamera::round_position_y() { _y = ((10.f * _y + 0.5f) / 10); }
 
 void ModelViewCamera::adjust_to_bounding_box(float x, float y)
 {
+    // For now stick camera to the main dude:
+
+//    _x = x;
+//    _y = y;
+//
+//    round_position_x();
+//    round_position_y();
+
     float dx = (x / 2) - _x;
     float dy = (y / 2) - _y;
 

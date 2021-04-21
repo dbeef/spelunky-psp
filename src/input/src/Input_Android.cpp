@@ -47,7 +47,53 @@ void Input::poll()
 
     while (SDL_PollEvent(&event))
     {
-        if (event.type == SDL_EventType::SDL_KEYDOWN || event.type == SDL_EventType::SDL_KEYUP)
+        if (event.type == SDL_EventType::SDL_JOYAXISMOTION)
+        {
+            const auto joystick_axis_event = event.jaxis;
+            if (joystick_axis_event.axis == 0)
+            {
+                _input.x = static_cast<float>(joystick_axis_event.value) / 32767.0f;
+            }
+            else if (joystick_axis_event.axis == 1)
+            {
+                _input.y = static_cast<float>(joystick_axis_event.value) / 32767.0f;
+            }
+            else if (joystick_axis_event.axis == 2)
+            {
+                _input.z = static_cast<float>(joystick_axis_event.value) / 32767.0f;
+            }
+
+            // Limit:
+
+            if (_input.x > 2.0f)
+            {
+                _input.x = 2.0f;
+            }
+
+            if (_input.x < -2.0f)
+            {
+                _input.x = -2.0f;
+            }
+            if (_input.y > 2.0f)
+            {
+                _input.y = 2.0f;
+            }
+
+            if (_input.y < -2.0f)
+            {
+                _input.y = -2.0f;
+            }
+            if (_input.z > 2.0f)
+            {
+                _input.z = 2.0f;
+            }
+
+            if (_input.z < -2.0f)
+            {
+                _input.z = -2.0f;
+            }
+        }
+        else if (event.type == SDL_EventType::SDL_KEYDOWN || event.type == SDL_EventType::SDL_KEYUP)
         {
             const auto& key = event.key.keysym.sym;
             const bool v = event.type == SDL_EventType::SDL_KEYDOWN;
@@ -109,4 +155,16 @@ void Input::poll()
 
         fill_input_events();
     }
+}
+
+AccelerometerInput& Input::get_accelerometer_input()
+{
+    _input.x += (_toggles.left.value()) * 0.01f;
+    _input.x -= (_toggles.right.value()) * 0.01f;
+
+    _input.y += (_toggles.up.value()) * 0.01f;
+    _input.y -= (_toggles.down.value()) * 0.01f;
+
+    _input.z += (_toggles.throwing.value()) * 0.01f;
+    _input.z -= (_toggles.jumping.value()) * 0.01f;
 }

@@ -716,6 +716,7 @@ std::vector<entt::entity> TileBatch::add_cube_entities(entt::registry &registry)
 //        out.push_back(entity);
 //    }
 
+#if 1
     for (auto& cube : _cubes)
     {
         const auto entity = registry.create();
@@ -732,6 +733,7 @@ std::vector<entt::entity> TileBatch::add_cube_entities(entt::registry &registry)
         registry.emplace<MeshComponent>(entity, mesh_component);
         out.push_back(entity);
     }
+#endif
 
     return out;
 }

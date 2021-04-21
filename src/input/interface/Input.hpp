@@ -6,6 +6,13 @@
 
 #include <vector>
 
+struct AccelerometerInput
+{
+    float x{};
+    float y{};
+    float z{};
+};
+
 class Input : public Singleton<Input>
 {
 public:
@@ -18,6 +25,7 @@ public:
     static const char* get_quit_request_binding_msg();
     static const char* get_scores_request_binding_msg();
 
+    AccelerometerInput& get_accelerometer_input();
     void poll();
 
     inline const Toggle& paused() const { return _toggles.paused; }
@@ -59,4 +67,6 @@ private:
     } _toggles;
 
     std::vector<InputEvent> _input_events;
+
+    AccelerometerInput _input;
 };

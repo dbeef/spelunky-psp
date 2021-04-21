@@ -19,9 +19,9 @@ void Video::run_loop(const std::function<bool(uint32_t delta_time_ms)> &loop_cal
 
         _timestep.mark_start();
 
-#ifndef NDEBUG
+//#ifndef NDEBUG
         DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
-#endif
+//#endif
          exit = loop_callback(last_delta_ms);
         // Force GPU to render commands queued in the callback:
         DebugGlCall(glFlush());

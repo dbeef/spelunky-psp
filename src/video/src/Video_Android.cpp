@@ -41,11 +41,30 @@ bool Video::setup_gl()
 
     _platform_specific = std::make_unique<PlatformSpecific>();
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0 || SDL_InitSubSystem(SDL_INIT_JOYSTICK) < 0)
+    {
         log_error("SDL_Init Error: %s", SDL_GetError());
         SDL_ClearError();
         return false;
     }
+
+    //Check for joysticks
+    if( SDL_NumJoysticks() < 1 )
+    {
+        printf( "Warning: No joysticks connected!\n" );
+        return false;
+    }
+    else
+    {
+        //Load joystick
+        const auto gGameController = SDL_JoystickOpen( 0 );
+        if( gGameController == NULL )
+        {
+            printf( "Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError() );
+            return false;
+        }
+    }
+
 
     SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 1);
     SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0);
@@ -107,23 +126,23 @@ bool Video::setup_gl()
     DebugGlCall(glEnableClientState(GL_TEXTURE_COORD_ARRAY)); // For glTexCoordPointer
 
     // Disable, as it is not used and may affect performance:
-    DebugGlCall(glDisableClientState(GL_COLOR_ARRAY));
-    DebugGlCall(glDisableClientState(GL_NORMAL_ARRAY));
-
-    DebugGlCall(glDisable(GL_FOG));
-    DebugGlCall(glDisable(GL_LIGHTING));
-    DebugGlCall(glDisable(GL_CULL_FACE));
-    DebugGlCall(glDisable(GL_ALPHA_TEST));
-    DebugGlCall(glDisable(GL_COLOR_LOGIC_OP));
-    DebugGlCall(glDisable(GL_DITHER));
-    DebugGlCall(glDisable(GL_STENCIL_TEST));
-    DebugGlCall(glDisable(GL_DEPTH_TEST));
-    DebugGlCall(glDisable(GL_POINT_SMOOTH));
-    DebugGlCall(glDisable(GL_LINE_SMOOTH));
-    DebugGlCall(glDisable(GL_SCISSOR_TEST));
-    DebugGlCall(glDisable(GL_COLOR_MATERIAL));
-    DebugGlCall(glDisable(GL_NORMALIZE));
-    DebugGlCall(glDisable(GL_RESCALE_NORMAL));
+//    DebugGlCall(glDisableClientState(GL_COLOR_ARRAY));
+//    DebugGlCall(glDisableClientState(GL_NORMAL_ARRAY));
+//
+//    DebugGlCall(glDisable(GL_FOG));
+//    DebugGlCall(glDisable(GL_LIGHTING));
+//    DebugGlCall(glDisable(GL_CULL_FACE));
+//    DebugGlCall(glDisable(GL_ALPHA_TEST));
+//    DebugGlCall(glDisable(GL_COLOR_LOGIC_OP));
+//    DebugGlCall(glDisable(GL_DITHER));
+//    DebugGlCall(glDisable(GL_STENCIL_TEST));
+//    DebugGlCall(glDisable(GL_DEPTH_TEST));
+//    DebugGlCall(glDisable(GL_POINT_SMOOTH));
+//    DebugGlCall(glDisable(GL_LINE_SMOOTH));
+//    DebugGlCall(glDisable(GL_SCISSOR_TEST));
+//    DebugGlCall(glDisable(GL_COLOR_MATERIAL));
+//    DebugGlCall(glDisable(GL_NORMALIZE));
+//    DebugGlCall(glDisable(GL_RESCALE_NORMAL));
 
     log_info("Exiting Video::setup_gl, success.");
     return true;

@@ -24,4 +24,5 @@ target_link_libraries(GraphicsUtils
         stb
         Logger
         glm
-        )
+        Input
+)
