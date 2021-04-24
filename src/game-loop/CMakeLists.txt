@@ -69,6 +69,7 @@ add_library(GameLoop STATIC
         src/components/specialized/LevelSummaryTracker.cpp
         src/components/generic/QuadComponent.cpp
         src/components/generic/TextComponent.cpp
+        src/components/generic/SaleableComponent.cpp
         src/components/generic/AnimationComponent.cpp
         src/components/generic/PhysicsComponent.cpp
         src/components/generic/ItemComponent.cpp
@@ -300,7 +301,7 @@ add_library(GameLoop STATIC
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
-        src/components/generic/SaleableComponent.cpp)
+)
 
 target_include_directories(GameLoop
         PRIVATE include interface
