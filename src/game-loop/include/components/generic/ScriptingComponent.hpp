@@ -16,5 +16,6 @@ struct ScriptingComponent
     explicit ScriptingComponent(std::shared_ptr<ScriptBase> script) : script(std::move(script)) {}
     ScriptingComponent() = default;
 
+    template <class T> T* get() { return reinterpret_cast<T*>(script.get()); }
     std::shared_ptr<ScriptBase> script = nullptr;
 };

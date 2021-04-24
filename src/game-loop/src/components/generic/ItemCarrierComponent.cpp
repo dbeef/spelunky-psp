@@ -245,3 +245,24 @@ std::vector<ItemType> ItemCarrierComponent::get_items() const
 
     return out;
 }
+
+entt::entity ItemCarrierComponent::get_passive_item(ItemType item_type) const
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    for (const auto& entity : _slots.other)
+    {
+        if (entity == entt::null)
+        {
+            continue;
+        }
+
+        auto &item_component = registry.get<ItemComponent>(entity);
+        if (item_component.get_type() == item_type)
+        {
+            return entity;
+        }
+    }
+
+    return entt::null;
+}

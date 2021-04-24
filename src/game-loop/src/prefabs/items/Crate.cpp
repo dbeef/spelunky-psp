@@ -3,6 +3,8 @@
 #include "prefabs/items/Cape.hpp"
 #include "prefabs/items/Pistol.hpp"
 #include "prefabs/items/Shotgun.hpp"
+#include "prefabs/items/BombSpawner.hpp"
+#include "prefabs/items/RopeSpawner.hpp"
 #include "prefabs/particles/PoofParticle.hpp"
 #include "prefabs/particles/ItemCollectedParticle.hpp"
 #include "prefabs/particles/RopeCollectedParticle.hpp"
@@ -90,13 +92,31 @@ namespace
                 }
                 case CrateLootType::ROPE:
                 {
-                    Inventory::instance().add_ropes(4);
+                    auto& item_carrier_component = registry.get<ItemCarrierComponent>(openable.who_opened);
+                    const auto spawner = item_carrier_component.get_passive_item(ItemType::ROPE_SPAWNER);
+
+                    if (spawner != entt::null)
+                    {
+                        auto& rope_spawner_script_component = registry.get<ScriptingComponent>(spawner);
+                        auto* rope_spawner_script = rope_spawner_script_component.get<prefabs::RopeSpawner::RopeSpawnerScript>();
+                        rope_spawner_script->add_ropes(4);
+                    }
+                    
                     prefabs::RopeCollectedParticle::create(position.x_center, position.y_center - 1.0f);
                     break;
                 }
                 case CrateLootType::BOMBS:
                 {
-                    Inventory::instance().add_bombs(4);
+                    auto& item_carrier_component = registry.get<ItemCarrierComponent>(openable.who_opened);
+                    const auto spawner = item_carrier_component.get_passive_item(ItemType::BOMB_SPAWNER);
+
+                    if (spawner != entt::null)
+                    {
+                        auto& bomb_spawner_script_component = registry.get<ScriptingComponent>(spawner);
+                        auto* bomb_spawner_script = bomb_spawner_script_component.get<prefabs::BombSpawner::BombSpawnerScript>();
+                        bomb_spawner_script->add_bombs(4);
+                    }
+
                     prefabs::BombCollectedParticle::create(position.x_center, position.y_center - 1.0f);
                     break;
                 }

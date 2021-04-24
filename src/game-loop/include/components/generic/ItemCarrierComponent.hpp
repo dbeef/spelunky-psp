@@ -31,6 +31,7 @@ public:
     void update_carried_items_orientation(HorizontalOrientationComponent& orientation);
 
     std::vector<ItemType> get_items() const;
+    entt::entity get_passive_item(ItemType) const;
 
 private:
 
