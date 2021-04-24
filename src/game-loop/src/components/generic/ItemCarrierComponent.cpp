@@ -290,10 +290,10 @@ void ItemCarrierComponent::recalculate_modifiers()
 
 bool ItemCarrierComponent::has_item(ItemType type, const std::vector<ItemType>& items) const
 {
-    return std::any_of(items.begin(), items.end(), [type](const auto& item_type)
-    {
-            return type == item_type;
+    return std::any_of(items.begin(), items.end(), [type](const auto &item_type) {
+        return type == item_type;
     });
+}
 
 std::vector<entt::entity> ItemCarrierComponent::get_item_entities() const
 {

@@ -92,13 +92,11 @@ enum class CollectiblesSpritesheetFrames : std::uint16_t
     ROPE_ITEM,
     PRE_WHIP,
     WHIP,
-    // TODO: REORDER SPRITESHEET FRAMES!
     GLOVE,
     MITT,
     SPRING_SHOES,
     SPIKE_SHOES,
     COMPASS,
-    //
     SHOP_DOLLAR_ANIMATION_0_FIRST,
     SHOP_DOLLAR_ANIMATION_1,
     SHOP_DOLLAR_ANIMATION_2,
