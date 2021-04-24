@@ -49,6 +49,8 @@ MainDudeBaseState* MainDudeJumpingState::update(MainDudeComponent& dude, uint32_
     auto& physics = registry.get<PhysicsComponent>(owner);
     auto& quad = registry.get<QuadComponent>(owner);
     auto& position = registry.get<PositionComponent>(owner);
+    auto& item_carrier = registry.get<ItemCarrierComponent>(owner);
+    auto& orientation = registry.get<HorizontalOrientationComponent>(owner);
 
     if (input.left().value() && dude.hang_off_cliff_left(physics, position))
     {
@@ -57,6 +59,18 @@ MainDudeBaseState* MainDudeJumpingState::update(MainDudeComponent& dude, uint32_
 
     if (input.right().value() && dude.hang_off_cliff_right(physics, position))
     {
+        return &dude._states.cliff_hanging;
+    }
+
+    if (input.left().value() && input.left().changed() && dude.hang_off_cliff_left_gloves(item_carrier, physics, position))
+    {
+        orientation.orientation = HorizontalOrientation::LEFT;
+        return &dude._states.cliff_hanging;
+    }
+
+    if (input.right().value() && input.right().changed() && dude.hang_off_cliff_right_gloves(item_carrier, physics, position))
+    {
+        orientation.orientation = HorizontalOrientation::RIGHT;
         return &dude._states.cliff_hanging;
     }
 

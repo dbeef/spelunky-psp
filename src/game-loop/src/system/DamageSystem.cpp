@@ -5,6 +5,7 @@
 #include "components/damage/TakeFallDamageComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/NpcTypeComponent.hpp"
+#include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/ZoneComponent.hpp"
 #include "components/damage/HitpointComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
@@ -52,23 +53,25 @@ void DamageSystem::update(std::uint32_t delta_time_ms)
     update_tile_collision_damage();
     update_falling_damage();
     update_projectile_damage();
-    update_melee_damage();
-    update_jump_on_top_damage();
+    update_melee_damage(delta_time_ms);
+    update_jump_on_top_damage(delta_time_ms);
     update_npc_touch_damage(delta_time_ms);
     update_explosion_damage();
     update_spikes_damage();
 }
 
-void DamageSystem::update_melee_damage()
+void DamageSystem::update_melee_damage(std::uint32_t delta_time_ms)
 {
     auto &registry = EntityRegistry::instance().get_registry();
     auto bodies = registry.view<TakeMeleeDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>();
     auto melee_bodies = registry.view<GiveMeleeDamageComponent, PhysicsComponent, PositionComponent>();
 
-    auto give_melee_damage = [&bodies, &registry](GiveMeleeDamageComponent& give_damage,
-                                            PhysicsComponent& projectile_physics,
-                                            PositionComponent& projectile_position)
+    auto give_melee_damage = [&](GiveMeleeDamageComponent& give_damage,
+                                 PhysicsComponent& projectile_physics,
+                                 PositionComponent& projectile_position)
     {
+        give_damage.update_cooldown(delta_time_ms);
+
         bodies.each([&](
                 entt::entity take_damage_entity,
                 TakeMeleeDamageComponent& take_damage,
@@ -76,6 +79,11 @@ void DamageSystem::update_melee_damage()
                 PhysicsComponent& body_physics,
                 PositionComponent& body_position)
         {
+            if (!give_damage.cooldown_reached())
+            {
+                return;
+            }
+
             if (!body_physics.is_collision(projectile_physics, projectile_position, body_position))
             {
                 return;
@@ -84,6 +92,7 @@ void DamageSystem::update_melee_damage()
             const MeleeDamage_t damage = give_damage.get_damage();
             take_damage.notify(damage);
             remove_hitpoints(damage, take_damage_entity);
+            give_damage.reset_cooldown();
         });
     };
 
@@ -217,28 +226,34 @@ void DamageSystem::update_tile_collision_damage()
     registry.view<TakeTileCollisionDamageComponent, HitpointComponent, PhysicsComponent>().each(give_tile_collision_damage);
 }
 
-void DamageSystem::update_jump_on_top_damage()
+void DamageSystem::update_jump_on_top_damage(uint32_t delta_time_ms)
 {
     auto &registry = EntityRegistry::instance().get_registry();
     auto bodies = registry.view<TakeJumpOnTopDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>();
     auto jumping_bodies = registry.view<GiveJumpOnTopDamageComponent, PhysicsComponent, PositionComponent>();
 
-    auto give_jump_on_top_damage = [&bodies, &registry](entt::entity give_damage_entity,
-                                                        GiveJumpOnTopDamageComponent& give_damage,
-                                                        PhysicsComponent& jumping_physics,
-                                                        PositionComponent& jumping_position)
+    auto give_jump_on_top_damage = [&](entt::entity give_damage_entity,
+                                       GiveJumpOnTopDamageComponent& give_damage,
+                                       PhysicsComponent& jumping_physics,
+                                       PositionComponent& jumping_position)
     {
+        give_damage.update_cooldown(delta_time_ms);
+
         if (jumping_physics.get_y_velocity() <= 0.0f)
         {
             return;
         }
-
         bodies.each([&](entt::entity take_damage_entity,
                              TakeJumpOnTopDamageComponent& take_damage,
                              HitpointComponent& hitpoints,
                              PhysicsComponent& body_physics,
                              PositionComponent& body_position)
         {
+            if (!give_damage.cooldown_reached())
+            {
+                return;
+            }
+
             if (jumping_physics.get_y_velocity() <= 0.0f)
             {
                 return;
@@ -259,9 +274,17 @@ void DamageSystem::update_jump_on_top_damage()
                 return;
             }
 
+            give_damage.reset_cooldown();
             jumping_physics.set_y_velocity(-0.15f);
 
-            const JumpOnTopDamage_t damage = give_damage.get_damage();
+            JumpOnTopDamage_t damage = give_damage.get_damage();
+
+            if (registry.has<ItemCarrierComponent>(give_damage_entity))
+            {
+                const auto item_carrier = registry.get<ItemCarrierComponent>(give_damage_entity);
+                damage += item_carrier.get_modifiers().additional_jump_on_top_damage;
+            }
+
             take_damage.notify(damage);
             remove_hitpoints(damage, take_damage_entity);
             Audio::instance().play(SFXType::HIT);
@@ -353,6 +376,14 @@ void DamageSystem::update_explosion_damage()
 
 void DamageSystem::update_npc_touch_damage(std::uint32_t delta_time_ms)
 {
+    // TODO: Problem - if damage upon jumping on top is inflicted, then there's still collision
+    //       and damage upon touching NPC is given (shouldn't be!).
+    //
+    //       Not sure if this is a problem though; this counts only for NPC's that have more than 1 hitpoints, i.e caveman,
+    //       and since caveman will have his GiveNpcDamageComponent removed upon being stunned, this effect won't take place.
+    //
+    //       Either way, remove this comment once stunnable caveman is implemented.
+
     const NpcDamage_t default_npc_touch_damage = 1;
 
     auto &registry = EntityRegistry::instance().get_registry();

@@ -91,5 +91,10 @@ enum class CollectiblesSpritesheetFrames : std::uint16_t
     ROPE_ENDING,
     ROPE_ITEM,
     PRE_WHIP,
-    WHIP
+    WHIP,
+    GLOVE,
+    MITT,
+    SPRING_SHOES,
+    SPIKE_SHOES,
+    COMPASS,
 };

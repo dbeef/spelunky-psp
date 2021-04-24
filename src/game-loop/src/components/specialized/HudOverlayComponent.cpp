@@ -1,20 +1,18 @@
 #include <utility>
 #include <sstream>
 #include <string>
+
 #include "EntityRegistry.hpp"
 #include "prefabs/ui/Text.hpp"
 #include "prefabs/ui/HudIcon.hpp"
 
-#include <components/generic/PositionComponent.hpp>
-#include <components/generic/MeshComponent.hpp>
-#include <components/specialized/HudOverlayComponent.hpp>
+#include "components/generic/PositionComponent.hpp"
+#include "components/specialized/HudOverlayComponent.hpp"
 #include "spritesheet-frames/HUDSpritesheetFrames.hpp"
 #include "other/Inventory.hpp"
 
 namespace
 {
-    const float ICONS_OFFSET_WORLD_UNITS = 1.5f;
-
     // std::to_string is missing in PSP's libc++.
     std::string to_string(uint32_t value)
     {
@@ -55,6 +53,7 @@ HudOverlayComponent& HudOverlayComponent::operator=(HudOverlayComponent &&other)
 {
     dispose_children();
 
+    _item_observer = other._item_observer;
     _children = other._children;
     _texts = other._texts;
 
@@ -73,12 +72,14 @@ HudOverlayComponent::HudOverlayComponent(const HudOverlayComponent& other)
 {
     create_children();
     Inventory::instance().add_observer(this);
+    _item_observer = std::make_shared<HudOverlayItemObserver>(_viewport);
 }
 
 HudOverlayComponent::HudOverlayComponent(std::shared_ptr<Viewport> viewport) : _viewport(std::move(viewport))
 {
     create_children();
     Inventory::instance().add_observer(this);
+    _item_observer = std::make_shared<HudOverlayItemObserver>(_viewport);
 }
 
 void HudOverlayComponent::on_notify(const InventoryEvent * event)

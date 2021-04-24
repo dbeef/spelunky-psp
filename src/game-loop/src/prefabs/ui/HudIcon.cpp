@@ -18,7 +18,7 @@ entt::entity prefabs::HudIcon::create(float x, float y, HUDSpritesheetFrames fra
     QuadComponent quad(TextureType::HUD, getIconSizeWorldUnits(), getIconSizeWorldUnits());
     MeshComponent mesh;
 
-    mesh.rendering_layer = RenderingLayer::LAYER_3_ITEMS;
+    mesh.rendering_layer = RenderingLayer::LAYER_2_HUD;
     mesh.camera_type = CameraType::SCREEN_SPACE;
     quad.frame_changed<HUDSpritesheetFrames>(frame);
 

@@ -62,6 +62,7 @@ add_library(GameLoop STATIC
 
         src/components/generic/ItemCarrierComponent.cpp
         src/components/specialized/HudOverlayComponent.cpp
+        src/components/specialized/HudOverlayObservers.cpp
         src/components/specialized/PauseOverlayComponent.cpp
         src/components/specialized/DeathOverlayComponent.cpp
         src/components/specialized/LevelSummaryOverlayComponent.cpp
@@ -93,6 +94,7 @@ add_library(GameLoop STATIC
         include/components/specialized/MainDudeComponent.hpp
         include/components/specialized/LevelSummaryTracker.hpp
         include/components/specialized/HudOverlayComponent.hpp
+        include/components/specialized/HudOverlayObservers.hpp
         include/components/specialized/PauseOverlayComponent.hpp
         include/components/specialized/DeathOverlayComponent.hpp
         include/components/specialized/LevelSummaryOverlayComponent.hpp
@@ -165,9 +167,15 @@ add_library(GameLoop STATIC
         include/prefabs/items/RopeChainElement.hpp
         include/prefabs/items/Whip.hpp
         include/prefabs/items/Crate.hpp
+        include/prefabs/items/Compass.hpp
         include/prefabs/items/Cape.hpp
         include/prefabs/items/Arrow.hpp
         include/prefabs/items/Skull.hpp
+        include/prefabs/items/SpikeShoes.hpp
+        include/prefabs/items/SpringShoes.hpp
+        include/prefabs/items/SpringShoes.hpp
+        include/prefabs/items/Mitt.hpp
+        include/prefabs/items/Glove.hpp
         include/prefabs/effects/Explosion.hpp
         include/prefabs/effects/ShotgunBlast.hpp
         include/prefabs/other/Bullet.hpp
@@ -211,6 +219,11 @@ add_library(GameLoop STATIC
         src/prefabs/collectibles/GoldNugget.cpp
         src/prefabs/collectibles/GoldChunk.cpp
         src/prefabs/collectibles/SmallGem.cpp
+        src/prefabs/items/SpikeShoes.cpp
+        src/prefabs/items/Compass.cpp
+        src/prefabs/items/SpringShoes.cpp
+        src/prefabs/items/Mitt.cpp
+        src/prefabs/items/Glove.cpp
         src/prefabs/items/Jetpack.cpp
         src/prefabs/items/BombSpawner.cpp
         src/prefabs/items/Bomb.cpp

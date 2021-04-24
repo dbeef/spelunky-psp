@@ -3,21 +3,7 @@
 
 #include <cassert>
 #include <cmath>
-
-namespace
-{
-    void place_passive_item(entt::entity& slot, entt::entity item)
-    {
-        auto& registry = EntityRegistry::instance().get_registry();
-
-        if (slot != entt::null)
-        {
-            registry.destroy(slot);
-        }
-
-        slot = item;
-    }
-}
+#include <algorithm>
 
 ItemComponent &ItemCarrierComponent::get_active_item() const
 {
@@ -73,6 +59,9 @@ void ItemCarrierComponent::pick_up_item(entt::entity item, entt::entity carrier)
         auto &physics = registry.get<PhysicsComponent>(item);
         physics.disable_gravity();
     }
+
+    notify({item, ItemCarrierEvent::EventType::ADDED, item_component.get_type()});
+    recalculate_modifiers();
 }
 
 void ItemCarrierComponent::put_down_active_item()
@@ -92,6 +81,7 @@ void ItemCarrierComponent::put_down_active_item()
     item.reset_carrier();
     physics.enable_gravity();
 
+    notify({_slots.active_item, ItemCarrierEvent::EventType::REMOVED, item.get_type()});
     _slots.active_item = entt::null;
 }
 
@@ -116,7 +106,7 @@ void ItemCarrierComponent::throw_active_item(HorizontalOrientationComponent carr
     physics.enable_gravity();
     physics.set_y_velocity(-0.085);
 
-    const float base_x_velocity = 0.5f;
+    const float base_x_velocity = 0.5f + _modifiers.additional_throw_x_velocity;
     const float velocity = (base_x_velocity / item.get_weight_kilos()) + std::fabs(carrier_physics.get_x_velocity());
 
     switch (carrier_orientation.orientation)
@@ -126,6 +116,7 @@ void ItemCarrierComponent::throw_active_item(HorizontalOrientationComponent carr
         default: assert(false);
     }
 
+    notify({_slots.active_item, ItemCarrierEvent::EventType::REMOVED, item.get_type()});
     _slots.active_item = entt::null;
 }
 
@@ -272,4 +263,36 @@ entt::entity ItemCarrierComponent::get_item(ItemType item_type) const
     }
 
     return entt::null;
+}
+
+void ItemCarrierComponent::place_passive_item(entt::entity &slot, entt::entity item)
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    if (slot != entt::null)
+    {
+        auto& item_component = registry.get<ItemComponent>(slot);
+        notify({item, ItemCarrierEvent::EventType::REMOVED, item_component.get_type()});
+        registry.destroy(slot);
+    }
+
+    slot = item;
+}
+
+void ItemCarrierComponent::recalculate_modifiers()
+{
+    const auto items = get_items();
+
+    _modifiers.can_climb_vertical_surfaces = has_item(ItemType::GLOVE, items);
+    _modifiers.additional_jump_on_top_damage = has_item(ItemType::SPIKE_SHOES, items) ? 1 : 0;
+    _modifiers.additional_throw_x_velocity = has_item(ItemType::MITT, items) ? 0.2f : 0.0f;
+    _modifiers.additional_jump_y_velocity = has_item(ItemType::SPRING_SHOES, items) ? 0.05f : 0.0f;
+}
+
+bool ItemCarrierComponent::has_item(ItemType type, const std::vector<ItemType>& items) const
+{
+    return std::any_of(items.begin(), items.end(), [type](const auto& item_type)
+    {
+            return type == item_type;
+    });
 }

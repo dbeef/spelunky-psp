@@ -5,6 +5,11 @@
 #include "prefabs/items/Shotgun.hpp"
 #include "prefabs/items/BombSpawner.hpp"
 #include "prefabs/items/RopeSpawner.hpp"
+#include "prefabs/items/SpikeShoes.hpp"
+#include "prefabs/items/SpringShoes.hpp"
+#include "prefabs/items/Mitt.hpp"
+#include "prefabs/items/Glove.hpp"
+#include "prefabs/items/Compass.hpp"
 #include "prefabs/particles/PoofParticle.hpp"
 #include "prefabs/particles/ItemCollectedParticle.hpp"
 #include "prefabs/particles/RopeCollectedParticle.hpp"
@@ -24,7 +29,6 @@
 #include "audio/Audio.hpp"
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
-#include "other/Inventory.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
 
 #include <cassert>
@@ -45,6 +49,11 @@ namespace
         CAPE,
         PISTOL,
         SHOTGUN,
+        SPIKE_SHOES,
+        SPRING_SHOES,
+        MITT,
+        GLOVE,
+        COMPASS,
         _SIZE
     };
 
@@ -85,6 +94,11 @@ namespace
                         case CrateItemType::CAPE: prefabs::Cape::create(position.x_center, position.y_center); break;
                         case CrateItemType::PISTOL: prefabs::Pistol::create(position.x_center, position.y_center); break;
                         case CrateItemType::SHOTGUN: prefabs::Shotgun::create(position.x_center, position.y_center); break;
+                        case CrateItemType::SPIKE_SHOES: prefabs::SpikeShoes::create(position.x_center, position.y_center); break;
+                        case CrateItemType::SPRING_SHOES: prefabs::SpringShoes::create(position.x_center, position.y_center); break;
+                        case CrateItemType::MITT: prefabs::Mitt::create(position.x_center, position.y_center); break;
+                        case CrateItemType::GLOVE: prefabs::Glove::create(position.x_center, position.y_center); break;
+                        case CrateItemType::COMPASS: prefabs::Compass::create(position.x_center, position.y_center); break;
                     }
 
                     prefabs::ItemCollectedParticle::create(position.x_center, position.y_center - 1.0f);
@@ -101,7 +115,7 @@ namespace
                         auto* rope_spawner_script = rope_spawner_script_component.get<prefabs::RopeSpawner::RopeSpawnerScript>();
                         rope_spawner_script->add_ropes(4);
                     }
-                    
+
                     prefabs::RopeCollectedParticle::create(position.x_center, position.y_center - 1.0f);
                     break;
                 }

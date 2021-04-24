@@ -3,13 +3,19 @@
 #include <memory>
 #include <entt/entt.hpp>
 
-#include "components/generic/TextComponent.hpp"
-
 #include "Point2D.hpp"
 #include "viewport/Viewport.hpp"
 #include "patterns/Observer.hpp"
 #include "main-dude/MainDudeEvent.hpp"
 #include "other/Inventory.hpp"
+#include "components/generic/TextComponent.hpp"
+#include "components/generic/ItemCarrierComponent.hpp"
+#include "components/specialized/HudOverlayObservers.hpp"
+
+#include <memory>
+#include <utility>
+
+static const float ICONS_OFFSET_WORLD_UNITS = 1.5f;
 
 class MainDudeComponent;
 
@@ -26,10 +32,12 @@ public:
 
     void update(uint32_t delta_time_ms);
     void on_notify(const InventoryEvent *) override;
+    HudOverlayItemObserver* get_item_observer() { return _item_observer.get(); }
 
 private:
 
     std::shared_ptr<Viewport> _viewport;
+    std::shared_ptr<HudOverlayItemObserver> _item_observer;
 
     int _dollars_buffer_count = 0;
     uint32_t _dollars_buffer_count_timer = 0;
