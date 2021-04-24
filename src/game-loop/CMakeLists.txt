@@ -62,6 +62,7 @@ add_library(GameLoop STATIC
 
         src/components/generic/ItemCarrierComponent.cpp
         src/components/specialized/HudOverlayComponent.cpp
+        src/components/specialized/HudOverlayObservers.cpp
         src/components/specialized/PauseOverlayComponent.cpp
         src/components/specialized/DeathOverlayComponent.cpp
         src/components/specialized/LevelSummaryOverlayComponent.cpp
@@ -93,6 +94,7 @@ add_library(GameLoop STATIC
         include/components/specialized/MainDudeComponent.hpp
         include/components/specialized/LevelSummaryTracker.hpp
         include/components/specialized/HudOverlayComponent.hpp
+        include/components/specialized/HudOverlayObservers.hpp
         include/components/specialized/PauseOverlayComponent.hpp
         include/components/specialized/DeathOverlayComponent.hpp
         include/components/specialized/LevelSummaryOverlayComponent.hpp
