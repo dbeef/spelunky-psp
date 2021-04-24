@@ -1,4 +1,4 @@
-## This is an experimental, one-shot branch that I am not going to support, leaving it for future reference
+## This is an experimental (beware smelly code), one-shot branch that I am not going to support, leaving it for future reference
 
 ## Spelunky® Classic remake for the Sony PSP [![`Build status`](https://github.com/dbeef/spelunky-psp/actions/workflows/build.yml/badge.svg)](https://github.com/dbeef/spelunky-psp/actions/workflows/build.yml)
 
