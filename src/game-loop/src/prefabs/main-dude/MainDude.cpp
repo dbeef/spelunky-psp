@@ -98,9 +98,21 @@ namespace prefabs
         {
             auto& carrier = registry.get<ItemCarrierComponent>(entity);
 
-            carrier.pick_up_item(prefabs::BombSpawner::create(), entity);
-            carrier.pick_up_item(prefabs::RopeSpawner::create(), entity);
+            auto bomb_spawner_entity = prefabs::BombSpawner::create(Inventory::instance().get_bombs());
+            auto& bomb_spawner_scripting_component = registry.get<ScriptingComponent>(bomb_spawner_entity);
+            auto* bomb_spawner_script = bomb_spawner_scripting_component.get<prefabs::BombSpawner::BombSpawnerScript>();
+
+            auto rope_spawner_entity = prefabs::RopeSpawner::create(Inventory::instance().get_ropes());
+            auto& rope_spawner_scripting_component = registry.get<ScriptingComponent>(rope_spawner_entity);
+            auto* rope_spawner_script = rope_spawner_scripting_component.get<prefabs::RopeSpawner::RopeSpawnerScript>();
+
+            carrier.pick_up_item(bomb_spawner_entity, entity);
+            carrier.pick_up_item(rope_spawner_entity, entity);
             carrier.pick_up_item(prefabs::Whip::create(pos_x_center, pos_y_center), entity);
+
+            auto& inventory = Inventory::instance();
+            bomb_spawner_script->add_observer(&inventory);
+            rope_spawner_script->add_observer(&inventory);
         }
 
         return entity;

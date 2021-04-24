@@ -302,6 +302,8 @@ void InputSystem::update_items_open()
             if (can_open_physics.is_collision(openable_physics, openable_position, can_open_position))
             {
                 openable.opened = true;
+                openable.who_opened = can_open_entity;
+
                 consume(InputEvent::UP, InputEvent::THROWING_PRESSED);
 
                 if (registry.has<ItemComponent>(openable_entity))

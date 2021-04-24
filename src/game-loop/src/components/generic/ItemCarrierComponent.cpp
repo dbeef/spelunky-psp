@@ -223,14 +223,7 @@ std::vector<ItemType> ItemCarrierComponent::get_items() const
     auto& registry = EntityRegistry::instance().get_registry();
 
     std::vector<ItemType> out;
-    std::vector<entt::entity> item_entities =
-    {
-            _slots.active_item,
-            _slots.passive_item_feet,
-            _slots.passive_item_hands,
-            _slots.passive_item_back
-    };
-    std::copy(_slots.other.begin(), _slots.other.end(), std::back_inserter(item_entities));
+    std::vector<entt::entity> item_entities = get_all_carried_items();
 
     for (const auto& entity : item_entities)
     {
@@ -244,4 +237,39 @@ std::vector<ItemType> ItemCarrierComponent::get_items() const
     }
 
     return out;
+}
+
+std::vector<entt::entity> ItemCarrierComponent::get_all_carried_items() const
+{
+    std::vector<entt::entity> out =
+            {
+                    _slots.active_item,
+                    _slots.passive_item_feet,
+                    _slots.passive_item_hands,
+                    _slots.passive_item_back
+            };
+    std::copy(_slots.other.begin(), _slots.other.end(), std::back_inserter(out));
+    return out;
+}
+
+entt::entity ItemCarrierComponent::get_item(ItemType item_type) const
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+    std::vector<entt::entity> item_entities = get_all_carried_items();
+
+    for (const auto& entity : item_entities)
+    {
+        if (entity == entt::null)
+        {
+            continue;
+        }
+
+        auto &item_component = registry.get<ItemComponent>(entity);
+        if (item_component.get_type() == item_type)
+        {
+            return entity;
+        }
+    }
+
+    return entt::null;
 }
