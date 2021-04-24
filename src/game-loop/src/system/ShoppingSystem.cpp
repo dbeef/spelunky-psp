@@ -1,6 +1,7 @@
 #include "system/ShoppingSystem.hpp"
 #include "EntityRegistry.hpp"
 #include "other/Inventory.hpp"
+#include "prefabs/items/Wallet.hpp"
 
 #include "components/generic/SaleableComponent.hpp"
 #include "components/generic/ActivableComponent.hpp"
@@ -8,42 +9,54 @@
 #include "components/generic/PositionComponent.hpp"
 #include "components/generic/ItemComponent.hpp"
 
-#include "prefabs/items/Wallet.hpp"
-
 #include <sstream>
 
 namespace
 {
     std::string item_name(ItemType type)
     {
+#define ITEM_TYPE_STR(x) case ItemType::x: return #x;
         switch(type)
         {
-            case ItemType::ARROW:break;
-            case ItemType::BOMB:break;
-            case ItemType::CAPE:break;
-            case ItemType::CHEST:break;
-            case ItemType::CRATE:break;
-            case ItemType::JAR:break;
-            case ItemType::JETPACK:break;
-            case ItemType::PISTOL:break;
-            case ItemType::ROCK:break;
-            case ItemType::ROPE:break;
-            case ItemType::SHOTGUN: return "SHOTGUN";
-            case ItemType::SKULL:break;
-            case ItemType::WHIP:break;
-            case ItemType::BOMB_SPAWNER:break;
-            case ItemType::ROPE_SPAWNER:break;
-            case ItemType::WALLET:break;
+            ITEM_TYPE_STR(ARROW);
+            ITEM_TYPE_STR(BOMB);
+            ITEM_TYPE_STR(CAPE);
+            ITEM_TYPE_STR(CHEST);
+            ITEM_TYPE_STR(CRATE);
+            ITEM_TYPE_STR(JAR);
+            ITEM_TYPE_STR(JETPACK);
+            ITEM_TYPE_STR(PISTOL);
+            ITEM_TYPE_STR(ROCK);
+            ITEM_TYPE_STR(ROPE);
+            ITEM_TYPE_STR(SKULL);
+            ITEM_TYPE_STR(WHIP);
+            ITEM_TYPE_STR(BOMB_SPAWNER);
+            ITEM_TYPE_STR(ROPE_SPAWNER);
+            ITEM_TYPE_STR(WALLET);
+            ITEM_TYPE_STR(SHOTGUN);
         }
-
+#undef ITEM_TYPE_STR
         return "UNKNOWN";
     }
 
-    // std::to_string is missing in PSP's libc++.
-    std::string to_string(uint32_t value)
+    std::string get_possible_transaction_message(ItemType item_type, int item_price_dollars)
     {
         std::stringstream ss;
-        ss << value;
+        ss << item_name(item_type) << " FOR " << item_price_dollars << "$ - PRESS " << Input::get_accept_transaction_binding_msg();
+        return ss.str();
+    }
+
+    std::string get_insufficient_funds_message(int item_price_dollars)
+    {
+        std::stringstream ss;
+        ss << "INSUFFICIENT FUNDS - NEED " << item_price_dollars << "$";
+        return ss.str();
+    }
+
+    std::string get_successful_transaction_message(ItemType item_type)
+    {
+        std::stringstream ss;
+        ss << "BOUGHT A " << item_name(item_type);
         return ss.str();
     }
 }
@@ -60,10 +73,10 @@ void ShoppingSystem::update_dollar_sign_positions()
     auto& registry = EntityRegistry::instance().get_registry();
     auto saleable_items = registry.view<ItemComponent, SaleableComponent, PositionComponent>();
 
-    saleable_items.each([&registry](entt::entity item_for_sale_entity,
-                                    ItemComponent& item,
-                                    SaleableComponent& item_saleable,
-                                    PositionComponent& item_position)
+    saleable_items.each([](entt::entity item_for_sale_entity,
+                           ItemComponent& item,
+                           SaleableComponent& item_saleable,
+                           PositionComponent& item_position)
     {
         if (item_saleable.get_dollar_sign_animation() != entt::null)
         {
@@ -111,20 +124,20 @@ void ShoppingSystem::update_transactions()
                         if (Inventory::instance().get_dollars() >= item_saleable.get_price_dollars())
                         {
                             Inventory::instance().remove_dollars(item_saleable.get_price_dollars());
-                            wallet_script->notify({"BOUGHT A " + item_name(item.get_type())});
+                            wallet_script->notify({get_successful_transaction_message(item.get_type())});
                             registry.remove<SaleableComponent>(item_for_sale_entity);
                         }
                         else
                         {
                             // Transaction failed - not enough dollars - should prompt observers (i.e HUD) about it:
-                            wallet_script->notify({"INSUFFICIENT FUNDS - NEED " + to_string(item_saleable.get_price_dollars()) + "$"});
+                            wallet_script->notify({get_insufficient_funds_message(item_saleable.get_price_dollars())});
                             item_carrier.put_down_active_item();
                         }
                     }
                     else
                     {
                         // Transaction is possible - should prompt observers (i.e HUD) about it:
-                        wallet_script->notify({item_name(item.get_type()) + " FOR " + to_string(item_saleable.get_price_dollars()) + "$"});
+                        wallet_script->notify({get_possible_transaction_message(item.get_type(), item_saleable.get_price_dollars())});
                     }
                 }
             }

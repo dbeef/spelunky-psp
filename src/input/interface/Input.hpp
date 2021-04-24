@@ -18,6 +18,7 @@ public:
     static const char* get_death_request_binding_msg();
     static const char* get_quit_request_binding_msg();
     static const char* get_scores_request_binding_msg();
+    static const char* get_accept_transaction_binding_msg();
 
     void poll();
 

@@ -18,6 +18,11 @@ const char* Input::get_quit_request_binding_msg()
     return "F10";
 }
 
+const char* Input::get_accept_transaction_binding_msg()
+{
+    return "P";
+}
+
 const char* Input::get_scores_request_binding_msg()
 {
     return "D";
