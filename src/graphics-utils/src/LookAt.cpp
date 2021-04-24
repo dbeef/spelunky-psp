@@ -31,38 +31,25 @@ void graphics_utils::look_at_screen_space(float x, float y)
 void graphics_utils::look_at(float x, float y)
 {
     auto& input = Input::instance();
-
-    // For testing:
-    //input.get_accelerometer_input().x = 0.0f;
-    //input.get_accelerometer_input().y = 0.0f;
-    //input.get_accelerometer_input().z = 0.0f;
+    auto& accelerometer = input.get_accelerometer_input();
+    
+    //accelerometer.x = 0.0f;
+    //accelerometer.y = 0.0f;
+    //accelerometer.z = 0.0f;
 
     DebugGlCall(glMatrixMode(GL_MODELVIEW));
-    //DebugGlCall(glLoadIdentity());
+    DebugGlCall(glLoadIdentity());
+    DebugGlCall(glTranslatef(0.0f, 0.0f, 10.0f));
 
-    const glm::vec3 translation_vec{0.0f, 0.0f, 10.0f};
-    const auto translation_matrix = glm::translate(glm::mat4(1.0), translation_vec);
-
-    //DebugGlCall(glTranslatef(0.0f, 0.0f, 10.0f));
-
-    //const glm::mat4x4 rotation_matrix = glm::rotate<float>(glm::mat4x4{1.0f}, glm::radians<float>(-30), {0.0f, 1.0f, 0.0f});
-    const glm::mat4x4 rotation_matrix{1.0f};
-
-    glm::vec4 eye = translation_matrix * rotation_matrix * glm::vec4{x + input.get_accelerometer_input().x,
-                                                    y + input.get_accelerometer_input().y,
-                                                    8.0f + input.get_accelerometer_input().z,
+    glm::vec4 eye = glm::vec4{x + accelerometer.x,
+                                                    y + accelerometer.y,
+                                                    8.0f + accelerometer.z,
                                                     1.0f};
 
-    //const glm::vec3 eye = {x, y, 8.0f};
     const glm::vec3 center = {x, y, 0.0f};
     const glm::vec3 up = {0.0f, 1.0f, 0.0f};
+    const auto M = glm::lookAt(glm::vec3{eye.x, eye.y, eye.z}, center, up);
 
-    auto M = glm::lookAt(glm::vec3{eye.x, eye.y, eye.z}, center, up);
-    M *= glm::translate(glm::mat4(1.0), glm::vec3{-eye[0], -eye[1], -eye[2]});
-
-    glRotatef()
-
-    DebugGlCall(glLoadMatrixf(glm::value_ptr(M)));
-    //DebugGlCall(glTranslatef(-eye[0], -eye[1], -eye[2]));
-    //glLoadIdentity();
+    DebugGlCall(glMultMatrixf(glm::value_ptr(M)));
+    DebugGlCall(glTranslatef(-eye[0], -eye[1], -eye[2]));
 }

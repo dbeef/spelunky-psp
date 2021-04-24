@@ -121,32 +121,32 @@ AccelerometerInput& Input::get_accelerometer_input()
     _input.z += (_toggles.throwing.value()) * 0.01f;
     _input.z -= (_toggles.jumping.value()) * 0.01f;
 
-    if (_input.x > 2.0f)
+    if (_input.x > 6.0f)
     {
-        _input.x = 2.0f;
+        _input.x = 6.0f;
     }
-    
-    if (_input.x < -2.0f)
+
+    if (_input.x < -6.0f)
     {
-        _input.x = -2.0f;
+        _input.x = -6.0f;
     }
-    if (_input.y > 2.0f)
+    if (_input.y > 6.0f)
     {
-        _input.y = 2.0f;
+        _input.y = 6.0f;
     }
-    
-    if (_input.y < -2.0f)
+
+    if (_input.y < -6.0f)
     {
-        _input.y = -2.0f;
+        _input.y = -6.0f;
     }
-    if (_input.z > 2.0f)
+    if (_input.z > 6.0f)
     {
-        _input.z = 2.0f;
+        _input.z = 6.0f;
     }
-    
-    if (_input.z < -2.0f)
+
+    if (_input.z < -6.0f)
     {
-        _input.z = -2.0f;
+        _input.z = -6.0f;
     }
     
 

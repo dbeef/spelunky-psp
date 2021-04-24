@@ -81,6 +81,8 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
 
     auto& dude = registry.get<MainDudeComponent>(_main_dude);
 
+    return &game_loop._states.playing;
+
     if (dude.entered_door())
     {
         auto& position = registry.get<PositionComponent>(_main_dude);

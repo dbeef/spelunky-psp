@@ -23,4 +23,5 @@ target_link_libraries(Camera
     PRIVATE
         GraphicsUtils
         Logger
+        glm
     )

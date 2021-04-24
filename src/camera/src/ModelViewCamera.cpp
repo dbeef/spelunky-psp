@@ -4,8 +4,11 @@
 #include "graphics_utils/LookAt.hpp"
 #include "ModelViewCamera.hpp"
 
+#include "glm/glm.hpp"
 #include <cstdlib>
 #include <cmath>
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 ModelViewCamera::ModelViewCamera(std::shared_ptr<Viewport> viewport)
     : _viewport(std::move(viewport))
@@ -26,8 +29,15 @@ void ModelViewCamera::update_gl_projection_matrix() const
     DebugGlCall(glMatrixMode(GL_PROJECTION));
     DebugGlCall(glLoadIdentity());
 
-    static const GLdouble near = -100;
-    static const GLdouble far = 100;
+    static const GLdouble near = 100;
+    static const GLdouble far = 0.0;
+
+//    const auto projection_matrix = glm::perspective<float>(glm::radians<float>(-80),
+//                                                    _viewport->get_aspect(),
+//                                                    near,
+//                                                    far);
+//
+//    DebugGlCall(glLoadMatrixf(glm::value_ptr(projection_matrix)));
 
     DebugGlCall(glOrtho(-1 * _projection_coefficient * _viewport->get_aspect(), // How much tiles will fit on half of the screen width.
                          1 * _projection_coefficient * _viewport->get_aspect(),
