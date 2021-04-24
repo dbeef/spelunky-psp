@@ -300,7 +300,7 @@ add_library(GameLoop STATIC
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
-)
+        src/components/generic/SaleableComponent.cpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface

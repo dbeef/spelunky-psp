@@ -169,24 +169,16 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     // Subscribe HUD on main-dude's wallet:
 
     auto& item_carrier = registry.get<ItemCarrierComponent>(_main_dude);
-    const auto carried_items = item_carrier.get_item_entities();
-    for (const auto& carried_item : carried_items)
+    const auto wallet_entity = item_carrier.get_item(ItemType::WALLET);
+
+    if (wallet_entity != entt::null)
     {
-        if (carried_item == entt::null)
-        {
-            continue;
-        }
+        auto& wallet_scripting_component = registry.get<ScriptingComponent>(wallet_entity);
+        auto* wallet_script = wallet_scripting_component.get<prefabs::WalletScript>();
 
-        auto& item = registry.get<ItemComponent>(carried_item);
-        if (item.get_type() == ItemType::WALLET)
-        {
-            auto& scripting_component = registry.get<ScriptingComponent>(carried_item);
-            auto* wallet_script = reinterpret_cast<prefabs::WalletScript*>(scripting_component.script.get());
-
-            auto& hud_overlay = registry.get<HudOverlayComponent>(_hud);
-            // TODO: HudOverlayComponent should have a shared_ptr observer:
-            wallet_script->add_observer(static_cast<Observer<ShoppingTransactionEvent>*>(&hud_overlay));
-        }
+        auto& hud_overlay = registry.get<HudOverlayComponent>(_hud);
+        // TODO: HudOverlayComponent should have a shared_ptr observer:
+        wallet_script->add_observer(static_cast<Observer<ShoppingTransactionEvent>*>(&hud_overlay));
     }
 }
 

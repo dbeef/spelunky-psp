@@ -96,8 +96,6 @@ HudOverlayComponent::HudOverlayComponent(std::shared_ptr<Viewport> viewport) : _
 
 void HudOverlayComponent::on_notify(const ShoppingTransactionEvent * event)
 {
-    // TODO: HudOverlayComponent should have a cooldown for the prompt visibility
-
     if (_texts.prompt == entt::null)
     {
         _texts.prompt = prefabs::Text::create(0, 0, "");
