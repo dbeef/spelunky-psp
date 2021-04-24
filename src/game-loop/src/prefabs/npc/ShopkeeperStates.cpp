@@ -9,8 +9,6 @@
 
 namespace prefabs
 {
-    // Standing state:
-    
     ShopkeeperBaseState* ShopkeeperStandingState::update(ShopkeeperScript& shopkeeper, uint32_t delta_time_ms, entt::entity id)
     {
         auto& registry = EntityRegistry::instance().get_registry();

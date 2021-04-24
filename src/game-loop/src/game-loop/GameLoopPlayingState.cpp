@@ -177,7 +177,6 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
         auto* wallet_script = wallet_scripting_component.get<prefabs::WalletScript>();
 
         auto& hud_overlay = registry.get<HudOverlayComponent>(_hud);
-        // TODO: HudOverlayComponent should have a shared_ptr observer:
         wallet_script->add_observer(static_cast<Observer<ShoppingTransactionEvent>*>(&hud_overlay));
     }
 }

@@ -20,6 +20,9 @@ static const float ICONS_OFFSET_WORLD_UNITS = 1.5f;
 
 class MainDudeComponent;
 
+// FIXME: HudOverlayComponent should have shared_ptr observers. So far this is not affecting the game in any negative way,
+//        because there's only a single instance of HudOverlayComponent thus no relocations within the registry,
+//        bad practice nevertheless. Resolve this in the upcoming HUD system.
 class HudOverlayComponent : public Observer<InventoryEvent>, public Observer<ShoppingTransactionEvent>
 {
 public:
