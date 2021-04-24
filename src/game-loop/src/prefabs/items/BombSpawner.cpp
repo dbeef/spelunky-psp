@@ -25,26 +25,11 @@ namespace
                 auto& item = registry.get<ItemComponent>(owner);
                 auto& item_carrier = item.get_item_carrier();
 
-                // TODO: Spawning bombs should be limited to the amount in inventory (same for ropes)
-                //       Problem - how to do it in generic way, i.e to not hard-wire it to main dude inventory?
-                //
-                // Main dude could subscribe on inventory event to know when amount of bombs changed,
-                // then it could check if the item he has is a bomb spawner and update its own counter?
-                //
-                // OR
-                //
-                // BombSpawner should be removed/added to main dude inventory dynamically (on inventory event),
-                // instead of once forever until main dude disposed - but then removing bomb should also notify inventory
-                //
-                //
-                // So far Inventory is a singleton (to save state between the levels)
-                // How about Inventory singleton + InventoryComponent that would mirror it plus enable easy access
-                // for Bomb/Rope spawner through subject/observer?
-                //
-                // OR
-                //
-                // Just don't over-engineer and hard-wire it as technically main dude is the only thing in the
-                // game that can spawn bombs / ropes:
+                // FIXME: Wiring bomb counter directly with main-dude's inventory. Technically not wrong, as main-dude
+                //        is the only thing spawning bombs in the game, but as existing codebase tries not to make
+                //        assumptions on item users, this should be the case here too.
+                //        Potential house-keeping task - find not-so-overcomplicated method of decoupling Inventory with
+                //        BombSpawner. Same goes for the RopeSpawner, and possibly even Crate (adding ropes/bombs).
                 if (Inventory::instance().get_bombs() == 0)
                 {
                     return;
