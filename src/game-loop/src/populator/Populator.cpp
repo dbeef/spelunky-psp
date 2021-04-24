@@ -24,11 +24,8 @@
 #include "prefabs/items/Glove.hpp"
 #include "prefabs/items/Shotgun.hpp"
 #include "prefabs/items/Skull.hpp"
-#include "prefabs/items/Rock.hpp"
-#include "prefabs/items/Jar.hpp"
-#include "prefabs/items/Crate.hpp"
-#include "prefabs/items/Chest.hpp"
 #include "prefabs/items/Jetpack.hpp"
+#include "prefabs/items/Compass.hpp"
 #include "prefabs/traps/Spikes.hpp"
 #include "prefabs/traps/ArrowTrap.hpp"
 #include "prefabs/npc/Snake.hpp"
@@ -70,6 +67,7 @@ void populator::generate_inventory_items(entt::entity main_dude)
             case ItemType::GLOVE: item = prefabs::Glove::create(); break;
             case ItemType::SPIKE_SHOES: item = prefabs::SpikeShoes::create(); break;
             case ItemType::SPRING_SHOES: item = prefabs::SpringShoes::create(); break;
+            case ItemType::COMPASS: item = prefabs::Compass::create(); break;
             // These items are added by default when creating main dude instance:
             case ItemType::WHIP:
             case ItemType::BOMB_SPAWNER:

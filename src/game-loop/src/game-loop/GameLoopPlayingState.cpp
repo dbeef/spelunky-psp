@@ -196,7 +196,11 @@ void GameLoopPlayingState::on_notify(const MainDudeEvent* event)
 
             if (registry.valid(_hud))
             {
-                // TODO: Unsubscribe on main-dude's ItemCarrierComponent
+                auto& item_carrier_component = registry.get<ItemCarrierComponent>(_main_dude);
+                auto& hud_overlay_component = registry.get<HudOverlayComponent>(_hud);
+
+                item_carrier_component.remove_observer(hud_overlay_component.get_item_observer());
+
                 registry.destroy(_hud);
             }
             _hud = entt::null;

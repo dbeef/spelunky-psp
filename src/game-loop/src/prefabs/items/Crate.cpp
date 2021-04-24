@@ -9,6 +9,7 @@
 #include "prefabs/items/SpringShoes.hpp"
 #include "prefabs/items/Mitt.hpp"
 #include "prefabs/items/Glove.hpp"
+#include "prefabs/items/Compass.hpp"
 #include "prefabs/particles/PoofParticle.hpp"
 #include "prefabs/particles/ItemCollectedParticle.hpp"
 #include "prefabs/particles/RopeCollectedParticle.hpp"
@@ -52,6 +53,7 @@ namespace
         SPRING_SHOES,
         MITT,
         GLOVE,
+        COMPASS,
         _SIZE
     };
 
@@ -96,6 +98,7 @@ namespace
                         case CrateItemType::SPRING_SHOES: prefabs::SpringShoes::create(position.x_center, position.y_center); break;
                         case CrateItemType::MITT: prefabs::Mitt::create(position.x_center, position.y_center); break;
                         case CrateItemType::GLOVE: prefabs::Glove::create(position.x_center, position.y_center); break;
+                        case CrateItemType::COMPASS: prefabs::Compass::create(position.x_center, position.y_center); break;
                     }
 
                     prefabs::ItemCollectedParticle::create(position.x_center, position.y_center - 1.0f);
