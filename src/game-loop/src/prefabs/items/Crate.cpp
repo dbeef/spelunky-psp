@@ -93,7 +93,7 @@ namespace
                 case CrateLootType::ROPE:
                 {
                     auto& item_carrier_component = registry.get<ItemCarrierComponent>(openable.who_opened);
-                    const auto spawner = item_carrier_component.get_passive_item(ItemType::ROPE_SPAWNER);
+                    const auto spawner = item_carrier_component.get_item(ItemType::ROPE_SPAWNER);
 
                     if (spawner != entt::null)
                     {
@@ -108,7 +108,7 @@ namespace
                 case CrateLootType::BOMBS:
                 {
                     auto& item_carrier_component = registry.get<ItemCarrierComponent>(openable.who_opened);
-                    const auto spawner = item_carrier_component.get_passive_item(ItemType::BOMB_SPAWNER);
+                    const auto spawner = item_carrier_component.get_item(ItemType::BOMB_SPAWNER);
 
                     if (spawner != entt::null)
                     {
