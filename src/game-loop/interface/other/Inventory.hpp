@@ -27,10 +27,10 @@ public:
 
     void set_starting_inventory();
 
-    uint16_t get_hearts() const { return _hearts; }
-    uint16_t get_dollars() const { return _dollars; }
-    uint16_t get_ropes() const { return _ropes; }
-    uint16_t get_bombs() const { return _bombs; }
+    int16_t get_hearts() const { return _hearts; }
+    int16_t get_ropes() const { return _ropes; }
+    int16_t get_bombs() const { return _bombs; }
+    int32_t get_dollars() const { return _dollars; }
 
     void remove_dollars(uint16_t amount);
     void add_dollars(uint16_t amount);
@@ -55,5 +55,5 @@ private:
     int16_t _hearts;
     int16_t _ropes;
     int16_t _bombs;
-    int16_t _dollars;
+    int32_t _dollars;
 };

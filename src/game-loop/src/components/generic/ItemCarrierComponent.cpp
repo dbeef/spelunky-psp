@@ -1,4 +1,5 @@
 #include "components/generic/ItemCarrierComponent.hpp"
+#include "components/generic/SaleableComponent.hpp"
 #include "components/damage/GiveProjectileDamageComponent.hpp"
 
 #include <cassert>
@@ -66,7 +67,11 @@ void ItemCarrierComponent::pick_up_item(entt::entity item, entt::entity carrier)
 
 void ItemCarrierComponent::put_down_active_item()
 {
-    assert(has_active_item());
+    if (!has_active_item())
+    {
+        return;
+    }
+
     auto& registry = EntityRegistry::instance().get_registry();
 
     auto& item = registry.get<ItemComponent>(_slots.active_item);
@@ -230,6 +235,32 @@ std::vector<ItemType> ItemCarrierComponent::get_items() const
     return out;
 }
 
+std::vector<ItemType> ItemCarrierComponent::get_non_saleable_items() const
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    std::vector<ItemType> out;
+    std::vector<entt::entity> item_entities = get_all_carried_items();
+
+    for (const auto& entity : item_entities)
+    {
+        if (entity == entt::null)
+        {
+            continue;
+        }
+
+        if (registry.has<SaleableComponent>(entity))
+        {
+            continue;
+        }
+
+        auto &item_component = registry.get<ItemComponent>(entity);
+        out.push_back(item_component.get_type());
+    }
+
+    return out;
+}
+
 std::vector<entt::entity> ItemCarrierComponent::get_all_carried_items() const
 {
     std::vector<entt::entity> out =
@@ -280,7 +311,7 @@ void ItemCarrierComponent::place_passive_item(entt::entity &slot, entt::entity i
 
 void ItemCarrierComponent::recalculate_modifiers()
 {
-    const auto items = get_items();
+    const auto items = get_non_saleable_items();
 
     _modifiers.can_climb_vertical_surfaces = has_item(ItemType::GLOVE, items);
     _modifiers.additional_jump_on_top_damage = has_item(ItemType::SPIKE_SHOES, items) ? 1 : 0;
@@ -290,7 +321,8 @@ void ItemCarrierComponent::recalculate_modifiers()
 
 bool ItemCarrierComponent::has_item(ItemType type, const std::vector<ItemType>& items) const
 {
-    return std::any_of(items.begin(), items.end(), [type](const auto &item_type) {
+    return std::any_of(items.begin(), items.end(), [type](const auto &item_type)
+    {
         return type == item_type;
     });
 }

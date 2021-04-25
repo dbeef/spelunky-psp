@@ -213,25 +213,25 @@ void HudOverlayComponent::create_children()
     // Create icons:
 
     {
-        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 0);
+        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 1.5f * 0);
         const float y = BASE_POS_Y;
         _children.push_back(prefabs::HudIcon::create(x, y, HUDSpritesheetFrames::HEART));
     }
 
     {
-        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 1);
+        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 1.5f * 1);
         const float y = BASE_POS_Y;
         _children.push_back(prefabs::HudIcon::create(x, y, HUDSpritesheetFrames::BOMB_ICON));
     }
 
     {
-        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 2);
+        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 1.5f * 2);
         const float y = BASE_POS_Y;
         _children.push_back(prefabs::HudIcon::create(x, y, HUDSpritesheetFrames::ROPE_ICON));
     }
 
     {
-        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 3);
+        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 1.5f * 3);
         const float y = BASE_POS_Y;
         _children.push_back(prefabs::HudIcon::create(x, y, HUDSpritesheetFrames::DOLLAR_SIGN));
     }
@@ -245,25 +245,25 @@ void HudOverlayComponent::create_children()
     // Create texts:
 
     {
-        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 0) + prefabs::HudIcon::getIconSizeWorldUnits();
+        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 1.5f * 0) + prefabs::HudIcon::getIconSizeWorldUnits();
         const float y = BASE_POS_Y - (prefabs::HudIcon::getIconSizeWorldUnits() * 0.425);
         _texts.hearts = prefabs::Text::create(x, y, to_string(Inventory::instance().get_hearts()));
     }
 
     {
-        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 1) + prefabs::HudIcon::getIconSizeWorldUnits();
+        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 1.5f * 1) + prefabs::HudIcon::getIconSizeWorldUnits();
         const float y = BASE_POS_Y - (prefabs::HudIcon::getIconSizeWorldUnits() * 0.425);
         _texts.bombs = prefabs::Text::create(x, y, to_string(Inventory::instance().get_bombs()));
     }
 
     {
-        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 2) + prefabs::HudIcon::getIconSizeWorldUnits();
+        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 1.5f * 2) + prefabs::HudIcon::getIconSizeWorldUnits();
         const float y = BASE_POS_Y - (prefabs::HudIcon::getIconSizeWorldUnits() * 0.425);
         _texts.ropes = prefabs::Text::create(x, y, to_string(Inventory::instance().get_ropes()));
     }
 
     {
-        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 3) + prefabs::HudIcon::getIconSizeWorldUnits();
+        const float x = BASE_POS_X + (ICONS_OFFSET_WORLD_UNITS * 1.5f * 3) + prefabs::HudIcon::getIconSizeWorldUnits();
         const float y = BASE_POS_Y - (prefabs::HudIcon::getIconSizeWorldUnits() * 0.4);
         _texts.dollars = prefabs::Text::create(x, y, to_string(Inventory::instance().get_dollars()));
     }

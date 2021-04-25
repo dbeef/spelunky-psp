@@ -1,12 +1,9 @@
 #pragma once
 
 #include "components/generic/PositionComponent.hpp"
+#include "components/generic/ItemComponent.hpp"
+#include "components/generic/ScriptingComponent.hpp"
 #include "entt/entt.hpp"
-
-struct SaleableItemPickedUpEvent
-{
-    const char* msg;
-};
 
 class SaleableComponent
 {
@@ -26,6 +23,10 @@ public:
 
     int get_price_dollars() const { return _price_dollars; }
 
+    ItemApplication get_original_item_application() const { return _original_item.application; }
+    ItemSlot get_original_item_slot() const { return _original_item.slot; }
+    std::shared_ptr<ScriptBase> get_original_script() { return _original_item.script; }
+
 private:
     entt::entity _parent_shopkeeper = entt::null;
     entt::entity _parent_item = entt::null;
@@ -34,4 +35,11 @@ private:
 
     const float width = 8.0 / 16.0f;
     const float height = 10.0 / 16.0f;
+
+    struct
+    {
+        ItemApplication application{};
+        ItemSlot slot{};
+        std::shared_ptr<ScriptBase> script = nullptr;
+    } _original_item;
 };

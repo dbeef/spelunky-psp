@@ -1,5 +1,6 @@
 #include "populator/Populator.hpp"
 #include "populator/Spawner.hpp"
+#include "populator/Shop.hpp"
 
 #include "components/specialized/LevelSummaryTracker.hpp"
 #include "components/generic/CollectibleComponent.hpp"
@@ -12,11 +13,14 @@
 #include "prefabs/collectibles/BigGem.hpp"
 #include "prefabs/items/Rock.hpp"
 #include "prefabs/items/Jar.hpp"
+#include "prefabs/items/Whip.hpp"
 #include "prefabs/items/Crate.hpp"
 #include "prefabs/items/Chest.hpp"
 #include "prefabs/items/Arrow.hpp"
 #include "prefabs/items/Rope.hpp"
 #include "prefabs/items/Pistol.hpp"
+#include "prefabs/items/BombSpawner.hpp"
+#include "prefabs/items/RopeSpawner.hpp"
 #include "prefabs/items/Bomb.hpp"
 #include "prefabs/items/Cape.hpp"
 #include "prefabs/items/SpringShoes.hpp"
@@ -39,6 +43,7 @@
 
 #include "EntityRegistry.hpp"
 #include "Level.hpp"
+
 
 void populator::generate_inventory_items(entt::entity main_dude)
 {
@@ -194,6 +199,8 @@ void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
     Spawner rock_spawner(2, 12);
     Spawner crate_spawner(2, 4);
 
+    Shop shop;
+
     std::vector<std::shared_ptr<GameEntity>> out{};
 
     const auto& tile_batch = Level::instance().get_tile_batch();
@@ -212,12 +219,7 @@ void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
                 case LootType::NOTHING: break;
                 case LootType::SHOP_ITEM:
                 {
-                    // FIXME: Just a placeholder for now:
-                    auto entity = prefabs::Shotgun::create(pos_x, pos_y);
-                    // Add SaleableComponent to it:
-                    //SaleableComponent saleable(0, entt::null, entity);
-                    //saleable.add_animation();
-                    registry.emplace<SaleableComponent>(entity, 1000, entt::null, entity);
+                    shop.make_next_item(pos_x, pos_y);
                     break;
                 }
                 case LootType::ANY:

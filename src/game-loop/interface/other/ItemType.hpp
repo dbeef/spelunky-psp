@@ -23,4 +23,5 @@ enum class ItemType
     MITT,
     GLOVE,
     COMPASS,
+    _SIZE
 };
