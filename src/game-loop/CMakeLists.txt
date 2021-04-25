@@ -145,6 +145,7 @@ add_library(GameLoop STATIC
         include/prefabs/collectibles/TripleGoldBar.hpp
         include/prefabs/collectibles/BigGem.hpp
         include/prefabs/ui/HudIcon.hpp
+        include/prefabs/particles/RotatingDollarParticle.hpp
         include/prefabs/particles/ItemCollectedParticle.hpp
         include/prefabs/particles/BloodTrailParticle.hpp
         include/prefabs/particles/SmokePuffParticle.hpp
@@ -218,6 +219,7 @@ add_library(GameLoop STATIC
         src/prefabs/particles/BombCollectedParticle.cpp
         src/prefabs/particles/BonesParticle.cpp
         src/prefabs/particles/BloodParticle.cpp
+        src/prefabs/particles/RotatingDollarParticle.cpp
         src/prefabs/collectibles/GoldNugget.cpp
         src/prefabs/collectibles/GoldChunk.cpp
         src/prefabs/collectibles/SmallGem.cpp
@@ -289,8 +291,10 @@ add_library(GameLoop STATIC
         # Other:
 
         src/populator/Populator.cpp
+        src/populator/Shop.cpp
         include/populator/Populator.hpp
         include/populator/Spawner.hpp
+        include/populator/Shop.hpp
 
         src/other/ParticleGenerator.cpp
         src/other/Inventory.cpp
@@ -301,7 +305,7 @@ add_library(GameLoop STATIC
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
-        include/populator/Shop.hpp src/populator/Shop.cpp)
+)
 
 target_include_directories(GameLoop
         PRIVATE include interface

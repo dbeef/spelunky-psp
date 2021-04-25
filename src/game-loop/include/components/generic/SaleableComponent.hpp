@@ -33,9 +33,6 @@ private:
     entt::entity _dollar_sign_animation = entt::null;
     int _price_dollars = 0;
 
-    const float width = 8.0 / 16.0f;
-    const float height = 10.0 / 16.0f;
-
     struct
     {
         ItemApplication application{};

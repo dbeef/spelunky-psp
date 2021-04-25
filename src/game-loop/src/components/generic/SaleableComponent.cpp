@@ -3,8 +3,10 @@
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
+#include "components/generic/PhysicsComponent.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
 #include "EntityRegistry.hpp"
+#include "prefabs/particles/RotatingDollarParticle.hpp"
 
 namespace
 {
@@ -80,7 +82,7 @@ void SaleableComponent::update_position(PositionComponent &parent_item_position)
     auto& registry = EntityRegistry::instance().get_registry();
     auto& dollar_animation_position = registry.get<PositionComponent>(_dollar_sign_animation);
     dollar_animation_position.x_center = parent_item_position.x_center;
-    dollar_animation_position.y_center = parent_item_position.y_center - height;
+    dollar_animation_position.y_center = parent_item_position.y_center - prefabs::RotatingDollarParticle::get_height();
 }
 
 void SaleableComponent::add_animation()
@@ -96,15 +98,6 @@ void SaleableComponent::add_animation()
     auto& registry = EntityRegistry::instance().get_registry();
     auto& parent_item_position = registry.get<PositionComponent>(_parent_item);
 
-    _dollar_sign_animation = registry.create();
-
-    AnimationComponent animation;
-    animation.start(static_cast<int>(CollectiblesSpritesheetFrames::SHOP_DOLLAR_ANIMATION_0_FIRST),
-                    static_cast<int>(CollectiblesSpritesheetFrames::SHOP_DOLLAR_ANIMATION_19_LAST),
-                    50, true);
-
-    registry.emplace<MeshComponent>(_dollar_sign_animation, RenderingLayer::LAYER_3_ITEMS, CameraType::MODEL_VIEW_SPACE);
-    registry.emplace<PositionComponent>(_dollar_sign_animation, parent_item_position.x_center, parent_item_position.y_center - height);
-    registry.emplace<QuadComponent>(_dollar_sign_animation, TextureType::COLLECTIBLES, width, height);
-    registry.emplace<AnimationComponent>(_dollar_sign_animation, animation);
+    _dollar_sign_animation = prefabs::RotatingDollarParticle::create();
+    update_position(parent_item_position);
 }

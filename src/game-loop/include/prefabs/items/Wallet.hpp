@@ -12,7 +12,6 @@ struct ShoppingTransactionEvent
 {
     enum class Type
     {
-        TRANSACTION_ABORTED, // TODO
         TRANSACTION_POSSIBLE,
         TRANSACTION_SUCCESS,
         TRANSACTION_FAILED
