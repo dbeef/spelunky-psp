@@ -305,7 +305,7 @@ add_library(GameLoop STATIC
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
-)
+        include/prefabs/npc/Damsel.hpp src/prefabs/npc/Damsel.cpp include/prefabs/npc/DamselScript.hpp include/prefabs/npc/DamselStates.hpp src/prefabs/npc/DamselScript.cpp src/prefabs/npc/DamselStates.cpp include/prefabs/particles/HelpParticle.hpp src/prefabs/particles/HelpParticle.cpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface

@@ -1,0 +1,328 @@
+#include "prefabs/npc/DamselStates.hpp"
+#include "prefabs/npc/Damsel.hpp"
+#include "prefabs/npc/DamselScript.hpp"
+#include "prefabs/particles/HelpParticle.hpp"
+
+#include "components/generic/QuadComponent.hpp"
+#include "components/generic/MeshComponent.hpp"
+#include "components/generic/ItemCarrierComponent.hpp"
+#include "components/generic/ItemComponent.hpp"
+#include "components/generic/AnimationComponent.hpp"
+#include "components/generic/PhysicsComponent.hpp"
+
+#include "Level.hpp"
+#include "spritesheet-frames/NPCSpritesheetFrames.hpp"
+
+namespace prefabs
+{
+    DamselBaseState* DamselStandingState::update(DamselScript& damsel, uint32_t delta_time_ms, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& physics = registry.get<PhysicsComponent>(id);
+        auto& item = registry.get<ItemComponent>(id);
+
+        _time_since_last_yell_ms += delta_time_ms;
+
+        if (_time_since_last_yell_ms > 4000)
+        {
+            _time_since_last_yell_ms = 0;
+            return &damsel._states.yelling;
+        }
+        else if (item.is_carried())
+        {
+            return &damsel._states.held;
+        }
+        else if (damsel.get_panic())
+        {
+            return &damsel._states.running;
+        }
+        else if (physics.get_x_velocity() == 0.0f)
+        {
+            return &damsel._states.standing;
+        }
+        else
+        {
+            return &damsel._states.running;
+        }
+    }
+
+    void DamselStandingState::enter(entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& quad = registry.get<QuadComponent>(id);
+        auto& animation = registry.get<AnimationComponent>(id);
+
+        quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::DAMSEL_STANDING);
+        animation.stop();
+    }
+
+    void DamselStandingState::exit(entt::entity id)
+    {
+    }
+
+    // Running state:
+
+    DamselBaseState* DamselRunningState::update(DamselScript& damsel, uint32_t delta_time_ms, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& physics = registry.get<PhysicsComponent>(id);
+        auto& item = registry.get<ItemComponent>(id);
+        auto& horizontal_orientation = registry.get<HorizontalOrientationComponent>(id);
+
+        if (damsel.get_panic())
+        {
+            if (physics.is_right_collision())
+            {
+                horizontal_orientation.orientation = HorizontalOrientation::LEFT;
+            }
+
+            if (physics.is_left_collision())
+            {
+                horizontal_orientation.orientation = HorizontalOrientation::RIGHT;
+            }
+
+            switch (horizontal_orientation.orientation)
+            {
+                case HorizontalOrientation::LEFT: physics.set_x_velocity(-0.05f); break;
+                case HorizontalOrientation::RIGHT: physics.set_x_velocity(0.05f); break;
+                default: assert(false);
+            }
+        }
+
+        if (item.is_carried())
+        {
+            return &damsel._states.held;
+        }
+        else if (physics.get_x_velocity() == 0.0f && physics.get_y_velocity() == 0.0f)
+        {
+            return &damsel._states.standing;
+        }
+        else
+        {
+            return &damsel._states.running;
+        }
+    }
+
+    void DamselRunningState::enter(entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& quad = registry.get<QuadComponent>(id);
+        auto& animation = registry.get<AnimationComponent>(id);
+
+        quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::DAMSEL_RUN_0_START);
+        animation.start(static_cast<int>(NPCSpritesheetFrames::DAMSEL_RUN_0_START),
+                        static_cast<int>(NPCSpritesheetFrames::DAMSEL_RUN_3_LAST),
+                        100, true);
+    }
+
+    void DamselRunningState::exit(entt::entity id)
+    {
+    }
+
+    // TODO: Rename to "Carried"
+    // Held state:
+
+    DamselBaseState* DamselHeldState::update(DamselScript& damsel, uint32_t delta_time_ms, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& physics = registry.get<PhysicsComponent>(id);
+        auto& position = registry.get<PositionComponent>(id);
+        auto& item = registry.get<ItemComponent>(id);
+
+        auto& tile_batch = Level::instance().get_tile_batch();
+        MapTile* exit = nullptr;
+        tile_batch.get_first_tile_of_given_type(MapTileType::EXIT, exit);
+        assert(exit);
+
+        // TODO: This should be a helper method inside the MapTile:
+        ZoneComponent tile_zone(MapTile::PHYSICAL_WIDTH, MapTile::PHYSICAL_HEIGHT);
+        PositionComponent tile_position(exit->get_center_x(), exit->get_center_y());
+
+        if (physics.is_collision(tile_zone, tile_position, position))
+        {
+            position.x_center = exit->get_center_x();
+            position.y_center = exit->get_center_y();
+
+            return &damsel._states.exiting;
+        }
+        else if (item.is_carried())
+        {
+            return this;
+        }
+        else
+        {
+            damsel.set_panic(true);
+            return &damsel._states.stunned;
+        }
+    }
+
+    void DamselHeldState::enter(entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& quad = registry.get<QuadComponent>(id);
+        auto& animation = registry.get<AnimationComponent>(id);
+
+        quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::DAMSEL_HELD);
+        animation.stop();
+    }
+
+    void DamselHeldState::exit(entt::entity id)
+    {
+    }
+    
+    // Exiting state:
+
+    DamselBaseState* DamselExitingState::update(DamselScript& damsel, uint32_t delta_time_ms, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& animation = registry.get<AnimationComponent>(id);
+
+        if (animation.is_finished() && !_hidden)
+        {
+            registry.remove<QuadComponent>(id);
+            registry.remove<MeshComponent>(id);
+            _hidden = true;
+        }
+
+        return this;
+    }
+
+    void DamselExitingState::enter(entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& quad = registry.get<QuadComponent>(id);
+        auto& animation = registry.get<AnimationComponent>(id);
+        auto& physics = registry.get<PhysicsComponent>(id);
+        auto& item = registry.get<ItemComponent>(id);
+
+        quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::DAMSEL_EXITING_0_START);
+        animation.start(static_cast<int>(NPCSpritesheetFrames::DAMSEL_EXITING_0_START),
+                        static_cast<int>(NPCSpritesheetFrames::DAMSEL_EXITING_15_LAST),
+                        100, false);
+
+
+        physics.disable_gravity();
+        physics.set_y_velocity(0.0f);
+        physics.set_x_velocity(0.0f);
+
+        if (item.is_carried())
+        {
+            auto& item_carrier = item.get_item_carrier();
+            item_carrier.put_down_active_item();
+        }
+        
+        // TODO: Should update some global game state that the smooch animation should be ran in the level summary screen
+        //
+        //       ^ Maybe the game-loop itself should query for damsel state? Just as it does for the main-dude.
+        //         Or, could make a singleton for this purpose, as robbing shopkeeper (theft) will need some globally
+        //         accessible game state too.
+    }
+
+    void DamselExitingState::exit(entt::entity id)
+    {
+    }
+    
+    // Stunned state:
+
+    DamselBaseState* DamselStunnedState::update(DamselScript& damsel, uint32_t delta_time_ms, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& animation = registry.get<AnimationComponent>(id);
+        auto& item = registry.get<ItemComponent>(id);
+
+        if (item.is_carried())
+        {
+            return &damsel._states.held;
+        }
+        else if (_damsel_stunned_timer_ms > 0)
+        {
+            _damsel_stunned_timer_ms -= delta_time_ms;
+        }
+        else
+        {
+            return &damsel._states.standing;
+        }
+
+        return this;
+    }
+
+    void DamselStunnedState::enter(entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& quad = registry.get<QuadComponent>(id);
+        auto& animation = registry.get<AnimationComponent>(id);
+
+        quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::DAMSEL_STUNNED_0_START);
+        animation.start(static_cast<int>(NPCSpritesheetFrames::DAMSEL_STUNNED_0_START),
+                        static_cast<int>(NPCSpritesheetFrames::DAMSEL_STUNNED_4_LAST),
+                        100, true);
+
+        _damsel_stunned_timer_ms = 5000;
+    }
+
+    void DamselStunnedState::exit(entt::entity id)
+    {
+        _damsel_stunned_timer_ms = 0;
+    }
+    
+    // Yelling state:
+
+    DamselBaseState* DamselYellingState::update(DamselScript& damsel, uint32_t delta_time_ms, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& animation = registry.get<AnimationComponent>(id);
+        auto& item = registry.get<ItemComponent>(id);
+
+        if (item.is_carried())
+        {
+            return &damsel._states.held;
+        }
+        else if (animation.is_finished())
+        {
+            return &damsel._states.standing;
+        }
+
+        return this;
+    }
+
+    void DamselYellingState::enter(entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& quad = registry.get<QuadComponent>(id);
+        auto& position = registry.get<PositionComponent>(id);
+        auto& animation = registry.get<AnimationComponent>(id);
+
+        prefabs::HelpParticle::create(position.x_center, position.y_center - MapTile::PHYSICAL_HEIGHT);
+
+        quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::DAMSEL_YELL_0_START);
+        animation.start(static_cast<int>(NPCSpritesheetFrames::DAMSEL_YELL_0_START),
+                        static_cast<int>(NPCSpritesheetFrames::DAMSEL_YELL_9_LAST),
+                        100, false);
+    }
+
+    void DamselYellingState::exit(entt::entity id)
+    {
+    }
+    
+    // Dead state:
+
+    DamselBaseState* DamselDeadState::update(DamselScript& damsel, uint32_t delta_time_ms, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        return this;
+    }
+
+    void DamselDeadState::enter(entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& quad = registry.get<QuadComponent>(id);
+        auto& animation = registry.get<AnimationComponent>(id);
+
+        quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::DAMSEL_DEAD);
+        animation.stop();
+    }
+
+    void DamselDeadState::exit(entt::entity id)
+    {
+    }
+}
