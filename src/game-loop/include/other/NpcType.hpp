@@ -7,5 +7,6 @@ enum class NpcType
     BAT,
     CAVEMAN,
     SPIDER,
-    SKELETON
+    SKELETON,
+    SHOPKEEPER,
 };

@@ -50,7 +50,7 @@ public:
     ItemApplication get_application() const { return _application; }
 
     void set_slot(ItemSlot slot) { _slot = slot; }
-    void set_type(ItemApplication application) { _application = application; }
+    void set_type(ItemApplication application) { _application = application; } // FIXME: More like set_application
 
 private:
 

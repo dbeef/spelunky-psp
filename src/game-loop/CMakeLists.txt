@@ -69,9 +69,11 @@ add_library(GameLoop STATIC
         src/components/specialized/LevelSummaryTracker.cpp
         src/components/generic/QuadComponent.cpp
         src/components/generic/TextComponent.cpp
+        src/components/generic/SaleableComponent.cpp
         src/components/generic/AnimationComponent.cpp
         src/components/generic/PhysicsComponent.cpp
         src/components/generic/ItemComponent.cpp
+        include/components/generic/SaleableComponent.hpp
         include/components/generic/OpenableComponent.hpp
         include/components/generic/CollectibleComponent.hpp
         include/components/generic/ScriptingComponent.hpp
@@ -122,6 +124,9 @@ add_library(GameLoop STATIC
         include/prefabs/npc/FakeSkeleton.hpp
         include/prefabs/npc/Spider.hpp
         include/prefabs/npc/Snake.hpp
+        include/prefabs/npc/Shopkeeper.hpp
+        include/prefabs/npc/ShopkeeperStates.hpp
+        include/prefabs/npc/ShopkeeperScript.hpp
         include/prefabs/props/StartSign.hpp
         include/prefabs/props/ScoresSign.hpp
         include/prefabs/props/ResetSign.hpp
@@ -139,10 +144,8 @@ add_library(GameLoop STATIC
         include/prefabs/collectibles/SingleGoldBar.hpp
         include/prefabs/collectibles/TripleGoldBar.hpp
         include/prefabs/collectibles/BigGem.hpp
-        include/prefabs/items/Rock.hpp
-        include/prefabs/items/Jar.hpp
-        include/prefabs/items/Chest.hpp
         include/prefabs/ui/HudIcon.hpp
+        include/prefabs/particles/RotatingDollarParticle.hpp
         include/prefabs/particles/ItemCollectedParticle.hpp
         include/prefabs/particles/BloodTrailParticle.hpp
         include/prefabs/particles/SmokePuffParticle.hpp
@@ -158,6 +161,9 @@ add_library(GameLoop STATIC
         include/prefabs/collectibles/GoldChunk.hpp
         include/prefabs/collectibles/SmallGem.hpp
         include/prefabs/items/Jetpack.hpp
+        include/prefabs/items/Rock.hpp
+        include/prefabs/items/Jar.hpp
+        include/prefabs/items/Chest.hpp
         include/prefabs/items/BombSpawner.hpp
         include/prefabs/items/Bomb.hpp
         include/prefabs/items/Pistol.hpp
@@ -176,6 +182,7 @@ add_library(GameLoop STATIC
         include/prefabs/items/SpringShoes.hpp
         include/prefabs/items/Mitt.hpp
         include/prefabs/items/Glove.hpp
+        include/prefabs/items/Wallet.hpp
         include/prefabs/effects/Explosion.hpp
         include/prefabs/effects/ShotgunBlast.hpp
         include/prefabs/other/Bullet.hpp
@@ -183,7 +190,6 @@ add_library(GameLoop STATIC
         include/prefabs/traps/Spikes.hpp
         include/prefabs/traps/ArrowTrap.hpp
 
-        src/prefabs/npc/Snake.cpp
         src/prefabs/props/QuitSign.cpp
         src/prefabs/props/ResetSign.cpp
         src/prefabs/props/ScoresSign.cpp
@@ -201,9 +207,6 @@ add_library(GameLoop STATIC
         src/prefabs/collectibles/SingleGoldBar.cpp
         src/prefabs/collectibles/TripleGoldBar.cpp
         src/prefabs/collectibles/BigGem.cpp
-        src/prefabs/items/Rock.cpp
-        src/prefabs/items/Jar.cpp
-        src/prefabs/items/Chest.cpp
         src/prefabs/ui/HudIcon.cpp
         src/prefabs/particles/ItemCollectedParticle.cpp
         src/prefabs/particles/BloodTrailParticle.cpp
@@ -216,9 +219,14 @@ add_library(GameLoop STATIC
         src/prefabs/particles/BombCollectedParticle.cpp
         src/prefabs/particles/BonesParticle.cpp
         src/prefabs/particles/BloodParticle.cpp
+        src/prefabs/particles/RotatingDollarParticle.cpp
         src/prefabs/collectibles/GoldNugget.cpp
         src/prefabs/collectibles/GoldChunk.cpp
         src/prefabs/collectibles/SmallGem.cpp
+        src/prefabs/items/Rock.cpp
+        src/prefabs/items/Jar.cpp
+        src/prefabs/items/Chest.cpp
+        src/prefabs/items/Wallet.cpp
         src/prefabs/items/SpikeShoes.cpp
         src/prefabs/items/Compass.cpp
         src/prefabs/items/SpringShoes.cpp
@@ -241,6 +249,10 @@ add_library(GameLoop STATIC
         src/prefabs/effects/ShotgunBlast.cpp
         src/prefabs/other/Bullet.cpp
         src/prefabs/other/Bones.cpp
+        src/prefabs/npc/Snake.cpp
+        src/prefabs/npc/ShopkeeperScript.cpp
+        src/prefabs/npc/Shopkeeper.cpp
+        src/prefabs/npc/ShopkeeperStates.cpp
         src/prefabs/npc/Bat.cpp
         src/prefabs/npc/Caveman.cpp
         src/prefabs/npc/Spider.cpp
@@ -262,7 +274,9 @@ add_library(GameLoop STATIC
         include/system/DisposingSystem.hpp
         include/system/ItemSystem.hpp
         include/system/DamageSystem.hpp
+        include/system/ShoppingSystem.hpp
 
+        src/system/ShoppingSystem.cpp
         src/system/ParticleSystem.cpp
         src/system/RenderingSystem.cpp
         src/system/PhysicsSystem.cpp
@@ -277,8 +291,10 @@ add_library(GameLoop STATIC
         # Other:
 
         src/populator/Populator.cpp
+        src/populator/Shop.cpp
         include/populator/Populator.hpp
         include/populator/Spawner.hpp
+        include/populator/Shop.hpp
 
         src/other/ParticleGenerator.cpp
         src/other/Inventory.cpp

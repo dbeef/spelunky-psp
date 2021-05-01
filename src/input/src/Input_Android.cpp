@@ -25,6 +25,11 @@ const char* Input::get_scores_request_binding_msg()
     return "SPACE";
 }
 
+const char* Input::get_accept_transaction_binding_msg()
+{
+    return "SPACE";
+}
+
 void Input::poll()
 {
     // As this input implementation relies on key events, to not end up with 'changed' being true until
@@ -42,6 +47,7 @@ void Input::poll()
     _toggles.throwing.reset_changed();
     _toggles.out_bomb.reset_changed();
     _toggles.out_rope.reset_changed();
+    _toggles.purchase.reset_changed();
 
     SDL_Event event{};
 
@@ -72,6 +78,7 @@ void Input::poll()
             else if (key == SDLK_SPACE)
             {
                 _toggles.jumping.feed(v);
+                _toggles.purchase.feed(v);
             }
             else if (key == SDLK_PAGEUP)
             {

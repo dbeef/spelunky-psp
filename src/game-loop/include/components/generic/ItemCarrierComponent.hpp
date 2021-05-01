@@ -54,6 +54,8 @@ public:
 
     const ItemDependentModifiers& get_modifiers() const { return _modifiers; }
     std::vector<ItemType> get_items() const;
+    std::vector<ItemType> get_non_saleable_items() const;
+    std::vector<entt::entity> get_item_entities() const;
     entt::entity get_item(ItemType) const;
 
 private:

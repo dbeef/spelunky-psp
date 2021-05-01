@@ -13,10 +13,12 @@ public:
     DELETE_COPY_MOVE_CONSTRUCTORS(Input)
     FRIEND_SINGLETON(Input)
 
+    // TODO: Binding message function for each InputEvent + better way of mapping
     static const char* get_pause_binding_msg();
     static const char* get_death_request_binding_msg();
     static const char* get_quit_request_binding_msg();
     static const char* get_scores_request_binding_msg();
+    static const char* get_accept_transaction_binding_msg();
 
     void poll();
 
@@ -33,6 +35,7 @@ public:
     inline const Toggle& throwing() const { return _toggles.throwing; }
     inline const Toggle& out_bomb() const { return _toggles.out_bomb; }
     inline const Toggle& out_rope() const { return _toggles.out_rope; }
+    inline const Toggle& purchase() const { return _toggles.purchase; }
 
     inline const std::vector<InputEvent>& get_input_events() const { return _input_events; }
 
@@ -56,6 +59,7 @@ private:
         Toggle throwing{false};
         Toggle out_bomb{false};
         Toggle out_rope{false};
+        Toggle purchase{false};
     } _toggles;
 
     std::vector<InputEvent> _input_events;

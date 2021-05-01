@@ -22,6 +22,12 @@ void Inventory::remove_hearts(uint16_t amount)
     notify(InventoryEvent::HEARTS_COUNT_CHANGED);
 }
 
+void Inventory::remove_dollars(uint16_t amount)
+{
+    _dollars -= amount;
+    notify(InventoryEvent::DOLLARS_COUNT_CHANGED);
+}
+
 void Inventory::add_dollars(uint16_t amount)
 {
     _dollars += amount;

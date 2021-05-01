@@ -20,6 +20,7 @@
 #include "system/ItemSystem.hpp"
 #include "system/CollectibleSystem.hpp"
 #include "system/ScriptingSystem.hpp"
+#include "system/ShoppingSystem.hpp"
 #include "system/PhysicsSystem.hpp"
 #include "system/AnimationSystem.hpp"
 #include "system/InputSystem.hpp"
@@ -48,6 +49,7 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     auto& disposing_system = game_loop._disposing_system;
     auto& particle_system = game_loop._particle_system;
     auto& damage_system = game_loop._damage_system;
+    auto& shopping_system = game_loop._shopping_system;
 
     // Adjust camera to follow main dude:
     auto& position = registry.get<PositionComponent>(_main_dude);
@@ -89,6 +91,7 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
         collectible_system->update(delta_time_ms);
         particle_system->update(delta_time_ms);
         damage_system->update(delta_time_ms);
+        shopping_system->update(delta_time_ms);
     }
 
     auto& dude = registry.get<MainDudeComponent>(_main_dude);
@@ -157,6 +160,20 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     populator::generate_inventory_items(_main_dude);
 
     game_loop._level_summary_tracker->entered_new_level();
+
+    // Subscribe HUD on main-dude's wallet:
+
+    auto& item_carrier = registry.get<ItemCarrierComponent>(_main_dude);
+    const auto wallet_entity = item_carrier.get_item(ItemType::WALLET);
+
+    if (wallet_entity != entt::null)
+    {
+        auto& wallet_scripting_component = registry.get<ScriptingComponent>(wallet_entity);
+        auto* wallet_script = wallet_scripting_component.get<prefabs::WalletScript>();
+
+        auto& hud_overlay = registry.get<HudOverlayComponent>(_hud);
+        wallet_script->add_observer(static_cast<Observer<ShoppingTransactionEvent>*>(&hud_overlay));
+    }
 }
 
 void GameLoopPlayingState::exit(GameLoop& game_loop)
@@ -200,6 +217,16 @@ void GameLoopPlayingState::on_notify(const MainDudeEvent* event)
                 auto& hud_overlay_component = registry.get<HudOverlayComponent>(_hud);
 
                 item_carrier_component.remove_observer(hud_overlay_component.get_item_observer());
+                const auto wallet_entity = item_carrier_component.get_item(ItemType::WALLET);
+
+                if (wallet_entity != entt::null)
+                {
+                    auto& wallet_scripting_component = registry.get<ScriptingComponent>(wallet_entity);
+                    auto* wallet_script = wallet_scripting_component.get<prefabs::WalletScript>();
+
+                    auto& hud_overlay = registry.get<HudOverlayComponent>(_hud);
+                    wallet_script->remove_observer(static_cast<Observer<ShoppingTransactionEvent>*>(&hud_overlay));
+                }
 
                 registry.destroy(_hud);
             }

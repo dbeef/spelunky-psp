@@ -17,9 +17,11 @@ enum class ItemType
     WHIP,
     BOMB_SPAWNER,
     ROPE_SPAWNER,
+    WALLET,
     SPIKE_SHOES,
     SPRING_SHOES,
     MITT,
     GLOVE,
     COMPASS,
+    _SIZE
 };

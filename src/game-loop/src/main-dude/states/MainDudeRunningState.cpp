@@ -29,6 +29,8 @@ void MainDudeRunningState::enter(MainDudeComponent& dude)
             InputEvent::OUT_ROPE_PRESSED,
             InputEvent::UP,
             InputEvent::UP_PRESSED,
+            InputEvent::ACCEPT_TRANSACTION,
+            InputEvent::ACCEPT_TRANSACTION_PRESSED,
     };
 
     if (dude._states.current == &dude._states.running_looking_up)

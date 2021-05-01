@@ -1,21 +1,26 @@
 #include "populator/Populator.hpp"
 #include "populator/Spawner.hpp"
+#include "populator/Shop.hpp"
 
 #include "components/specialized/LevelSummaryTracker.hpp"
 #include "components/generic/CollectibleComponent.hpp"
 #include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
+#include "components/generic/SaleableComponent.hpp"
 
 #include "prefabs/collectibles/SingleGoldBar.hpp"
 #include "prefabs/collectibles/TripleGoldBar.hpp"
 #include "prefabs/collectibles/BigGem.hpp"
 #include "prefabs/items/Rock.hpp"
 #include "prefabs/items/Jar.hpp"
+#include "prefabs/items/Whip.hpp"
 #include "prefabs/items/Crate.hpp"
 #include "prefabs/items/Chest.hpp"
 #include "prefabs/items/Arrow.hpp"
 #include "prefabs/items/Rope.hpp"
 #include "prefabs/items/Pistol.hpp"
+#include "prefabs/items/BombSpawner.hpp"
+#include "prefabs/items/RopeSpawner.hpp"
 #include "prefabs/items/Bomb.hpp"
 #include "prefabs/items/Cape.hpp"
 #include "prefabs/items/SpringShoes.hpp"
@@ -34,9 +39,11 @@
 #include "prefabs/npc/FakeSkeleton.hpp"
 #include "prefabs/npc/Skeleton.hpp"
 #include "prefabs/npc/Caveman.hpp"
+#include "prefabs/npc/Shopkeeper.hpp"
 
 #include "EntityRegistry.hpp"
 #include "Level.hpp"
+
 
 void populator::generate_inventory_items(entt::entity main_dude)
 {
@@ -116,6 +123,11 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
                     }
                     break;
                 }
+                case NPCType::SHOPKEEPER:
+                {
+                    prefabs::Shopkeeper::create(pos_x, pos_y);
+                    break;
+                }
                 case NPCType::ARROW_TRAP_LEFT:
                 {
                     prefabs::ArrowTrap::create(pos_x, pos_y, HorizontalOrientation::LEFT);
@@ -187,6 +199,8 @@ void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
     Spawner rock_spawner(2, 12);
     Spawner crate_spawner(2, 4);
 
+    Shop shop;
+
     std::vector<std::shared_ptr<GameEntity>> out{};
 
     const auto& tile_batch = Level::instance().get_tile_batch();
@@ -203,6 +217,11 @@ void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
             switch (loot_type)
             {
                 case LootType::NOTHING: break;
+                case LootType::SHOP_ITEM:
+                {
+                    shop.make_next_item(pos_x, pos_y);
+                    break;
+                }
                 case LootType::ANY:
                 {
                     if (rock_spawner.can_spawn())

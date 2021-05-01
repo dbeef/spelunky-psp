@@ -29,6 +29,7 @@ class DisposingSystem;
 class ParticleSystem;
 class ItemSystem;
 class DamageSystem;
+class ShoppingSystem;
 
 class GameLoop
 {
@@ -66,6 +67,7 @@ private:
     std::shared_ptr<InputSystem> _input_system;
     std::shared_ptr<ItemSystem> _item_system;
     std::shared_ptr<DamageSystem> _damage_system;
+    std::shared_ptr<ShoppingSystem> _shopping_system;
     std::shared_ptr<Viewport> _viewport;
     std::shared_ptr<LevelSummaryTracker> _level_summary_tracker;
     std::function<bool(uint32_t delta_time_ms)> _loop;

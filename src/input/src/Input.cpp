@@ -39,6 +39,9 @@ void Input::fill_input_events()
     if (throwing().value()) _input_events.push_back(InputEvent::THROWING);
     if (throwing().value() && throwing().changed()) _input_events.push_back(InputEvent::THROWING_PRESSED);
 
+    if (purchase().value()) _input_events.push_back(InputEvent::ACCEPT_TRANSACTION);
+    if (purchase().value() && purchase().changed()) _input_events.push_back(InputEvent::ACCEPT_TRANSACTION_PRESSED);
+
     if (out_bomb().value()) _input_events.push_back(InputEvent::OUT_BOMB);
     if (out_bomb().value() && out_bomb().changed()) _input_events.push_back(InputEvent::OUT_BOMB_PRESSED);
 

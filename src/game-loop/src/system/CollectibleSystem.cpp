@@ -8,7 +8,6 @@
 
 void CollectibleSystem::update(std::uint32_t delta_time_ms)
 {
-
     auto &registry = EntityRegistry::instance().get_registry();
 
     auto dudes = registry.view<MainDudeComponent>();
@@ -17,6 +16,11 @@ void CollectibleSystem::update(std::uint32_t delta_time_ms)
 
     auto &dude_physics = registry.get<PhysicsComponent>(dude);
     auto &dude_position = registry.get<PositionComponent>(dude);
+
+    // FIXME: Technically the only thing that can gather collectibles is main dude, so counting all collectibles
+    //        into Inventory::instance() is not wrong, however - in case I wanted to split it up, i.e potentially multiplayer
+    //        with multiple main-dudes, this would need to be re-written so to each collectible-gatherer would have its
+    //        own dollar counter.
 
     auto check_collisions =
             [&registry, &dude_physics, &dude_position]

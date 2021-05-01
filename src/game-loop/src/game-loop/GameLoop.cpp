@@ -1,7 +1,7 @@
 #include "game-loop/GameLoop.hpp"
-
 #include "viewport/Viewport.hpp"
 #include "components/specialized/LevelSummaryTracker.hpp"
+
 #include "system/RenderingSystem.hpp"
 #include "system/DisposingSystem.hpp"
 #include "system/InputSystem.hpp"
@@ -12,6 +12,7 @@
 #include "system/AnimationSystem.hpp"
 #include "system/ItemSystem.hpp"
 #include "system/DamageSystem.hpp"
+#include "system/ShoppingSystem.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -34,6 +35,7 @@ GameLoop::GameLoop(const std::shared_ptr<Viewport>& viewport)
     , _particle_system(std::make_shared<ParticleSystem>())
     , _item_system(std::make_shared<ItemSystem>())
     , _damage_system(std::make_shared<DamageSystem>())
+    , _shopping_system(std::make_shared<ShoppingSystem>())
 {
     _states.current = &_states.started;
     _states.current->enter(*this);

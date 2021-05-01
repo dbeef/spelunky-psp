@@ -11,6 +11,7 @@
 #include "components/generic/TextComponent.hpp"
 #include "components/generic/ItemCarrierComponent.hpp"
 #include "components/specialized/HudOverlayObservers.hpp"
+#include "prefabs/items/Wallet.hpp"
 
 #include <memory>
 #include <utility>
@@ -19,7 +20,10 @@ static const float ICONS_OFFSET_WORLD_UNITS = 1.5f;
 
 class MainDudeComponent;
 
-class HudOverlayComponent : public Observer<InventoryEvent>
+// FIXME: HudOverlayComponent should have shared_ptr observers. So far this is not affecting the game in any negative way,
+//        because there's only a single instance of HudOverlayComponent thus no relocations within the registry,
+//        bad practice nevertheless. Resolve this in the upcoming HUD system.
+class HudOverlayComponent : public Observer<InventoryEvent>, public Observer<ShoppingTransactionEvent>
 {
 public:
 
@@ -32,6 +36,7 @@ public:
 
     void update(uint32_t delta_time_ms);
     void on_notify(const InventoryEvent *) override;
+    void on_notify(const ShoppingTransactionEvent *) override;
     HudOverlayItemObserver* get_item_observer() { return _item_observer.get(); }
 
 private:
@@ -53,7 +58,10 @@ private:
         entt::entity dollars_buffer = entt::null;
         entt::entity ropes = entt::null;
         entt::entity bombs = entt::null;
+        entt::entity prompt = entt::null;
     } _texts;
+
+    int _prompt_visibility_cooldown_ms = 0;
 
     void dispose_children();
     void create_children();

@@ -17,6 +17,11 @@ const char* Input::get_quit_request_binding_msg()
     return "R";
 }
 
+const char* Input::get_accept_transaction_binding_msg()
+{
+    return "R";
+}
+
 const char* Input::get_scores_request_binding_msg()
 {
     return "X";
@@ -49,6 +54,7 @@ void Input::poll()
     _toggles.paused.feed(pad.Buttons & PSP_CTRL_SELECT);
     _toggles.out_bomb.feed(pad.Buttons & PSP_CTRL_TRIANGLE);
     _toggles.out_rope.feed(pad.Buttons & PSP_CTRL_SQUARE);
+    _toggles.purchase.feed(pad.Buttons & PSP_CTRL_RTRIGGER);
 
     fill_input_events();
 }

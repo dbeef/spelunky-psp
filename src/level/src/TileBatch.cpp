@@ -596,8 +596,8 @@ LootType TileBatch::get_loot_type_spawned_at(int x_tiles, int y_tiles) const
         case RoomType::LEFT_RIGHT_UP: return static_cast<LootType>(left_right_up_rooms_loot[room_id][y_tiles_room][x_tiles_room]);
         case RoomType::EXIT: return static_cast<LootType>(exit_rooms_loot[room_id][y_tiles_room][x_tiles_room]);
         case RoomType::ENTRANCE: return static_cast<LootType>(entrance_room_loot[room_id][y_tiles_room][x_tiles_room]);
-        case RoomType::SHOP_LEFT: break;
-        case RoomType::SHOP_RIGHT:break;
+        case RoomType::SHOP_LEFT: return static_cast<LootType>(shops_loot[0][y_tiles_room][x_tiles_room]);
+        case RoomType::SHOP_RIGHT: return static_cast<LootType>(shops_loot[1][y_tiles_room][x_tiles_room]);
         case RoomType::SHOP_LEFT_MUGSHOT:break;
         case RoomType::SHOP_RIGHT_MUGSHOT:break;
         case RoomType::ALTAR:break;
@@ -658,8 +658,8 @@ NPCType TileBatch::get_npc_type_spawned_at(int x_tiles, int y_tiles) const
         case RoomType::LEFT_RIGHT_UP: return static_cast<NPCType>(left_right_up_rooms_npc[room_id][y_tiles_room][x_tiles_room]);
         case RoomType::EXIT: return static_cast<NPCType>(exit_rooms_npc[room_id][y_tiles_room][x_tiles_room]);
         case RoomType::ENTRANCE: return static_cast<NPCType>(entrance_room_npc[room_id][y_tiles_room][x_tiles_room]);
-        case RoomType::SHOP_LEFT: break;
-        case RoomType::SHOP_RIGHT:break;
+        case RoomType::SHOP_LEFT: return static_cast<NPCType>(shops_npc[0][y_tiles_room][x_tiles_room]);
+        case RoomType::SHOP_RIGHT: return static_cast<NPCType>(shops_npc[1][y_tiles_room][x_tiles_room]);
         case RoomType::SHOP_LEFT_MUGSHOT:break;
         case RoomType::SHOP_RIGHT_MUGSHOT:break;
         case RoomType::ALTAR:break;

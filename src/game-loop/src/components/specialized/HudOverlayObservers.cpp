@@ -1,6 +1,7 @@
 #include "components/specialized/HudOverlayObservers.hpp"
 #include "components/specialized/HudOverlayComponent.hpp"
 #include "components/generic/ItemCarrierComponent.hpp"
+#include "components/generic/SaleableComponent.hpp"
 #include "prefabs/ui/HudIcon.hpp"
 #include "viewport/Viewport.hpp"
 
@@ -9,6 +10,11 @@ void HudOverlayItemObserver::on_notify(const ItemCarrierEvent * event)
     assert(_viewport);
 
     auto& registry = EntityRegistry::instance().get_registry();
+    if (registry.has<SaleableComponent>(event->item))
+    {
+        return;
+    }
+
     const auto new_icon_position = get_item_icon_position(_displayed_items);
 
     switch (event->event_type)
