@@ -72,11 +72,5 @@ entt::entity prefabs::Damsel::create(bool& damsel_rescued, float pos_x_center, f
     registry.emplace<TakeExplosionDamageComponent>(entity);
     registry.emplace<ItemComponent>(entity, item);
 
-    // TODO: In the original game, damsel takes melee damage from main dude, slightly jumps but no damage taken
-    registry.emplace<TakeMeleeDamageComponent>(entity);
-
-    // TODO: Does the damsel take jump on top damage? Check in the original game
-    //registry.emplace<TakeJumpOnTopDamageComponent>(entity);
-
     return entity;
 }
