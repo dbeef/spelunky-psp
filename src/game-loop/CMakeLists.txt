@@ -127,6 +127,9 @@ add_library(GameLoop STATIC
         include/prefabs/npc/Shopkeeper.hpp
         include/prefabs/npc/ShopkeeperStates.hpp
         include/prefabs/npc/ShopkeeperScript.hpp
+        include/prefabs/npc/Damsel.hpp
+        include/prefabs/npc/DamselScript.hpp
+        include/prefabs/npc/DamselStates.hpp
         include/prefabs/props/StartSign.hpp
         include/prefabs/props/ScoresSign.hpp
         include/prefabs/props/ResetSign.hpp
@@ -157,6 +160,7 @@ add_library(GameLoop STATIC
         include/prefabs/particles/RopeCollectedParticle.hpp
         include/prefabs/particles/BombCollectedParticle.hpp
         include/prefabs/particles/BloodParticle.hpp
+        include/prefabs/particles/HelpParticle.hpp
         include/prefabs/collectibles/GoldNugget.hpp
         include/prefabs/collectibles/GoldChunk.hpp
         include/prefabs/collectibles/SmallGem.hpp
@@ -220,6 +224,7 @@ add_library(GameLoop STATIC
         src/prefabs/particles/BonesParticle.cpp
         src/prefabs/particles/BloodParticle.cpp
         src/prefabs/particles/RotatingDollarParticle.cpp
+        src/prefabs/particles/HelpParticle.cpp
         src/prefabs/collectibles/GoldNugget.cpp
         src/prefabs/collectibles/GoldChunk.cpp
         src/prefabs/collectibles/SmallGem.cpp
@@ -250,6 +255,9 @@ add_library(GameLoop STATIC
         src/prefabs/other/Bullet.cpp
         src/prefabs/other/Bones.cpp
         src/prefabs/npc/Snake.cpp
+        src/prefabs/npc/Damsel.cpp
+        src/prefabs/npc/DamselScript.cpp
+        src/prefabs/npc/DamselStates.cpp
         src/prefabs/npc/ShopkeeperScript.cpp
         src/prefabs/npc/Shopkeeper.cpp
         src/prefabs/npc/ShopkeeperStates.cpp
@@ -305,7 +313,7 @@ add_library(GameLoop STATIC
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
-        include/prefabs/npc/Damsel.hpp src/prefabs/npc/Damsel.cpp include/prefabs/npc/DamselScript.hpp include/prefabs/npc/DamselStates.hpp src/prefabs/npc/DamselScript.cpp src/prefabs/npc/DamselStates.cpp include/prefabs/particles/HelpParticle.hpp src/prefabs/particles/HelpParticle.cpp)
+)
 
 target_include_directories(GameLoop
         PRIVATE include interface
