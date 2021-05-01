@@ -11,16 +11,16 @@ namespace prefabs
     {
     public:
         virtual DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) = 0;
-        virtual void enter(entt::entity id) = 0;
-        virtual void exit(entt::entity id) = 0;
+        virtual void enter(DamselScript&, entt::entity id) = 0;
+        virtual void exit(DamselScript&, entt::entity id) = 0;
     };
 
     class DamselStandingState : public DamselBaseState
     {
     public:
         DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) override;
-        void enter(entt::entity id) override;
-        void exit(entt::entity id) override;
+        void enter(DamselScript&, entt::entity id) override;
+        void exit(DamselScript&, entt::entity id) override;
     private:
         int32_t _time_since_last_yell_ms = 0;
     };
@@ -29,24 +29,24 @@ namespace prefabs
     {
     public:
         DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) override;
-        void enter(entt::entity id) override;
-        void exit(entt::entity id) override;
+        void enter(DamselScript&, entt::entity id) override;
+        void exit(DamselScript&, entt::entity id) override;
     };
 
     class DamselHeldState : public DamselBaseState
     {
     public:
         DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) override;
-        void enter(entt::entity id) override;
-        void exit(entt::entity id) override;
+        void enter(DamselScript&, entt::entity id) override;
+        void exit(DamselScript&, entt::entity id) override;
     };
 
     class DamselExitingState : public DamselBaseState
     {
     public:
         DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) override;
-        void enter(entt::entity id) override;
-        void exit(entt::entity id) override;
+        void enter(DamselScript&, entt::entity id) override;
+        void exit(DamselScript&, entt::entity id) override;
     private:
         bool _hidden = false;
     };
@@ -55,8 +55,8 @@ namespace prefabs
     {
     public:
         DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) override;
-        void enter(entt::entity id) override;
-        void exit(entt::entity id) override;
+        void enter(DamselScript&, entt::entity id) override;
+        void exit(DamselScript&, entt::entity id) override;
     private:
         int32_t _damsel_stunned_timer_ms = 0;
     };
@@ -65,8 +65,8 @@ namespace prefabs
     {
     public:
         DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) override;
-        void enter(entt::entity id) override;
-        void exit(entt::entity id) override;
+        void enter(DamselScript&, entt::entity id) override;
+        void exit(DamselScript&, entt::entity id) override;
     private:
         int32_t _damsel_stunned_timer_ms = 0;
     };
@@ -75,8 +75,18 @@ namespace prefabs
     {
     public:
         DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) override;
-        void enter(entt::entity id) override;
-        void exit(entt::entity id) override;
+        void enter(DamselScript&, entt::entity id) override;
+        void exit(DamselScript&, entt::entity id) override;
+    private:
+        int32_t _damsel_stunned_timer_ms = 0;
+    };
+
+    class DamselSmoochingState : public DamselBaseState
+    {
+    public:
+        DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) override;
+        void enter(DamselScript&, entt::entity id) override;
+        void exit(DamselScript&, entt::entity id) override;
     private:
         int32_t _damsel_stunned_timer_ms = 0;
     };

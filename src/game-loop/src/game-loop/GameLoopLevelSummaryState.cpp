@@ -1,6 +1,8 @@
 #include "populator/Populator.hpp"
 #include "prefabs/main-dude/MainDude.hpp"
 #include "prefabs/ui/LevelSummaryOverlay.hpp"
+#include "prefabs/npc/Damsel.hpp"
+#include "prefabs/npc/DamselScript.hpp"
 
 #include "game-loop/GameLoopLevelSummaryState.hpp"
 #include "game-loop/GameLoop.hpp"
@@ -9,6 +11,7 @@
 #include "components/specialized/MainDudeComponent.hpp"
 
 #include "system/RenderingSystem.hpp"
+#include "system/DisposingSystem.hpp"
 #include "system/ScriptingSystem.hpp"
 #include "system/PhysicsSystem.hpp"
 #include "system/AnimationSystem.hpp"
@@ -30,18 +33,39 @@ GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32
     auto& physics_system = game_loop._physics_system;
     auto& animation_system = game_loop._animation_system;
     auto& item_system = game_loop._item_system;
+    auto& disposing_system = game_loop._disposing_system;
 
     rendering_system->update(delta_time_ms);
     scripting_system->update(delta_time_ms);
     physics_system->update(delta_time_ms);
     animation_system->update(delta_time_ms);
     item_system->update(delta_time_ms);
+    disposing_system->update(delta_time_ms);
 
     auto& dude = registry.get<MainDudeComponent>(_main_dude);
 
     if (dude.entered_door())
     {
         return &game_loop._states.playing;
+    }
+
+    if (_damsel != entt::null)
+    {
+        auto &dude_position = registry.get<PositionComponent>(_main_dude);
+        auto &dude_physics = registry.get<PhysicsComponent>(_main_dude);
+
+        auto &damsel_position = registry.get<PositionComponent>(_damsel);
+        auto &damsel_physics = registry.get<PhysicsComponent>(_damsel);
+
+        if (dude_physics.is_collision(damsel_physics, damsel_position, dude_position))
+        {
+            auto& damsel_scripting_component = registry.get<ScriptingComponent>(_damsel);
+            auto* damsel_script = damsel_scripting_component.get<prefabs::DamselScript>();
+
+            damsel_script->enter_smooching_state(_damsel);
+            Inventory::instance().add_hearts(1);
+            _damsel = entt::null;
+        }
     }
 
     return this;
@@ -82,6 +106,12 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     dude.enter_level_summary_state();
 
     populator::generate_inventory_items(_main_dude);
+
+    auto& damsel_rescued = game_loop._states.playing.is_damsel_rescued();
+    if (damsel_rescued)
+    {
+        _damsel = prefabs::Damsel::create(damsel_rescued, pos_x + MapTile::PHYSICAL_WIDTH * 8, pos_y);
+    }
 
     rendering_system->sort();
 }

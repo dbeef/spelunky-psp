@@ -35,7 +35,8 @@ public:
     void remove_dollars(uint16_t amount);
     void add_dollars(uint16_t amount);
     void remove_hearts(uint16_t amount);
-    
+    void add_hearts(uint16_t amount);
+
     void set_bombs(uint16_t amount);
     void set_ropes(uint16_t amount);
 

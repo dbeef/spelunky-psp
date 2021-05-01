@@ -27,12 +27,12 @@
 #include "TextureType.hpp"
 #include "spritesheet-frames/NPCSpritesheetFrames.hpp"
 
-entt::entity prefabs::Damsel::create()
+entt::entity prefabs::Damsel::create(bool& damsel_rescued)
 {
-    return create(0, 0);
+    return create(damsel_rescued, 0, 0);
 }
 
-entt::entity prefabs::Damsel::create(float pos_x_center, float pos_y_center)
+entt::entity prefabs::Damsel::create(bool& damsel_rescued, float pos_x_center, float pos_y_center)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
@@ -44,11 +44,14 @@ entt::entity prefabs::Damsel::create(float pos_x_center, float pos_y_center)
     QuadComponent quad(TextureType::NPC, width, height);
     quad.frame_changed(NPCSpritesheetFrames::DAMSEL_STANDING);
 
-    auto Damsel_script = std::make_shared<DamselScript>(entity);
-    ScriptingComponent script(Damsel_script);
+    auto damsel_script = std::make_shared<DamselScript>(entity, damsel_rescued);
+    ScriptingComponent script(damsel_script);
 
     HitpointComponent hitpoints(4, false);
-    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(Damsel_script->get_observer()));
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(damsel_script->get_observer()));
+
+    ItemComponent item{ItemType::ROCK, ItemApplication::THROWABLE, ItemSlot::ACTIVE};
+    item.set_weight(7);
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
@@ -62,7 +65,7 @@ entt::entity prefabs::Damsel::create(float pos_x_center, float pos_y_center)
     registry.emplace<TakeSpikesDamageComponent>(entity);
     registry.emplace<NpcTypeComponent>(entity, NpcType::DAMSEL);
     registry.emplace<TakeExplosionDamageComponent>(entity);
-    registry.emplace<ItemComponent>(entity, ItemType::ROCK, ItemApplication::THROWABLE, ItemSlot::ACTIVE);
+    registry.emplace<ItemComponent>(entity, item);
 
     // TODO: In the original game, damsel takes melee damage from main dude, slightly jumps but no damage taken
     registry.emplace<TakeMeleeDamageComponent>(entity);

@@ -24,9 +24,9 @@ void prefabs::DamselScript::enter_state(DamselBaseState* new_state, entt::entity
 {
     if (new_state != _states.current)
     {
-        _states.current->exit(owner);
+        _states.current->exit(*this, owner);
         _states.current = new_state;
-        _states.current->enter(owner);
+        _states.current->enter(*this, owner);
     }
 }
 

@@ -2,6 +2,7 @@
 #include "prefabs/npc/Damsel.hpp"
 #include "prefabs/npc/DamselScript.hpp"
 #include "prefabs/particles/HelpParticle.hpp"
+#include "prefabs/particles/SmoochingParticle.hpp"
 
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
@@ -21,7 +22,10 @@ namespace prefabs
         auto& physics = registry.get<PhysicsComponent>(id);
         auto& item = registry.get<ItemComponent>(id);
 
-        _time_since_last_yell_ms += delta_time_ms;
+        if (!damsel._damsel_rescued)
+        {
+            _time_since_last_yell_ms += delta_time_ms;
+        }
 
         if (_time_since_last_yell_ms > 4000)
         {
@@ -46,7 +50,7 @@ namespace prefabs
         }
     }
 
-    void DamselStandingState::enter(entt::entity id)
+    void DamselStandingState::enter(DamselScript&, entt::entity id)
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& quad = registry.get<QuadComponent>(id);
@@ -56,7 +60,7 @@ namespace prefabs
         animation.stop();
     }
 
-    void DamselStandingState::exit(entt::entity id)
+    void DamselStandingState::exit(DamselScript&, entt::entity id)
     {
     }
 
@@ -103,7 +107,7 @@ namespace prefabs
         }
     }
 
-    void DamselRunningState::enter(entt::entity id)
+    void DamselRunningState::enter(DamselScript&, entt::entity id)
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& quad = registry.get<QuadComponent>(id);
@@ -115,7 +119,7 @@ namespace prefabs
                         100, true);
     }
 
-    void DamselRunningState::exit(entt::entity id)
+    void DamselRunningState::exit(DamselScript&, entt::entity id)
     {
     }
 
@@ -128,6 +132,7 @@ namespace prefabs
         auto& physics = registry.get<PhysicsComponent>(id);
         auto& position = registry.get<PositionComponent>(id);
         auto& item = registry.get<ItemComponent>(id);
+        auto& hitpoints = registry.get<HitpointComponent>(id);
 
         auto& tile_batch = Level::instance().get_tile_batch();
         MapTile* exit = nullptr;
@@ -138,16 +143,20 @@ namespace prefabs
         ZoneComponent tile_zone(MapTile::PHYSICAL_WIDTH, MapTile::PHYSICAL_HEIGHT);
         PositionComponent tile_position(exit->get_center_x(), exit->get_center_y());
 
-        if (physics.is_collision(tile_zone, tile_position, position))
+        if (item.is_carried())
+        {
+            return this;
+        }
+        else if (hitpoints.get_hitpoints() == 0)
+        {
+            return &damsel._states.dead;
+        }
+        else if (physics.is_collision(tile_zone, tile_position, position))
         {
             position.x_center = exit->get_center_x();
             position.y_center = exit->get_center_y();
 
             return &damsel._states.exiting;
-        }
-        else if (item.is_carried())
-        {
-            return this;
         }
         else
         {
@@ -156,7 +165,7 @@ namespace prefabs
         }
     }
 
-    void DamselHeldState::enter(entt::entity id)
+    void DamselHeldState::enter(DamselScript&, entt::entity id)
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& quad = registry.get<QuadComponent>(id);
@@ -166,7 +175,7 @@ namespace prefabs
         animation.stop();
     }
 
-    void DamselHeldState::exit(entt::entity id)
+    void DamselHeldState::exit(DamselScript&, entt::entity id)
     {
     }
     
@@ -187,7 +196,7 @@ namespace prefabs
         return this;
     }
 
-    void DamselExitingState::enter(entt::entity id)
+    void DamselExitingState::enter(DamselScript& damsel, entt::entity id)
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& quad = registry.get<QuadComponent>(id);
@@ -210,15 +219,11 @@ namespace prefabs
             auto& item_carrier = item.get_item_carrier();
             item_carrier.put_down_active_item();
         }
-        
-        // TODO: Should update some global game state that the smooch animation should be ran in the level summary screen
-        //
-        //       ^ Maybe the game-loop itself should query for damsel state? Just as it does for the main-dude.
-        //         Or, could make a singleton for this purpose, as robbing shopkeeper (theft) will need some globally
-        //         accessible game state too.
+
+        damsel._damsel_rescued = true;
     }
 
-    void DamselExitingState::exit(entt::entity id)
+    void DamselExitingState::exit(DamselScript&, entt::entity id)
     {
     }
     
@@ -246,7 +251,7 @@ namespace prefabs
         return this;
     }
 
-    void DamselStunnedState::enter(entt::entity id)
+    void DamselStunnedState::enter(DamselScript&, entt::entity id)
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& quad = registry.get<QuadComponent>(id);
@@ -260,7 +265,7 @@ namespace prefabs
         _damsel_stunned_timer_ms = 5000;
     }
 
-    void DamselStunnedState::exit(entt::entity id)
+    void DamselStunnedState::exit(DamselScript&, entt::entity id)
     {
         _damsel_stunned_timer_ms = 0;
     }
@@ -285,7 +290,7 @@ namespace prefabs
         return this;
     }
 
-    void DamselYellingState::enter(entt::entity id)
+    void DamselYellingState::enter(DamselScript&, entt::entity id)
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& quad = registry.get<QuadComponent>(id);
@@ -300,7 +305,7 @@ namespace prefabs
                         100, false);
     }
 
-    void DamselYellingState::exit(entt::entity id)
+    void DamselYellingState::exit(DamselScript&, entt::entity id)
     {
     }
     
@@ -309,10 +314,17 @@ namespace prefabs
     DamselBaseState* DamselDeadState::update(DamselScript& damsel, uint32_t delta_time_ms, entt::entity id)
     {
         auto& registry = EntityRegistry::instance().get_registry();
+        auto& item = registry.get<ItemComponent>(id);
+
+        if (item.is_carried())
+        {
+            return &damsel._states.held;
+        }
+
         return this;
     }
 
-    void DamselDeadState::enter(entt::entity id)
+    void DamselDeadState::enter(DamselScript&, entt::entity id)
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& quad = registry.get<QuadComponent>(id);
@@ -322,7 +334,41 @@ namespace prefabs
         animation.stop();
     }
 
-    void DamselDeadState::exit(entt::entity id)
+    void DamselDeadState::exit(DamselScript&, entt::entity id)
+    {
+    }
+
+    // Smooching state:
+
+    DamselBaseState* DamselSmoochingState::update(DamselScript& damsel, uint32_t delta_time_ms, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& animation = registry.get<AnimationComponent>(id);
+
+        if (animation.is_finished())
+        {
+            return &damsel._states.standing;
+        }
+
+        return this;
+    }
+
+    void DamselSmoochingState::enter(DamselScript&, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& quad = registry.get<QuadComponent>(id);
+        auto& animation = registry.get<AnimationComponent>(id);
+        auto& position = registry.get<PositionComponent>(id);
+
+        prefabs::SmoochingParticle::create(position.x_center, position.y_center);
+
+        quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::DAMSEL_KISS_0_START);
+        animation.start(static_cast<int>(NPCSpritesheetFrames::DAMSEL_KISS_0_START),
+                        static_cast<int>(NPCSpritesheetFrames::DAMSEL_KISS_9_LAST),
+                        100, false);
+    }
+
+    void DamselSmoochingState::exit(DamselScript&, entt::entity id)
     {
     }
 }

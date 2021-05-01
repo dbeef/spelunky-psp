@@ -16,6 +16,12 @@ void Inventory::set_starting_inventory()
     _items.clear();
 }
 
+void Inventory::add_hearts(uint16_t amount)
+{
+    _hearts += amount;
+    notify(InventoryEvent::HEARTS_COUNT_CHANGED);
+}
+
 void Inventory::remove_hearts(uint16_t amount)
 {
     _hearts = std::max<int16_t>(0, _hearts - amount);

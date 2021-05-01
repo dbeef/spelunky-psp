@@ -313,7 +313,7 @@ add_library(GameLoop STATIC
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
-)
+        include/prefabs/particles/SmoochingParticle.hpp src/prefabs/particles/SmoochingParticle.cpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface

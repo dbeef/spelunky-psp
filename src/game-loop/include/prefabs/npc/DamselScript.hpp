@@ -28,8 +28,12 @@ namespace prefabs
         friend class DamselStunnedState;
         friend class DamselYellingState;
         friend class DamselDeadState;
+        friend class DamselSmoochingState;
 
-        explicit DamselScript(entt::entity Damsel) : _death_observer(Damsel) {}
+        explicit DamselScript(entt::entity damsel, bool& damsel_rescued)
+            : _death_observer(damsel)
+            , _damsel_rescued(damsel_rescued)
+        {}
 
         DamselDeathObserver* get_observer()
         {
@@ -39,10 +43,19 @@ namespace prefabs
         void update(entt::entity owner, uint32_t delta_time_ms) override;
         void set_panic(bool v) { _panic = v; }
         bool get_panic() const { return _panic; }
+        void enter_smooching_state(entt::entity id)
+        {
+            if (_states.current != &_states.smooching)
+            {
+                enter_state(&_states.smooching, id);
+            }
+        }
+
     private:
 
         void enter_state(DamselBaseState* new_state, entt::entity owner);
 
+        bool& _damsel_rescued;
         bool _panic = false;
         DamselDeathObserver _death_observer;
 
@@ -55,6 +68,7 @@ namespace prefabs
             DamselStunnedState stunned;
             DamselYellingState yelling;
             DamselDeadState dead;
+            DamselSmoochingState smooching;
             DamselBaseState* current = &standing;
         } _states;
     };
