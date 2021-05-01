@@ -4,6 +4,7 @@
 #include "prefabs/npc/DamselStates.hpp"
 #include "EntityRegistry.hpp"
 #include "components/damage/HitpointComponent.hpp"
+#include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
 
 namespace prefabs
@@ -17,10 +18,21 @@ namespace prefabs
         const entt::entity _damsel;
     };
 
+    class DamselProjectileDamageObserver final : public Observer<ProjectileDamage_t>
+    {
+    public:
+        explicit DamselProjectileDamageObserver(entt::entity damsel) : _damsel(damsel) {}
+        void on_notify(const ProjectileDamage_t *) override;
+    private:
+        const entt::entity _damsel;
+    };
+
     class DamselScript final : public ScriptBase
     {
     public:
         friend class DamselDeathObserver;
+        friend class DamselProjectileDamageObserver;
+
         friend class DamselStandingState;
         friend class DamselRunningState;
         friend class DamselHeldState;
@@ -34,12 +46,18 @@ namespace prefabs
 
         explicit DamselScript(entt::entity damsel, bool& damsel_rescued)
             : _death_observer(damsel)
+            , _projectile_damage_observer(damsel)
             , _damsel_rescued(damsel_rescued)
         {}
 
-        DamselDeathObserver* get_observer()
+        DamselDeathObserver* get_death_observer()
         {
             return &_death_observer;
+        }
+
+        DamselProjectileDamageObserver* get_projectile_damage_observer()
+        {
+            return &_projectile_damage_observer;
         }
 
         void update(entt::entity owner, uint32_t delta_time_ms) override;
@@ -59,7 +77,9 @@ namespace prefabs
 
         bool& _damsel_rescued;
         bool _panic = false;
+
         DamselDeathObserver _death_observer;
+        DamselProjectileDamageObserver _projectile_damage_observer;
 
         struct
         {

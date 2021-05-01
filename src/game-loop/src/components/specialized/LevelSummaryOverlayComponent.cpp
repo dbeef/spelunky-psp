@@ -181,7 +181,7 @@ void LevelSummaryOverlayComponent::update(uint32_t delta_time_ms)
     for (std::size_t index = _loot_spawned; index < elements_appearing && index < loot_events.size(); index++)
     {
         auto& current_event = loot_events[index];
-        float x = 6.25f + (0.5 * index);
+        float x = 6.25f + (0.25 * index);
         float y = 3.25f;
 
         switch (current_event)
@@ -231,12 +231,10 @@ void LevelSummaryOverlayComponent::update(uint32_t delta_time_ms)
 
     elements_appearing = std::floor<int>(static_cast<float>(_kills_appearing_timer) / 150.0f);
 
-    std::size_t added_icons = 0;
-
     for (std::size_t index = _kills_spawned; index < elements_appearing && index < killed_events.size(); index++)
     {
         auto& current_event = killed_events[index];
-        float x = 6.75f + (0.5 * added_icons);
+        float x = 6.75f + (0.25f * index);
         float y = 4.25f;
 
         switch (current_event)
@@ -278,6 +276,5 @@ void LevelSummaryOverlayComponent::update(uint32_t delta_time_ms)
             }
         }
         _kills_spawned++;
-        added_icons++;
     }
 }
