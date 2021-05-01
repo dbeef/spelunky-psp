@@ -134,7 +134,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     assert(entrance);
 
     float pos_x = entrance->x + (MapTile::PHYSICAL_WIDTH / 2.0f);
-    float pos_y = entrance->y + (MapTile::PHYSICAL_HEIGHT / 2.0f) + MapTile::PHYSICAL_HEIGHT;
+    float pos_y = entrance->y + (MapTile::PHYSICAL_HEIGHT / 2.0f);
 
     // Update main dude:
     _main_dude = prefabs::MainDude::create(pos_x, pos_y);

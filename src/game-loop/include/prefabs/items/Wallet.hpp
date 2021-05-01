@@ -10,13 +10,6 @@
 
 struct ShoppingTransactionEvent
 {
-    enum class Type
-    {
-        TRANSACTION_POSSIBLE,
-        TRANSACTION_SUCCESS,
-        TRANSACTION_FAILED
-    };
-
     std::string message;
 };
 

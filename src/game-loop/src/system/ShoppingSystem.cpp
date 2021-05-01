@@ -126,6 +126,7 @@ void ShoppingSystem::update_transactions()
 
                     if (activable.activated)
                     {
+                        // TODO: After rework to remove Inventory singleton, take the amount of dollars from Wallet instance.
                         // Finish transaction by removing dollar amount from wallet and removing SaleableComponent from
                         // item for sale:
                         if (Inventory::instance().get_dollars() >= item_saleable.get_price_dollars())
