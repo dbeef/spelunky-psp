@@ -71,6 +71,7 @@ namespace prefabs
         auto& registry = EntityRegistry::instance().get_registry();
         auto& physics = registry.get<PhysicsComponent>(id);
         auto& item = registry.get<ItemComponent>(id);
+        auto& position = registry.get<PositionComponent>(id);
         auto& horizontal_orientation = registry.get<HorizontalOrientationComponent>(id);
 
         if (damsel.get_panic())
@@ -93,7 +94,23 @@ namespace prefabs
             }
         }
 
-        if (item.is_carried())
+        auto& tile_batch = Level::instance().get_tile_batch();
+        MapTile* exit = nullptr;
+        tile_batch.get_first_tile_of_given_type(MapTileType::EXIT, exit);
+        assert(exit);
+
+        // TODO: This should be a helper method inside the MapTile:
+        ZoneComponent tile_zone(MapTile::PHYSICAL_WIDTH, MapTile::PHYSICAL_HEIGHT);
+        PositionComponent tile_position(exit->get_center_x(), exit->get_center_y());
+
+        if (physics.is_collision(tile_zone, tile_position, position))
+        {
+            position.x_center = exit->get_center_x();
+            position.y_center = exit->get_center_y();
+
+            return &damsel._states.exiting;
+        }
+        else if (item.is_carried())
         {
             return &damsel._states.held;
         }
@@ -143,26 +160,26 @@ namespace prefabs
         ZoneComponent tile_zone(MapTile::PHYSICAL_WIDTH, MapTile::PHYSICAL_HEIGHT);
         PositionComponent tile_position(exit->get_center_x(), exit->get_center_y());
 
-        if (item.is_carried())
-        {
-            return this;
-        }
-        else if (hitpoints.get_hitpoints() == 0)
-        {
-            return &damsel._states.dead;
-        }
-        else if (physics.is_collision(tile_zone, tile_position, position))
+        if (hitpoints.get_hitpoints() >= 0 && physics.is_collision(tile_zone, tile_position, position))
         {
             position.x_center = exit->get_center_x();
             position.y_center = exit->get_center_y();
 
             return &damsel._states.exiting;
         }
-        else
+
+        if (item.is_carried())
         {
-            damsel.set_panic(true);
-            return &damsel._states.stunned;
+            return this;
         }
+
+        if (hitpoints.get_hitpoints() <= 0)
+        {
+            return &damsel._states.dead;
+        }
+
+        damsel.set_panic(true);
+        return &damsel._states.stunned;
     }
 
     void DamselHeldState::enter(DamselScript&, entt::entity id)

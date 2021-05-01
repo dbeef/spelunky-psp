@@ -71,6 +71,7 @@ void DamageSystem::update_melee_damage(std::uint32_t delta_time_ms)
                                  PositionComponent& projectile_position)
     {
         give_damage.update_cooldown(delta_time_ms);
+        bool damage_given = false;
 
         bodies.each([&](
                 entt::entity take_damage_entity,
@@ -92,8 +93,13 @@ void DamageSystem::update_melee_damage(std::uint32_t delta_time_ms)
             const MeleeDamage_t damage = give_damage.get_damage();
             take_damage.notify(damage);
             remove_hitpoints(damage, take_damage_entity);
-            give_damage.reset_cooldown();
+            damage_given = true;
         });
+
+        if (damage_given)
+        {
+            give_damage.reset_cooldown();
+        }
     };
 
     registry.view<GiveMeleeDamageComponent, PhysicsComponent, PositionComponent>().each(give_melee_damage);

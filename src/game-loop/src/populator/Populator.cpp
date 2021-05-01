@@ -80,6 +80,8 @@ void populator::generate_inventory_items(entt::entity main_dude)
             case ItemType::WHIP:
             case ItemType::BOMB_SPAWNER:
             case ItemType::ROPE_SPAWNER:
+            // These items are not re-created:
+            case ItemType::BODY:
             default: continue;
         }
 

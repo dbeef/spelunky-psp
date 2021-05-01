@@ -20,6 +20,7 @@
 #include "components/damage/TakeMeleeDamageComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 #include "components/damage/TakeExplosionDamageComponent.hpp"
 #include "components/generic/ItemComponent.hpp"
 
@@ -50,7 +51,7 @@ entt::entity prefabs::Damsel::create(bool& damsel_rescued, float pos_x_center, f
     HitpointComponent hitpoints(4, false);
     hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(damsel_script->get_observer()));
 
-    ItemComponent item{ItemType::ROCK, ItemApplication::THROWABLE, ItemSlot::ACTIVE};
+    ItemComponent item{ItemType::BODY, ItemApplication::THROWABLE, ItemSlot::ACTIVE};
     item.set_weight(7);
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
@@ -62,6 +63,7 @@ entt::entity prefabs::Damsel::create(bool& damsel_rescued, float pos_x_center, f
     registry.emplace<HorizontalOrientationComponent>(entity);
     registry.emplace<HitpointComponent>(entity, hitpoints);
     registry.emplace<TakeProjectileDamageComponent>(entity);
+    registry.emplace<GiveProjectileDamageComponent>(entity, 1);
     registry.emplace<TakeSpikesDamageComponent>(entity);
     registry.emplace<NpcTypeComponent>(entity, NpcType::DAMSEL);
     registry.emplace<TakeExplosionDamageComponent>(entity);

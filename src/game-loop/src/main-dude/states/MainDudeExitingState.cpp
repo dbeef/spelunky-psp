@@ -8,6 +8,10 @@
 
 void MainDudeExitingState::exit(MainDudeComponent& dude)
 {
+    auto& registry = EntityRegistry::instance().get_registry();
+    auto& physics = registry.get<PhysicsComponent>(dude._owner);
+    physics.enable_gravity();
+
     dude._other.entered_door = false;
 }
 
@@ -21,6 +25,8 @@ void MainDudeExitingState::enter(MainDudeComponent& dude)
 
     physics.set_x_velocity(0);
     physics.set_y_velocity(0);
+    physics.disable_gravity();
+
     input.allowed_events = {};
 
     Audio::instance().play(SFXType::MAIN_DUDE_ENTERING_DOOR);
