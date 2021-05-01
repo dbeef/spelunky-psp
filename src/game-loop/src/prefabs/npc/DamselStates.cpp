@@ -14,6 +14,7 @@
 #include "components/damage/TakeExplosionDamageComponent.hpp"
 #include "components/damage/TakeProjectileDamageComponent.hpp"
 
+#include "audio/Audio.hpp"
 #include "Level.hpp"
 #include "spritesheet-frames/NPCSpritesheetFrames.hpp"
 
@@ -243,6 +244,8 @@ namespace prefabs
         if (registry.has<TakeMeleeDamageComponent>(id)) registry.remove<TakeMeleeDamageComponent>(id);
         if (registry.has<TakeExplosionDamageComponent>(id)) registry.remove<TakeExplosionDamageComponent>(id);
         if (registry.has<TakeProjectileDamageComponent>(id)) registry.remove<TakeProjectileDamageComponent>(id);
+
+        Audio::instance().play(SFXType::MAIN_DUDE_ENTERING_DOOR);
 
         damsel._damsel_rescued = true;
     }
