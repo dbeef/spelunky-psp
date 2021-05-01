@@ -29,6 +29,8 @@ namespace prefabs
         friend class DamselYellingState;
         friend class DamselDeadState;
         friend class DamselSmoochingState;
+        friend class DamselFallingState;
+        friend class DamselBouncingState;
 
         explicit DamselScript(entt::entity damsel, bool& damsel_rescued)
             : _death_observer(damsel)
@@ -69,6 +71,8 @@ namespace prefabs
             DamselYellingState yelling;
             DamselDeadState dead;
             DamselSmoochingState smooching;
+            DamselFallingState falling;
+            DamselBouncingState bouncing;
             DamselBaseState* current = &standing;
         } _states;
     };

@@ -339,10 +339,19 @@ namespace prefabs
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& item = registry.get<ItemComponent>(id);
+        auto& physics = registry.get<PhysicsComponent>(id);
 
         if (item.is_carried())
         {
             return &damsel._states.held;
+        }
+        else if (physics.get_y_velocity() < 0.0f)
+        {
+            return &damsel._states.bouncing;
+        }
+        else if (physics.get_y_velocity() > 0.0f)
+        {
+            return &damsel._states.falling;
         }
 
         return this;
@@ -353,12 +362,90 @@ namespace prefabs
         auto& registry = EntityRegistry::instance().get_registry();
         auto& quad = registry.get<QuadComponent>(id);
         auto& animation = registry.get<AnimationComponent>(id);
+        auto& physics = registry.get<PhysicsComponent>(id);
 
+        physics.set_bounciness(0.4f);
         quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::DAMSEL_DEAD);
         animation.stop();
     }
 
     void DamselDeadState::exit(DamselScript&, entt::entity id)
+    {
+    }
+
+    // Falling state:
+
+    DamselBaseState* DamselFallingState::update(DamselScript& damsel, uint32_t delta_time_ms, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& item = registry.get<ItemComponent>(id);
+        auto& physics = registry.get<PhysicsComponent>(id);
+
+        if (item.is_carried())
+        {
+            return &damsel._states.held;
+        }
+        else if (physics.get_y_velocity() < 0.0f)
+        {
+            return &damsel._states.bouncing;
+        }
+        else if (physics.get_y_velocity() == 0.0f)
+        {
+            return &damsel._states.dead;
+        }
+
+        return this;
+    }
+
+    void DamselFallingState::enter(DamselScript&, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& quad = registry.get<QuadComponent>(id);
+        auto& animation = registry.get<AnimationComponent>(id);
+
+        quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::DAMSEL_FALL);
+        animation.stop();
+    }
+
+    void DamselFallingState::exit(DamselScript&, entt::entity id)
+    {
+    }
+
+    // Bouncing state:
+
+    DamselBaseState* DamselBouncingState::update(DamselScript& damsel, uint32_t delta_time_ms, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& item = registry.get<ItemComponent>(id);
+        auto& physics = registry.get<PhysicsComponent>(id);
+
+        if (item.is_carried())
+        {
+            return &damsel._states.held;
+        }
+        else if (physics.get_y_velocity() > 0.0f)
+        {
+            return &damsel._states.falling;
+        }
+        else if (physics.get_y_velocity() == 0.0f)
+        {
+            return &damsel._states.dead;
+        }
+
+        return this;
+    }
+
+    void DamselBouncingState::enter(DamselScript&, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& quad = registry.get<QuadComponent>(id);
+        auto& animation = registry.get<AnimationComponent>(id);
+
+        quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::DAMSEL_BOUNCE);
+        animation.stop();
+    }
+
+    void DamselBouncingState::exit(DamselScript&, entt::entity id)
     {
     }
 

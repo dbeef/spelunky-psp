@@ -67,8 +67,6 @@ namespace prefabs
         DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) override;
         void enter(DamselScript&, entt::entity id) override;
         void exit(DamselScript&, entt::entity id) override;
-    private:
-        int32_t _damsel_stunned_timer_ms = 0;
     };
 
     class DamselDeadState : public DamselBaseState
@@ -77,8 +75,6 @@ namespace prefabs
         DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) override;
         void enter(DamselScript&, entt::entity id) override;
         void exit(DamselScript&, entt::entity id) override;
-    private:
-        int32_t _damsel_stunned_timer_ms = 0;
     };
 
     class DamselSmoochingState : public DamselBaseState
@@ -87,7 +83,21 @@ namespace prefabs
         DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) override;
         void enter(DamselScript&, entt::entity id) override;
         void exit(DamselScript&, entt::entity id) override;
-    private:
-        int32_t _damsel_stunned_timer_ms = 0;
+    };
+
+    class DamselFallingState : public DamselBaseState
+    {
+    public:
+        DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) override;
+        void enter(DamselScript&, entt::entity id) override;
+        void exit(DamselScript&, entt::entity id) override;
+    };
+
+    class DamselBouncingState : public DamselBaseState
+    {
+    public:
+        DamselBaseState* update(DamselScript&, uint32_t delta_time_ms, entt::entity id) override;
+        void enter(DamselScript&, entt::entity id) override;
+        void exit(DamselScript&, entt::entity id) override;
     };
 }
