@@ -39,6 +39,7 @@ namespace
         if (hitpoints.get_hitpoints() <= 0)
         {
             hitpoints.notify({npc_type});
+            hitpoints.remove_all_observers();
 
             if (hitpoints.is_disposed_when_zero())
             {
@@ -215,10 +216,10 @@ void DamageSystem::update_tile_collision_damage()
     auto &registry = EntityRegistry::instance().get_registry();
     auto bodies = registry.view<TakeFallDamageComponent, HitpointComponent, PhysicsComponent>();
 
-    auto give_tile_collision_damage = [&registry](entt::entity tile_collision_entity,
-                                         TakeTileCollisionDamageComponent& tile_collision_damage,
-                                         HitpointComponent& hitpoints,
-                                         PhysicsComponent& physics)
+    auto give_tile_collision_damage = [&](entt::entity tile_collision_entity,
+                                          TakeTileCollisionDamageComponent& tile_collision_damage,
+                                          HitpointComponent& hitpoints,
+                                          PhysicsComponent& physics)
     {
         const bool damage_taken = tile_collision_damage.update(physics);
         if (damage_taken)
