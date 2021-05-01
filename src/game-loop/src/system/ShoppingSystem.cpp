@@ -1,9 +1,12 @@
 #include "system/ShoppingSystem.hpp"
 #include "EntityRegistry.hpp"
 #include "other/Inventory.hpp"
+#include "audio/Audio.hpp"
+
 #include "prefabs/items/Wallet.hpp"
 #include "prefabs/particles/ItemCollectedParticle.hpp"
-#include "audio/Audio.hpp"
+#include "prefabs/particles/RopeCollectedParticle.hpp"
+#include "prefabs/particles/BombCollectedParticle.hpp"
 
 #include "components/generic/SaleableComponent.hpp"
 #include "components/generic/ActivableComponent.hpp"
@@ -15,6 +18,16 @@
 
 namespace
 {
+    void create_transaction_particle(ItemType type, float pos_x_center, float pos_y_center)
+    {
+        switch (type)
+        {
+            case ItemType::BOMB_BAG: prefabs::BombCollectedParticle::create(pos_x_center, pos_y_center); break;
+            case ItemType::ROPE_PILE: prefabs::RopeCollectedParticle::create(pos_x_center, pos_y_center); break;
+            default: prefabs::ItemCollectedParticle::create(pos_x_center, pos_y_center); break;
+        }
+    }
+
     std::string item_name(ItemType type)
     {
 #define ITEM_TYPE_STR(x) case ItemType::x: return #x;
@@ -41,6 +54,8 @@ namespace
             case ItemType::ROPE_SPAWNER: return "ROPE SPAWNER";
             case ItemType::SPIKE_SHOES: return "SPIKE SHOES";
             case ItemType::SPRING_SHOES: return "SPRING SHOES";
+            case ItemType::ROPE_PILE: return "ROPE PILE";
+            case ItemType::BOMB_BAG: return "BOMB BAG";
         }
 #undef ITEM_TYPE_STR
         return "UNKNOWN";
@@ -134,13 +149,14 @@ void ShoppingSystem::update_transactions()
                             Inventory::instance().remove_dollars(item_saleable.get_price_dollars());
                             wallet_script->notify({get_successful_transaction_message(item.get_type())});
 
-                            prefabs::ItemCollectedParticle::create(item_position.x_center, item_position.y_center - 0.75f);
                             Audio::instance().play(SFXType::PICKUP);
 
                             item_carrier.put_down_active_item();
 
                             item.set_type(item_saleable.get_original_item_application());
                             item.set_slot(item_saleable.get_original_item_slot());
+
+                            create_transaction_particle(item.get_type(), item_position.x_center, item_position.y_center - 0.75f);
 
                             if (registry.has<ScriptingComponent>(item_for_sale_entity))
                             {
