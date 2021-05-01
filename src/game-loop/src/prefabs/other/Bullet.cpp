@@ -87,9 +87,7 @@ entt::entity prefabs::Bullet::create(float pos_x_center, float pos_y_center, ent
     GiveProjectileDamageComponent give_projectile_damage(2, projectile_source);
     give_projectile_damage.set_mutual(true);
 
-    float critical_speed_x = -0.1f;
-    float critical_speed_y = -0.1f;
-    TakeTileCollisionDamageComponent tile_collision_damage(1, critical_speed_x, critical_speed_y);
+    TakeTileCollisionDamageComponent tile_collision_damage(1);
 
     registry.emplace<PositionComponent>(entity, position);
     registry.emplace<QuadComponent>(entity, quad);

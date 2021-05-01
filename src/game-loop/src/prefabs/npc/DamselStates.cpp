@@ -10,6 +10,9 @@
 #include "components/generic/ItemComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
+#include "components/damage/TakeMeleeDamageComponent.hpp"
+#include "components/damage/TakeExplosionDamageComponent.hpp"
+#include "components/damage/TakeProjectileDamageComponent.hpp"
 
 #include "Level.hpp"
 #include "spritesheet-frames/NPCSpritesheetFrames.hpp"
@@ -160,7 +163,7 @@ namespace prefabs
         ZoneComponent tile_zone(MapTile::PHYSICAL_WIDTH, MapTile::PHYSICAL_HEIGHT);
         PositionComponent tile_position(exit->get_center_x(), exit->get_center_y());
 
-        if (hitpoints.get_hitpoints() >= 0 && physics.is_collision(tile_zone, tile_position, position))
+        if (hitpoints.get_hitpoints() > 0 && physics.is_collision(tile_zone, tile_position, position))
         {
             position.x_center = exit->get_center_x();
             position.y_center = exit->get_center_y();
@@ -236,6 +239,10 @@ namespace prefabs
             auto& item_carrier = item.get_item_carrier();
             item_carrier.put_down_active_item();
         }
+
+        if (registry.has<TakeMeleeDamageComponent>(id)) registry.remove<TakeMeleeDamageComponent>(id);
+        if (registry.has<TakeExplosionDamageComponent>(id)) registry.remove<TakeExplosionDamageComponent>(id);
+        if (registry.has<TakeProjectileDamageComponent>(id)) registry.remove<TakeProjectileDamageComponent>(id);
 
         damsel._damsel_rescued = true;
     }
