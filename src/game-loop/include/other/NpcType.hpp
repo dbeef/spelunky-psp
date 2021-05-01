@@ -9,4 +9,5 @@ enum class NpcType
     SPIDER,
     SKELETON,
     SHOPKEEPER,
+    DAMSEL,
 };

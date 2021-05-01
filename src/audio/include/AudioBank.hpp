@@ -27,4 +27,5 @@ namespace audio_bank
     const char* get_pickup_wav();
     const char* get_shotgun_wav();
     const char* get_throw_wav();
+    const char* get_kiss_wav();
 };

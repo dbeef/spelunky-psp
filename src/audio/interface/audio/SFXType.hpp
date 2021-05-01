@@ -20,4 +20,5 @@ enum class SFXType
     PICKUP,
     SHOTGUN,
     THROW,
+    KISS
 };

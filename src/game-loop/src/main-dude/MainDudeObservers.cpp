@@ -39,7 +39,10 @@ void MainDudeProjectileDamageObserver::on_notify(const ProjectileDamage_t *event
             .quantity(4)
             .finalize();
 
-    main_dude_component.enter_stunned_state();
+    if (Inventory::instance().get_hearts() > 0)
+    {
+        main_dude_component.enter_stunned_state();
+    }
 }
 
 void MainDudeSpikesDamageObserver::on_notify(const SpikesDamageEvent *event)

@@ -40,6 +40,7 @@
 #include "prefabs/npc/Skeleton.hpp"
 #include "prefabs/npc/Caveman.hpp"
 #include "prefabs/npc/Shopkeeper.hpp"
+#include "prefabs/npc/Damsel.hpp"
 
 #include "EntityRegistry.hpp"
 #include "Level.hpp"
@@ -79,6 +80,8 @@ void populator::generate_inventory_items(entt::entity main_dude)
             case ItemType::WHIP:
             case ItemType::BOMB_SPAWNER:
             case ItemType::ROPE_SPAWNER:
+            // These items are not re-created:
+            case ItemType::BODY:
             default: continue;
         }
 
@@ -86,7 +89,7 @@ void populator::generate_inventory_items(entt::entity main_dude)
     }
 }
 
-void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
+void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker, bool& damsel_rescued)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
@@ -97,6 +100,7 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
     Spawner skeleton_spawner(3, 4);
     Spawner spikes_spawner(3, 4);
     Spawner spider_spawner(3, 3);
+    Spawner damsel_spawner(1, 1);
 
     std::vector<std::shared_ptr<GameEntity>> out{};
 
@@ -119,7 +123,6 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
                     {
                         spider_spawner.spawned();
                         prefabs::Spider::create(pos_x, pos_y);
-
                     }
                     break;
                 }
@@ -177,6 +180,11 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker)
                     {
                         spikes_spawner.spawned();
                         prefabs::Spikes::create(pos_x, pos_y);
+                    }
+                    else if (damsel_spawner.can_spawn())
+                    {
+                        damsel_spawner.spawned();
+                        prefabs::Damsel::create(damsel_rescued, pos_x, pos_y);
                     }
                     break;
                 }

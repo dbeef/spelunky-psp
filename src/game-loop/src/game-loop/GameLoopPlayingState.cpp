@@ -156,10 +156,12 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     death.disable_input();
 
     populator::generate_loot(game_loop._level_summary_tracker);
-    populator::generate_npc(game_loop._level_summary_tracker);
+    populator::generate_npc(game_loop._level_summary_tracker, is_damsel_rescued());
     populator::generate_inventory_items(_main_dude);
 
     game_loop._level_summary_tracker->entered_new_level();
+
+    _special_events.damsel_rescued = false;
 
     // Subscribe HUD on main-dude's wallet:
 

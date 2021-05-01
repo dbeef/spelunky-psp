@@ -23,6 +23,11 @@ public:
         _observers.emplace_back(observer);
     }
 
+    void remove_all_observers()
+    {
+        _observers = {};
+    }
+
     void remove_observer(const Observer<EventType>* observer)
     {
         const auto iter = std::remove_if(_observers.begin(), _observers.end(), [observer](const auto& other){ return observer == other; });

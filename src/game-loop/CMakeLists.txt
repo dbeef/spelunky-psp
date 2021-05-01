@@ -127,6 +127,9 @@ add_library(GameLoop STATIC
         include/prefabs/npc/Shopkeeper.hpp
         include/prefabs/npc/ShopkeeperStates.hpp
         include/prefabs/npc/ShopkeeperScript.hpp
+        include/prefabs/npc/Damsel.hpp
+        include/prefabs/npc/DamselScript.hpp
+        include/prefabs/npc/DamselStates.hpp
         include/prefabs/props/StartSign.hpp
         include/prefabs/props/ScoresSign.hpp
         include/prefabs/props/ResetSign.hpp
@@ -145,6 +148,7 @@ add_library(GameLoop STATIC
         include/prefabs/collectibles/TripleGoldBar.hpp
         include/prefabs/collectibles/BigGem.hpp
         include/prefabs/ui/HudIcon.hpp
+        include/prefabs/particles/SmoochingParticle.hpp
         include/prefabs/particles/RotatingDollarParticle.hpp
         include/prefabs/particles/ItemCollectedParticle.hpp
         include/prefabs/particles/BloodTrailParticle.hpp
@@ -157,6 +161,7 @@ add_library(GameLoop STATIC
         include/prefabs/particles/RopeCollectedParticle.hpp
         include/prefabs/particles/BombCollectedParticle.hpp
         include/prefabs/particles/BloodParticle.hpp
+        include/prefabs/particles/HelpParticle.hpp
         include/prefabs/collectibles/GoldNugget.hpp
         include/prefabs/collectibles/GoldChunk.hpp
         include/prefabs/collectibles/SmallGem.hpp
@@ -208,6 +213,7 @@ add_library(GameLoop STATIC
         src/prefabs/collectibles/TripleGoldBar.cpp
         src/prefabs/collectibles/BigGem.cpp
         src/prefabs/ui/HudIcon.cpp
+        src/prefabs/particles/SmoochingParticle.cpp
         src/prefabs/particles/ItemCollectedParticle.cpp
         src/prefabs/particles/BloodTrailParticle.cpp
         src/prefabs/particles/SmokePuffParticle.cpp
@@ -220,6 +226,7 @@ add_library(GameLoop STATIC
         src/prefabs/particles/BonesParticle.cpp
         src/prefabs/particles/BloodParticle.cpp
         src/prefabs/particles/RotatingDollarParticle.cpp
+        src/prefabs/particles/HelpParticle.cpp
         src/prefabs/collectibles/GoldNugget.cpp
         src/prefabs/collectibles/GoldChunk.cpp
         src/prefabs/collectibles/SmallGem.cpp
@@ -250,6 +257,9 @@ add_library(GameLoop STATIC
         src/prefabs/other/Bullet.cpp
         src/prefabs/other/Bones.cpp
         src/prefabs/npc/Snake.cpp
+        src/prefabs/npc/Damsel.cpp
+        src/prefabs/npc/DamselScript.cpp
+        src/prefabs/npc/DamselStates.cpp
         src/prefabs/npc/ShopkeeperScript.cpp
         src/prefabs/npc/Shopkeeper.cpp
         src/prefabs/npc/ShopkeeperStates.cpp
