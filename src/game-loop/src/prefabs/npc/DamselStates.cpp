@@ -480,6 +480,8 @@ namespace prefabs
         animation.start(static_cast<int>(NPCSpritesheetFrames::DAMSEL_KISS_0_START),
                         static_cast<int>(NPCSpritesheetFrames::DAMSEL_KISS_9_LAST),
                         100, false);
+
+        Audio::instance().play(SFXType::KISS);
     }
 
     void DamselSmoochingState::exit(DamselScript&, entt::entity id)

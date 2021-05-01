@@ -95,6 +95,11 @@ namespace shotgun
     #include "generated/shotgun.wav.hpp"
 }
 
+namespace kiss
+{
+    #include "generated/kiss.wav.hpp"
+}
+
 namespace _throw
 {
     #include "generated/throw.wav.hpp"
@@ -198,4 +203,9 @@ const char *audio_bank::get_shotgun_wav()
 const char *audio_bank::get_throw_wav()
 {
     return &_throw::data[0];
+}
+
+const char *audio_bank::get_kiss_wav()
+{
+    return &kiss::data[0];
 }

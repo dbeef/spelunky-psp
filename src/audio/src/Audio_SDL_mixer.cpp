@@ -31,6 +31,7 @@ struct Audio::Handles
     Mix_Chunk* jetpack = nullptr;
     Mix_Chunk* pickup = nullptr;
     Mix_Chunk* shotgun = nullptr;
+    Mix_Chunk* kiss = nullptr;
     Mix_Chunk* _throw = nullptr;
 };
 
@@ -180,6 +181,7 @@ void Audio::play(SFXType sfx)
         case SFXType::JETPACK: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->jetpack, 0); break;
         case SFXType::PICKUP: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->pickup, 0); break;
         case SFXType::SHOTGUN: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->shotgun, 0); break;
+        case SFXType::KISS: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->kiss, 0); break;
         case SFXType::THROW: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->_throw, 0); break;
         default: assert(false); break;
     }
@@ -242,6 +244,8 @@ void Audio::load()
     assert(_handles->pickup);
     _handles->shotgun = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_shotgun_wav())));
     assert(_handles->shotgun);
+    _handles->kiss = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_kiss_wav())));
+    assert(_handles->kiss);
     _handles->_throw = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_throw_wav())));
     assert(_handles->_throw);
 }
@@ -269,5 +273,6 @@ void Audio::unload()
     Mix_FreeChunk(_handles->jetpack); _handles->jetpack = nullptr;
     Mix_FreeChunk(_handles->pickup); _handles->pickup = nullptr;
     Mix_FreeChunk(_handles->shotgun); _handles->shotgun = nullptr;
+    Mix_FreeChunk(_handles->kiss); _handles->kiss = nullptr;
     Mix_FreeChunk(_handles->_throw); _handles->_throw = nullptr;
 }
