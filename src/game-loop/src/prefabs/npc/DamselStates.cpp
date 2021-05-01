@@ -20,6 +20,8 @@
 
 namespace prefabs
 {
+    // Standing state:
+
     DamselBaseState* DamselStandingState::update(DamselScript& damsel, uint32_t delta_time_ms, entt::entity id)
     {
         auto& registry = EntityRegistry::instance().get_registry();
@@ -144,7 +146,6 @@ namespace prefabs
     {
     }
 
-    // TODO: Rename to "Carried"
     // Held state:
 
     DamselBaseState* DamselHeldState::update(DamselScript& damsel, uint32_t delta_time_ms, entt::entity id)
