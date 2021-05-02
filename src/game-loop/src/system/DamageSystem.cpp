@@ -245,6 +245,7 @@ void DamageSystem::update_jump_on_top_damage(uint32_t delta_time_ms)
                                        PositionComponent& jumping_position)
     {
         give_damage.update_cooldown(delta_time_ms);
+        bool damage_given = false;
 
         if (jumping_physics.get_y_velocity() <= 0.0f)
         {
@@ -256,11 +257,6 @@ void DamageSystem::update_jump_on_top_damage(uint32_t delta_time_ms)
                              PhysicsComponent& body_physics,
                              PositionComponent& body_position)
         {
-            if (!give_damage.cooldown_reached())
-            {
-                return;
-            }
-
             if (jumping_physics.get_y_velocity() <= 0.0f)
             {
                 return;
@@ -281,7 +277,6 @@ void DamageSystem::update_jump_on_top_damage(uint32_t delta_time_ms)
                 return;
             }
 
-            give_damage.reset_cooldown();
             jumping_physics.set_y_velocity(-0.15f);
 
             JumpOnTopDamage_t damage = give_damage.get_damage();
@@ -295,7 +290,13 @@ void DamageSystem::update_jump_on_top_damage(uint32_t delta_time_ms)
             take_damage.notify(damage);
             remove_hitpoints(damage, take_damage_entity);
             Audio::instance().play(SFXType::HIT);
+            damage_given = true;
         });
+
+        if (damage_given)
+        {
+            give_damage.reset_cooldown();
+        }
     };
 
     registry.view<GiveJumpOnTopDamageComponent, PhysicsComponent, PositionComponent>().each(give_jump_on_top_damage);

@@ -165,6 +165,8 @@ add_library(GameLoop STATIC
         include/prefabs/collectibles/GoldNugget.hpp
         include/prefabs/collectibles/GoldChunk.hpp
         include/prefabs/collectibles/SmallGem.hpp
+        include/prefabs/items/RopePile.hpp
+        include/prefabs/items/BombBag.hpp
         include/prefabs/items/Jetpack.hpp
         include/prefabs/items/Rock.hpp
         include/prefabs/items/Jar.hpp
@@ -230,6 +232,8 @@ add_library(GameLoop STATIC
         src/prefabs/collectibles/GoldNugget.cpp
         src/prefabs/collectibles/GoldChunk.cpp
         src/prefabs/collectibles/SmallGem.cpp
+        src/prefabs/items/RopePile.cpp
+        src/prefabs/items/BombBag.cpp
         src/prefabs/items/Rock.cpp
         src/prefabs/items/Jar.cpp
         src/prefabs/items/Chest.cpp

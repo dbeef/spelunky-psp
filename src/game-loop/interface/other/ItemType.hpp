@@ -24,5 +24,7 @@ enum class ItemType
     GLOVE,
     COMPASS,
     BODY,
+    BOMB_BAG,
+    ROPE_PILE,
     _SIZE
 };

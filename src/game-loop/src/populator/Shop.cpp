@@ -9,6 +9,8 @@
 #include "prefabs/items/Crate.hpp"
 #include "prefabs/items/Chest.hpp"
 #include "prefabs/items/Arrow.hpp"
+#include "prefabs/items/BombBag.hpp"
+#include "prefabs/items/RopePile.hpp"
 #include "prefabs/items/Rope.hpp"
 #include "prefabs/items/Pistol.hpp"
 #include "prefabs/items/BombSpawner.hpp"
@@ -69,6 +71,8 @@ namespace populator
                 case ItemType::MITT: return prefabs::Mitt::create();
                 case ItemType::GLOVE: return prefabs::Glove::create();
                 case ItemType::COMPASS: return prefabs::Compass::create();
+                case ItemType::BOMB_BAG: return prefabs::BombBag::create();
+                case ItemType::ROPE_PILE: return prefabs::RopePile::create();
                 case ItemType::_SIZE:
                 default: assert(false);
             }
@@ -103,13 +107,15 @@ namespace populator
                 {ItemType::MITT,         5 * 1000},
                 {ItemType::GLOVE,        13 * 1000},
                 {ItemType::COMPASS,      6 * 1000},
+                {ItemType::BOMB_BAG,     5 * 1000},
+                {ItemType::ROPE_PILE,    5 * 1000},
         };
 
         const std::unordered_map<ShopTheme, std::vector<ItemType>> items_in_theme =
         {
                 {
                         ShopTheme::WEAPONS,
-                        {ItemType::SHOTGUN, ItemType::PISTOL, ItemType::SPIKE_SHOES} // TODO: Bomb bag, rope bag
+                        {ItemType::SHOTGUN, ItemType::PISTOL, ItemType::SPIKE_SHOES, ItemType::ROPE_PILE, ItemType::BOMB_BAG}
                 },
                 {
                         ShopTheme::CLOTHES,
