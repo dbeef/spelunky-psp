@@ -163,7 +163,7 @@ void TileBatch::generate_new_level_layout()
     }
 
     // Post-generation effects:
-    place_an_altar();
+    //place_an_altar();
     place_a_shop();
 }
 
