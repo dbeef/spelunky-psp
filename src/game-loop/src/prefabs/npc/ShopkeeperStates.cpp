@@ -7,9 +7,9 @@
 #include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
-#include "components/generic/ItemCarrierComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
-#include "components/damage/GiveProjectileDamageComponent.hpp"
+#include "components/damage/GiveNpcTouchDamageComponent.hpp"
+
 #include "spritesheet-frames/NPCSpritesheetFrames.hpp"
 
 namespace prefabs
@@ -23,6 +23,7 @@ namespace prefabs
 
         if (shopkeeper._angry)
         {
+            // TODO
         }
 
         if (physics.get_x_velocity() == 0.0f)
@@ -119,11 +120,13 @@ namespace prefabs
         auto& registry = EntityRegistry::instance().get_registry();
         auto& quad = registry.get<QuadComponent>(id);
         auto& animation = registry.get<AnimationComponent>(id);
+        auto& item_carrier = registry.get<ItemCarrierComponent>(id);
 
         quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::SHOPKEEPER_STUNNED_0_START);
         animation.start(static_cast<int>(NPCSpritesheetFrames::SHOPKEEPER_STUNNED_0_START),
                         static_cast<int>(NPCSpritesheetFrames::SHOPKEEPER_STUNNED_5_LAST),
                         100, true);
+        item_carrier.put_down_active_item();
 
         stunned_timer_ms = 2000;
 
@@ -171,12 +174,15 @@ namespace prefabs
         auto& quad = registry.get<QuadComponent>(id);
         auto& animation = registry.get<AnimationComponent>(id);
         auto& physics = registry.get<PhysicsComponent>(id);
+        auto& item_carrier = registry.get<ItemCarrierComponent>(id);
 
         physics.set_bounciness(0.4f);
         quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::SHOPKEEPER_DEAD);
         animation.stop();
+        item_carrier.put_down_active_item();
 
         if (registry.has<TakeJumpOnTopDamageComponent>(id)) registry.remove<TakeJumpOnTopDamageComponent>(id);
+        if (registry.has<GiveNpcTouchDamageComponent>(id)) registry.remove<GiveNpcTouchDamageComponent>(id);
     }
 
     void ShopkeeperDeadState::exit(ShopkeeperScript&, entt::entity id)
@@ -249,11 +255,13 @@ namespace prefabs
         auto& registry = EntityRegistry::instance().get_registry();
         auto& quad = registry.get<QuadComponent>(id);
         auto& animation = registry.get<AnimationComponent>(id);
+        auto& item_carrier = registry.get<ItemCarrierComponent>(id);
 
         quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::SHOPKEEPER_HELD_STUNNED_0_START);
         animation.start(static_cast<int>(NPCSpritesheetFrames::SHOPKEEPER_HELD_STUNNED_0_START),
                         static_cast<int>(NPCSpritesheetFrames::SHOPKEEPER_HELD_STUNNED_5_LAST),
                         100, true);
+        item_carrier.put_down_active_item();
 
         if (registry.has<TakeJumpOnTopDamageComponent>(id)) registry.remove<TakeJumpOnTopDamageComponent>(id);
     }

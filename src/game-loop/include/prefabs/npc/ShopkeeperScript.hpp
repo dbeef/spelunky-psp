@@ -81,6 +81,8 @@ namespace prefabs
 
     private:
 
+        void get_angry(entt::entity shopkeeper);
+
         int _stunned_timer_ms = 0;
         bool _angry = false;
 

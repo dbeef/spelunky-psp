@@ -1,11 +1,12 @@
 #include "prefabs/npc/ShopkeeperScript.hpp"
 #include "prefabs/items/Shotgun.hpp"
+
 #include "components/damage/HitpointComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
-#include "components/generic/ItemComponent.hpp"
 #include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
+
 #include "other/ParticleGenerator.hpp"
 
 void prefabs::ShopkeeperJumpOnTopDamageObserver::on_notify(const JumpOnTopDamage_t*)
@@ -28,16 +29,7 @@ void prefabs::ShopkeeperJumpOnTopDamageObserver::on_notify(const JumpOnTopDamage
 
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
     auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
-
-    if (!shopkeeper_script->_angry)
-    {
-        registry.emplace<GiveNpcTouchDamageComponent>(_shopkeeper);
-        auto& item_carrier = registry.get<ItemCarrierComponent>(_shopkeeper);
-        auto shotgun = prefabs::Shotgun::create(position.x_center, position.y_center);
-        item_carrier.pick_up_item(shotgun, _shopkeeper);
-
-        shopkeeper_script->_angry = true;
-    }
+    shopkeeper_script->get_angry(_shopkeeper);
 }
 
 void prefabs::ShopkeeperMeleeDamageObserver::on_notify(const MeleeDamage_t *)
@@ -63,16 +55,7 @@ void prefabs::ShopkeeperMeleeDamageObserver::on_notify(const MeleeDamage_t *)
 
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
     auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
-
-    if (!shopkeeper_script->_angry)
-    {
-        registry.emplace<GiveNpcTouchDamageComponent>(_shopkeeper);
-        auto& item_carrier = registry.get<ItemCarrierComponent>(_shopkeeper);
-        auto shotgun = prefabs::Shotgun::create(position.x_center, position.y_center);
-        item_carrier.pick_up_item(shotgun, _shopkeeper);
-
-        shopkeeper_script->_angry = true;
-    }
+    shopkeeper_script->get_angry(_shopkeeper);
 }
 
 void prefabs::ShopkeeperProjectileDamageObserver::on_notify(const ProjectileDamage_t *)
@@ -95,17 +78,7 @@ void prefabs::ShopkeeperProjectileDamageObserver::on_notify(const ProjectileDama
 
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
     auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
-
-    if (!shopkeeper_script->_angry)
-    {
-        registry.emplace<GiveNpcTouchDamageComponent>(_shopkeeper);
-        auto& item_carrier = registry.get<ItemCarrierComponent>(_shopkeeper);
-        auto shotgun = prefabs::Shotgun::create(position.x_center, position.y_center);
-        item_carrier.pick_up_item(shotgun, _shopkeeper);
-
-        shopkeeper_script->_angry = true;
-    }
-
+    shopkeeper_script->get_angry(_shopkeeper);
     shopkeeper_script->enter_state(&shopkeeper_script->_states.stunned, _shopkeeper);
 }
 
@@ -142,4 +115,23 @@ void prefabs::ShopkeeperScript::enter_state(ShopkeeperBaseState* new_state, entt
         _states.current = new_state;
         _states.current->enter(*this, owner);
     }
+}
+
+void prefabs::ShopkeeperScript::get_angry(entt::entity shopkeeper)
+{
+    if (_angry)
+    {
+        return;
+    }
+
+    auto& registry = EntityRegistry::instance().get_registry();
+    auto& position = registry.get<PositionComponent>(shopkeeper);
+    auto& item_carrier = registry.get<ItemCarrierComponent>(shopkeeper);
+
+    auto shotgun = prefabs::Shotgun::create(position.x_center, position.y_center);
+    item_carrier.pick_up_item(shotgun, shopkeeper);
+
+    registry.emplace<GiveNpcTouchDamageComponent>(shopkeeper);
+
+    _angry = true;
 }

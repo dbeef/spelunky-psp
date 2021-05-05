@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(Spelunky_PSP)
 
-option(WITH_DEV_TOOLS "Tools meant to be run only on host (development) system." TRUE)
+option(WITH_DEV_TOOLS "Tools meant to be run only on host (development) system." FALSE)
 
 include(cmake/CurrentPlatform.cmake)
 

@@ -5,7 +5,15 @@ add_library(Audio STATIC
         interface/audio/Audio.hpp
         interface/audio/SFXType.hpp
         interface/audio/MusicType.hpp
-		src/Audio_Dummy.cpp
+        # Compile AudioBank only when it is actually utilized on target platform:
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,src/AudioBank.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,src/AudioBank.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/AudioBank.cpp,>
+        # Compile audio backend (dummy when audio is not supported):
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,src/Audio_SDL_mixer.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,src/Audio_SDL_mixer.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Audio_SDL_mixer.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,src/Audio_Dummy.cpp,>
 )
 
 if (NOT SPELUNKY_PSP_PLATFORM_WINDOWS)
