@@ -60,6 +60,7 @@ namespace prefabs
         friend class ShopkeeperStunnedState;
         friend class ShopkeeperDeadState;
         friend class ShopkeeperHeldDeadState;
+        friend class ShopkeeperHeldStunnedState;
         friend class ShopkeeperFallingState;
         friend class ShopkeeperBouncingState;
 
@@ -70,30 +71,19 @@ namespace prefabs
             , _jump_on_top_damage_observer(shopkeeper)
         {}
 
-        ShopkeeperDeathObserver* get_death_observer()
-        {
-            return &_death_observer;
-        }
-
-        ShopkeeperProjectileDamageObserver* get_projectile_damage_observer()
-        {
-            return &_projectile_damage_observer;
-        }
-
-        ShopkeeperMeleeDamageObserver* get_melee_damage_observer()
-        {
-            return &_melee_damage_observer;
-        }
-
-        ShopkeeperJumpOnTopDamageObserver* get_jump_on_top_damage_observer()
-        {
-            return &_jump_on_top_damage_observer;
-        }
+        ShopkeeperDeathObserver* get_death_observer() { return &_death_observer; }
+        ShopkeeperProjectileDamageObserver* get_projectile_damage_observer() { return &_projectile_damage_observer; }
+        ShopkeeperMeleeDamageObserver* get_melee_damage_observer() { return &_melee_damage_observer; }
+        ShopkeeperJumpOnTopDamageObserver* get_jump_on_top_damage_observer() { return &_jump_on_top_damage_observer; }
 
         void update(entt::entity owner, uint32_t delta_time_ms) override;
         void enter_state(ShopkeeperBaseState* new_state, entt::entity owner);
 
     private:
+
+        int _stunned_timer_ms = 0;
+        bool _angry = false;
+
         ShopkeeperDeathObserver _death_observer;
         ShopkeeperProjectileDamageObserver _projectile_damage_observer;
         ShopkeeperMeleeDamageObserver _melee_damage_observer;
@@ -106,6 +96,7 @@ namespace prefabs
             ShopkeeperStunnedState stunned;
             ShopkeeperDeadState dead;
             ShopkeeperHeldDeadState held_dead;
+            ShopkeeperHeldStunnedState held_stunned;
             ShopkeeperFallingState falling;
             ShopkeeperBouncingState bouncing;
             ShopkeeperBaseState* current = &standing;

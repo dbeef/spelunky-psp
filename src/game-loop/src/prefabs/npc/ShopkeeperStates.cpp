@@ -4,9 +4,12 @@
 
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/ItemComponent.hpp"
+#include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
+#include "components/generic/ItemCarrierComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 #include "spritesheet-frames/NPCSpritesheetFrames.hpp"
 
 namespace prefabs
@@ -17,6 +20,10 @@ namespace prefabs
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& physics = registry.get<PhysicsComponent>(id);
+
+        if (shopkeeper._angry)
+        {
+        }
 
         if (physics.get_x_velocity() == 0.0f)
         {
@@ -79,13 +86,15 @@ namespace prefabs
     
     ShopkeeperBaseState* ShopkeeperStunnedState::update(ShopkeeperScript& shopkeeper, uint32_t delta_time_ms, entt::entity id)
     {
+        auto& stunned_timer_ms = shopkeeper._stunned_timer_ms;
         auto& registry = EntityRegistry::instance().get_registry();
         auto& physics = registry.get<PhysicsComponent>(id);
+        auto& item = registry.get<ItemComponent>(id);
 
-        _shopkeeper_stunned_timer_ms -= delta_time_ms;
-        if (_shopkeeper_stunned_timer_ms <= 0)
+        stunned_timer_ms -= delta_time_ms;
+        if (stunned_timer_ms <= 0)
         {
-            _shopkeeper_stunned_timer_ms = 0;
+            stunned_timer_ms = 0;
 
             if (physics.get_x_velocity() == 0.0f && physics.get_y_velocity() == 0.0f)
             {
@@ -96,14 +105,17 @@ namespace prefabs
                 return &shopkeeper._states.running;
             }
         }
-        else
+        else if (item.is_carried())
         {
-            return &shopkeeper._states.stunned;
+            return &shopkeeper._states.held_stunned;
         }
+
+        return this;
     }
 
-    void ShopkeeperStunnedState::enter(ShopkeeperScript&, entt::entity id)
+    void ShopkeeperStunnedState::enter(ShopkeeperScript& shopkeeper, entt::entity id)
     {
+        auto& stunned_timer_ms = shopkeeper._stunned_timer_ms;
         auto& registry = EntityRegistry::instance().get_registry();
         auto& quad = registry.get<QuadComponent>(id);
         auto& animation = registry.get<AnimationComponent>(id);
@@ -113,12 +125,20 @@ namespace prefabs
                         static_cast<int>(NPCSpritesheetFrames::SHOPKEEPER_STUNNED_5_LAST),
                         100, true);
 
-        _shopkeeper_stunned_timer_ms = 2000;
+        stunned_timer_ms = 2000;
+
+        if (registry.has<TakeJumpOnTopDamageComponent>(id)) registry.remove<TakeJumpOnTopDamageComponent>(id);
     }
 
 
     void ShopkeeperStunnedState::exit(ShopkeeperScript&, entt::entity id)
     {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& hitpoint = registry.get<HitpointComponent>(id);
+        if (hitpoint.get_hitpoints() > 0)
+        {
+            if (!registry.has<TakeJumpOnTopDamageComponent>(id)) registry.emplace<TakeJumpOnTopDamageComponent>(id);
+        }
     }
     
     // Dead state:
@@ -194,7 +214,61 @@ namespace prefabs
     {
     }
     
-    // Held falling:
+    // Held stunned state:
+    
+    ShopkeeperBaseState* ShopkeeperHeldStunnedState::update(ShopkeeperScript& shopkeeper, uint32_t delta_time_ms, entt::entity id)
+    {
+        auto& stunned_timer_ms = shopkeeper._stunned_timer_ms;
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& item = registry.get<ItemComponent>(id);
+        auto& physics = registry.get<PhysicsComponent>(id);
+
+        stunned_timer_ms -= delta_time_ms;
+
+        if (stunned_timer_ms <= 0)
+        {
+            if (item.is_carried())
+            {
+                auto& item_carrier = item.get_item_carrier();
+                item_carrier.put_down_active_item();
+                physics.add_velocity(0.0f, -0.075f);
+            }
+
+            return &shopkeeper._states.running;
+        }
+        else if (!item.is_carried())
+        {
+            return &shopkeeper._states.stunned;
+        }
+
+        return this;
+    }
+
+    void ShopkeeperHeldStunnedState::enter(ShopkeeperScript&, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& quad = registry.get<QuadComponent>(id);
+        auto& animation = registry.get<AnimationComponent>(id);
+
+        quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::SHOPKEEPER_HELD_STUNNED_0_START);
+        animation.start(static_cast<int>(NPCSpritesheetFrames::SHOPKEEPER_HELD_STUNNED_0_START),
+                        static_cast<int>(NPCSpritesheetFrames::SHOPKEEPER_HELD_STUNNED_5_LAST),
+                        100, true);
+
+        if (registry.has<TakeJumpOnTopDamageComponent>(id)) registry.remove<TakeJumpOnTopDamageComponent>(id);
+    }
+
+    void ShopkeeperHeldStunnedState::exit(ShopkeeperScript&, entt::entity id)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& hitpoint = registry.get<HitpointComponent>(id);
+        if (hitpoint.get_hitpoints() > 0)
+        {
+            if (!registry.has<TakeJumpOnTopDamageComponent>(id)) registry.emplace<TakeJumpOnTopDamageComponent>(id);
+        }
+    }
+    
+    // Falling:
     
     ShopkeeperBaseState* ShopkeeperFallingState::update(ShopkeeperScript& shopkeeper, uint32_t delta_time_ms, entt::entity id)
     {
@@ -232,7 +306,7 @@ namespace prefabs
     {
     }
 
-    // Held bouncing:
+    // Bouncing:
     
     ShopkeeperBaseState* ShopkeeperBouncingState::update(ShopkeeperScript& shopkeeper, uint32_t delta_time_ms, entt::entity id)
     {

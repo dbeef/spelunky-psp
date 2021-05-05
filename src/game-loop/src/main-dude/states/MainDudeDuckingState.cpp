@@ -26,6 +26,8 @@ void MainDudeDuckingState::enter(MainDudeComponent& dude)
             InputEvent::OUT_BOMB_PRESSED,
             InputEvent::OUT_ROPE,
             InputEvent::OUT_ROPE_PRESSED,
+            InputEvent::DUCKING,
+            InputEvent::DUCKING_PRESSED,
     };
 
     animation.stop();
