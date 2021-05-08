@@ -26,5 +26,6 @@ enum class ItemType
     BODY,
     BOMB_BAG,
     ROPE_PILE,
+    GOLDEN_IDOL,
     _SIZE
 };

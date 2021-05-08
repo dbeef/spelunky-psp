@@ -598,9 +598,9 @@ LootType TileBatch::get_loot_type_spawned_at(int x_tiles, int y_tiles) const
         case RoomType::ENTRANCE: return static_cast<LootType>(entrance_room_loot[room_id][y_tiles_room][x_tiles_room]);
         case RoomType::SHOP_LEFT: return static_cast<LootType>(shops_loot[0][y_tiles_room][x_tiles_room]);
         case RoomType::SHOP_RIGHT: return static_cast<LootType>(shops_loot[1][y_tiles_room][x_tiles_room]);
+        case RoomType::ALTAR: return static_cast<LootType>(altar_loot[y_tiles_room][x_tiles_room]);
         case RoomType::SHOP_LEFT_MUGSHOT:break;
         case RoomType::SHOP_RIGHT_MUGSHOT:break;
-        case RoomType::ALTAR:break;
         default: assert(false);
     }
 

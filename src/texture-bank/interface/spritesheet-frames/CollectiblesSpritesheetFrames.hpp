@@ -119,4 +119,6 @@ enum class CollectiblesSpritesheetFrames : std::uint16_t
     SHOP_DOLLAR_ANIMATION_19_LAST,
     ROPE_PILE,
     BOMB_BAG,
+    GOLDEN_IDOL,
+    BIG_COLLECT_EFFECT,
 };
