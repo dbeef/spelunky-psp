@@ -3,9 +3,11 @@
 #include "prefabs/npc/ShopkeeperScript.hpp"
 
 #include "components/generic/QuadComponent.hpp"
+#include "components/generic/SaleableComponent.hpp"
 #include "components/generic/ItemComponent.hpp"
 #include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
+#include "components/generic/ActivableComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
@@ -21,10 +23,24 @@ namespace prefabs
         auto& registry = EntityRegistry::instance().get_registry();
         auto& physics = registry.get<PhysicsComponent>(id);
 
-        if (shopkeeper._angry)
+        shopkeeper.follow_customer(id);
+
+
+
+        // How to follow the attacker?
+        // Keep track of the entity who holds the SaleableItem? But what if it doesn't hold?
+        // put entity of attacker into the event?
+
+        auto& item_carrier = registry.get<ItemCarrierComponent>(id);
+        if (item_carrier.has_active_item())
         {
-            // TODO
+            auto item_entity = item_carrier.get_item(ItemType::SHOTGUN);
+            auto& activable = registry.get<ActivableComponent>(item_entity);
+            activable.activated = true;
         }
+
+
+
 
         if (physics.get_x_velocity() == 0.0f)
         {
@@ -56,6 +72,8 @@ namespace prefabs
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& physics = registry.get<PhysicsComponent>(id);
+
+        shopkeeper.follow_customer(id);
 
         if (physics.get_x_velocity() == 0.0f && physics.get_y_velocity() == 0.0f)
         {
@@ -168,7 +186,7 @@ namespace prefabs
         return this;
     }
 
-    void ShopkeeperDeadState::enter(ShopkeeperScript&, entt::entity id)
+    void ShopkeeperDeadState::enter(ShopkeeperScript& shopkeeper, entt::entity id)
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& quad = registry.get<QuadComponent>(id);
@@ -180,6 +198,7 @@ namespace prefabs
         quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::SHOPKEEPER_DEAD);
         animation.stop();
         item_carrier.put_down_active_item();
+        shopkeeper._robbed = true;
 
         if (registry.has<TakeJumpOnTopDamageComponent>(id)) registry.remove<TakeJumpOnTopDamageComponent>(id);
         if (registry.has<GiveNpcTouchDamageComponent>(id)) registry.remove<GiveNpcTouchDamageComponent>(id);

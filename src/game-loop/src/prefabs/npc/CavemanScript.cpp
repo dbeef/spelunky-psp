@@ -4,7 +4,7 @@
 #include "other/ParticleGenerator.hpp"
 #include "EntityRegistry.hpp"
 
-void prefabs::CavemanProjectileDamageObserver::on_notify(const ProjectileDamage_t *)
+void prefabs::CavemanProjectileDamageObserver::on_notify(const TakenProjectileDamageEvent *)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     auto& hitpoints = registry.get<HitpointComponent>(_caveman);
@@ -28,7 +28,7 @@ void prefabs::CavemanProjectileDamageObserver::on_notify(const ProjectileDamage_
     caveman_script->enter_state(&caveman_script->_states.stunned, _caveman);
 }
 
-void prefabs::CavemanMeleeDamageObserver::on_notify(const MeleeDamage_t *)
+void prefabs::CavemanMeleeDamageObserver::on_notify(const TakenMeleeDamageEvent *)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     auto& hitpoints = registry.get<HitpointComponent>(_caveman);
@@ -55,7 +55,7 @@ void prefabs::CavemanMeleeDamageObserver::on_notify(const MeleeDamage_t *)
     caveman_script->enter_state(&caveman_script->_states.stunned, _caveman);
 }
 
-void prefabs::CavemanJumpOnTopDamageObserver::on_notify(const JumpOnTopDamage_t *)
+void prefabs::CavemanJumpOnTopDamageObserver::on_notify(const TakenJumpOnTopDamageEvent *)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     auto& hitpoints = registry.get<HitpointComponent>(_caveman);
@@ -121,7 +121,7 @@ void prefabs::CavemanScript::add_take_melee_damage_component(entt::entity cavema
     auto* caveman_script = scripting_component.get<prefabs::CavemanScript>();
 
     TakeMeleeDamageComponent take_melee_damage;
-    take_melee_damage.add_observer(reinterpret_cast<Observer<MeleeDamage_t>*>(caveman_script->get_melee_damage_observer()));
+    take_melee_damage.add_observer(reinterpret_cast<Observer<TakenMeleeDamageEvent>*>(caveman_script->get_melee_damage_observer()));
     registry.emplace<TakeMeleeDamageComponent>(caveman, take_melee_damage);
 }
 
@@ -132,6 +132,6 @@ void prefabs::CavemanScript::add_take_jump_on_top_damage_component(entt::entity 
     auto* caveman_script = scripting_component.get<prefabs::CavemanScript>();
 
     TakeJumpOnTopDamageComponent take_jump_on_top_damage;
-    take_jump_on_top_damage.add_observer(reinterpret_cast<Observer<JumpOnTopDamage_t>*>(caveman_script->get_jump_on_top_damage_observer()));
+    take_jump_on_top_damage.add_observer(reinterpret_cast<Observer<TakenJumpOnTopDamageEvent>*>(caveman_script->get_jump_on_top_damage_observer()));
     registry.emplace<TakeJumpOnTopDamageComponent>(caveman, take_jump_on_top_damage);
 }

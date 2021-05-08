@@ -69,7 +69,8 @@ void DamageSystem::update_melee_damage(std::uint32_t delta_time_ms)
     auto bodies = registry.view<TakeMeleeDamageComponent, HitpointComponent, PhysicsComponent, PositionComponent>();
     auto melee_bodies = registry.view<GiveMeleeDamageComponent, PhysicsComponent, PositionComponent>();
 
-    auto give_melee_damage = [&](GiveMeleeDamageComponent& give_damage,
+    auto give_melee_damage = [&](entt::entity give_damage_entity,
+                                 GiveMeleeDamageComponent& give_damage,
                                  PhysicsComponent& projectile_physics,
                                  PositionComponent& projectile_position)
     {
@@ -93,9 +94,12 @@ void DamageSystem::update_melee_damage(std::uint32_t delta_time_ms)
                 return;
             }
 
-            const MeleeDamage_t damage = give_damage.get_damage();
-            take_damage.notify(damage);
-            remove_hitpoints(damage, take_damage_entity);
+            TakenMeleeDamageEvent event;
+            event.amount = give_damage.get_damage();
+            event.source = give_damage_entity;
+
+            take_damage.notify(event);
+            remove_hitpoints(event.amount, take_damage_entity);
             damage_given = true;
         });
 
@@ -153,7 +157,11 @@ void DamageSystem::update_projectile_damage()
 
             const ProjectileDamage_t damage = give_damage.get_damage();
 
-            take_damage.notify(damage);
+            TakenProjectileDamageEvent event;
+            event.amount = damage;
+            event.source = give_damage.get_last_throw_source();
+
+            take_damage.notify(event);
             remove_hitpoints(damage, take_damage_entity);
             Audio::instance().play(SFXType::HIT);
 
@@ -289,7 +297,11 @@ void DamageSystem::update_jump_on_top_damage(uint32_t delta_time_ms)
                 damage += item_carrier.get_modifiers().additional_jump_on_top_damage;
             }
 
-            take_damage.notify(damage);
+            TakenJumpOnTopDamageEvent event;
+            event.amount = damage;
+            event.source = give_damage_entity;
+
+            take_damage.notify(event);
             remove_hitpoints(damage, take_damage_entity);
             Audio::instance().play(SFXType::HIT);
             damage_given = true;

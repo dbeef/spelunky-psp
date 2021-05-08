@@ -28,14 +28,13 @@
 #include "TextureType.hpp"
 #include "spritesheet-frames/NPCSpritesheetFrames.hpp"
 
-entt::entity prefabs::Shopkeeper::create()
+entt::entity prefabs::Shopkeeper::create(bool& robbed)
 {
-    return create(0, 0);
+    return create(robbed, 0, 0);
 }
 
-entt::entity prefabs::Shopkeeper::create(float pos_x_center, float pos_y_center)
-{
-    auto& registry = EntityRegistry::instance().get_registry();
+entt::entity prefabs::Shopkeeper::create(bool& robbed, float pos_x_center, float pos_y_center) {
+    auto &registry = EntityRegistry::instance().get_registry();
 
     const auto entity = registry.create();
 
@@ -45,20 +44,23 @@ entt::entity prefabs::Shopkeeper::create(float pos_x_center, float pos_y_center)
     QuadComponent quad(TextureType::NPC, width, height);
     quad.frame_changed(NPCSpritesheetFrames::SHOPKEEPER_STANDING);
 
-    auto shopkeeper_script = std::make_shared<ShopkeeperScript>(entity);
+    auto shopkeeper_script = std::make_shared<ShopkeeperScript>(entity, robbed);
     ScriptingComponent script(shopkeeper_script);
 
     HitpointComponent hitpoints(4, false);
-    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(shopkeeper_script->get_death_observer()));
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent> *>(shopkeeper_script->get_death_observer()));
 
     TakeProjectileDamageComponent take_projectile_damage;
-    take_projectile_damage.add_observer(reinterpret_cast<Observer<ProjectileDamage_t>*>(shopkeeper_script->get_projectile_damage_observer()));
+    take_projectile_damage.add_observer(reinterpret_cast<Observer<TakenProjectileDamageEvent> *>(shopkeeper_script->get_projectile_damage_observer()));
 
     TakeMeleeDamageComponent take_melee_damage;
-    take_melee_damage.add_observer(reinterpret_cast<Observer<MeleeDamage_t>*>(shopkeeper_script->get_melee_damage_observer()));
+    take_melee_damage.add_observer(reinterpret_cast<Observer<TakenMeleeDamageEvent> *>(shopkeeper_script->get_melee_damage_observer()));
 
     TakeJumpOnTopDamageComponent take_jump_on_top_damage;
-    take_jump_on_top_damage.add_observer(reinterpret_cast<Observer<MeleeDamage_t>*>(shopkeeper_script->get_jump_on_top_damage_observer()));
+    take_jump_on_top_damage.add_observer(reinterpret_cast<Observer<TakenJumpOnTopDamageEvent> *>(shopkeeper_script->get_jump_on_top_damage_observer()));
+
+    ItemComponent item(ItemType::BODY, ItemApplication::THROWABLE, ItemSlot::ACTIVE);
+    item.set_weight(7);
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
@@ -73,11 +75,6 @@ entt::entity prefabs::Shopkeeper::create(float pos_x_center, float pos_y_center)
     registry.emplace<TakeJumpOnTopDamageComponent>(entity, take_jump_on_top_damage);
     registry.emplace<NpcTypeComponent>(entity, NpcType::SHOPKEEPER);
     registry.emplace<TakeExplosionDamageComponent>(entity);
-    registry.emplace<GiveProjectileDamageComponent>(entity, 1);
-
-    ItemComponent item(ItemType::BODY, ItemApplication::THROWABLE, ItemSlot::ACTIVE);
-    item.set_weight(7);
-
     registry.emplace<ItemComponent>(entity, item);
     registry.emplace<ItemCarrierComponent>(entity);
 

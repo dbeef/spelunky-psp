@@ -34,6 +34,11 @@ public:
         return last_throw_source == _last_throw_source;
     }
 
+    entt::entity get_last_throw_source() const
+    {
+        return _last_throw_source;
+    }
+
     void set_last_throw_source(entt::entity last_throw_source)
     {
         _last_throw_source = last_throw_source;
@@ -41,6 +46,6 @@ public:
 
 private:
     ProjectileDamage_t _damage_given = 0;
-    entt::entity _last_throw_source;
+    entt::entity _last_throw_source = entt::null;
     bool _mutual = false;
 };

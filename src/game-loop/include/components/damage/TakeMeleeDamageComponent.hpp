@@ -4,6 +4,13 @@
 #include "components/generic/PhysicsComponent.hpp"
 
 using MeleeDamage_t = int;
-class TakeMeleeDamageComponent : public Subject<MeleeDamage_t>
+
+struct TakenMeleeDamageEvent
+{
+    MeleeDamage_t amount;
+    entt::entity source;
+};
+
+class TakeMeleeDamageComponent : public Subject<TakenMeleeDamageEvent>
 {
 };

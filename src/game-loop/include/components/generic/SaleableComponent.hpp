@@ -18,6 +18,7 @@ public:
     void update_position(PositionComponent& parent_item_position) const;
     void add_animation();
 
+    entt::entity get_parent_shopkeeper() const { return _parent_shopkeeper; }
     entt::entity get_parent_item() const { return _parent_item; }
     entt::entity get_dollar_sign_animation() const { return _dollar_sign_animation; }
 

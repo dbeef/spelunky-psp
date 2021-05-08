@@ -18,29 +18,29 @@ namespace prefabs
         const entt::entity _caveman;
     };
 
-    class CavemanProjectileDamageObserver final : public Observer<ProjectileDamage_t>
+    class CavemanProjectileDamageObserver final : public Observer<TakenProjectileDamageEvent>
     {
     public:
         explicit CavemanProjectileDamageObserver(entt::entity caveman) : _caveman(caveman) {}
-        void on_notify(const ProjectileDamage_t *) override;
+        void on_notify(const TakenProjectileDamageEvent *) override;
     private:
         const entt::entity _caveman;
     };
 
-    class CavemanMeleeDamageObserver final : public Observer<MeleeDamage_t>
+    class CavemanMeleeDamageObserver final : public Observer<TakenMeleeDamageEvent>
     {
     public:
         explicit CavemanMeleeDamageObserver(entt::entity caveman) : _caveman(caveman) {}
-        void on_notify(const MeleeDamage_t *) override;
+        void on_notify(const TakenMeleeDamageEvent *) override;
     private:
         const entt::entity _caveman;
     };
 
-    class CavemanJumpOnTopDamageObserver final : public Observer<JumpOnTopDamage_t>
+    class CavemanJumpOnTopDamageObserver final : public Observer<TakenJumpOnTopDamageEvent>
     {
     public:
         explicit CavemanJumpOnTopDamageObserver(entt::entity caveman) : _caveman(caveman) {}
-        void on_notify(const JumpOnTopDamage_t *) override;
+        void on_notify(const TakenJumpOnTopDamageEvent *) override;
     private:
         const entt::entity _caveman;
     };

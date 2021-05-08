@@ -90,7 +90,7 @@ void populator::generate_inventory_items(entt::entity main_dude)
     }
 }
 
-void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker, bool& damsel_rescued)
+void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker, bool& damsel_rescued, bool& shopkeeper_robbed)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
@@ -129,7 +129,7 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker, bool
                 }
                 case NPCType::SHOPKEEPER:
                 {
-                    prefabs::Shopkeeper::create(pos_x, pos_y);
+                    prefabs::Shopkeeper::create(shopkeeper_robbed, pos_x, pos_y);
                     break;
                 }
                 case NPCType::ARROW_TRAP_LEFT:
@@ -193,6 +193,14 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker, bool
                 default: assert(false);
             }
         }
+    }
+
+    if (shopkeeper_robbed)
+    {
+        MapTile* map_tile = nullptr;
+        tile_batch.get_first_tile_of_given_type(MapTileType::EXIT, map_tile);
+        assert(map_tile);
+        prefabs::Shopkeeper::create(shopkeeper_robbed, map_tile->get_center_x(), map_tile->get_center_y());
     }
 }
 

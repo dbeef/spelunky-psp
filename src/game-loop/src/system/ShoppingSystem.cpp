@@ -7,6 +7,7 @@
 #include "prefabs/particles/ItemCollectedParticle.hpp"
 #include "prefabs/particles/RopeCollectedParticle.hpp"
 #include "prefabs/particles/BombCollectedParticle.hpp"
+#include "prefabs/npc/ShopkeeperScript.hpp"
 
 #include "components/generic/SaleableComponent.hpp"
 #include "components/generic/ActivableComponent.hpp"
@@ -153,6 +154,8 @@ void ShoppingSystem::update_transactions()
 
                             item_carrier.put_down_active_item();
 
+                            //
+
                             item.set_type(item_saleable.get_original_item_application());
                             item.set_slot(item_saleable.get_original_item_slot());
 
@@ -165,6 +168,9 @@ void ShoppingSystem::update_transactions()
                             }
 
                             registry.remove<SaleableComponent>(item_for_sale_entity);
+
+                            //
+
                             item_carrier.pick_up_item(item_for_sale_entity, item_carrier_entity);
                         }
                         else
@@ -189,4 +195,18 @@ void ShoppingSystem::update_items_out_of_shop()
 {
     // TODO: Check if item with SaleableComponent is out of shop zone, if so, change state of shopkeeper to "angry"
     //       "COME BACK HERE, THIEF!" <- Prompt when item taken out of shop zone without purchase
+    //
+    // TODO: Shopkeeper should follow the carrier of item for sale
+    //       if too far from original position, then assume being robbed, iterate over everything with SaleableComponent...
+    //
+    // if saleablecomponent item is carried, check position diff, go a little bit towards it
+    //
+    //  How to notify all shopkeepers? Just check "_robbed" flag?
+    //
+    // TODO: Make Populator save state? To get all shopkeepers, spawned items, etc.
+    //
+    //       If one shopkeeper is robbed, then everyone should become hostile, therefore remove SaleableComponent
+    //       from all items on such occasion.
+    //
+    // TODO: Shooting shotgun / angry-alert/angry-standby state
 }

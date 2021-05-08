@@ -45,7 +45,7 @@ entt::entity prefabs::Caveman::create(float pos_x_center, float pos_y_center)
     hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(caveman_script->get_death_observer()));
 
     TakeProjectileDamageComponent take_projectile_damage;
-    take_projectile_damage.add_observer(reinterpret_cast<Observer<ProjectileDamage_t>*>(caveman_script->get_projectile_damage_observer()));
+    take_projectile_damage.add_observer(reinterpret_cast<Observer<TakenProjectileDamageEvent>*>(caveman_script->get_projectile_damage_observer()));
 
     ItemComponent item(ItemType::BODY, ItemApplication::THROWABLE, ItemSlot::ACTIVE);
     item.set_weight(7);

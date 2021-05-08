@@ -3,13 +3,16 @@
 
 #include "components/damage/HitpointComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
+#include "components/generic/SaleableComponent.hpp"
 #include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
 
 #include "other/ParticleGenerator.hpp"
 
-void prefabs::ShopkeeperJumpOnTopDamageObserver::on_notify(const JumpOnTopDamage_t*)
+#include <cmath>
+
+void prefabs::ShopkeeperJumpOnTopDamageObserver::on_notify(const TakenJumpOnTopDamageEvent*)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     auto& position = registry.get<PositionComponent>(_shopkeeper);
@@ -32,7 +35,7 @@ void prefabs::ShopkeeperJumpOnTopDamageObserver::on_notify(const JumpOnTopDamage
     shopkeeper_script->get_angry(_shopkeeper);
 }
 
-void prefabs::ShopkeeperMeleeDamageObserver::on_notify(const MeleeDamage_t *)
+void prefabs::ShopkeeperMeleeDamageObserver::on_notify(const TakenMeleeDamageEvent *)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     auto& position = registry.get<PositionComponent>(_shopkeeper);
@@ -58,7 +61,7 @@ void prefabs::ShopkeeperMeleeDamageObserver::on_notify(const MeleeDamage_t *)
     shopkeeper_script->get_angry(_shopkeeper);
 }
 
-void prefabs::ShopkeeperProjectileDamageObserver::on_notify(const ProjectileDamage_t *)
+void prefabs::ShopkeeperProjectileDamageObserver::on_notify(const TakenProjectileDamageEvent *)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     auto& position = registry.get<PositionComponent>(_shopkeeper);
@@ -119,7 +122,7 @@ void prefabs::ShopkeeperScript::enter_state(ShopkeeperBaseState* new_state, entt
 
 void prefabs::ShopkeeperScript::get_angry(entt::entity shopkeeper)
 {
-    if (_angry)
+    if (_robbed)
     {
         return;
     }
@@ -133,5 +136,51 @@ void prefabs::ShopkeeperScript::get_angry(entt::entity shopkeeper)
 
     registry.emplace<GiveNpcTouchDamageComponent>(shopkeeper);
 
-    _angry = true;
+    _robbed = true;
+    remove_all_saleables();
+}
+
+void prefabs::ShopkeeperScript::remove_all_saleables()
+{
+    // TODO: Stuff from ShoppingSystem
+
+    auto& registry = EntityRegistry::instance().get_registry();
+    auto saleable_items = registry.view<SaleableComponent, ItemComponent, PositionComponent>();
+    saleable_items.each([&registry](entt::entity item_for_sale_entity, SaleableComponent& item_saleable, ItemComponent& item, PositionComponent& item_position)
+    {
+        item.set_type(item_saleable.get_original_item_application());
+        item.set_slot(item_saleable.get_original_item_slot());
+
+        if (registry.has<ScriptingComponent>(item_for_sale_entity))
+        {
+            auto& scripting_component = registry.get<ScriptingComponent>(item_for_sale_entity);
+            scripting_component.script = item_saleable.get_original_script();
+        }
+
+        registry.remove<SaleableComponent>(item_for_sale_entity);
+    });
+}
+
+void prefabs::ShopkeeperScript::follow_customer(entt::entity shopkeeper)
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+    auto& position = registry.get<PositionComponent>(shopkeeper);
+    auto& physics = registry.get<PhysicsComponent>(shopkeeper);
+
+    auto saleable_items = registry.view<ItemComponent, SaleableComponent, PositionComponent>();
+    saleable_items.each([&](entt::entity item_for_sale_entity,
+        ItemComponent& item,
+        SaleableComponent& item_saleable,
+        PositionComponent& item_position)
+    {
+        if (item.is_carried())
+        {
+            auto &item_carrier_position = registry.get<PositionComponent>(item.get_item_carrier_entity());
+            const auto pos_diff_x = position.x_center - item_carrier_position.x_center;
+            if (std::fabs(pos_diff_x) > 1 * MapTile::PHYSICAL_WIDTH)
+            {
+                physics.set_x_velocity(std::copysign(0.05f, -pos_diff_x));
+            }
+        }
+    });
 }
