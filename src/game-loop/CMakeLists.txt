@@ -130,6 +130,8 @@ add_library(GameLoop STATIC
         include/prefabs/npc/Damsel.hpp
         include/prefabs/npc/DamselScript.hpp
         include/prefabs/npc/DamselStates.hpp
+        include/prefabs/npc/CavemanScript.hpp
+        include/prefabs/npc/CavemanStates.hpp
         include/prefabs/props/StartSign.hpp
         include/prefabs/props/ScoresSign.hpp
         include/prefabs/props/ResetSign.hpp
@@ -272,6 +274,8 @@ add_library(GameLoop STATIC
         src/prefabs/npc/Shopkeeper.cpp
         src/prefabs/npc/ShopkeeperStates.cpp
         src/prefabs/npc/Bat.cpp
+        src/prefabs/npc/CavemanScript.cpp
+        src/prefabs/npc/CavemanStates.cpp
         src/prefabs/npc/Caveman.cpp
         src/prefabs/npc/Spider.cpp
         src/prefabs/npc/Skeleton.cpp
