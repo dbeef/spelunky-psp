@@ -3,7 +3,6 @@
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/HorizontalOrientationComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
-#include "components/generic/ScriptingComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/damage/TakeExplosionDamageComponent.hpp"
@@ -13,18 +12,6 @@
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
 #include "spritesheet-frames/NPCSpritesheetFrames.hpp"
-
-namespace
-{
-    class SpikesScript final : public ScriptBase
-    {
-    public:
-        void update(entt::entity owner, uint32_t delta_time_ms) override
-        {
-            // TODO
-        }
-    };
-}
 
 entt::entity prefabs::Spikes::create()
 {
@@ -56,7 +43,6 @@ entt::entity prefabs::Spikes::create(float pos_x_center, float pos_y_center)
     registry.emplace<MeshComponent>(entity, mesh);
     registry.emplace<PhysicsComponent>(entity, physics);
     registry.emplace<HorizontalOrientationComponent>(entity);
-    registry.emplace<ScriptingComponent>(entity, std::make_shared<SpikesScript>());
     registry.emplace<HitpointComponent>(entity, 1, true);
     registry.emplace<TakeExplosionDamageComponent>(entity);
     registry.emplace<GiveSpikesDamageComponent>(entity);

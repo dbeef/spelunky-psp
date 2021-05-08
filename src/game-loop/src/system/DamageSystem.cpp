@@ -1,9 +1,11 @@
 #include "system/DamageSystem.hpp"
 #include "EntityRegistry.hpp"
 #include "audio/Audio.hpp"
+#include "spritesheet-frames/NPCSpritesheetFrames.hpp"
 
 #include "components/damage/TakeFallDamageComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
+#include "components/generic/QuadComponent.hpp"
 #include "components/generic/NpcTypeComponent.hpp"
 #include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/ZoneComponent.hpp"
@@ -330,6 +332,10 @@ void DamageSystem::update_spikes_damage()
             {
                 auto& hitpoints = registry.get<HitpointComponent>(body_entity);
                 remove_hitpoints(hitpoints.get_hitpoints(), body_entity);
+
+                // Assuming only spikes can deal spikes-damage:
+                auto& quad = registry.get<QuadComponent>(spike_entity);
+                quad.frame_changed(NPCSpritesheetFrames::SPIKES_BLOOD);
             }
         });
     };

@@ -33,15 +33,14 @@ void MainDudeProjectileDamageObserver::on_notify(const ProjectileDamage_t *event
 
     Inventory::instance().remove_hearts(*event);
 
-    ParticleGenerator().particle_type(ParticleType::BLOOD)
-            .position(position.x_center, position.y_center)
-            .max_velocity(0.25f, 0.25f)
-            .quantity(4)
-            .finalize();
-
     if (Inventory::instance().get_hearts() > 0)
     {
         main_dude_component.enter_stunned_state();
+        ParticleGenerator().particle_type(ParticleType::BLOOD)
+                .position(position.x_center, position.y_center)
+                .max_velocity(0.25f, 0.25f)
+                .quantity(4)
+                .finalize();
     }
 }
 
