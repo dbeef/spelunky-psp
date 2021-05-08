@@ -31,6 +31,7 @@
 #include "prefabs/items/Skull.hpp"
 #include "prefabs/items/Jetpack.hpp"
 #include "prefabs/items/Compass.hpp"
+#include "prefabs/items/GoldenIdol.hpp"
 #include "prefabs/traps/Spikes.hpp"
 #include "prefabs/traps/ArrowTrap.hpp"
 #include "prefabs/npc/Snake.hpp"
@@ -228,6 +229,13 @@ void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
                 case LootType::SHOP_ITEM:
                 {
                     shop.make_next_item(pos_x, pos_y);
+                    break;
+                }
+                case LootType::GOLDEN_IDOL:
+                {
+                    // Offset coming from the fact that layout arrays can't define item spawn position in-between tiles.
+                    const auto offset = (MapTile::PHYSICAL_WIDTH / 2.0f);
+                    prefabs::GoldenIdol::create(pos_x + offset, pos_y);
                     break;
                 }
                 case LootType::ANY:

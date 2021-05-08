@@ -149,6 +149,7 @@ add_library(GameLoop STATIC
         include/prefabs/collectibles/BigGem.hpp
         include/prefabs/ui/HudIcon.hpp
         include/prefabs/particles/SmoochingParticle.hpp
+        include/prefabs/particles/BigCollectParticle.hpp
         include/prefabs/particles/RotatingDollarParticle.hpp
         include/prefabs/particles/ItemCollectedParticle.hpp
         include/prefabs/particles/BloodTrailParticle.hpp
@@ -165,6 +166,7 @@ add_library(GameLoop STATIC
         include/prefabs/collectibles/GoldNugget.hpp
         include/prefabs/collectibles/GoldChunk.hpp
         include/prefabs/collectibles/SmallGem.hpp
+        include/prefabs/items/GoldenIdol.hpp
         include/prefabs/items/RopePile.hpp
         include/prefabs/items/BombBag.hpp
         include/prefabs/items/Jetpack.hpp
@@ -229,6 +231,7 @@ add_library(GameLoop STATIC
         src/prefabs/particles/BloodParticle.cpp
         src/prefabs/particles/RotatingDollarParticle.cpp
         src/prefabs/particles/HelpParticle.cpp
+        src/prefabs/particles/BigCollectParticle.cpp
         src/prefabs/collectibles/GoldNugget.cpp
         src/prefabs/collectibles/GoldChunk.cpp
         src/prefabs/collectibles/SmallGem.cpp
@@ -256,6 +259,7 @@ add_library(GameLoop STATIC
         src/prefabs/items/Cape.cpp
         src/prefabs/items/Arrow.cpp
         src/prefabs/items/Skull.cpp
+        src/prefabs/items/GoldenIdol.cpp
         src/prefabs/effects/Explosion.cpp
         src/prefabs/effects/ShotgunBlast.cpp
         src/prefabs/other/Bullet.cpp
