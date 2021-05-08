@@ -53,6 +53,7 @@ entt::entity prefabs::Mitt::create(float pos_x_center, float pos_y_center)
     quad.frame_changed(CollectiblesSpritesheetFrames::MITT);
 
     ItemComponent item(ItemType::MITT, ItemApplication::PASSIVE, ItemSlot::HANDS);
+    item.set_weight(7);
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);

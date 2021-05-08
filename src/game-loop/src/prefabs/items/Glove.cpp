@@ -53,6 +53,7 @@ entt::entity prefabs::Glove::create(float pos_x_center, float pos_y_center)
     quad.frame_changed(CollectiblesSpritesheetFrames::GLOVE);
 
     ItemComponent item(ItemType::GLOVE, ItemApplication::PASSIVE, ItemSlot::HANDS);
+    item.set_weight(7);
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
