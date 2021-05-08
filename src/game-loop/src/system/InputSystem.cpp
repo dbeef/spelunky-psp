@@ -38,17 +38,23 @@ namespace
         }
     }
 
-    entt::entity find_overlaping_items(PositionComponent& carrier_position, PhysicsComponent& carrier_physics, ItemCarrierComponent& carrier)
+    entt::entity find_overlaping_items(entt::entity carrier_entity,
+                                       PositionComponent& carrier_position,
+                                       PhysicsComponent& carrier_physics,
+                                       ItemCarrierComponent& carrier)
     {
         entt::entity out = entt::null;
 
         auto& registry = EntityRegistry::instance().get_registry();
         const auto items = registry.view<ItemComponent, PositionComponent, PhysicsComponent>();
 
-        items.each([&out, &carrier, &carrier_position, &carrier_physics]
-        (entt::entity item_entity, ItemComponent& item, PositionComponent& item_position, PhysicsComponent& item_physics)
+        items.each([&](entt::entity item_entity,
+                             ItemComponent& item,
+                             PositionComponent& item_position,
+                             PhysicsComponent& item_physics)
         {
-            if (!carrier.is_carried(item_entity) &&
+            if (item_entity != carrier_entity &&
+                !item.is_carried() &&
                 carrier_physics.is_collision(item_physics, item_position, carrier_position))
             {
                 out = item_entity;
@@ -192,18 +198,18 @@ void InputSystem::update_items_pick_up_put_down()
 {
     auto &registry = EntityRegistry::instance().get_registry();
     const auto item_carriers = registry.view<ItemCarrierComponent,
-                                       PositionComponent,
-                                       PhysicsComponent,
-                                       HorizontalOrientationComponent>();
+                                             PositionComponent,
+                                             PhysicsComponent,
+                                             InputComponent,
+                                             HorizontalOrientationComponent>();
 
-    item_carriers.each([&](
-            entt::entity carrier_entity,
-            ItemCarrierComponent& carrier,
-            PositionComponent& carrier_position,
-            PhysicsComponent& carrier_physics,
-            HorizontalOrientationComponent& carrier_orientation)
+    item_carriers.each([&](entt::entity carrier_entity,
+                                ItemCarrierComponent& carrier,
+                                PositionComponent& carrier_position,
+                                PhysicsComponent& carrier_physics,
+                                InputComponent& carrier_input,
+                                HorizontalOrientationComponent& carrier_orientation)
     {
-        // TODO: Should take into consideration InputComponent of entity with ItemCarrierComponent.
         const bool pick_up_or_put_down_intent = have_event(_input_events, InputEvent::DUCKING, InputEvent::THROWING_PRESSED);
         const bool open_intent = have_event(_input_events, InputEvent::UP, InputEvent::THROWING_PRESSED);
         const bool throw_intent = have_event(_input_events, InputEvent::THROWING_PRESSED);
@@ -217,7 +223,7 @@ void InputSystem::update_items_pick_up_put_down()
             }
             else
             {
-                auto entity = find_overlaping_items(carrier_position, carrier_physics, carrier);
+                auto entity = find_overlaping_items(carrier_entity, carrier_position, carrier_physics, carrier);
                 if (entity != entt::null)
                 {
                     carrier.pick_up_item(entity, carrier_entity);

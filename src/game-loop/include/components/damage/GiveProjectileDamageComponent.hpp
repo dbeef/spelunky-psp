@@ -8,7 +8,7 @@ using ProjectileDamage_t = int;
 class GiveProjectileDamageComponent : public Subject<MutualDamage_t>
 {
 public:
-
+    // TODO: Should rework giving projectile damage, so it wouldn't be continuous with collision being the sole criteria
     explicit GiveProjectileDamageComponent(ProjectileDamage_t damage_given, entt::entity last_throw_source = entt::null)
         : _damage_given(damage_given)
         , _last_throw_source(last_throw_source)

@@ -15,6 +15,7 @@
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
 #include "components/damage/TakeFallDamageComponent.hpp"
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 #include "components/damage/TakeProjectileDamageComponent.hpp"
 #include "components/damage/HitpointComponent.hpp"
 #include "components/damage/TakeMeleeDamageComponent.hpp"
@@ -44,11 +45,20 @@ entt::entity prefabs::Shopkeeper::create(float pos_x_center, float pos_y_center)
     QuadComponent quad(TextureType::NPC, width, height);
     quad.frame_changed(NPCSpritesheetFrames::SHOPKEEPER_STANDING);
 
-    auto Shopkeeper_script = std::make_shared<ShopkeeperScript>(entity);
-    ScriptingComponent script(Shopkeeper_script);
+    auto shopkeeper_script = std::make_shared<ShopkeeperScript>(entity);
+    ScriptingComponent script(shopkeeper_script);
 
-    HitpointComponent hitpoints(1, true);
-    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(Shopkeeper_script->get_observer()));
+    HitpointComponent hitpoints(4, false);
+    hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(shopkeeper_script->get_death_observer()));
+
+    TakeProjectileDamageComponent take_projectile_damage;
+    take_projectile_damage.add_observer(reinterpret_cast<Observer<ProjectileDamage_t>*>(shopkeeper_script->get_projectile_damage_observer()));
+
+    TakeMeleeDamageComponent take_melee_damage;
+    take_melee_damage.add_observer(reinterpret_cast<Observer<MeleeDamage_t>*>(shopkeeper_script->get_melee_damage_observer()));
+
+    TakeJumpOnTopDamageComponent take_jump_on_top_damage;
+    take_jump_on_top_damage.add_observer(reinterpret_cast<Observer<MeleeDamage_t>*>(shopkeeper_script->get_jump_on_top_damage_observer()));
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
@@ -58,12 +68,18 @@ entt::entity prefabs::Shopkeeper::create(float pos_x_center, float pos_y_center)
     registry.emplace<ScriptingComponent>(entity, script);
     registry.emplace<HorizontalOrientationComponent>(entity);
     registry.emplace<HitpointComponent>(entity, hitpoints);
-    registry.emplace<TakeProjectileDamageComponent>(entity);
-    registry.emplace<TakeMeleeDamageComponent>(entity);
-    registry.emplace<TakeJumpOnTopDamageComponent>(entity);
+    registry.emplace<TakeProjectileDamageComponent>(entity, take_projectile_damage);
+    registry.emplace<TakeMeleeDamageComponent>(entity, take_melee_damage);
+    registry.emplace<TakeJumpOnTopDamageComponent>(entity, take_jump_on_top_damage);
     registry.emplace<NpcTypeComponent>(entity, NpcType::SHOPKEEPER);
     registry.emplace<TakeExplosionDamageComponent>(entity);
-    registry.emplace<ItemComponent>(entity, ItemType::ROCK, ItemApplication::THROWABLE, ItemSlot::ACTIVE);
+    registry.emplace<GiveProjectileDamageComponent>(entity, 1);
+
+    ItemComponent item(ItemType::BODY, ItemApplication::THROWABLE, ItemSlot::ACTIVE);
+    item.set_weight(7);
+
+    registry.emplace<ItemComponent>(entity, item);
+    registry.emplace<ItemCarrierComponent>(entity);
 
     return entity;
 }

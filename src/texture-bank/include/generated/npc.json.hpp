@@ -1,5 +1,5 @@
 #pragma once
-// Generated from: npc.json, at: Tue Apr 27 16:43:51 2021
+// Generated from: npc.json, at: Mon May  3 11:03:27 2021
 
 char data[] = 
 {
