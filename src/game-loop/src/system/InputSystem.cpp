@@ -210,17 +210,9 @@ void InputSystem::update_items_pick_up_put_down()
                                 InputComponent& carrier_input,
                                 HorizontalOrientationComponent& carrier_orientation)
     {
-        const bool pick_up_or_put_down_intent =
-                    have_event(carrier_input.allowed_events, InputEvent::DUCKING, InputEvent::THROWING_PRESSED) &&
-                    have_event(_input_events, InputEvent::DUCKING, InputEvent::THROWING_PRESSED);
-
-        const bool open_intent =
-                have_event(carrier_input.allowed_events, InputEvent::UP, InputEvent::THROWING_PRESSED) &&
-                have_event(_input_events, InputEvent::UP, InputEvent::THROWING_PRESSED);
-
-        const bool throw_intent =
-                have_event(carrier_input.allowed_events, InputEvent::THROWING_PRESSED) &&
-                have_event(_input_events, InputEvent::THROWING_PRESSED);
+        const bool pick_up_or_put_down_intent = have_event(_input_events, InputEvent::DUCKING, InputEvent::THROWING_PRESSED);
+        const bool open_intent = have_event(_input_events, InputEvent::UP, InputEvent::THROWING_PRESSED);
+        const bool throw_intent = have_event(_input_events, InputEvent::THROWING_PRESSED);
 
         if (pick_up_or_put_down_intent)
         {
