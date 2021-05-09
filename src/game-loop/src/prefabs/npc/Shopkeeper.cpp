@@ -28,12 +28,12 @@
 #include "TextureType.hpp"
 #include "spritesheet-frames/NPCSpritesheetFrames.hpp"
 
-entt::entity prefabs::Shopkeeper::create(bool& robbed)
+entt::entity prefabs::Shopkeeper::create()
 {
-    return create(robbed, 0, 0);
+    return create(0, 0);
 }
 
-entt::entity prefabs::Shopkeeper::create(bool& robbed, float pos_x_center, float pos_y_center) {
+entt::entity prefabs::Shopkeeper::create(float pos_x_center, float pos_y_center) {
     auto &registry = EntityRegistry::instance().get_registry();
 
     const auto entity = registry.create();
@@ -44,7 +44,7 @@ entt::entity prefabs::Shopkeeper::create(bool& robbed, float pos_x_center, float
     QuadComponent quad(TextureType::NPC, width, height);
     quad.frame_changed(NPCSpritesheetFrames::SHOPKEEPER_STANDING);
 
-    auto shopkeeper_script = std::make_shared<ShopkeeperScript>(entity, robbed);
+    auto shopkeeper_script = std::make_shared<ShopkeeperScript>(entity);
     ScriptingComponent script(shopkeeper_script);
 
     HitpointComponent hitpoints(4, false);

@@ -1,18 +1,26 @@
 #pragma once
 
+#include "patterns/Subject.hpp"
 #include "System.hpp"
 
-// TODO: ThieveryEvent in ShoppingSystem (Shopkeepers must subscribe to)
-//       Non state-less Populator (saving shopkeepers, their respective items inside std::vector<Shop>)
-//       Add _angry boolean to the Shopkeeper
+struct ThieveryEvent
+{
+    entt::entity thief = entt::null;
+};
 
-class ShoppingSystem final : public System // Either keep track of all shopkeepers or emit ThieveryEvent (still need to save _robbed_shopkeeper somewhere)
+struct ShopkeeperAssaultEvent
+{
+    entt::entity attacker = entt::null;
+};
+
+class ShoppingSystem final : public System, public Subject<ThieveryEvent>, public Observer<ShopkeeperAssaultEvent>
 {
 public:
     void update(std::uint32_t delta_time_ms) override;
-    bool& is_shopkeeper_robbed() { return _robbed_shopkeeper; }
+    void on_notify(const ShopkeeperAssaultEvent*);
+    bool is_robbed() const { return _robbed; }
 private:
-    bool _robbed_shopkeeper = false;
+    bool _robbed = false;
     void update_items_out_of_shop();
     static void update_dollar_sign_positions();
     static void update_transactions();

@@ -47,7 +47,7 @@
 #include "Level.hpp"
 
 
-void populator::generate_inventory_items(entt::entity main_dude)
+void Populator::generate_inventory_items(entt::entity main_dude)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
@@ -90,7 +90,7 @@ void populator::generate_inventory_items(entt::entity main_dude)
     }
 }
 
-void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker, bool& damsel_rescued, bool& shopkeeper_robbed)
+void Populator::generate_npc(bool& damsel_rescued, bool shopkeeper_robbed)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
@@ -102,8 +102,6 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker, bool
     Spawner spikes_spawner(3, 4);
     Spawner spider_spawner(3, 3);
     Spawner damsel_spawner(1, 1);
-
-    std::vector<std::shared_ptr<GameEntity>> out{};
 
     const auto& tile_batch = Level::instance().get_tile_batch();
 
@@ -129,7 +127,7 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker, bool
                 }
                 case NPCType::SHOPKEEPER:
                 {
-                    prefabs::Shopkeeper::create(shopkeeper_robbed, pos_x, pos_y);
+                    _shopkeepers.push_back(prefabs::Shopkeeper::create(pos_x, pos_y));
                     break;
                 }
                 case NPCType::ARROW_TRAP_LEFT:
@@ -148,22 +146,19 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker, bool
                     {
                         snake_spawner.spawned();
                         auto entity = prefabs::Snake::create(pos_x, pos_y);
-                        auto& hitpoints = registry.get<HitpointComponent>(entity);
-                        hitpoints.add_observer(tracker.get());
+                        _npcs.push_back(entity);
                     }
                     else if (bat_spawner.can_spawn())
                     {
                         bat_spawner.spawned();
                         auto entity = prefabs::Bat::create(pos_x, pos_y);
-                        auto& hitpoints = registry.get<HitpointComponent>(entity);
-                        hitpoints.add_observer(tracker.get());
+                        _npcs.push_back(entity);
                     }
                     else if (caveman_spawner.can_spawn())
                     {
                         caveman_spawner.spawned();
                         auto entity = prefabs::Caveman::create(pos_x, pos_y);
-                        auto& hitpoints = registry.get<HitpointComponent>(entity);
-                        hitpoints.add_observer(tracker.get());
+                        _npcs.push_back(entity);
                     }
                     else if (fake_skeleton_spawner.can_spawn())
                     {
@@ -174,8 +169,7 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker, bool
                     {
                         skeleton_spawner.spawned();
                         auto entity = prefabs::Skeleton::create(pos_x, pos_y);
-                        auto& hitpoints = registry.get<HitpointComponent>(entity);
-                        hitpoints.add_observer(tracker.get());
+                        _npcs.push_back(entity);
                     }
                     else if (spikes_spawner.can_spawn())
                     {
@@ -200,11 +194,11 @@ void populator::generate_npc(std::shared_ptr<LevelSummaryTracker>& tracker, bool
         MapTile* map_tile = nullptr;
         tile_batch.get_first_tile_of_given_type(MapTileType::EXIT, map_tile);
         assert(map_tile);
-        prefabs::Shopkeeper::create(shopkeeper_robbed, map_tile->get_center_x(), map_tile->get_center_y());
+        _shopkeepers.push_back(prefabs::Shopkeeper::create(map_tile->get_center_x(), map_tile->get_center_y()));
     }
 }
 
-void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
+void Populator::generate_loot(bool robbed)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
@@ -216,9 +210,7 @@ void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
     Spawner rock_spawner(2, 12);
     Spawner crate_spawner(2, 4);
 
-    Shop shop;
-
-    std::vector<std::shared_ptr<GameEntity>> out{};
+    Shop shop(robbed);
 
     const auto& tile_batch = Level::instance().get_tile_batch();
 
@@ -272,22 +264,19 @@ void populator::generate_loot(std::shared_ptr<LevelSummaryTracker>& tracker)
                     {
                         triple_gold_bar_spawner.spawned();
                         auto entity = prefabs::TripleGoldBar::create(pos_x, pos_y);
-                        auto& collectible = registry.get<CollectibleComponent>(entity);
-                        collectible.add_observer(tracker.get());
+                        _collectibles.push_back(entity);
                     }
                     else if (big_gem_spawner.can_spawn())
                     {
                         big_gem_spawner.spawned();
                         auto entity = prefabs::BigGem::create(pos_x, pos_y);
-                        auto& collectible = registry.get<CollectibleComponent>(entity);
-                        collectible.add_observer(tracker.get());
+                        _collectibles.push_back(entity);
                     }
                     else if (single_gold_bar_spawner.can_spawn())
                     {
                         single_gold_bar_spawner.spawned();
                         auto entity = prefabs::SingleGoldBar::create(pos_x, pos_y);
-                        auto& collectible = registry.get<CollectibleComponent>(entity);
-                        collectible.add_observer(tracker.get());
+                        _collectibles.push_back(entity);
                     }
                     break;
                 }

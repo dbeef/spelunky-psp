@@ -1,7 +1,8 @@
 #include "prefabs/ui/DeathOverlay.hpp"
 #include "prefabs/ui/HudOverlay.hpp"
-#include "prefabs/main-dude/MainDude.hpp"
 #include "prefabs/ui/PauseOverlay.hpp"
+#include "prefabs/npc/ShopkeeperScript.hpp"
+#include "prefabs/main-dude/MainDude.hpp"
 
 #include "game-loop/GameLoopPlayingState.hpp"
 #include "game-loop/GameLoop.hpp"
@@ -14,6 +15,7 @@
 #include "components/specialized/LevelSummaryTracker.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
 #include "components/generic/ItemCarrierComponent.hpp"
+#include "components/generic/CollectibleComponent.hpp"
 
 #include "system/RenderingSystem.hpp"
 #include "system/DamageSystem.hpp"
@@ -156,9 +158,37 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     auto& death = registry.get<DeathOverlayComponent>(_death_overlay);
     death.disable_input();
 
-    populator::generate_loot(game_loop._level_summary_tracker);
-    populator::generate_npc(game_loop._level_summary_tracker, is_damsel_rescued(), game_loop._shopping_system->is_shopkeeper_robbed());
-    populator::generate_inventory_items(_main_dude);
+    Populator populator;
+    populator.generate_loot(game_loop._shopping_system->is_robbed());
+    populator.generate_npc(is_damsel_rescued(), game_loop._shopping_system->is_robbed());
+    populator.generate_inventory_items(_main_dude);
+
+    // Wire subjects with observers:
+
+    for (const auto& collectible_entity : populator.get_collectibles())
+    {
+        auto& collectible = registry.get<CollectibleComponent>(collectible_entity);
+        collectible.add_observer(game_loop._level_summary_tracker.get());
+    }
+
+    for (const auto& npc_entity : populator.get_npcs())
+    {
+        auto& hitpoints = registry.get<HitpointComponent>(npc_entity);
+        hitpoints.add_observer(game_loop._level_summary_tracker.get());
+    }
+
+    for (const auto& shopkeeper : populator.get_shopkeepers())
+    {
+        auto &scripting_component = registry.get<ScriptingComponent>(shopkeeper);
+        auto *shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
+        game_loop._shopping_system->add_observer(shopkeeper_script->get_thievery_observer());
+        shopkeeper_script->add_observer(game_loop._shopping_system.get());
+
+        if (game_loop._shopping_system->is_robbed())
+        {
+            // Make angry!
+        }
+    }
 
     game_loop._level_summary_tracker->entered_new_level();
 

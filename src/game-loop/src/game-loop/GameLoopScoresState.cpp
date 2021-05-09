@@ -14,6 +14,7 @@
 #include "system/RenderingSystem.hpp"
 #include "system/ScriptingSystem.hpp"
 #include "system/PhysicsSystem.hpp"
+#include "system/ShoppingSystem.hpp"
 #include "system/AnimationSystem.hpp"
 #include "system/InputSystem.hpp"
 
@@ -89,6 +90,7 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
 
     auto& inventory = Inventory::instance();
     inventory.clear_items();
+    game_loop._shopping_system = std::make_shared<ShoppingSystem>();
 
     MapTile* entrance = nullptr;
     Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::EXIT, entrance);

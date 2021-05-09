@@ -198,7 +198,7 @@ namespace prefabs
         quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::SHOPKEEPER_DEAD);
         animation.stop();
         item_carrier.put_down_active_item();
-        shopkeeper._robbed = true;
+//        /shopkeeper._robbed = true;
 
         if (registry.has<TakeJumpOnTopDamageComponent>(id)) registry.remove<TakeJumpOnTopDamageComponent>(id);
         if (registry.has<GiveNpcTouchDamageComponent>(id)) registry.remove<GiveNpcTouchDamageComponent>(id);

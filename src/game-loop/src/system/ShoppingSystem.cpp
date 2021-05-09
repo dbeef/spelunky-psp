@@ -19,6 +19,25 @@
 
 namespace
 {
+    void remove_all_saleables()
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto saleable_items = registry.view<SaleableComponent, ItemComponent, PositionComponent>();
+        saleable_items.each([&registry](entt::entity item_for_sale_entity, SaleableComponent& item_saleable, ItemComponent& item, PositionComponent& item_position)
+                            {
+                                item.set_type(item_saleable.get_original_item_application());
+                                item.set_slot(item_saleable.get_original_item_slot());
+
+                                if (registry.has<ScriptingComponent>(item_for_sale_entity))
+                                {
+                                    auto& scripting_component = registry.get<ScriptingComponent>(item_for_sale_entity);
+                                    scripting_component.script = item_saleable.get_original_script();
+                                }
+
+                                registry.remove<SaleableComponent>(item_for_sale_entity);
+                            });
+    }
+
     void create_transaction_particle(ItemType type, float pos_x_center, float pos_y_center)
     {
         switch (type)
@@ -193,6 +212,11 @@ void ShoppingSystem::update_transactions()
 
 void ShoppingSystem::update_items_out_of_shop()
 {
+    if (_robbed)
+    {
+        return;
+    }
+
     auto& registry = EntityRegistry::instance().get_registry();
     auto saleable_items = registry.view<ItemComponent, SaleableComponent, PositionComponent, PhysicsComponent>();
 
@@ -204,7 +228,21 @@ void ShoppingSystem::update_items_out_of_shop()
     {
         if (!item_physics.is_collision(item_saleable.get_shop_zone(), item_saleable.get_shop_position(), item_position))
         {
-             _robbed_shopkeeper = true;
+            const entt::entity thief = item.is_carried() ? item.get_item_carrier_entity() : entt::null;
+            notify({thief});
+            remove_all_saleables();
+            _robbed = true;
         }
     });
+}
+
+void ShoppingSystem::on_notify(const ShopkeeperAssaultEvent *)
+{
+    if (_robbed)
+    {
+        return;
+    }
+
+    remove_all_saleables();
+    _robbed = true;
 }

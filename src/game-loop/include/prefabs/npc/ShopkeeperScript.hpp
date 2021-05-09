@@ -8,9 +8,19 @@
 #include "components/damage/TakeMeleeDamageComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
 #include "components/generic/ScriptingComponent.hpp"
+#include "system/ShoppingSystem.hpp"
 
 namespace prefabs
 {
+    class ShopkeeperThieveryObserver final : public Observer<ThieveryEvent>
+    {
+    public:
+        explicit ShopkeeperThieveryObserver(entt::entity shopkeeper) : _shopkeeper(shopkeeper) {}
+        void on_notify(const ThieveryEvent*) override;
+    private:
+        const entt::entity _shopkeeper;
+    };
+
     class ShopkeeperDeathObserver final : public Observer<DeathEvent>
     {
     public:
@@ -47,13 +57,14 @@ namespace prefabs
         const entt::entity _shopkeeper;
     };
 
-    class ShopkeeperScript final : public ScriptBase
+    class ShopkeeperScript final : public ScriptBase, public Subject<ShopkeeperAssaultEvent>
     {
     public:
         friend class ShopkeeperDeathObserver;
         friend class ShopkeeperProjectileDamageObserver;
         friend class ShopkeeperJumpOnTopDamageObserver;
         friend class ShopkeeperMeleeDamageObserver;
+        friend class ShopkeeperThieveryObserver;
 
         friend class ShopkeeperStandingState;
         friend class ShopkeeperRunningState;
@@ -64,33 +75,32 @@ namespace prefabs
         friend class ShopkeeperFallingState;
         friend class ShopkeeperBouncingState;
 
-        explicit ShopkeeperScript(entt::entity shopkeeper, bool& robbed)
+        explicit ShopkeeperScript(entt::entity shopkeeper)
             : _death_observer(shopkeeper)
             , _projectile_damage_observer(shopkeeper)
             , _melee_damage_observer(shopkeeper)
             , _jump_on_top_damage_observer(shopkeeper)
-            , _robbed(robbed)
+            , _thievery_observer(shopkeeper)
         {}
 
         ShopkeeperDeathObserver* get_death_observer() { return &_death_observer; }
         ShopkeeperProjectileDamageObserver* get_projectile_damage_observer() { return &_projectile_damage_observer; }
         ShopkeeperMeleeDamageObserver* get_melee_damage_observer() { return &_melee_damage_observer; }
         ShopkeeperJumpOnTopDamageObserver* get_jump_on_top_damage_observer() { return &_jump_on_top_damage_observer; }
+        ShopkeeperThieveryObserver* get_thievery_observer() { return &_thievery_observer; }
 
         void update(entt::entity owner, uint32_t delta_time_ms) override;
         void enter_state(ShopkeeperBaseState* new_state, entt::entity owner);
-        bool is_robbed() const { return _robbed; }
-
     private:
 
         int _stunned_timer_ms = 0;
-        bool& _robbed;
         entt::entity _thief = entt::null;
 
         ShopkeeperDeathObserver _death_observer;
         ShopkeeperProjectileDamageObserver _projectile_damage_observer;
         ShopkeeperMeleeDamageObserver _melee_damage_observer;
         ShopkeeperJumpOnTopDamageObserver _jump_on_top_damage_observer;
+        ShopkeeperThieveryObserver _thievery_observer;
 
         struct
         {
@@ -108,6 +118,5 @@ namespace prefabs
         void get_angry(entt::entity shopkeeper);
         void follow_customer(entt::entity shopkeeper);
         void follow_thief(entt::entity shopkeeper);
-        void remove_all_saleables();
     };
 }

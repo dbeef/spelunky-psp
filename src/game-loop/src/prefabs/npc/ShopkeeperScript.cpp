@@ -12,6 +12,11 @@
 
 #include <cmath>
 
+void prefabs::ShopkeeperThieveryObserver::on_notify(const ThieveryEvent* event)
+{
+    log_info("Thief: %i", event->thief);
+}
+
 void prefabs::ShopkeeperJumpOnTopDamageObserver::on_notify(const TakenJumpOnTopDamageEvent* event)
 {
     auto& registry = EntityRegistry::instance().get_registry();
@@ -33,6 +38,7 @@ void prefabs::ShopkeeperJumpOnTopDamageObserver::on_notify(const TakenJumpOnTopD
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
     auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
     shopkeeper_script->_thief = event->source;
+    shopkeeper_script->notify({shopkeeper_script->_thief});
     shopkeeper_script->get_angry(_shopkeeper);
 }
 
@@ -78,6 +84,7 @@ void prefabs::ShopkeeperMeleeDamageObserver::on_notify(const TakenMeleeDamageEve
         shopkeeper_script->_thief = event->source;
     }
 
+    shopkeeper_script->notify({shopkeeper_script->_thief});
     shopkeeper_script->get_angry(_shopkeeper);
 }
 
@@ -102,6 +109,7 @@ void prefabs::ShopkeeperProjectileDamageObserver::on_notify(const TakenProjectil
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
     auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
     shopkeeper_script->_thief = event->source;
+    shopkeeper_script->notify({shopkeeper_script->_thief});
     shopkeeper_script->get_angry(_shopkeeper);
     shopkeeper_script->enter_state(&shopkeeper_script->_states.stunned, _shopkeeper);
 }
@@ -119,8 +127,8 @@ void prefabs::ShopkeeperDeathObserver::on_notify(const DeathEvent *)
 
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
     auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
+    shopkeeper_script->notify({shopkeeper_script->_thief});
     shopkeeper_script->enter_state(&shopkeeper_script->_states.dead, _shopkeeper);
-
     // TODO: If killed by main dude, set some permanent flag to indicate that other shopkeepers
     //       should be automatically hostile to main dude.
 }
@@ -143,43 +151,22 @@ void prefabs::ShopkeeperScript::enter_state(ShopkeeperBaseState* new_state, entt
 
 void prefabs::ShopkeeperScript::get_angry(entt::entity shopkeeper)
 {
-    if (_robbed)
-    {
-        return;
-    }
+//    if (_robbed)
+//    {
+//        return;
+//    }
 
-    auto& registry = EntityRegistry::instance().get_registry();
-    auto& position = registry.get<PositionComponent>(shopkeeper);
-    auto& item_carrier = registry.get<ItemCarrierComponent>(shopkeeper);
+//    auto& registry = EntityRegistry::instance().get_registry();
+//    auto& position = registry.get<PositionComponent>(shopkeeper);
+//    auto& item_carrier = registry.get<ItemCarrierComponent>(shopkeeper);
+//
+//    auto shotgun = prefabs::Shotgun::create(position.x_center, position.y_center);
+//    item_carrier.pick_up_item(shotgun, shopkeeper);
+//
+//    registry.emplace<GiveNpcTouchDamageComponent>(shopkeeper);
 
-    auto shotgun = prefabs::Shotgun::create(position.x_center, position.y_center);
-    item_carrier.pick_up_item(shotgun, shopkeeper);
-
-    registry.emplace<GiveNpcTouchDamageComponent>(shopkeeper);
-
-    _robbed = true;
-    remove_all_saleables();
-}
-
-void prefabs::ShopkeeperScript::remove_all_saleables()
-{
-    // TODO: Stuff from ShoppingSystem
-
-    auto& registry = EntityRegistry::instance().get_registry();
-    auto saleable_items = registry.view<SaleableComponent, ItemComponent, PositionComponent>();
-    saleable_items.each([&registry](entt::entity item_for_sale_entity, SaleableComponent& item_saleable, ItemComponent& item, PositionComponent& item_position)
-    {
-        item.set_type(item_saleable.get_original_item_application());
-        item.set_slot(item_saleable.get_original_item_slot());
-
-        if (registry.has<ScriptingComponent>(item_for_sale_entity))
-        {
-            auto& scripting_component = registry.get<ScriptingComponent>(item_for_sale_entity);
-            scripting_component.script = item_saleable.get_original_script();
-        }
-
-        registry.remove<SaleableComponent>(item_for_sale_entity);
-    });
+//    _robbed = true;
+//    remove_all_saleables();
 }
 
 void prefabs::ShopkeeperScript::follow_thief(entt::entity shopkeeper)
