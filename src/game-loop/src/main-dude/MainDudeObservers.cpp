@@ -1,4 +1,5 @@
 #include "main-dude/MainDudeObservers.hpp"
+#include "prefabs/particles/PoofParticle.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
 #include "components/generic/BlinkingComponent.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
@@ -6,6 +7,7 @@
 #include "EntityRegistry.hpp"
 #include "other/Inventory.hpp"
 #include "other/ParticleGenerator.hpp"
+#include "audio/Audio.hpp"
 
 void MainDudeClimbingObserver::on_notify(const ClimbingEvent *event)
 {
@@ -32,6 +34,7 @@ void MainDudeProjectileDamageObserver::on_notify(const ProjectileDamage_t *event
     auto& position = registry.get<PositionComponent>(_main_dude);
 
     Inventory::instance().remove_hearts(*event);
+    Audio::instance().play(SFXType::MAIN_DUDE_HURT);
 
     if (Inventory::instance().get_hearts() > 0)
     {
@@ -50,6 +53,7 @@ void MainDudeSpikesDamageObserver::on_notify(const SpikesDamageEvent *event)
     auto& hitpoints = registry.get<HitpointComponent>(_main_dude);
 
     Inventory::instance().remove_hearts(hitpoints.get_hitpoints());
+    Audio::instance().play(SFXType::MAIN_DUDE_HURT);
 }
 
 void MainDudeExplosionDamageObserver::on_notify(const ExplosionDamageTakenEvent *event)
@@ -68,6 +72,8 @@ void MainDudeExplosionDamageObserver::on_notify(const ExplosionDamageTakenEvent 
     particle_emitter.time_since_last_emission_ms = 0;
 
     registry.emplace<ParticleEmitterComponent>(_main_dude, particle_emitter);
+
+    Audio::instance().play(SFXType::MAIN_DUDE_HURT);
 }
 
 void MainDudeNpcDamageObserver::on_notify(const NpcDamage_t *event)
@@ -76,6 +82,7 @@ void MainDudeNpcDamageObserver::on_notify(const NpcDamage_t *event)
     auto& main_dude_component = registry.get<MainDudeComponent>(_main_dude);
 
     Inventory::instance().remove_hearts(*event);
+    Audio::instance().play(SFXType::MAIN_DUDE_HURT);
 
     if (Inventory::instance().get_hearts() == 0)
     {
@@ -116,7 +123,11 @@ void MainDudeFallObserver::on_notify(const FallDamage_t *event)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     auto& main_dude_component = registry.get<MainDudeComponent>(_main_dude);
+    auto& position = registry.get<PositionComponent>(_main_dude);
 
+    Audio::instance().play(SFXType::MAIN_DUDE_HURT);
+    prefabs::PoofParticle::create(position.x_center - (MapTile::PHYSICAL_WIDTH / 2.0f), position.y_center);
+    prefabs::PoofParticle::create(position.x_center + (MapTile::PHYSICAL_WIDTH / 2.0f), position.y_center);
     Inventory::instance().remove_hearts(*event);
 
     if (Inventory::instance().get_hearts() == 0)
