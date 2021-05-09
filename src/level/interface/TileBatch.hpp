@@ -67,6 +67,8 @@ public:
 
     NPCType get_npc_type_spawned_at(int x_tiles, int y_tiles) const;
 
+    RoomType get_room_type_at(int x_room, int y_room) const;
+
 private:
 
     // Any encountered closed room will be turned into an altar.

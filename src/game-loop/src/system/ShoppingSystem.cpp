@@ -193,20 +193,18 @@ void ShoppingSystem::update_transactions()
 
 void ShoppingSystem::update_items_out_of_shop()
 {
-    // TODO: Check if item with SaleableComponent is out of shop zone, if so, change state of shopkeeper to "angry"
-    //       "COME BACK HERE, THIEF!" <- Prompt when item taken out of shop zone without purchase
-    //
-    // TODO: Shopkeeper should follow the carrier of item for sale
-    //       if too far from original position, then assume being robbed, iterate over everything with SaleableComponent...
-    //
-    // if saleablecomponent item is carried, check position diff, go a little bit towards it
-    //
-    //  How to notify all shopkeepers? Just check "_robbed" flag?
-    //
-    // TODO: Make Populator save state? To get all shopkeepers, spawned items, etc.
-    //
-    //       If one shopkeeper is robbed, then everyone should become hostile, therefore remove SaleableComponent
-    //       from all items on such occasion.
-    //
-    // TODO: Shooting shotgun / angry-alert/angry-standby state
+    auto& registry = EntityRegistry::instance().get_registry();
+    auto saleable_items = registry.view<ItemComponent, SaleableComponent, PositionComponent, PhysicsComponent>();
+
+    saleable_items.each([&](entt::entity item_for_sale_entity,
+                            ItemComponent& item,
+                            SaleableComponent& item_saleable,
+                            PositionComponent& item_position,
+                            PhysicsComponent& item_physics)
+    {
+        if (!item_physics.is_collision(item_saleable.get_shop_zone(), item_saleable.get_shop_position(), item_position))
+        {
+             _robbed_shopkeeper = true;
+        }
+    });
 }

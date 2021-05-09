@@ -19,7 +19,6 @@ public:
     void exit(GameLoop&) override;
     void on_notify(const MainDudeEvent*) override;
 
-    bool& is_shopkeeper_robbed() { return _special_events.shopkeeper_robbed; }
     bool& is_damsel_rescued() { return _special_events.damsel_rescued; }
 
 private:
@@ -27,7 +26,6 @@ private:
     struct
     {
         bool damsel_rescued = false;
-        bool shopkeeper_robbed = false;
     } _special_events;
 
     entt::entity _main_dude = entt::null;

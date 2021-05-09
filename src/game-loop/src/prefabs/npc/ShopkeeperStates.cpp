@@ -24,8 +24,7 @@ namespace prefabs
         auto& physics = registry.get<PhysicsComponent>(id);
 
         shopkeeper.follow_customer(id);
-
-
+        shopkeeper.follow_thief(id);
 
         // How to follow the attacker?
         // Keep track of the entity who holds the SaleableItem? But what if it doesn't hold?
@@ -74,6 +73,7 @@ namespace prefabs
         auto& physics = registry.get<PhysicsComponent>(id);
 
         shopkeeper.follow_customer(id);
+        shopkeeper.follow_thief(id);
 
         if (physics.get_x_velocity() == 0.0f && physics.get_y_velocity() == 0.0f)
         {

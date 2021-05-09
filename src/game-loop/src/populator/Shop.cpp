@@ -1,5 +1,6 @@
 #include "populator/Shop.hpp"
 #include "EntityRegistry.hpp"
+#include "Level.hpp"
 #include "components/generic/SaleableComponent.hpp"
 
 #include "prefabs/items/Rock.hpp"
@@ -79,12 +80,6 @@ namespace populator
             return entt::null;
         }
 
-        void attach_saleable_component(entt::entity item, int price)
-        {
-            auto& registry = EntityRegistry::instance().get_registry();
-            registry.emplace<SaleableComponent>(item, price, entt::null, item);
-        }
-
         void set_position(entt::entity item, float x_center, float y_center)
         {
             auto& registry = EntityRegistry::instance().get_registry();
@@ -126,6 +121,26 @@ namespace populator
 
     Shop::Shop()
     {
+        log_info("Created a shop");
+        auto& tile_batch = Level::instance().get_tile_batch();
+        for (int x_room = 0; x_room < Consts::ROOMS_COUNT_WIDTH; x_room++)
+        {
+            for (int y_room = 0; y_room < Consts::ROOMS_COUNT_HEIGHT; y_room++)
+            {
+                if (tile_batch.get_room_type_at(x_room, y_room) == RoomType::SHOP_LEFT ||
+                    tile_batch.get_room_type_at(x_room, y_room) == RoomType::SHOP_RIGHT)
+                {
+                    log_info("Shop at (rooms): %i %i", x_room, y_room);
+                    _shop_center.x_center = ((0.5f + x_room) * Consts::ROOM_WIDTH_TILES);
+                    _shop_center.y_center = ((0.5f + y_room) * Consts::ROOM_HEIGHT_TILES);
+                    log_info("Shop center at (tiles): %f %f", _shop_center.x_center, _shop_center.y_center);
+                    _shop_zone.width = Consts::ROOM_WIDTH_TILES;
+                    _shop_zone.height = Consts::ROOM_HEIGHT_TILES;
+                    break;
+                }
+            }
+        }
+        
         const auto theme = get_random_theme();
 
         _items = items_in_theme.at(theme);
@@ -151,5 +166,11 @@ namespace populator
         set_position(item_entity, x_center, y_center);
 
         return item_entity;
+    }
+
+    void Shop::attach_saleable_component(entt::entity item, int price)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        registry.emplace<SaleableComponent>(item, price, item, _shop_zone, _shop_center);
     }
 }

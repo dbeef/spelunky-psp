@@ -85,6 +85,7 @@ namespace prefabs
 
         int _stunned_timer_ms = 0;
         bool& _robbed;
+        entt::entity _thief = entt::null;
 
         ShopkeeperDeathObserver _death_observer;
         ShopkeeperProjectileDamageObserver _projectile_damage_observer;
@@ -106,6 +107,7 @@ namespace prefabs
 
         void get_angry(entt::entity shopkeeper);
         void follow_customer(entt::entity shopkeeper);
+        void follow_thief(entt::entity shopkeeper);
         void remove_all_saleables();
     };
 }

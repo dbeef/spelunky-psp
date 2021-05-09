@@ -660,3 +660,13 @@ NPCType TileBatch::get_npc_type_spawned_at(int x_tiles, int y_tiles) const
 
     return NPCType::NOTHING;
 }
+
+RoomType TileBatch::get_room_type_at(int x_room, int y_room) const
+{
+    assert(x_room >= 0 && x_room < ROOMS_COUNT_WIDTH);
+    assert(y_room >= 0 && y_room < ROOMS_COUNT_HEIGHT);
+
+    // Reverse notation:
+    y_room = std::abs(y_room - (ROOMS_COUNT_HEIGHT - 1));
+    return _layout[x_room][y_room];
+}
