@@ -53,6 +53,7 @@ entt::entity prefabs::SpringShoes::create(float pos_x_center, float pos_y_center
     quad.frame_changed(CollectiblesSpritesheetFrames::SPRING_SHOES);
 
     ItemComponent item(ItemType::SPRING_SHOES, ItemApplication::PASSIVE, ItemSlot::FEET);
+    item.set_weight(7);
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);

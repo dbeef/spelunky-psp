@@ -106,6 +106,7 @@ entt::entity prefabs::Jetpack::create(float pos_x_center, float pos_y_center)
 
     ItemComponent item(ItemType::JETPACK, ItemApplication::ACTIVABLE, ItemSlot::BACK);
     item.set_carrying_offset({-0.4f, -0.2f});
+    item.set_weight(7);
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);

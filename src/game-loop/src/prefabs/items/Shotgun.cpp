@@ -107,6 +107,7 @@ entt::entity prefabs::Shotgun::create(float pos_x_center, float pos_y_center)
 
     ItemComponent item(ItemType::SHOTGUN, ItemApplication::ACTIVABLE, ItemSlot::ACTIVE);
     item.set_carrying_offset({0.1f, 0.1f});
+    item.set_weight(7);
 
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
