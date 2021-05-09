@@ -186,7 +186,8 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
         if (game_loop._shopping_system->is_robbed())
         {
-            // Make angry!
+            shopkeeper_script->set_thief(_main_dude);
+            shopkeeper_script-> get_angry(shopkeeper);
         }
     }
 

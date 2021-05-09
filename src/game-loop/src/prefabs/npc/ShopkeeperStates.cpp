@@ -26,21 +26,6 @@ namespace prefabs
         shopkeeper.follow_customer(id);
         shopkeeper.follow_thief(id);
 
-        // How to follow the attacker?
-        // Keep track of the entity who holds the SaleableItem? But what if it doesn't hold?
-        // put entity of attacker into the event?
-
-        auto& item_carrier = registry.get<ItemCarrierComponent>(id);
-        if (item_carrier.has_active_item())
-        {
-            auto item_entity = item_carrier.get_item(ItemType::SHOTGUN);
-            auto& activable = registry.get<ActivableComponent>(item_entity);
-            activable.activated = true;
-        }
-
-
-
-
         if (physics.get_x_velocity() == 0.0f)
         {
             return &shopkeeper._states.standing;
@@ -74,6 +59,17 @@ namespace prefabs
 
         shopkeeper.follow_customer(id);
         shopkeeper.follow_thief(id);
+
+        auto& item_carrier = registry.get<ItemCarrierComponent>(id);
+        if (item_carrier.has_active_item())
+        {
+            auto item_entity = item_carrier.get_item(ItemType::SHOTGUN);
+            if (item_entity != entt::null)
+            {
+                auto &activable = registry.get<ActivableComponent>(item_entity);
+                activable.activated = true;
+            }
+        }
 
         if (physics.get_x_velocity() == 0.0f && physics.get_y_velocity() == 0.0f)
         {

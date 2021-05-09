@@ -14,7 +14,13 @@
 
 void prefabs::ShopkeeperThieveryObserver::on_notify(const ThieveryEvent* event)
 {
-    log_info("Thief: %i", event->thief);
+    auto& registry = EntityRegistry::instance().get_registry();
+    auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
+    auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
+
+    shopkeeper_script->set_thief(event->thief);
+    shopkeeper_script->notify({shopkeeper_script->_thief});
+    shopkeeper_script->get_angry(_shopkeeper);
 }
 
 void prefabs::ShopkeeperJumpOnTopDamageObserver::on_notify(const TakenJumpOnTopDamageEvent* event)
@@ -37,7 +43,7 @@ void prefabs::ShopkeeperJumpOnTopDamageObserver::on_notify(const TakenJumpOnTopD
 
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
     auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
-    shopkeeper_script->_thief = event->source;
+    shopkeeper_script->set_thief(event->source);
     shopkeeper_script->notify({shopkeeper_script->_thief});
     shopkeeper_script->get_angry(_shopkeeper);
 }
@@ -72,16 +78,16 @@ void prefabs::ShopkeeperMeleeDamageObserver::on_notify(const TakenMeleeDamageEve
         auto& item = registry.get<ItemComponent>(event->source);
         if (item.is_carried())
         {
-            shopkeeper_script->_thief = item.get_item_carrier_entity();
+            shopkeeper_script->set_thief(item.get_item_carrier_entity());
         }
         else
         {
-            shopkeeper_script->_thief = event->source;
+            shopkeeper_script->set_thief(event->source);
         }
     }
     else
     {
-        shopkeeper_script->_thief = event->source;
+        shopkeeper_script->set_thief(event->source);
     }
 
     shopkeeper_script->notify({shopkeeper_script->_thief});
@@ -108,7 +114,7 @@ void prefabs::ShopkeeperProjectileDamageObserver::on_notify(const TakenProjectil
 
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
     auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
-    shopkeeper_script->_thief = event->source;
+    shopkeeper_script->set_thief(event->source);
     shopkeeper_script->notify({shopkeeper_script->_thief});
     shopkeeper_script->get_angry(_shopkeeper);
     shopkeeper_script->enter_state(&shopkeeper_script->_states.stunned, _shopkeeper);
@@ -151,22 +157,21 @@ void prefabs::ShopkeeperScript::enter_state(ShopkeeperBaseState* new_state, entt
 
 void prefabs::ShopkeeperScript::get_angry(entt::entity shopkeeper)
 {
-//    if (_robbed)
-//    {
-//        return;
-//    }
+    if (_angry)
+    {
+        return;
+    }
 
-//    auto& registry = EntityRegistry::instance().get_registry();
-//    auto& position = registry.get<PositionComponent>(shopkeeper);
-//    auto& item_carrier = registry.get<ItemCarrierComponent>(shopkeeper);
-//
-//    auto shotgun = prefabs::Shotgun::create(position.x_center, position.y_center);
-//    item_carrier.pick_up_item(shotgun, shopkeeper);
-//
-//    registry.emplace<GiveNpcTouchDamageComponent>(shopkeeper);
+    auto& registry = EntityRegistry::instance().get_registry();
+    auto& position = registry.get<PositionComponent>(shopkeeper);
+    auto& item_carrier = registry.get<ItemCarrierComponent>(shopkeeper);
 
-//    _robbed = true;
-//    remove_all_saleables();
+    auto shotgun = prefabs::Shotgun::create(position.x_center, position.y_center);
+    item_carrier.pick_up_item(shotgun, shopkeeper);
+
+    registry.emplace<GiveNpcTouchDamageComponent>(shopkeeper);
+
+    _angry = true;
 }
 
 void prefabs::ShopkeeperScript::follow_thief(entt::entity shopkeeper)
