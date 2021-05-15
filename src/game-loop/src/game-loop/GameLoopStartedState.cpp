@@ -33,8 +33,8 @@ void GameLoopStartedState::enter(GameLoop& game_loop)
     TextureBank::instance().load_texture_regions();
 
     auto& registry = EntityRegistry::instance().get_registry();
-    registry.reserve<MeshComponent>(256);
-    registry.reserve<QuadComponent>(256);
+    registry.reserve<MeshComponent>(1024);
+    registry.reserve<QuadComponent>(1024);
 
     _game_initialized = true;
 }
