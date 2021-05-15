@@ -38,7 +38,7 @@ void prefabs::ShopkeeperJumpOnTopDamageObserver::on_notify(const TakenJumpOnTopD
     ParticleGenerator().particle_type(ParticleType::BLOOD)
             .position(position.x_center, position.y_center)
             .max_velocity(0.25f, 0.25f)
-            .quantity(4)
+            .quantity(2)
             .finalize();
 
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
@@ -63,7 +63,7 @@ void prefabs::ShopkeeperMeleeDamageObserver::on_notify(const TakenMeleeDamageEve
     ParticleGenerator().particle_type(ParticleType::BLOOD)
             .position(position.x_center, position.y_center)
             .max_velocity(0.25f, 0.25f)
-            .quantity(4)
+            .quantity(2)
             .finalize();
 
     physics.add_velocity(0.0f, -0.05f);
@@ -90,7 +90,7 @@ void prefabs::ShopkeeperProjectileDamageObserver::on_notify(const TakenProjectil
     ParticleGenerator().particle_type(ParticleType::BLOOD)
             .position(position.x_center, position.y_center)
             .max_velocity(0.25f, 0.25f)
-            .quantity(4)
+            .quantity(2)
             .finalize();
 
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
@@ -108,7 +108,7 @@ void prefabs::ShopkeeperDeathObserver::on_notify(const DeathEvent *)
     ParticleGenerator().particle_type(ParticleType::BLOOD)
             .position(position.x_center, position.y_center)
             .max_velocity(0.25f, 0.25f)
-            .quantity(4)
+            .quantity(2)
             .finalize();
 
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);

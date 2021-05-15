@@ -224,6 +224,8 @@ void GameLoopPlayingState::exit(GameLoop& game_loop)
     auto& inventory = Inventory::instance();
     inventory.set_items(dude_item_carrier_component.get_items());
 
+    game_loop._shopping_system->remove_all_observers();
+
     dude.remove_observer(this);
     registry.clear();
 }
