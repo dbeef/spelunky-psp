@@ -10,6 +10,7 @@
 #include "components/damage/TakeJumpOnTopDamage.hpp"
 #include "components/damage/TakeMeleeDamageComponent.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 
 #include "spritesheet-frames/NPCSpritesheetFrames.hpp"
 #include "EntityRegistry.hpp"
@@ -176,6 +177,7 @@ namespace prefabs
         if (registry.has<TakeMeleeDamageComponent>(id)) registry.remove<TakeMeleeDamageComponent>(id);
         if (registry.has<TakeJumpOnTopDamageComponent>(id)) registry.remove<TakeJumpOnTopDamageComponent>(id);
         if (registry.has<GiveNpcTouchDamageComponent>(id)) registry.remove<GiveNpcTouchDamageComponent>(id);
+        if (!registry.has<GiveProjectileDamageComponent>(id)) registry.emplace<GiveProjectileDamageComponent>(id, 1);
     }
 
     void CavemanDeadState::exit(CavemanScript& caveman, entt::entity id)

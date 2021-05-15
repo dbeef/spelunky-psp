@@ -128,6 +128,27 @@ void DamageSystem::update_projectile_damage()
             return;
         }
 
+        // Check if bodies from last update still do overlap:
+        auto& last_update_overlapping_bodies = give_damage.get_last_update_overlaping_bodies();
+        const auto it = std::remove_if(last_update_overlapping_bodies.begin(),
+                       last_update_overlapping_bodies.end(),
+                       [&](const entt::entity recently_overlapped_body)
+        {
+            if (!registry.valid(recently_overlapped_body))
+            {
+                return true;
+            }
+
+            auto& recent_body_physics = registry.get<PhysicsComponent>(recently_overlapped_body);
+            auto& recent_body_position = registry.get<PositionComponent>(recently_overlapped_body);
+
+            return !projectile_physics.is_collision(recent_body_physics, recent_body_position, projectile_position);
+        });
+        if  (it != last_update_overlapping_bodies.end())
+        {
+            last_update_overlapping_bodies.erase(it);
+        }
+
         bodies.each([&](entt::entity take_damage_entity,
                              TakeProjectileDamageComponent& take_damage,
                              HitpointComponent& hitpoints,
@@ -145,6 +166,11 @@ void DamageSystem::update_projectile_damage()
                 return;
             }
 
+            if (std::find(last_update_overlapping_bodies.begin(), last_update_overlapping_bodies.end(), take_damage_entity) != last_update_overlapping_bodies.end())
+            {
+                return;
+            }
+
             if (!body_physics.is_collision(projectile_physics, projectile_position, body_position))
             {
                 return;
@@ -154,6 +180,8 @@ void DamageSystem::update_projectile_damage()
             {
                 return;
             }
+
+            last_update_overlapping_bodies.push_back(take_damage_entity);
 
             const ProjectileDamage_t damage = give_damage.get_damage();
 

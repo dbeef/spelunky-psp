@@ -25,6 +25,7 @@ void prefabs::DamselProjectileDamageObserver::on_notify(const ProjectileDamage_t
 
     auto& scripting_component = registry.get<ScriptingComponent>(_damsel);
     auto* damsel_script = scripting_component.get<prefabs::DamselScript>();
+    damsel_script->set_panic(true);
     damsel_script->enter_state(&damsel_script->_states.stunned, _damsel);
 }
 
