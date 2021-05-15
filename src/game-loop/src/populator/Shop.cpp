@@ -119,7 +119,6 @@ namespace
 
 Shop::Shop(bool robbed) : _robbed(robbed)
 {
-    log_info("Created a shop");
     auto& tile_batch = Level::instance().get_tile_batch();
     for (int x_room = 0; x_room < Consts::ROOMS_COUNT_WIDTH; x_room++)
     {
@@ -128,10 +127,8 @@ Shop::Shop(bool robbed) : _robbed(robbed)
             if (tile_batch.get_room_type_at(x_room, y_room) == RoomType::SHOP_LEFT ||
                 tile_batch.get_room_type_at(x_room, y_room) == RoomType::SHOP_RIGHT)
             {
-                log_info("Shop at (rooms): %i %i", x_room, y_room);
                 _shop_center.x_center = ((0.5f + x_room) * Consts::ROOM_WIDTH_TILES);
                 _shop_center.y_center = ((0.5f + y_room) * Consts::ROOM_HEIGHT_TILES);
-                log_info("Shop center at (tiles): %f %f", _shop_center.x_center, _shop_center.y_center);
                 _shop_zone.width = Consts::ROOM_WIDTH_TILES - 3.0f;
                 _shop_zone.height = Consts::ROOM_HEIGHT_TILES;
                 break;
