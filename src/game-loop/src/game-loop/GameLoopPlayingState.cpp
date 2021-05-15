@@ -236,6 +236,11 @@ void GameLoopPlayingState::on_notify(const MainDudeEvent* event)
     {
         case MainDudeEvent::DIED:
         {
+            if (_hud == entt::null)
+            {
+                break;
+            }
+
             // TODO: Maybe just remove components when they are no longer needed?
             auto& death = registry.get<DeathOverlayComponent>(_death_overlay);
             auto& pause = registry.get<PauseOverlayComponent>(_pause_overlay);
@@ -257,24 +262,21 @@ void GameLoopPlayingState::on_notify(const MainDudeEvent* event)
                 }
             });
 
-            if (_hud != entt::null)
+            auto& item_carrier_component = registry.get<ItemCarrierComponent>(_main_dude);
+            auto& hud_overlay_component = registry.get<HudOverlayComponent>(_hud);
+
+            item_carrier_component.remove_observer(hud_overlay_component.get_item_observer());
+            const auto wallet_entity = item_carrier_component.get_item(ItemType::WALLET);
+
+            if (wallet_entity != entt::null)
             {
-                auto& item_carrier_component = registry.get<ItemCarrierComponent>(_main_dude);
-                auto& hud_overlay_component = registry.get<HudOverlayComponent>(_hud);
-
-                item_carrier_component.remove_observer(hud_overlay_component.get_item_observer());
-                const auto wallet_entity = item_carrier_component.get_item(ItemType::WALLET);
-
-                if (wallet_entity != entt::null)
-                {
-                    auto& wallet_scripting_component = registry.get<ScriptingComponent>(wallet_entity);
-                    auto* wallet_script = wallet_scripting_component.get<prefabs::WalletScript>();
-                    wallet_script->remove_observer(static_cast<Observer<ShoppingTransactionEvent>*>(&hud_overlay_component));
-                }
-
-                registry.destroy(_hud);
-                _hud = entt::null;
+                auto& wallet_scripting_component = registry.get<ScriptingComponent>(wallet_entity);
+                auto* wallet_script = wallet_scripting_component.get<prefabs::WalletScript>();
+                wallet_script->remove_observer(static_cast<Observer<ShoppingTransactionEvent>*>(&hud_overlay_component));
             }
+
+            registry.destroy(_hud);
+            _hud = entt::null;
 
             break;
         }

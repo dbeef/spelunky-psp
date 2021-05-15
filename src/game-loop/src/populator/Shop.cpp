@@ -91,17 +91,17 @@ namespace
 
     const std::unordered_map<ItemType, int> item_prices =
     {
-            {ItemType::CAPE,         15 * 1000},
-            {ItemType::JETPACK,      20 * 1000},
-            {ItemType::PISTOL,       10 * 1000},
-            {ItemType::SHOTGUN,      20 * 1000},
-            {ItemType::SPIKE_SHOES,  5 * 1000},
+            {ItemType::CAPE, 15 * 1000},
+            {ItemType::JETPACK, 20 * 1000},
+            {ItemType::PISTOL, 10 * 1000},
+            {ItemType::SHOTGUN, 20 * 1000},
+            {ItemType::SPIKE_SHOES, 5 * 1000},
             {ItemType::SPRING_SHOES, 8 * 1000},
-            {ItemType::MITT,         5 * 1000},
-            {ItemType::GLOVE,        13 * 1000},
-            {ItemType::COMPASS,      6 * 1000},
-            {ItemType::BOMB_BAG,     5 * 1000},
-            {ItemType::ROPE_PILE,    5 * 1000},
+            {ItemType::MITT, 5 * 1000},
+            {ItemType::GLOVE, 13 * 1000},
+            {ItemType::COMPASS, 6 * 1000},
+            {ItemType::BOMB_BAG, 5 * 1000},
+            {ItemType::ROPE_PILE, 5 * 1000},
     };
 
     const std::unordered_map<ShopTheme, std::vector<ItemType>> items_in_theme =

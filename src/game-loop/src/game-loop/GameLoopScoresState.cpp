@@ -17,6 +17,9 @@
 #include "system/ShoppingSystem.hpp"
 #include "system/AnimationSystem.hpp"
 #include "system/InputSystem.hpp"
+#include "system/DisposingSystem.hpp"
+#include "system/ParticleSystem.hpp"
+#include "system/ItemSystem.hpp"
 
 #include "populator/Populator.hpp"
 #include "logger/log.h"
@@ -35,6 +38,9 @@ GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t del
     auto& physics_system = game_loop._physics_system;
     auto& animation_system = game_loop._animation_system;
     auto& input_system = game_loop._input_system;
+    auto& disposing_system = game_loop._disposing_system;
+    auto& particle_system = game_loop._particle_system;
+    auto& item_system = game_loop._item_system;
 
     rendering_system->update(delta_time_ms);
     input_system->update(delta_time_ms);
@@ -56,6 +62,9 @@ GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t del
         physics_system->update(delta_time_ms);
         animation_system->update(delta_time_ms);
         scripting_system->update(delta_time_ms);
+        disposing_system->update(delta_time_ms);
+        particle_system->update(delta_time_ms);
+        item_system->update(delta_time_ms);
     }
 
     auto& dude = registry.get<MainDudeComponent>(_main_dude);
