@@ -49,7 +49,7 @@ public:
         }
     }
 
-    bool have_observers() const
+    bool has_observers() const
     {
         return !_observers.empty();
     }
