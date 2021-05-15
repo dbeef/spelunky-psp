@@ -15,7 +15,7 @@
 #include "NPCType.hpp"
 
 #include <vector>
-#include "entt/entt.hpp"
+#include <entt/entt.hpp>
 
 namespace Consts
 {
@@ -39,11 +39,16 @@ class TileBatch {
 
 public:
 
+    struct LevelGeneratorParams
+    {
+        bool shopkeeper_robbed = false;
+    };
+
     TileBatch();
 
     ~TileBatch();
 
-    void generate_new_level_layout();
+    void generate_new_level_layout(const LevelGeneratorParams& params);
 
     void generate_cave_background();
 
@@ -67,6 +72,8 @@ public:
 
     NPCType get_npc_type_spawned_at(int x_tiles, int y_tiles) const;
 
+    RoomType get_room_type_at(int x_room, int y_room) const;
+
 private:
 
     // Any encountered closed room will be turned into an altar.
@@ -74,7 +81,7 @@ private:
 
     // Finds a closed room that is not blocked from either left or right side by other closed room,
     // and plants a shop there that is oriented to the not-blocked side.
-    void place_a_shop();
+    void place_a_shop(bool shopkeeper_robbed);
 
     std::vector<Vertex> _mesh;
     std::vector<IndexType> _indices;

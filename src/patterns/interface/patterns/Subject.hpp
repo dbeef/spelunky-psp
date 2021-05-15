@@ -49,6 +49,11 @@ public:
         }
     }
 
+    bool has_observers() const
+    {
+        return !_observers.empty();
+    }
+
 private:
 
     std::vector<Observer<EventType>*> _observers;

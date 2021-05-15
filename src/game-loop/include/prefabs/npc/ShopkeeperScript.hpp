@@ -8,9 +8,19 @@
 #include "components/damage/TakeMeleeDamageComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
 #include "components/generic/ScriptingComponent.hpp"
+#include "system/ShoppingSystem.hpp"
 
 namespace prefabs
 {
+    class ShopkeeperThieveryObserver final : public Observer<ThieveryEvent>
+    {
+    public:
+        explicit ShopkeeperThieveryObserver(entt::entity shopkeeper) : _shopkeeper(shopkeeper) {}
+        void on_notify(const ThieveryEvent*) override;
+    private:
+        const entt::entity _shopkeeper;
+    };
+
     class ShopkeeperDeathObserver final : public Observer<DeathEvent>
     {
     public:
@@ -20,40 +30,41 @@ namespace prefabs
         const entt::entity _shopkeeper;
     };
 
-    class ShopkeeperProjectileDamageObserver final : public Observer<ProjectileDamage_t>
+    class ShopkeeperProjectileDamageObserver final : public Observer<TakenProjectileDamageEvent>
     {
     public:
         explicit ShopkeeperProjectileDamageObserver(entt::entity shopkeeper) : _shopkeeper(shopkeeper) {}
-        void on_notify(const ProjectileDamage_t *) override;
+        void on_notify(const TakenProjectileDamageEvent *) override;
     private:
         const entt::entity _shopkeeper;
     };
 
-    class ShopkeeperMeleeDamageObserver final : public Observer<MeleeDamage_t>
+    class ShopkeeperMeleeDamageObserver final : public Observer<TakenMeleeDamageEvent>
     {
     public:
         explicit ShopkeeperMeleeDamageObserver(entt::entity shopkeeper) : _shopkeeper(shopkeeper) {}
-        void on_notify(const MeleeDamage_t *) override;
+        void on_notify(const TakenMeleeDamageEvent *) override;
     private:
         const entt::entity _shopkeeper;
     };
 
-    class ShopkeeperJumpOnTopDamageObserver final : public Observer<JumpOnTopDamage_t>
+    class ShopkeeperJumpOnTopDamageObserver final : public Observer<TakenJumpOnTopDamageEvent>
     {
     public:
         explicit ShopkeeperJumpOnTopDamageObserver(entt::entity shopkeeper) : _shopkeeper(shopkeeper) {}
-        void on_notify(const JumpOnTopDamage_t *) override;
+        void on_notify(const TakenJumpOnTopDamageEvent *) override;
     private:
         const entt::entity _shopkeeper;
     };
 
-    class ShopkeeperScript final : public ScriptBase
+    class ShopkeeperScript final : public ScriptBase, public Subject<ShopkeeperAssaultEvent>
     {
     public:
         friend class ShopkeeperDeathObserver;
         friend class ShopkeeperProjectileDamageObserver;
         friend class ShopkeeperJumpOnTopDamageObserver;
         friend class ShopkeeperMeleeDamageObserver;
+        friend class ShopkeeperThieveryObserver;
 
         friend class ShopkeeperStandingState;
         friend class ShopkeeperRunningState;
@@ -69,27 +80,30 @@ namespace prefabs
             , _projectile_damage_observer(shopkeeper)
             , _melee_damage_observer(shopkeeper)
             , _jump_on_top_damage_observer(shopkeeper)
+            , _thievery_observer(shopkeeper)
         {}
 
         ShopkeeperDeathObserver* get_death_observer() { return &_death_observer; }
         ShopkeeperProjectileDamageObserver* get_projectile_damage_observer() { return &_projectile_damage_observer; }
         ShopkeeperMeleeDamageObserver* get_melee_damage_observer() { return &_melee_damage_observer; }
         ShopkeeperJumpOnTopDamageObserver* get_jump_on_top_damage_observer() { return &_jump_on_top_damage_observer; }
+        ShopkeeperThieveryObserver* get_thievery_observer() { return &_thievery_observer; }
 
         void update(entt::entity owner, uint32_t delta_time_ms) override;
         void enter_state(ShopkeeperBaseState* new_state, entt::entity owner);
+        void get_angry(entt::entity shopkeeper);
 
     private:
 
-        void get_angry(entt::entity shopkeeper);
-
-        int _stunned_timer_ms = 0;
         bool _angry = false;
+        int _stunned_timer_ms = 0;
+        int _horizontal_orientation_switch_timer_ms = 0;
 
         ShopkeeperDeathObserver _death_observer;
         ShopkeeperProjectileDamageObserver _projectile_damage_observer;
         ShopkeeperMeleeDamageObserver _melee_damage_observer;
         ShopkeeperJumpOnTopDamageObserver _jump_on_top_damage_observer;
+        ShopkeeperThieveryObserver _thievery_observer;
 
         struct
         {
@@ -103,5 +117,8 @@ namespace prefabs
             ShopkeeperBouncingState bouncing;
             ShopkeeperBaseState* current = &standing;
         } _states;
+
+        void follow_customer(entt::entity shopkeeper);
+        void do_angry_stuff(entt::entity shopkeeper, std::uint32_t delta_time_ms);
     };
 }

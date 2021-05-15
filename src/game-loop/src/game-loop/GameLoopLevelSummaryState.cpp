@@ -23,6 +23,7 @@
 #include "ScreenSpaceCamera.hpp"
 #include "CameraType.hpp"
 #include "Level.hpp"
+#include "other/Inventory.hpp"
 
 GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -105,7 +106,7 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     auto& dude = registry.get<MainDudeComponent>(_main_dude);
     dude.enter_level_summary_state();
 
-    populator::generate_inventory_items(_main_dude);
+    Populator().generate_inventory_items(_main_dude);
 
     auto& damsel_rescued = game_loop._states.playing.is_damsel_rescued();
     if (damsel_rescued)

@@ -44,7 +44,7 @@ namespace
 GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
     auto& registry = EntityRegistry::instance().get_registry();
-    
+
     auto& rendering_system = game_loop._rendering_system;
     auto& scripting_system = game_loop._scripting_system;
     auto& physics_system = game_loop._physics_system;

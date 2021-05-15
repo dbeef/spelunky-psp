@@ -25,7 +25,7 @@ const char* Input::get_accept_transaction_binding_msg()
 
 const char* Input::get_scores_request_binding_msg()
 {
-    return "D";
+    return "P";
 }
 
 void Input::poll()

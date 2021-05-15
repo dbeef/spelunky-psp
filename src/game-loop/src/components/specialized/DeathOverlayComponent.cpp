@@ -71,7 +71,7 @@ void DeathOverlayComponent::update()
     }
 
     const auto& input = Input::instance();
-    if (input.jumping().value() && input.jumping().changed())
+    if (input.purchase().value() && input.purchase().changed())
     {
         _scores_requested = true;
     }

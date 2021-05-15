@@ -3,6 +3,7 @@
 #include "components/specialized/MainDudeComponent.hpp"
 #include "components/generic/BlinkingComponent.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
+#include "components/damage/GiveJumpOnTopDamage.hpp"
 #include "components/generic/ParticleEmitterComponent.hpp"
 #include "EntityRegistry.hpp"
 #include "other/Inventory.hpp"
@@ -108,6 +109,8 @@ void MainDudeDeathObserver::on_notify(const DeathEvent *event)
     auto& registry = EntityRegistry::instance().get_registry();
     auto& main_dude_component = registry.get<MainDudeComponent>(_main_dude);
     auto& position = registry.get<PositionComponent>(_main_dude);
+
+    if (registry.has<GiveJumpOnTopDamageComponent>(_main_dude)) registry.remove<GiveJumpOnTopDamageComponent>(_main_dude);
 
     main_dude_component.notify(MainDudeEvent::DIED);
     main_dude_component.enter_dead_state();

@@ -52,7 +52,7 @@ entt::entity prefabs::Damsel::create(bool& damsel_rescued, float pos_x_center, f
     hitpoints.add_observer(reinterpret_cast<Observer<DeathEvent>*>(damsel_script->get_death_observer()));
 
     TakeProjectileDamageComponent take_projectile_damage;
-    take_projectile_damage.add_observer(reinterpret_cast<Observer<ProjectileDamage_t>*>(damsel_script->get_projectile_damage_observer()));
+    take_projectile_damage.add_observer(reinterpret_cast<Observer<TakenProjectileDamageEvent>*>(damsel_script->get_projectile_damage_observer()));
 
     ItemComponent item{ItemType::BODY, ItemApplication::THROWABLE, ItemSlot::ACTIVE};
     item.set_weight(7);
@@ -65,7 +65,6 @@ entt::entity prefabs::Damsel::create(bool& damsel_rescued, float pos_x_center, f
     registry.emplace<ScriptingComponent>(entity, script);
     registry.emplace<HorizontalOrientationComponent>(entity);
     registry.emplace<HitpointComponent>(entity, hitpoints);
-    registry.emplace<GiveProjectileDamageComponent>(entity, 1);
     registry.emplace<TakeSpikesDamageComponent>(entity);
     registry.emplace<TakeProjectileDamageComponent>(entity, take_projectile_damage);
     registry.emplace<NpcTypeComponent>(entity, NpcType::DAMSEL);

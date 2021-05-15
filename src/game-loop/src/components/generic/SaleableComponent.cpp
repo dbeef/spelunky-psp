@@ -18,10 +18,11 @@ namespace
     };
 }
 
-SaleableComponent::SaleableComponent(int price_dollars, entt::entity parent_shopkeeper, entt::entity parent_item)
+SaleableComponent::SaleableComponent(int price_dollars, entt::entity parent_item, ZoneComponent shop_zone, PositionComponent shop_position)
         : _price_dollars(price_dollars)
-        , _parent_shopkeeper(parent_shopkeeper)
         , _parent_item(parent_item)
+        , _shop_zone(shop_zone)
+        , _shop_position(shop_position)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     auto& item_component = registry.get<ItemComponent>(parent_item);
@@ -56,11 +57,12 @@ SaleableComponent::SaleableComponent(SaleableComponent &&other) noexcept
 SaleableComponent &SaleableComponent::operator=(SaleableComponent &&other) noexcept
 {
     _parent_item = other._parent_item;
-    _parent_shopkeeper = other._parent_shopkeeper;
     _price_dollars = other._price_dollars;
     _original_item.script = other._original_item.script;
     _original_item.slot = other._original_item.slot;
     _original_item.application = other._original_item.application;
+    _shop_zone = other._shop_zone;
+    _shop_position = other._shop_position;
 
     return *this;
 }

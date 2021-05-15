@@ -106,6 +106,7 @@ void HudOverlayComponent::on_notify(const ShoppingTransactionEvent * event)
 
     auto& prompt_text = registry.get<TextComponent>(_texts.prompt);
     prompt_text.set_text(event->message);
+    prompt_text.set_scale(0.75f);
 
     auto& position = registry.get<PositionComponent>(_texts.prompt);
     position.x_center = (_viewport->get_width_world_units() / 2.0f) -

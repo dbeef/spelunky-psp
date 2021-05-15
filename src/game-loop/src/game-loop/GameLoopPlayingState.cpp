@@ -1,7 +1,8 @@
 #include "prefabs/ui/DeathOverlay.hpp"
 #include "prefabs/ui/HudOverlay.hpp"
-#include "prefabs/main-dude/MainDude.hpp"
 #include "prefabs/ui/PauseOverlay.hpp"
+#include "prefabs/npc/ShopkeeperScript.hpp"
+#include "prefabs/main-dude/MainDude.hpp"
 
 #include "game-loop/GameLoopPlayingState.hpp"
 #include "game-loop/GameLoop.hpp"
@@ -14,6 +15,7 @@
 #include "components/specialized/LevelSummaryTracker.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
 #include "components/generic/ItemCarrierComponent.hpp"
+#include "components/generic/CollectibleComponent.hpp"
 
 #include "system/RenderingSystem.hpp"
 #include "system/DamageSystem.hpp"
@@ -122,7 +124,10 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
     Audio::instance().play(MusicType::CAVE);
 
-    Level::instance().get_tile_batch().generate_new_level_layout();
+    TileBatch::LevelGeneratorParams generator_params;
+    generator_params.shopkeeper_robbed = game_loop._shopping_system->is_robbed();
+
+    Level::instance().get_tile_batch().generate_new_level_layout(generator_params);
     Level::instance().get_tile_batch().initialise_tiles_from_room_layout();
     Level::instance().get_tile_batch().generate_frame();
     Level::instance().get_tile_batch().generate_cave_background();
@@ -156,9 +161,37 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     auto& death = registry.get<DeathOverlayComponent>(_death_overlay);
     death.disable_input();
 
-    populator::generate_loot(game_loop._level_summary_tracker);
-    populator::generate_npc(game_loop._level_summary_tracker, is_damsel_rescued());
-    populator::generate_inventory_items(_main_dude);
+    Populator populator;
+    populator.generate_loot(game_loop._shopping_system->is_robbed());
+    populator.generate_npc(is_damsel_rescued(), game_loop._shopping_system->is_robbed());
+    populator.generate_inventory_items(_main_dude);
+
+    // Wire subjects with observers:
+
+    for (const auto& collectible_entity : populator.get_collectibles())
+    {
+        auto& collectible = registry.get<CollectibleComponent>(collectible_entity);
+        collectible.add_observer(game_loop._level_summary_tracker.get());
+    }
+
+    for (const auto& npc_entity : populator.get_npcs())
+    {
+        auto& hitpoints = registry.get<HitpointComponent>(npc_entity);
+        hitpoints.add_observer(game_loop._level_summary_tracker.get());
+    }
+
+    for (const auto& shopkeeper : populator.get_shopkeepers())
+    {
+        auto &scripting_component = registry.get<ScriptingComponent>(shopkeeper);
+        auto *shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
+        game_loop._shopping_system->add_observer(shopkeeper_script->get_thievery_observer());
+        shopkeeper_script->add_observer(game_loop._shopping_system.get());
+
+        if (game_loop._shopping_system->is_robbed())
+        {
+            shopkeeper_script-> get_angry(shopkeeper);
+        }
+    }
 
     game_loop._level_summary_tracker->entered_new_level();
 
@@ -203,6 +236,11 @@ void GameLoopPlayingState::on_notify(const MainDudeEvent* event)
     {
         case MainDudeEvent::DIED:
         {
+            if (_hud == entt::null)
+            {
+                break;
+            }
+
             // TODO: Maybe just remove components when they are no longer needed?
             auto& death = registry.get<DeathOverlayComponent>(_death_overlay);
             auto& pause = registry.get<PauseOverlayComponent>(_pause_overlay);
@@ -214,25 +252,30 @@ void GameLoopPlayingState::on_notify(const MainDudeEvent* event)
             pause.hide(registry);
             pause.disable_input();
 
-            if (registry.valid(_hud))
+            registry.view<ItemComponent>().each([&registry](entt::entity item_entity, ItemComponent& item)
             {
-                auto& item_carrier_component = registry.get<ItemCarrierComponent>(_main_dude);
-                auto& hud_overlay_component = registry.get<HudOverlayComponent>(_hud);
-
-                item_carrier_component.remove_observer(hud_overlay_component.get_item_observer());
-                const auto wallet_entity = item_carrier_component.get_item(ItemType::WALLET);
-
-                if (wallet_entity != entt::null)
+                if (item.get_type() == ItemType::COMPASS)
                 {
-                    auto& wallet_scripting_component = registry.get<ScriptingComponent>(wallet_entity);
-                    auto* wallet_script = wallet_scripting_component.get<prefabs::WalletScript>();
-
-                    auto& hud_overlay = registry.get<HudOverlayComponent>(_hud);
-                    wallet_script->remove_observer(static_cast<Observer<ShoppingTransactionEvent>*>(&hud_overlay));
+                    auto& compass_scripting_component = registry.get<ScriptingComponent>(item_entity);
+                    auto* compass_script = compass_scripting_component.get<prefabs::CompassScript>();
+                    compass_script->remove_all_observers();
                 }
+            });
 
-                registry.destroy(_hud);
+            auto& item_carrier_component = registry.get<ItemCarrierComponent>(_main_dude);
+            auto& hud_overlay_component = registry.get<HudOverlayComponent>(_hud);
+
+            item_carrier_component.remove_observer(hud_overlay_component.get_item_observer());
+            const auto wallet_entity = item_carrier_component.get_item(ItemType::WALLET);
+
+            if (wallet_entity != entt::null)
+            {
+                auto& wallet_scripting_component = registry.get<ScriptingComponent>(wallet_entity);
+                auto* wallet_script = wallet_scripting_component.get<prefabs::WalletScript>();
+                wallet_script->remove_observer(static_cast<Observer<ShoppingTransactionEvent>*>(&hud_overlay_component));
             }
+
+            registry.destroy(_hud);
             _hud = entt::null;
 
             break;

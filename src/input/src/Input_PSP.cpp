@@ -19,12 +19,12 @@ const char* Input::get_quit_request_binding_msg()
 
 const char* Input::get_accept_transaction_binding_msg()
 {
-    return "L";
+    return "SELECT";
 }
 
 const char* Input::get_scores_request_binding_msg()
 {
-    return "X";
+    return "SELECT";
 }
 
 void Input::poll()
@@ -54,7 +54,7 @@ void Input::poll()
     _toggles.paused.feed(pad.Buttons & PSP_CTRL_SELECT);
     _toggles.out_bomb.feed(pad.Buttons & PSP_CTRL_TRIANGLE);
     _toggles.out_rope.feed(pad.Buttons & PSP_CTRL_SQUARE);
-    _toggles.purchase.feed(pad.Buttons & PSP_CTRL_LTRIGGER);
+    _toggles.purchase.feed(pad.Buttons & PSP_CTRL_SELECT);
 
     fill_input_events();
 }

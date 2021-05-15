@@ -89,7 +89,7 @@ namespace prefabs
         registry.emplace<TakeExplosionDamageComponent>(entity, take_explosion_damage);
 
         TakeProjectileDamageComponent take_projectile_damage;
-        take_projectile_damage.add_observer(reinterpret_cast<Observer<ProjectileDamage_t> *>(main_dude.get_projectile_damage_observer()));
+        take_projectile_damage.add_observer(reinterpret_cast<Observer<TakenProjectileDamageEvent> *>(main_dude.get_projectile_damage_observer()));
         registry.emplace<TakeProjectileDamageComponent>(entity, take_projectile_damage);
 
         TakeSpikesDamageComponent take_spikes_damage;

@@ -28,6 +28,53 @@ namespace
         }
     }
 
+    void remove_saleable(entt::entity item_id, bool do_create_transaction_particle)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& item = registry.get<ItemComponent>(item_id);
+        auto& position = registry.get<PositionComponent>(item_id);
+        auto& saleable = registry.get<SaleableComponent>(item_id);
+        auto item_carrier_entity = item.is_carried() ? item.get_item_carrier_entity() : entt::null;
+
+        if (item_carrier_entity != entt::null)
+        {
+            auto& item_carrier = registry.get<ItemCarrierComponent>(item_carrier_entity);
+            item_carrier.put_down_active_item();
+        }
+
+        item.set_type(saleable.get_original_item_application());
+        item.set_slot(saleable.get_original_item_slot());
+
+        if (do_create_transaction_particle)
+        {
+            create_transaction_particle(item.get_type(), position.x_center, position.y_center - 0.75f);
+        }
+
+        if (registry.has<ScriptingComponent>(item_id))
+        {
+            auto& scripting_component = registry.get<ScriptingComponent>(item_id);
+            scripting_component.script = saleable.get_original_script();
+        }
+
+        registry.remove<SaleableComponent>(item_id);
+
+        if (item_carrier_entity != entt::null)
+        {
+            auto& item_carrier = registry.get<ItemCarrierComponent>(item_carrier_entity);
+            item_carrier.pick_up_item(item_id, item_carrier_entity);
+        }
+    }
+
+    void remove_all_saleables()
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto saleable_items = registry.view<SaleableComponent, ItemComponent, PositionComponent>();
+        saleable_items.each([](entt::entity item_for_sale_entity, SaleableComponent&, ItemComponent&, PositionComponent&)
+        {
+            remove_saleable(item_for_sale_entity, false);
+        });
+    }
+
     std::string item_name(ItemType type)
     {
 #define ITEM_TYPE_STR(x) case ItemType::x: return #x;
@@ -112,13 +159,12 @@ void ShoppingSystem::update_transactions()
     auto saleable_items = registry.view<ItemComponent, SaleableComponent, PositionComponent>();
 
     saleable_items.each([&registry](entt::entity item_for_sale_entity,
-                                    ItemComponent& item,
-                                    SaleableComponent& item_saleable,
-                                    PositionComponent& item_position)
+                                         ItemComponent& item,
+                                         SaleableComponent& item_saleable,
+                                         PositionComponent& item_position)
     {
         if (item.is_carried())
         {
-            auto item_carrier_entity = item.get_item_carrier_entity();
             auto& item_carrier = registry.get<ItemCarrierComponent>(item.get_item_carrier_entity());
             const auto& items = item_carrier.get_items();
             const auto carried_item_entities = item_carrier.get_item_entities();
@@ -147,37 +193,21 @@ void ShoppingSystem::update_transactions()
                         if (Inventory::instance().get_dollars() >= item_saleable.get_price_dollars())
                         {
                             Inventory::instance().remove_dollars(item_saleable.get_price_dollars());
-                            wallet_script->notify({get_successful_transaction_message(item.get_type())});
-
+                            wallet_script->notify(ShoppingTransactionEvent{get_successful_transaction_message(item.get_type())});
                             Audio::instance().play(SFXType::PICKUP);
-
-                            item_carrier.put_down_active_item();
-
-                            item.set_type(item_saleable.get_original_item_application());
-                            item.set_slot(item_saleable.get_original_item_slot());
-
-                            create_transaction_particle(item.get_type(), item_position.x_center, item_position.y_center - 0.75f);
-
-                            if (registry.has<ScriptingComponent>(item_for_sale_entity))
-                            {
-                                auto& scripting_component = registry.get<ScriptingComponent>(item_for_sale_entity);
-                                scripting_component.script = item_saleable.get_original_script();
-                            }
-
-                            registry.remove<SaleableComponent>(item_for_sale_entity);
-                            item_carrier.pick_up_item(item_for_sale_entity, item_carrier_entity);
+                            remove_saleable(item_for_sale_entity, true);
                         }
                         else
                         {
                             // Transaction failed - not enough dollars - should prompt observers (i.e HUD) about it:
-                            wallet_script->notify({get_insufficient_funds_message()});
+                            wallet_script->notify(ShoppingTransactionEvent{get_insufficient_funds_message()});
                             item_carrier.put_down_active_item();
                         }
                     }
                     else
                     {
                         // Transaction is possible - should prompt observers (i.e HUD) about it:
-                        wallet_script->notify({get_possible_transaction_message(item.get_type(), item_saleable.get_price_dollars())});
+                        wallet_script->notify(ShoppingTransactionEvent{get_possible_transaction_message(item.get_type(), item_saleable.get_price_dollars())});
                     }
                 }
             }
@@ -187,6 +217,36 @@ void ShoppingSystem::update_transactions()
 
 void ShoppingSystem::update_items_out_of_shop()
 {
-    // TODO: Check if item with SaleableComponent is out of shop zone, if so, change state of shopkeeper to "angry"
-    //       "COME BACK HERE, THIEF!" <- Prompt when item taken out of shop zone without purchase
+    auto& registry = EntityRegistry::instance().get_registry();
+    auto saleable_items = registry.view<ItemComponent, SaleableComponent, PositionComponent, PhysicsComponent>();
+
+    saleable_items.each([&](entt::entity item_for_sale_entity,
+                                 ItemComponent& item,
+                                 SaleableComponent& item_saleable,
+                                 PositionComponent& item_position,
+                                 PhysicsComponent& item_physics)
+    {
+        if (_robbed)
+        {
+            return;
+        }
+        else if (!item_physics.is_collision(item_saleable.get_shop_zone(), item_saleable.get_shop_position(), item_position))
+        {
+            const entt::entity thief = item.is_carried() ? item.get_item_carrier_entity() : entt::null;
+            notify(ThieveryEvent{thief});
+            remove_all_saleables();
+            _robbed = true;
+        }
+    });
+}
+
+void ShoppingSystem::on_notify(const ShopkeeperAssaultEvent *)
+{
+    if (_robbed)
+    {
+        return;
+    }
+
+    remove_all_saleables();
+    _robbed = true;
 }

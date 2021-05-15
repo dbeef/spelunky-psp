@@ -18,6 +18,8 @@
 
 namespace
 {
+    constexpr uint16_t cooldown_time_ms =  750;
+
     class ShotgunScript final : public ScriptBase
     {
     public:
@@ -38,7 +40,7 @@ namespace
             auto& physics = registry.get<PhysicsComponent>(owner);
             auto& orientation = registry.get<HorizontalOrientationComponent>(owner);
 
-            if (activable.activated && _cooldown_timer_ms > 750)
+            if (activable.activated && _cooldown_timer_ms >= cooldown_time_ms)
             {
                 Audio::instance().play(SFXType::SHOTGUN);
 
@@ -78,7 +80,7 @@ namespace
             }
         }
     private:
-        uint32_t _cooldown_timer_ms = 750;
+        uint32_t _cooldown_timer_ms = cooldown_time_ms;
     };
 }
 

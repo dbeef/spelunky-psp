@@ -3,9 +3,11 @@
 #include "prefabs/npc/ShopkeeperScript.hpp"
 
 #include "components/generic/QuadComponent.hpp"
+#include "components/generic/SaleableComponent.hpp"
 #include "components/generic/ItemComponent.hpp"
 #include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
+#include "components/generic/ActivableComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/damage/TakeJumpOnTopDamage.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
@@ -21,10 +23,8 @@ namespace prefabs
         auto& registry = EntityRegistry::instance().get_registry();
         auto& physics = registry.get<PhysicsComponent>(id);
 
-        if (shopkeeper._angry)
-        {
-            // TODO
-        }
+        shopkeeper.follow_customer(id);
+        shopkeeper.do_angry_stuff(id, delta_time_ms);
 
         if (physics.get_x_velocity() == 0.0f)
         {
@@ -56,6 +56,9 @@ namespace prefabs
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& physics = registry.get<PhysicsComponent>(id);
+
+        shopkeeper.follow_customer(id);
+        shopkeeper.do_angry_stuff(id, delta_time_ms);
 
         if (physics.get_x_velocity() == 0.0f && physics.get_y_velocity() == 0.0f)
         {
@@ -168,7 +171,7 @@ namespace prefabs
         return this;
     }
 
-    void ShopkeeperDeadState::enter(ShopkeeperScript&, entt::entity id)
+    void ShopkeeperDeadState::enter(ShopkeeperScript& shopkeeper, entt::entity id)
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& quad = registry.get<QuadComponent>(id);
