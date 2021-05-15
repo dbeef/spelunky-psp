@@ -19,7 +19,7 @@ void prefabs::CavemanProjectileDamageObserver::on_notify(const TakenProjectileDa
     ParticleGenerator().particle_type(ParticleType::BLOOD)
             .position(position.x_center, position.y_center)
             .max_velocity(0.25f, 0.25f)
-            .quantity(4)
+            .quantity(2)
             .finalize();
 
     auto& scripting_component = registry.get<ScriptingComponent>(_caveman);
@@ -46,7 +46,7 @@ void prefabs::CavemanMeleeDamageObserver::on_notify(const TakenMeleeDamageEvent 
     ParticleGenerator().particle_type(ParticleType::BLOOD)
             .position(position.x_center, position.y_center)
             .max_velocity(0.25f, 0.25f)
-            .quantity(4)
+            .quantity(2)
             .finalize();
 
     auto& scripting_component = registry.get<ScriptingComponent>(_caveman);
@@ -62,8 +62,6 @@ void prefabs::CavemanJumpOnTopDamageObserver::on_notify(const TakenJumpOnTopDama
     auto& physics = registry.get<PhysicsComponent>(_caveman);
     auto& position = registry.get<PositionComponent>(_caveman);
 
-    physics.add_velocity(0.0f, -0.1f);
-
     if (hitpoints.get_hitpoints() <= 0)
     {
         // Already handled by CavemanDeathObserver
@@ -73,7 +71,7 @@ void prefabs::CavemanJumpOnTopDamageObserver::on_notify(const TakenJumpOnTopDama
     ParticleGenerator().particle_type(ParticleType::BLOOD)
             .position(position.x_center, position.y_center)
             .max_velocity(0.25f, 0.25f)
-            .quantity(4)
+            .quantity(2)
             .finalize();
 
     auto& scripting_component = registry.get<ScriptingComponent>(_caveman);
@@ -90,7 +88,7 @@ void prefabs::CavemanDeathObserver::on_notify(const DeathEvent *)
     ParticleGenerator().particle_type(ParticleType::BLOOD)
             .position(position.x_center, position.y_center)
             .max_velocity(0.25f, 0.25f)
-            .quantity(4)
+            .quantity(2)
             .finalize();
 
     auto& scripting_component = registry.get<ScriptingComponent>(_caveman);

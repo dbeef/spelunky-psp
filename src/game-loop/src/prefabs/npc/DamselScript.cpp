@@ -20,7 +20,7 @@ void prefabs::DamselProjectileDamageObserver::on_notify(const ProjectileDamage_t
     ParticleGenerator().particle_type(ParticleType::BLOOD)
             .position(position.x_center, position.y_center)
             .max_velocity(0.25f, 0.25f)
-            .quantity(4)
+            .quantity(2)
             .finalize();
 
     auto& scripting_component = registry.get<ScriptingComponent>(_damsel);
@@ -37,7 +37,7 @@ void prefabs::DamselDeathObserver::on_notify(const DeathEvent *)
     ParticleGenerator().particle_type(ParticleType::BLOOD)
             .position(position.x_center, position.y_center)
             .max_velocity(0.25f, 0.25f)
-            .quantity(4)
+            .quantity(2)
             .finalize();
 
     auto& scripting_component = registry.get<ScriptingComponent>(_damsel);

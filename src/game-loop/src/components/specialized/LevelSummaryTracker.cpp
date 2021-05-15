@@ -25,6 +25,7 @@ void LevelSummaryTracker::entered_new_level()
     _time_playing_current_level_ms = 0;
     _dollars_beginning = _dollars_end;
     _loot_collected_events.clear();
+    _npc_killed_events.clear();
 }
 
 void LevelSummaryTracker::reset()
