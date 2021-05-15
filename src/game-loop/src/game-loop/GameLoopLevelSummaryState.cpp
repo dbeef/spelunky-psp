@@ -16,6 +16,7 @@
 #include "system/PhysicsSystem.hpp"
 #include "system/AnimationSystem.hpp"
 #include "system/ItemSystem.hpp"
+#include "system/ParticleSystem.hpp"
 
 #include "EntityRegistry.hpp"
 #include "logger/log.h"
@@ -34,6 +35,7 @@ GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32
     auto& physics_system = game_loop._physics_system;
     auto& animation_system = game_loop._animation_system;
     auto& item_system = game_loop._item_system;
+    auto& particle_system = game_loop._particle_system;
     auto& disposing_system = game_loop._disposing_system;
 
     rendering_system->update(delta_time_ms);
@@ -42,6 +44,7 @@ GameLoopBaseState *GameLoopLevelSummaryState::update(GameLoop& game_loop, uint32
     animation_system->update(delta_time_ms);
     item_system->update(delta_time_ms);
     disposing_system->update(delta_time_ms);
+    particle_system->update(delta_time_ms);
 
     auto& dude = registry.get<MainDudeComponent>(_main_dude);
 

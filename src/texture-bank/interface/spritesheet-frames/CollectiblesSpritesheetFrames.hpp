@@ -121,4 +121,11 @@ enum class CollectiblesSpritesheetFrames : std::uint16_t
     BOMB_BAG,
     GOLDEN_IDOL,
     BIG_COLLECT_EFFECT,
+    FLARE_0_FIRST,
+    FLARE_1_LAST,
+    FLARE_SPARK_0_FIRST,
+    FLARE_SPARK_1,
+    FLARE_SPARK_2,
+    FLARE_SPARK_3,
+    FLARE_SPARK_4_LAST,
 };

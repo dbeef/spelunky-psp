@@ -12,6 +12,7 @@
 #include "prefabs/collectibles/TripleGoldBar.hpp"
 #include "prefabs/collectibles/BigGem.hpp"
 #include "prefabs/items/Rock.hpp"
+#include "prefabs/items/Flare.hpp"
 #include "prefabs/items/Jar.hpp"
 #include "prefabs/items/Whip.hpp"
 #include "prefabs/items/Crate.hpp"
@@ -77,6 +78,7 @@ void Populator::generate_inventory_items(entt::entity main_dude)
             case ItemType::SPIKE_SHOES: item = prefabs::SpikeShoes::create(); break;
             case ItemType::SPRING_SHOES: item = prefabs::SpringShoes::create(); break;
             case ItemType::COMPASS: item = prefabs::Compass::create(); break;
+            case ItemType::FLARE: item = prefabs::Flare::create(); break;
             // These items are added by default when creating main dude instance:
             case ItemType::WHIP:
             case ItemType::BOMB_SPAWNER:

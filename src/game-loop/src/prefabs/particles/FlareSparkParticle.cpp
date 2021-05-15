@@ -1,4 +1,4 @@
-#include "prefabs/particles/FlameTrailParticle.hpp"
+#include "prefabs/particles/FlareSparkParticle.hpp"
 
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
@@ -11,30 +11,30 @@
 #include "TextureType.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
 
-entt::entity prefabs::FlameTrailParticle::create()
+entt::entity prefabs::FlareSparkParticle::create()
 {
     return create(0, 0);
 }
 
-entt::entity prefabs::FlameTrailParticle::create(float pos_x_center, float pos_y_center)
+entt::entity prefabs::FlareSparkParticle::create(float pos_x_center, float pos_y_center)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
     const auto entity = registry.create();
 
-    const float width = 0.5f;
-    const float height = 0.5f;
+    const float width = 0.25f;
+    const float height = 0.25f;
 
     PositionComponent position(pos_x_center, pos_y_center);
     QuadComponent quad(TextureType::COLLECTIBLES, width, height);
     MeshComponent mesh;
     AnimationComponent animation;
 
-    quad.frame_changed<CollectiblesSpritesheetFrames>(CollectiblesSpritesheetFrames::FLAME_TRAIL_0_FIRST);
+    quad.frame_changed<CollectiblesSpritesheetFrames>(CollectiblesSpritesheetFrames::FLARE_SPARK_0_FIRST);
 
-    animation.start(static_cast<std::size_t>(CollectiblesSpritesheetFrames::FLAME_TRAIL_0_FIRST),
-                    static_cast<std::size_t>(CollectiblesSpritesheetFrames::FLAME_TRAIL_4_LAST),
-                    110, false);
+    animation.start(static_cast<std::size_t>(CollectiblesSpritesheetFrames::FLARE_SPARK_0_FIRST),
+                    static_cast<std::size_t>(CollectiblesSpritesheetFrames::FLARE_SPARK_4_LAST),
+                    110, true);
 
     mesh.rendering_layer = RenderingLayer::LAYER_4_DUDE;
     mesh.camera_type = CameraType::MODEL_VIEW_SPACE;

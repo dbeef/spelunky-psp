@@ -5,6 +5,7 @@
 #include "prefabs/particles/ItemCollectedParticle.hpp"
 #include "prefabs/particles/BloodTrailParticle.hpp"
 #include "prefabs/particles/FlameTrailParticle.hpp"
+#include "prefabs/particles/FlareSparkParticle.hpp"
 
 #include <cassert>
 
@@ -33,6 +34,11 @@ void ParticleSystem::update(std::uint32_t delta_time_ms)
                 case ParticleType::FLAME_TRAIL:
                 {
                     prefabs::FlameTrailParticle::create(position.x_center, position.y_center);
+                    break;
+                }
+                case ParticleType::FLARE_SPARK:
+                {
+                    prefabs::FlareSparkParticle::create(position.x_center, position.y_center);
                     break;
                 }
                 case ParticleType::ROPE_COLLECTED:break;
