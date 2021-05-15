@@ -74,8 +74,27 @@ void DamageSystem::update_melee_damage(std::uint32_t delta_time_ms)
                                  PhysicsComponent& projectile_physics,
                                  PositionComponent& projectile_position)
     {
-        give_damage.update_cooldown(delta_time_ms);
-        bool damage_given = false;
+        // Check if bodies from last update still do overlap:
+        auto& last_update_overlapping_bodies = give_damage.get_last_update_overlaping_bodies();
+        const auto it = std::remove_if(last_update_overlapping_bodies.begin(),
+                                       last_update_overlapping_bodies.end(),
+                                       [&](const entt::entity recently_overlapped_body)
+        {
+            if (!registry.valid(recently_overlapped_body))
+            {
+                return true;
+            }
+
+            auto& recent_body_physics = registry.get<PhysicsComponent>(recently_overlapped_body);
+            auto& recent_body_position = registry.get<PositionComponent>(recently_overlapped_body);
+
+            return !projectile_physics.is_collision(recent_body_physics, recent_body_position, projectile_position);
+        });
+
+        if  (it != last_update_overlapping_bodies.end())
+        {
+            last_update_overlapping_bodies.erase(it);
+        }
 
         bodies.each([&](
                 entt::entity take_damage_entity,
@@ -84,7 +103,7 @@ void DamageSystem::update_melee_damage(std::uint32_t delta_time_ms)
                 PhysicsComponent& body_physics,
                 PositionComponent& body_position)
         {
-            if (!give_damage.cooldown_reached())
+            if (std::find(last_update_overlapping_bodies.begin(), last_update_overlapping_bodies.end(), take_damage_entity) != last_update_overlapping_bodies.end())
             {
                 return;
             }
@@ -94,19 +113,15 @@ void DamageSystem::update_melee_damage(std::uint32_t delta_time_ms)
                 return;
             }
 
+            last_update_overlapping_bodies.push_back(take_damage_entity);
+
             TakenMeleeDamageEvent event;
             event.amount = give_damage.get_damage();
             event.source = give_damage_entity;
 
             take_damage.notify(event);
             remove_hitpoints(event.amount, take_damage_entity);
-            damage_given = true;
         });
-
-        if (damage_given)
-        {
-            give_damage.reset_cooldown();
-        }
     };
 
     registry.view<GiveMeleeDamageComponent, PhysicsComponent, PositionComponent>().each(give_melee_damage);
