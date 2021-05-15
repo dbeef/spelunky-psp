@@ -11,6 +11,7 @@ enum class ParticleType
     FLAME_TRAIL,
     BLOOD,
     FLAME,
+    FLARE_SPARK,
 };
 
 struct ParticleEmitterComponent

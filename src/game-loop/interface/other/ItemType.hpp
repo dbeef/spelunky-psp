@@ -27,5 +27,6 @@ enum class ItemType
     BOMB_BAG,
     ROPE_PILE,
     GOLDEN_IDOL,
+    FLARE,
     _SIZE
 };

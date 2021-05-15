@@ -30,6 +30,7 @@
 #include "prefabs/props/MainLogo.hpp"
 #include "prefabs/props/CopyrightsSign.hpp"
 #include "prefabs/items/RopeChainElement.hpp"
+#include "prefabs/items/Flare.hpp"
 #include "prefabs/main-dude/MainDude.hpp"
 #include "prefabs/ui/PauseOverlay.hpp"
 
@@ -139,6 +140,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     prefabs::QuitSign::create(16.0, 1.5);
     prefabs::MainLogo::create(9.75, 5.5);
     prefabs::CopyrightsSign::create(10.0, 10.75);
+    prefabs::Flare::create(16.5, 9.5);
 
     for (int index = 0; index < 18; index++)
     {
@@ -159,8 +161,15 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
 
 void GameLoopMainMenuState::exit(GameLoop& game_loop)
 {
+    auto& registry = EntityRegistry::instance().get_registry();
     Audio::instance().stop();
 
-    auto& registry = EntityRegistry::instance().get_registry();
+    auto& dude = registry.get<MainDudeComponent>(_main_dude);
+    auto& dude_item_carrier_component = registry.get<ItemCarrierComponent>(_main_dude);
+
+    // Save collected item types in inventory which is persistent between the levels:
+    auto& inventory = Inventory::instance();
+    inventory.set_items(dude_item_carrier_component.get_items());
+
     registry.clear();
 }
