@@ -29,6 +29,7 @@
 #include "prefabs/props/QuitSign.hpp"
 #include "prefabs/props/MainLogo.hpp"
 #include "prefabs/props/CopyrightsSign.hpp"
+#include "prefabs/items/RopeChainElement.hpp"
 #include "prefabs/main-dude/MainDude.hpp"
 #include "prefabs/ui/PauseOverlay.hpp"
 
@@ -39,6 +40,7 @@ namespace
     const Point2D PLAY_COORDS = {5, 9};
     const Point2D SCORES_COORDS = {9, 9};
     const Point2D TUTORIAL_COORDS = {1, 9};
+    const float EXIT_LEVEL_Y = 1.0f;
 }
 
 GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t delta_time_ms)
@@ -80,10 +82,10 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
     }
 
     auto& dude = registry.get<MainDudeComponent>(_main_dude);
+    auto& position = registry.get<PositionComponent>(_main_dude);
 
     if (dude.entered_door())
     {
-        auto& position = registry.get<PositionComponent>(_main_dude);
         const Point2D position_in_tiles = {std::floor(position.x_center), std::floor(position.y_center)};
 
         if (position_in_tiles == PLAY_COORDS)
@@ -98,6 +100,12 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
         {
             assert(false);
         }
+    }
+
+    if (position.y_center <= EXIT_LEVEL_Y)
+    {
+        log_info("Quitting using rope.");
+        game_loop._exit = true;
     }
 
     return this;
@@ -131,6 +139,15 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     prefabs::QuitSign::create(16.0, 1.5);
     prefabs::MainLogo::create(9.75, 5.5);
     prefabs::CopyrightsSign::create(10.0, 10.75);
+
+    for (int index = 0; index < 18; index++)
+    {
+        const float x = 17.5f;
+        const float y = 0.5f * index;
+        prefabs::RopeChainElement::create(x, y);
+        auto& tile_batch = Level::instance().get_tile_batch();
+        tile_batch.map_tiles[static_cast<int>(x)][static_cast<int>(y)]->climbable = true;
+    }
 
     _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::MAIN_MENU);
     _main_dude = prefabs::MainDude::create(17.5, 9.5);
