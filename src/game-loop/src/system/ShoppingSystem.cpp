@@ -7,7 +7,6 @@
 #include "prefabs/particles/ItemCollectedParticle.hpp"
 #include "prefabs/particles/RopeCollectedParticle.hpp"
 #include "prefabs/particles/BombCollectedParticle.hpp"
-#include "prefabs/npc/ShopkeeperScript.hpp"
 
 #include "components/generic/SaleableComponent.hpp"
 #include "components/generic/ActivableComponent.hpp"
@@ -35,11 +34,11 @@ namespace
         auto& item = registry.get<ItemComponent>(item_id);
         auto& position = registry.get<PositionComponent>(item_id);
         auto& saleable = registry.get<SaleableComponent>(item_id);
-        auto item_carrier_entt = item.is_carried() ? item.get_item_carrier_entity() : entt::null;
+        auto item_carrier_entity = item.is_carried() ? item.get_item_carrier_entity() : entt::null;
 
-        if (item_carrier_entt != entt::null)
+        if (item_carrier_entity != entt::null)
         {
-            auto& item_carrier = registry.get<ItemCarrierComponent>(item_carrier_entt);
+            auto& item_carrier = registry.get<ItemCarrierComponent>(item_carrier_entity);
             item_carrier.put_down_active_item();
         }
 
@@ -59,10 +58,10 @@ namespace
 
         registry.remove<SaleableComponent>(item_id);
 
-        if (item_carrier_entt != entt::null)
+        if (item_carrier_entity != entt::null)
         {
-            auto& item_carrier = registry.get<ItemCarrierComponent>(item_carrier_entt);
-            item_carrier.pick_up_item(item_id, item_carrier_entt);
+            auto& item_carrier = registry.get<ItemCarrierComponent>(item_carrier_entity);
+            item_carrier.pick_up_item(item_id, item_carrier_entity);
         }
     }
 
@@ -160,13 +159,12 @@ void ShoppingSystem::update_transactions()
     auto saleable_items = registry.view<ItemComponent, SaleableComponent, PositionComponent>();
 
     saleable_items.each([&registry](entt::entity item_for_sale_entity,
-                                    ItemComponent& item,
-                                    SaleableComponent& item_saleable,
-                                    PositionComponent& item_position)
+                                         ItemComponent& item,
+                                         SaleableComponent& item_saleable,
+                                         PositionComponent& item_position)
     {
         if (item.is_carried())
         {
-            auto item_carrier_entity = item.get_item_carrier_entity();
             auto& item_carrier = registry.get<ItemCarrierComponent>(item.get_item_carrier_entity());
             const auto& items = item_carrier.get_items();
             const auto carried_item_entities = item_carrier.get_item_entities();
@@ -195,21 +193,21 @@ void ShoppingSystem::update_transactions()
                         if (Inventory::instance().get_dollars() >= item_saleable.get_price_dollars())
                         {
                             Inventory::instance().remove_dollars(item_saleable.get_price_dollars());
-                            wallet_script->notify({get_successful_transaction_message(item.get_type())});
+                            wallet_script->notify(ShoppingTransactionEvent{get_successful_transaction_message(item.get_type())});
                             Audio::instance().play(SFXType::PICKUP);
                             remove_saleable(item_for_sale_entity, true);
                         }
                         else
                         {
                             // Transaction failed - not enough dollars - should prompt observers (i.e HUD) about it:
-                            wallet_script->notify({get_insufficient_funds_message()});
+                            wallet_script->notify(ShoppingTransactionEvent{get_insufficient_funds_message()});
                             item_carrier.put_down_active_item();
                         }
                     }
                     else
                     {
                         // Transaction is possible - should prompt observers (i.e HUD) about it:
-                        wallet_script->notify({get_possible_transaction_message(item.get_type(), item_saleable.get_price_dollars())});
+                        wallet_script->notify(ShoppingTransactionEvent{get_possible_transaction_message(item.get_type(), item_saleable.get_price_dollars())});
                     }
                 }
             }
@@ -219,24 +217,23 @@ void ShoppingSystem::update_transactions()
 
 void ShoppingSystem::update_items_out_of_shop()
 {
-    if (_robbed)
-    {
-        return;
-    }
-
     auto& registry = EntityRegistry::instance().get_registry();
     auto saleable_items = registry.view<ItemComponent, SaleableComponent, PositionComponent, PhysicsComponent>();
 
     saleable_items.each([&](entt::entity item_for_sale_entity,
-                            ItemComponent& item,
-                            SaleableComponent& item_saleable,
-                            PositionComponent& item_position,
-                            PhysicsComponent& item_physics)
+                                 ItemComponent& item,
+                                 SaleableComponent& item_saleable,
+                                 PositionComponent& item_position,
+                                 PhysicsComponent& item_physics)
     {
-        if (!item_physics.is_collision(item_saleable.get_shop_zone(), item_saleable.get_shop_position(), item_position))
+        if (_robbed)
+        {
+            return;
+        }
+        else if (!item_physics.is_collision(item_saleable.get_shop_zone(), item_saleable.get_shop_position(), item_position))
         {
             const entt::entity thief = item.is_carried() ? item.get_item_carrier_entity() : entt::null;
-            notify({thief});
+            notify(ThieveryEvent{thief});
             remove_all_saleables();
             _robbed = true;
         }

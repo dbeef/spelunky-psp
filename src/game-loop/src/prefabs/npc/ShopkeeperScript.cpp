@@ -4,6 +4,7 @@
 #include "components/damage/HitpointComponent.hpp"
 #include "components/generic/ScriptingComponent.hpp"
 #include "components/generic/SaleableComponent.hpp"
+#include "components/generic/ActivableComponent.hpp"
 #include "components/generic/ItemCarrierComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
@@ -156,22 +157,45 @@ void prefabs::ShopkeeperScript::get_angry(entt::entity shopkeeper)
     _angry = true;
 }
 
-void prefabs::ShopkeeperScript::follow_thief(entt::entity shopkeeper)
+void prefabs::ShopkeeperScript::do_angry_stuff(entt::entity shopkeeper, uint32_t delta_t_ms)
 {
+    if (!_angry)
+    {
+        return;
+    }
+
     auto& registry = EntityRegistry::instance().get_registry();
     auto& position = registry.get<PositionComponent>(shopkeeper);
     auto& physics = registry.get<PhysicsComponent>(shopkeeper);
 
-    if (_angry)
+    auto& item_carrier = registry.get<ItemCarrierComponent>(shopkeeper);
+    if (item_carrier.has_active_item())
     {
-        auto& horizontal_orientation_component = registry.get<HorizontalOrientationComponent>(shopkeeper);
-        switch (horizontal_orientation_component.orientation)
+        auto item_entity = item_carrier.get_item(ItemType::SHOTGUN);
+        if (item_entity != entt::null)
         {
-            case HorizontalOrientation::LEFT: physics.set_x_velocity(-0.12f); break;
-            case HorizontalOrientation::RIGHT: physics.set_x_velocity(0.12f); break;
-            default: assert(false);
+            auto &activable = registry.get<ActivableComponent>(item_entity);
+            activable.activated = true;
         }
+    }
 
+    auto& horizontal_orientation_component = registry.get<HorizontalOrientationComponent>(shopkeeper);
+    switch (horizontal_orientation_component.orientation)
+    {
+        case HorizontalOrientation::LEFT: physics.set_x_velocity(-0.11f); break;
+        case HorizontalOrientation::RIGHT: physics.set_x_velocity(0.11f); break;
+        default: assert(false);
+    }
+
+    if ((physics.is_left_collision() || physics.is_right_collision()) && physics.is_bottom_collision())
+    {
+        physics.set_y_velocity(-1.0f * static_cast<float>(std::rand() % 240) / 1000.0f);
+    }
+
+    _horizontal_orientation_switch_timer_ms -= delta_t_ms;
+
+    if (_horizontal_orientation_switch_timer_ms <= 0 && physics.is_bottom_collision())
+    {
         if (physics.is_left_collision())
         {
             horizontal_orientation_component.orientation = HorizontalOrientation::RIGHT;
@@ -181,20 +205,7 @@ void prefabs::ShopkeeperScript::follow_thief(entt::entity shopkeeper)
             horizontal_orientation_component.orientation = HorizontalOrientation::LEFT;
         }
 
-        // TODO: Jumping in random intervals or/and only on collision
-
-        if (physics.is_bottom_collision())
-        {
-            // Or just randomize in the range of 0.16 - 0.24
-            if (std::rand() % 2)
-            {
-                physics.set_y_velocity(-0.16f);
-            }
-            else
-            {
-                physics.set_y_velocity(-0.24f);
-            }
-        }
+        _horizontal_orientation_switch_timer_ms = 1000 + std::rand() % 1000;
     }
 }
 

@@ -15,7 +15,7 @@
 #include "NPCType.hpp"
 
 #include <vector>
-#include "entt/entt.hpp"
+#include <entt/entt.hpp>
 
 namespace Consts
 {
@@ -48,7 +48,6 @@ public:
 
     ~TileBatch();
 
-    // TODO: Generator params struct
     void generate_new_level_layout(const LevelGeneratorParams& params);
 
     void generate_cave_background();

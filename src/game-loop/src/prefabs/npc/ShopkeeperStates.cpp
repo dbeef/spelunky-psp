@@ -24,7 +24,7 @@ namespace prefabs
         auto& physics = registry.get<PhysicsComponent>(id);
 
         shopkeeper.follow_customer(id);
-        shopkeeper.follow_thief(id);
+        shopkeeper.do_angry_stuff(id, delta_time_ms);
 
         if (physics.get_x_velocity() == 0.0f)
         {
@@ -58,18 +58,7 @@ namespace prefabs
         auto& physics = registry.get<PhysicsComponent>(id);
 
         shopkeeper.follow_customer(id);
-        shopkeeper.follow_thief(id);
-
-        auto& item_carrier = registry.get<ItemCarrierComponent>(id);
-        if (item_carrier.has_active_item())
-        {
-            auto item_entity = item_carrier.get_item(ItemType::SHOTGUN);
-            if (item_entity != entt::null)
-            {
-                auto &activable = registry.get<ActivableComponent>(item_entity);
-                activable.activated = true;
-            }
-        }
+        shopkeeper.do_angry_stuff(id, delta_time_ms);
 
         if (physics.get_x_velocity() == 0.0f && physics.get_y_velocity() == 0.0f)
         {

@@ -97,6 +97,7 @@ namespace prefabs
 
         bool _angry = false;
         int _stunned_timer_ms = 0;
+        int _horizontal_orientation_switch_timer_ms = 0;
 
         ShopkeeperDeathObserver _death_observer;
         ShopkeeperProjectileDamageObserver _projectile_damage_observer;
@@ -118,6 +119,6 @@ namespace prefabs
         } _states;
 
         void follow_customer(entt::entity shopkeeper);
-        void follow_thief(entt::entity shopkeeper);
+        void do_angry_stuff(entt::entity shopkeeper, std::uint32_t delta_time_ms);
     };
 }
