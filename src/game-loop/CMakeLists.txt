@@ -139,6 +139,7 @@ add_library(GameLoop STATIC
         include/prefabs/props/QuitSign.hpp
         include/prefabs/props/MainLogo.hpp
         include/prefabs/props/CopyrightsSign.hpp
+        include/prefabs/props/GithubLink.hpp
         include/prefabs/main-dude/MainDude.hpp
         include/prefabs/ui/PauseOverlay.hpp
         include/prefabs/ui/ScoresOverlay.hpp
@@ -210,6 +211,7 @@ add_library(GameLoop STATIC
         src/prefabs/props/CopyrightsSign.cpp
         src/prefabs/props/MainLogo.cpp
         src/prefabs/props/TutorialSign.cpp
+        src/prefabs/props/GithubLink.cpp
         src/prefabs/main-dude/MainDude.cpp
         src/prefabs/ui/PauseOverlay.cpp
         src/prefabs/ui/ScoresOverlay.cpp

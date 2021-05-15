@@ -11,4 +11,5 @@ enum class MainMenuSpritesheetFrames : std::uint16_t
     START,
     COPYRIGHTS,
     RESET,
+    GITHUB_LINK,
 };
