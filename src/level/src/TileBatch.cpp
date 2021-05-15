@@ -39,14 +39,6 @@ namespace
         DOWN
     };
 
-    int get_random_number()
-    {
-        static std::random_device random_device;
-        std::default_random_engine engine(random_device());
-        std::uniform_int_distribution<int> uniform_dist(1, 6);
-        return uniform_dist(engine);
-    }
-
     void obtain_new_direction(int curr_x, Direction &direction)
     {
         if (curr_x == 0)
@@ -62,7 +54,7 @@ namespace
         else
         {
             // We're in the middle, so make a guess where should we go now (only left/right allowed):
-            direction = static_cast<Direction>(get_random_number() % 2);
+            direction = static_cast<Direction>(std::rand() % 2);
         }
     }
 }
@@ -79,7 +71,7 @@ void TileBatch::generate_new_level_layout()
     }
 
     // Set starting position to the random room in the upper-most row:
-    int curr_x = get_random_number() % ROOMS_COUNT_WIDTH;
+    int curr_x = std::rand() % ROOMS_COUNT_WIDTH;
     int curr_y = ROOMS_COUNT_HEIGHT - 1;
 
     // Direction represents where the generator will go in the next loop iteration.
@@ -114,7 +106,7 @@ void TileBatch::generate_new_level_layout()
                     curr_x++;
                 }
 
-                if (curr_y == 0 && !exit_placed && get_random_number() % 2 == 0)
+                if (curr_y == 0 && !exit_placed && std::rand() % 2 == 0)
                 {
                     // We're on the most bottom floor, we didn't plant an exit yet and we've guessed that's the place:
                     exit_placed = true;
@@ -125,7 +117,7 @@ void TileBatch::generate_new_level_layout()
                     _layout[curr_x][curr_y] = RoomType::LEFT_RIGHT;
                 }
 
-                if (get_random_number() % 3 == 2)
+                if (std::rand() % 3 == 2)
                 {
                     // Random chance that we change our direction to go down in the next iteration:
                     direction = Direction::DOWN;
@@ -140,7 +132,7 @@ void TileBatch::generate_new_level_layout()
                 curr_y--;
                 _layout[curr_x][curr_y] = RoomType::LEFT_RIGHT_UP;
 
-                if (curr_y == 0 && !exit_placed && get_random_number() % 2 == 0)
+                if (curr_y == 0 && !exit_placed && std::rand() % 2 == 0)
                 {
                     // If we're on the very bottom floor, no exit planted yet and a guess tells us so, place an exit:
                     exit_placed = true;
@@ -227,7 +219,7 @@ void TileBatch::place_a_shop()
                         level._layout[x + 1][y] != RoomType::CLOSED)
                     {
 
-                        if (get_random_number() % 2 == 0)
+                        if (std::rand() % 2 == 0)
                         {
                             level._layout[x][y] = RoomType::SHOP_LEFT;
                         } else
@@ -323,7 +315,7 @@ void TileBatch::initialise_tiles_from_room_layout()
                 case RoomType::CLOSED:
                 {
                     const int possible_variations = std::extent<decltype(closed_rooms)>::value;
-                    const int room_index = get_random_number() % possible_variations;
+                    const int room_index = std::rand() % possible_variations;
                     _layout_room_ids[room_x][room_y] = room_index;
                     memcpy(temp, closed_rooms[room_index], sizeof(closed_rooms[room_index]));
                     break;
@@ -331,7 +323,7 @@ void TileBatch::initialise_tiles_from_room_layout()
                 case RoomType::LEFT_RIGHT:
                 {
                     const int possible_variations = std::extent<decltype(left_right_rooms)>::value;
-                    const int room_index = get_random_number() % possible_variations;
+                    const int room_index = std::rand() % possible_variations;
                     _layout_room_ids[room_x][room_y] = room_index;
                     memcpy(temp, left_right_rooms[room_index], sizeof(left_right_rooms[room_index]));
                     break;
@@ -339,7 +331,7 @@ void TileBatch::initialise_tiles_from_room_layout()
                 case RoomType::LEFT_RIGHT_DOWN:
                 {
                     const int possible_variations = std::extent<decltype(left_right_down_rooms)>::value;
-                    const int room_index = get_random_number() % possible_variations;
+                    const int room_index = std::rand() % possible_variations;
                     _layout_room_ids[room_x][room_y] = room_index;
                     memcpy(temp, left_right_down_rooms[room_index], sizeof(left_right_down_rooms[room_index]));
                     break;
@@ -347,7 +339,7 @@ void TileBatch::initialise_tiles_from_room_layout()
                 case RoomType::LEFT_RIGHT_UP:
                 {
                     const int possible_variations = std::extent<decltype(left_right_up_rooms)>::value;
-                    const int room_index = get_random_number() % possible_variations;
+                    const int room_index = std::rand() % possible_variations;
                     _layout_room_ids[room_x][room_y] = room_index;
                     memcpy(temp, left_right_up_rooms[room_index], sizeof(left_right_up_rooms[room_index]));
                     break;
@@ -355,7 +347,7 @@ void TileBatch::initialise_tiles_from_room_layout()
                 case RoomType::ENTRANCE:
                 {
                     const int possible_variations = std::extent<decltype(entrance_room)>::value;
-                    const int room_index = get_random_number() % possible_variations;
+                    const int room_index = std::rand() % possible_variations;
                     _layout_room_ids[room_x][room_y] = room_index;
                     memcpy(temp, entrance_room[room_index], sizeof(entrance_room[room_index]));
                     break;
@@ -363,7 +355,7 @@ void TileBatch::initialise_tiles_from_room_layout()
                 case RoomType::EXIT:
                 {
                     const int possible_variations = std::extent<decltype(exit_room)>::value;
-                    const int room_index = get_random_number() % possible_variations;
+                    const int room_index = std::rand() % possible_variations;
                     _layout_room_ids[room_x][room_y] = room_index;
                     memcpy(temp, exit_room[room_index], sizeof(exit_room[room_index]));
                     break;
@@ -483,7 +475,7 @@ entt::entity TileBatch::add_render_entity(entt::registry &registry)
 
 void TileBatch::generate_cave_background()
 {
-    int random_offset = get_random_number();
+    int random_offset = std::rand();
 
     for (int x = 0; x < LEVEL_WIDTH_TILES; x++)
     {
@@ -493,7 +485,7 @@ void TileBatch::generate_cave_background()
             {
                 if (x % 4)
                 {
-                    random_offset = get_random_number();
+                    random_offset = std::rand();
                 }
 
                 int type_index = x + y + random_offset;

@@ -116,6 +116,7 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
 void GameLoopPlayingState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopPlayingState");
+    std::srand(game_loop._time_elapsed_ms);
 
     auto& registry = EntityRegistry::instance().get_registry();
 

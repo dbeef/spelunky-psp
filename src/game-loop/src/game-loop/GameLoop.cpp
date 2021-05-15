@@ -42,6 +42,8 @@ GameLoop::GameLoop(const std::shared_ptr<Viewport>& viewport)
 
     _loop = [this](uint32_t delta_time_ms)
     {
+        _time_elapsed_ms += delta_time_ms;
+
         assert(_states.current);
         auto new_state = _states.current->update(*this, delta_time_ms);
 

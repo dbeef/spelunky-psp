@@ -56,6 +56,7 @@ private:
     } _states;
 
     bool _exit = false;
+    std::uint32_t _time_elapsed_ms = 0;
 
     std::shared_ptr<PhysicsSystem> _physics_system;
     std::shared_ptr<AnimationSystem> _animation_system;
