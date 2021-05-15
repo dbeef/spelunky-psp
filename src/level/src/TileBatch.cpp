@@ -59,7 +59,7 @@ namespace
     }
 }
 
-void TileBatch::generate_new_level_layout()
+void TileBatch::generate_new_level_layout(const LevelGeneratorParams& params)
 {
     // Clean the previous layout:
     for (int x = 0; x < ROOMS_COUNT_WIDTH; x++)
@@ -156,7 +156,7 @@ void TileBatch::generate_new_level_layout()
 
     // Post-generation effects:
     place_an_altar();
-    place_a_shop();
+    place_a_shop(params.shopkeeper_robbed);
 }
 
 void TileBatch::place_an_altar()
@@ -175,7 +175,7 @@ void TileBatch::place_an_altar()
     }
 }
 
-void TileBatch::place_a_shop()
+void TileBatch::place_a_shop(bool shopkeeper_robbed)
 {
     auto &level = Level::instance().get_tile_batch();
 
@@ -189,12 +189,14 @@ void TileBatch::place_a_shop()
                 {
                     if (level._layout[x + 1][y] != RoomType::CLOSED)
                     {
-//                        TODO: Uncomment once shopkeeper is implemented.
-//                        if (GameState::instance().robbed_or_killed_shopkeeper)
-//                        if (false)
-//                            level.layout[a][b] = RoomType::SHOP_RIGHT_MUGSHOT;
-//                        else
-                        level._layout[x][y] = RoomType::SHOP_RIGHT;
+                        if (shopkeeper_robbed)
+                        {
+                            level._layout[x][y] = RoomType::SHOP_RIGHT_MUGSHOT;
+                        }
+                        else
+                        {
+                            level._layout[x][y] = RoomType::SHOP_RIGHT;
+                        }
                         return;
                     }
                 }
@@ -202,14 +204,14 @@ void TileBatch::place_a_shop()
                 {
                     if (level._layout[x - 1][y] != RoomType::CLOSED)
                     {
-//                        TODO: Uncomment once shopkeeper is implemented.
-//                        if (GameState::instance().robbed_or_killed_shopkeeper)
-//                        if (false)
-//                            level.layout[a][b] = RoomType::SHOP_LEFT_MUGSHOT;
-//                        else
-
-                        // Placed a shop, can return.
-                        level._layout[x][y] = RoomType::SHOP_LEFT;
+                        if (shopkeeper_robbed)
+                        {
+                            level._layout[x][y] = RoomType::SHOP_LEFT_MUGSHOT;
+                        }
+                        else
+                        {
+                            level._layout[x][y] = RoomType::SHOP_LEFT;
+                        }
                         return;
                     }
                 }

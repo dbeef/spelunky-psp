@@ -92,13 +92,11 @@ namespace prefabs
         void update(entt::entity owner, uint32_t delta_time_ms) override;
         void enter_state(ShopkeeperBaseState* new_state, entt::entity owner);
         void get_angry(entt::entity shopkeeper);
-        void set_thief(entt::entity thief) { if (_thief == entt::null) _thief = thief; }
 
     private:
 
         bool _angry = false;
         int _stunned_timer_ms = 0;
-        entt::entity _thief = entt::null;
 
         ShopkeeperDeathObserver _death_observer;
         ShopkeeperProjectileDamageObserver _projectile_damage_observer;

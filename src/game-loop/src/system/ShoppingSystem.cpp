@@ -19,25 +19,6 @@
 
 namespace
 {
-    void remove_all_saleables()
-    {
-        auto& registry = EntityRegistry::instance().get_registry();
-        auto saleable_items = registry.view<SaleableComponent, ItemComponent, PositionComponent>();
-        saleable_items.each([&registry](entt::entity item_for_sale_entity, SaleableComponent& item_saleable, ItemComponent& item, PositionComponent& item_position)
-                            {
-                                item.set_type(item_saleable.get_original_item_application());
-                                item.set_slot(item_saleable.get_original_item_slot());
-
-                                if (registry.has<ScriptingComponent>(item_for_sale_entity))
-                                {
-                                    auto& scripting_component = registry.get<ScriptingComponent>(item_for_sale_entity);
-                                    scripting_component.script = item_saleable.get_original_script();
-                                }
-
-                                registry.remove<SaleableComponent>(item_for_sale_entity);
-                            });
-    }
-
     void create_transaction_particle(ItemType type, float pos_x_center, float pos_y_center)
     {
         switch (type)
@@ -46,6 +27,53 @@ namespace
             case ItemType::ROPE_PILE: prefabs::RopeCollectedParticle::create(pos_x_center, pos_y_center); break;
             default: prefabs::ItemCollectedParticle::create(pos_x_center, pos_y_center); break;
         }
+    }
+
+    void remove_saleable(entt::entity item_id, bool do_create_transaction_particle)
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto& item = registry.get<ItemComponent>(item_id);
+        auto& position = registry.get<PositionComponent>(item_id);
+        auto& saleable = registry.get<SaleableComponent>(item_id);
+        auto item_carrier_entt = item.is_carried() ? item.get_item_carrier_entity() : entt::null;
+
+        if (item_carrier_entt != entt::null)
+        {
+            auto& item_carrier = registry.get<ItemCarrierComponent>(item_carrier_entt);
+            item_carrier.put_down_active_item();
+        }
+
+        item.set_type(saleable.get_original_item_application());
+        item.set_slot(saleable.get_original_item_slot());
+
+        if (do_create_transaction_particle)
+        {
+            create_transaction_particle(item.get_type(), position.x_center, position.y_center - 0.75f);
+        }
+
+        if (registry.has<ScriptingComponent>(item_id))
+        {
+            auto& scripting_component = registry.get<ScriptingComponent>(item_id);
+            scripting_component.script = saleable.get_original_script();
+        }
+
+        registry.remove<SaleableComponent>(item_id);
+
+        if (item_carrier_entt != entt::null)
+        {
+            auto& item_carrier = registry.get<ItemCarrierComponent>(item_carrier_entt);
+            item_carrier.pick_up_item(item_id, item_carrier_entt);
+        }
+    }
+
+    void remove_all_saleables()
+    {
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto saleable_items = registry.view<SaleableComponent, ItemComponent, PositionComponent>();
+        saleable_items.each([](entt::entity item_for_sale_entity, SaleableComponent&, ItemComponent&, PositionComponent&)
+        {
+            remove_saleable(item_for_sale_entity, false);
+        });
     }
 
     std::string item_name(ItemType type)
@@ -168,29 +196,8 @@ void ShoppingSystem::update_transactions()
                         {
                             Inventory::instance().remove_dollars(item_saleable.get_price_dollars());
                             wallet_script->notify({get_successful_transaction_message(item.get_type())});
-
                             Audio::instance().play(SFXType::PICKUP);
-
-                            item_carrier.put_down_active_item();
-
-                            //
-
-                            item.set_type(item_saleable.get_original_item_application());
-                            item.set_slot(item_saleable.get_original_item_slot());
-
-                            create_transaction_particle(item.get_type(), item_position.x_center, item_position.y_center - 0.75f);
-
-                            if (registry.has<ScriptingComponent>(item_for_sale_entity))
-                            {
-                                auto& scripting_component = registry.get<ScriptingComponent>(item_for_sale_entity);
-                                scripting_component.script = item_saleable.get_original_script();
-                            }
-
-                            registry.remove<SaleableComponent>(item_for_sale_entity);
-
-                            //
-
-                            item_carrier.pick_up_item(item_for_sale_entity, item_carrier_entity);
+                            remove_saleable(item_for_sale_entity, true);
                         }
                         else
                         {

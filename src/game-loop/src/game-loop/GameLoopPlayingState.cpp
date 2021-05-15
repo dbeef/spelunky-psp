@@ -124,7 +124,10 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
     Audio::instance().play(MusicType::CAVE);
 
-    Level::instance().get_tile_batch().generate_new_level_layout();
+    TileBatch::LevelGeneratorParams generator_params;
+    generator_params.shopkeeper_robbed = game_loop._shopping_system->is_robbed();
+
+    Level::instance().get_tile_batch().generate_new_level_layout(generator_params);
     Level::instance().get_tile_batch().initialise_tiles_from_room_layout();
     Level::instance().get_tile_batch().generate_frame();
     Level::instance().get_tile_batch().generate_cave_background();
@@ -186,7 +189,6 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
 
         if (game_loop._shopping_system->is_robbed())
         {
-            shopkeeper_script->set_thief(_main_dude);
             shopkeeper_script-> get_angry(shopkeeper);
         }
     }
@@ -245,7 +247,17 @@ void GameLoopPlayingState::on_notify(const MainDudeEvent* event)
             pause.hide(registry);
             pause.disable_input();
 
-            if (registry.valid(_hud))
+            registry.view<ItemComponent>().each([&registry](entt::entity item_entity, ItemComponent& item)
+            {
+                if (item.get_type() == ItemType::COMPASS)
+                {
+                    auto& compass_scripting_component = registry.get<ScriptingComponent>(item_entity);
+                    auto* compass_script = compass_scripting_component.get<prefabs::CompassScript>();
+                    compass_script->remove_all_observers();
+                }
+            });
+
+            if (_hud != entt::null)
             {
                 auto& item_carrier_component = registry.get<ItemCarrierComponent>(_main_dude);
                 auto& hud_overlay_component = registry.get<HudOverlayComponent>(_hud);
@@ -257,14 +269,12 @@ void GameLoopPlayingState::on_notify(const MainDudeEvent* event)
                 {
                     auto& wallet_scripting_component = registry.get<ScriptingComponent>(wallet_entity);
                     auto* wallet_script = wallet_scripting_component.get<prefabs::WalletScript>();
-
-                    auto& hud_overlay = registry.get<HudOverlayComponent>(_hud);
-                    wallet_script->remove_observer(static_cast<Observer<ShoppingTransactionEvent>*>(&hud_overlay));
+                    wallet_script->remove_observer(static_cast<Observer<ShoppingTransactionEvent>*>(&hud_overlay_component));
                 }
 
                 registry.destroy(_hud);
+                _hud = entt::null;
             }
-            _hud = entt::null;
 
             break;
         }

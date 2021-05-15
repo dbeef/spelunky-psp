@@ -59,9 +59,6 @@ entt::entity prefabs::Shopkeeper::create(float pos_x_center, float pos_y_center)
     TakeJumpOnTopDamageComponent take_jump_on_top_damage;
     take_jump_on_top_damage.add_observer(reinterpret_cast<Observer<TakenJumpOnTopDamageEvent> *>(shopkeeper_script->get_jump_on_top_damage_observer()));
 
-    ItemComponent item(ItemType::BODY, ItemApplication::THROWABLE, ItemSlot::ACTIVE);
-    item.set_weight(7);
-
     registry.emplace<PositionComponent>(entity, pos_x_center, pos_y_center);
     registry.emplace<QuadComponent>(entity, quad);
     registry.emplace<AnimationComponent>(entity);
@@ -75,7 +72,6 @@ entt::entity prefabs::Shopkeeper::create(float pos_x_center, float pos_y_center)
     registry.emplace<TakeJumpOnTopDamageComponent>(entity, take_jump_on_top_damage);
     registry.emplace<NpcTypeComponent>(entity, NpcType::SHOPKEEPER);
     registry.emplace<TakeExplosionDamageComponent>(entity);
-    registry.emplace<ItemComponent>(entity, item);
     registry.emplace<ItemCarrierComponent>(entity);
 
     return entity;

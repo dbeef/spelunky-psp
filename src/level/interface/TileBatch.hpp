@@ -39,11 +39,17 @@ class TileBatch {
 
 public:
 
+    struct LevelGeneratorParams
+    {
+        bool shopkeeper_robbed = false;
+    };
+
     TileBatch();
 
     ~TileBatch();
 
-    void generate_new_level_layout();
+    // TODO: Generator params struct
+    void generate_new_level_layout(const LevelGeneratorParams& params);
 
     void generate_cave_background();
 
@@ -76,7 +82,7 @@ private:
 
     // Finds a closed room that is not blocked from either left or right side by other closed room,
     // and plants a shop there that is oriented to the not-blocked side.
-    void place_a_shop();
+    void place_a_shop(bool shopkeeper_robbed);
 
     std::vector<Vertex> _mesh;
     std::vector<IndexType> _indices;

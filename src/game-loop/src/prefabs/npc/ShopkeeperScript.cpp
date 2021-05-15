@@ -18,8 +18,7 @@ void prefabs::ShopkeeperThieveryObserver::on_notify(const ThieveryEvent* event)
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
     auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
 
-    shopkeeper_script->set_thief(event->thief);
-    shopkeeper_script->notify({shopkeeper_script->_thief});
+    shopkeeper_script->notify(ShopkeeperAssaultEvent{});
     shopkeeper_script->get_angry(_shopkeeper);
 }
 
@@ -43,8 +42,7 @@ void prefabs::ShopkeeperJumpOnTopDamageObserver::on_notify(const TakenJumpOnTopD
 
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
     auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
-    shopkeeper_script->set_thief(event->source);
-    shopkeeper_script->notify({shopkeeper_script->_thief});
+    shopkeeper_script->notify(ShopkeeperAssaultEvent{});
     shopkeeper_script->get_angry(_shopkeeper);
 }
 
@@ -72,25 +70,7 @@ void prefabs::ShopkeeperMeleeDamageObserver::on_notify(const TakenMeleeDamageEve
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
     auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
 
-    // If it's an item - try to find item carrier:
-    if (registry.has<ItemComponent>(event->source))
-    {
-        auto& item = registry.get<ItemComponent>(event->source);
-        if (item.is_carried())
-        {
-            shopkeeper_script->set_thief(item.get_item_carrier_entity());
-        }
-        else
-        {
-            shopkeeper_script->set_thief(event->source);
-        }
-    }
-    else
-    {
-        shopkeeper_script->set_thief(event->source);
-    }
-
-    shopkeeper_script->notify({shopkeeper_script->_thief});
+    shopkeeper_script->notify(ShopkeeperAssaultEvent{});
     shopkeeper_script->get_angry(_shopkeeper);
 }
 
@@ -114,8 +94,7 @@ void prefabs::ShopkeeperProjectileDamageObserver::on_notify(const TakenProjectil
 
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
     auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
-    shopkeeper_script->set_thief(event->source);
-    shopkeeper_script->notify({shopkeeper_script->_thief});
+    shopkeeper_script->notify(ShopkeeperAssaultEvent{});
     shopkeeper_script->get_angry(_shopkeeper);
     shopkeeper_script->enter_state(&shopkeeper_script->_states.stunned, _shopkeeper);
 }
@@ -133,10 +112,9 @@ void prefabs::ShopkeeperDeathObserver::on_notify(const DeathEvent *)
 
     auto& scripting_component = registry.get<ScriptingComponent>(_shopkeeper);
     auto* shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
-    shopkeeper_script->notify({shopkeeper_script->_thief});
+    shopkeeper_script->notify(ShopkeeperAssaultEvent{});
+    shopkeeper_script->get_angry(_shopkeeper);
     shopkeeper_script->enter_state(&shopkeeper_script->_states.dead, _shopkeeper);
-    // TODO: If killed by main dude, set some permanent flag to indicate that other shopkeepers
-    //       should be automatically hostile to main dude.
 }
 
 void prefabs::ShopkeeperScript::update(entt::entity owner, uint32_t delta_time_ms)
@@ -171,6 +149,10 @@ void prefabs::ShopkeeperScript::get_angry(entt::entity shopkeeper)
 
     registry.emplace<GiveNpcTouchDamageComponent>(shopkeeper);
 
+    ItemComponent item(ItemType::BODY, ItemApplication::THROWABLE, ItemSlot::ACTIVE);
+    item.set_weight(7);
+    registry.emplace<ItemComponent>(shopkeeper, item);
+
     _angry = true;
 }
 
@@ -180,19 +162,28 @@ void prefabs::ShopkeeperScript::follow_thief(entt::entity shopkeeper)
     auto& position = registry.get<PositionComponent>(shopkeeper);
     auto& physics = registry.get<PhysicsComponent>(shopkeeper);
 
-    // Following thief is done, but again, how to detect a thief that does not attack but simply take out some item?
-    // Define shop zone? Item distance from original placing?
-
-    if (_thief != entt::null && registry.valid(_thief))
+    if (_angry)
     {
-        auto& thief_position = registry.get<PositionComponent>(_thief);
-        const auto pos_diff_x = position.x_center - thief_position.x_center;
-        if (std::fabs(pos_diff_x) > 0.5f * MapTile::PHYSICAL_WIDTH)
+        auto& horizontal_orientation_component = registry.get<HorizontalOrientationComponent>(shopkeeper);
+        switch (horizontal_orientation_component.orientation)
         {
-            physics.set_x_velocity(std::copysign(0.12f, -pos_diff_x));
+            case HorizontalOrientation::LEFT: physics.set_x_velocity(-0.12f); break;
+            case HorizontalOrientation::RIGHT: physics.set_x_velocity(0.12f); break;
+            default: assert(false);
         }
-        const auto pos_diff_y = position.y_center - thief_position.y_center;
-        if (physics.is_bottom_collision() && std::fabs(pos_diff_y) > 1 * MapTile::PHYSICAL_HEIGHT)
+
+        if (physics.is_left_collision())
+        {
+            horizontal_orientation_component.orientation = HorizontalOrientation::RIGHT;
+        }
+        else if (physics.is_right_collision())
+        {
+            horizontal_orientation_component.orientation = HorizontalOrientation::LEFT;
+        }
+
+        // TODO: Jumping in random intervals or/and only on collision
+
+        if (physics.is_bottom_collision())
         {
             // Or just randomize in the range of 0.16 - 0.24
             if (std::rand() % 2)
@@ -225,7 +216,7 @@ void prefabs::ShopkeeperScript::follow_customer(entt::entity shopkeeper)
             const auto pos_diff_x = position.x_center - item_carrier_position.x_center;
             if (std::fabs(pos_diff_x) > 1 * MapTile::PHYSICAL_WIDTH)
             {
-                physics.set_x_velocity(std::copysign(0.05f, -pos_diff_x));
+                physics.set_x_velocity(copysign(0.05f, -pos_diff_x));
             }
         }
     });
