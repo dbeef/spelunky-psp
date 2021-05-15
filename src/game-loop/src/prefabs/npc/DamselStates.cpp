@@ -10,6 +10,7 @@
 #include "components/generic/ItemComponent.hpp"
 #include "components/generic/AnimationComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
+#include "components/damage/GiveProjectileDamageComponent.hpp"
 #include "components/damage/TakeMeleeDamageComponent.hpp"
 #include "components/damage/TakeExplosionDamageComponent.hpp"
 #include "components/damage/TakeProjectileDamageComponent.hpp"
@@ -371,6 +372,8 @@ namespace prefabs
         physics.set_bounciness(0.4f);
         quad.frame_changed<NPCSpritesheetFrames>(NPCSpritesheetFrames::DAMSEL_DEAD);
         animation.stop();
+
+        if (!registry.has<GiveProjectileDamageComponent>(id)) registry.emplace<GiveProjectileDamageComponent>(id, 1);
     }
 
     void DamselDeadState::exit(DamselScript&, entt::entity id)

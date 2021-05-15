@@ -2,6 +2,7 @@
 
 #include "patterns/Subject.hpp"
 #include "components/generic/PhysicsComponent.hpp"
+#include <vector>
 
 using MutualDamage_t = int;
 using ProjectileDamage_t = int;
@@ -44,8 +45,14 @@ public:
         _last_throw_source = last_throw_source;
     }
 
+    std::vector<entt::entity>& get_last_update_overlaping_bodies()
+    {
+        return _last_update_overlaping_bodies;
+    }
+
 private:
     ProjectileDamage_t _damage_given = 0;
     entt::entity _last_throw_source = entt::null;
+    std::vector<entt::entity> _last_update_overlaping_bodies;
     bool _mutual = false;
 };
