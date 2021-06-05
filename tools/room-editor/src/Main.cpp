@@ -1,10 +1,12 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <fstream>
 
 #include "raylib.h"
 #include "MapTileType.hpp"
 #include "MapTileToString.hpp"
+#include "Serialize.hpp"
 
 namespace
 {
@@ -162,6 +164,9 @@ int main()
 
         EndDrawing();
     }
+
+    std::ofstream out("out.hpp", std::ofstream::out);
+    serialize(out, grid);
 
     CloseWindow();
     return EXIT_SUCCESS;
