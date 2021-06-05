@@ -51,7 +51,6 @@ namespace
         {
             Rectangle dimensions{0, 0, tile_width, tile_height};
 
-            // Check button state
             if (CheckCollisionPointRec(mouse_point, {menu_camera.zoom * position.x, menu_camera.zoom * position.y,
                                                      menu_camera.zoom * dimensions.width, menu_camera.zoom * dimensions.height}))
             {
@@ -87,6 +86,7 @@ namespace
 
     void display_workspace_grid()
     {
+        auto& camera = workspace_grid_camera;
         Rectangle dimensions{0, 0, tile_width, tile_height};
         Vector2 position;
 
@@ -97,7 +97,32 @@ namespace
                 position = {x_index * tile_width, y_index * tile_height};
 
                 auto& tile = get_tile_texture(grid[x_index][y_index]);
-                DrawTextureRec(tile, dimensions, position, WHITE);
+
+                if (CheckCollisionPointRec(mouse_point, {camera.offset.x + (camera.zoom * position.x), camera.offset.y + (camera.zoom * position.y),
+                                                         camera.zoom * dimensions.width, camera.zoom * dimensions.height}))
+                {
+                    if (IsMouseButtonDown(MouseButton::MOUSE_LEFT_BUTTON))
+                    {
+                        if (has_selected_tile())
+                        {
+                            grid[x_index][y_index] = static_cast<MapTileType>(selected_tile_index);
+                            auto& selected_tile_texture = get_selected_tile_texture();
+                            DrawTextureRec(selected_tile_texture, {0, 0, dimensions.width * 1.1f, dimensions.height * 1.1f}, position, BLUE);
+                        }
+                        else
+                        {
+                            DrawTextureRec(tile, {0, 0, dimensions.width * 1.1f, dimensions.height * 1.1f}, position, BLUE);
+                        }
+                    }
+                    else
+                    {
+                        DrawTextureRec(tile, {0, 0, dimensions.width * 1.1f, dimensions.height * 1.1f}, position, GREEN);
+                    }
+                }
+                else
+                {
+                    DrawTextureRec(tile, dimensions, position, WHITE);
+                }
             }
         }
     }
