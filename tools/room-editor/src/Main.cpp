@@ -15,6 +15,7 @@
 
 #include "raylib.h"
 #include "MapTileType.hpp"
+#include "MapTileToString.hpp"
 
 namespace
 {
@@ -49,11 +50,15 @@ int main()
     camera.target = {};
     camera.offset = (Vector2){ 0, 0 };
     camera.rotation = 0.0f;
-    camera.zoom = 1.65f;
+    camera.zoom = 1.6f;
+
+    Vector2 mouse_point = { 0.0f, 0.0f };
 
     SetTargetFPS(60);
     while (!WindowShouldClose())
     {
+        mouse_point = GetMousePosition();
+
         BeginDrawing();
         ClearBackground(RAYWHITE);
         BeginMode2D(camera);
@@ -62,10 +67,22 @@ int main()
         const float tile_height = 16;
         Vector2 position {0, 0}; // By convention, it's a left-upper corner of the rectangle
 
+        std::size_t index = 0;
+
         for (const auto& tile : tiles)
         {
             Rectangle dimensions{0, 0, tile_width, tile_height};
             DrawTextureRec(tile, dimensions, position, WHITE);
+
+            // Check button state
+            if (CheckCollisionPointRec(mouse_point, {camera.zoom * position.x, camera.zoom * position.y,
+                                                     camera.zoom * dimensions.width, camera.zoom * dimensions.height}))
+            {
+                std::cout << "Hovering above tile: " << toString(static_cast<MapTileType>(index)) << std::endl;
+
+                if (IsMouseButtonDown(MouseButton::MOUSE_LEFT_BUTTON)) {}
+                if (IsMouseButtonReleased(MouseButton::MOUSE_LEFT_BUTTON)) {}
+            }
 
             if (position.x == 0)
             {
@@ -76,6 +93,8 @@ int main()
                 position.y += (tile_height + 2);
                 position.x = 0;
             }
+
+            index++;
         }
 
         EndMode2D();
@@ -85,80 +104,3 @@ int main()
     CloseWindow();
     return EXIT_SUCCESS;
 }
-
-/*
-int main(void)
-{
-    // Initialization
-    //--------------------------------------------------------------------------------------
-    const int screenWidth = 1280;
-    const int screenHeight = 720;
-
-    InitWindow(screenWidth, screenHeight, "raylib [textures] example - sprite button");
-    InitAudioDevice();      // Initialize audio device
-
-    Texture2D button = LoadTexture("/home/dbeef/Desktop/spelunky-psp/assets/tilesheets/level-tiles/2.png"); // Load button texture
-
-    // Define frame rectangle for drawing
-    float frameHeight = (float)button.height/NUM_FRAMES;
-    Rectangle sourceRec = { 0, 0, (float)button.width, frameHeight };
-
-    // Define button bounds on screen
-    Rectangle btnBounds = { screenWidth/2.0f - button.width/2.0f, screenHeight/2.0f - button.height/NUM_FRAMES/2.0f, (float)button.width, frameHeight };
-
-    int btnState = 0;               // Button state: 0-NORMAL, 1-MOUSE_HOVER, 2-PRESSED
-    bool btnAction = false;         // Button action should be activated
-
-    Vector2 mousePoint = { 0.0f, 0.0f };
-
-    SetTargetFPS(60);
-    //--------------------------------------------------------------------------------------
-
-    // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
-    {
-        // Update
-        //----------------------------------------------------------------------------------
-        mousePoint = GetMousePosition();
-        btnAction = false;
-
-        // Check button state
-        if (CheckCollisionPointRec(mousePoint, btnBounds))
-        {
-            if (IsMouseButtonDown(MouseButton::MOUSE_LEFT_BUTTON)) btnState = 2;
-            else btnState = 1;
-
-            if (IsMouseButtonReleased(MouseButton::MOUSE_LEFT_BUTTON)) btnAction = true;
-        }
-        else btnState = 0;
-
-        if (btnAction)
-        {
-            // TODO: Any desired action
-        }
-
-        // Calculate button frame rectangle to draw depending on button state
-        sourceRec.y = btnState*frameHeight;
-        //----------------------------------------------------------------------------------
-
-        // Draw
-        //----------------------------------------------------------------------------------
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        DrawTextureRec(button, sourceRec, (Vector2){ btnBounds.x, btnBounds.y }, WHITE); // Draw button frame
-        EndDrawing();
-        //----------------------------------------------------------------------------------
-    }
-
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    UnloadTexture(button);  // Unload button texture
-
-    CloseAudioDevice();     // Close audio device
-
-    CloseWindow();          // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
-
-    return 0;
-}
-*/
