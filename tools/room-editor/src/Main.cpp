@@ -10,12 +10,22 @@ namespace
 {
     Texture2D tiles[static_cast<std::size_t>(MapTileType::_SIZE)];
     std::size_t selected_tile_index = -1;
-    Camera2D camera = { 0 };
+    Camera2D menu_camera = { 0 };
+    Camera2D workspace_grid_camera = { 0 };
     Vector2 mouse_point = { 0.0f, 0.0f };
+
+    const std::size_t grid_width = 10;
+    const std::size_t grid_height = 10;
+
+    MapTileType grid[grid_width][grid_height] = {MapTileType::NOTHING};
     const float tile_width = 16;
     const float tile_height = 16;
     const int screenWidth = 1280;
     const int screenHeight = 720;
+
+    bool has_selected_tile() { return selected_tile_index != -1; }
+    Texture2D& get_selected_tile_texture() { assert(has_selected_tile()); return tiles[selected_tile_index]; }
+    Texture2D& get_tile_texture(MapTileType type) { return tiles[static_cast<std::size_t>(type)]; }
 
     void load_tiles(const std::string& assetsPath)
     {
@@ -42,8 +52,8 @@ namespace
             Rectangle dimensions{0, 0, tile_width, tile_height};
 
             // Check button state
-            if (CheckCollisionPointRec(mouse_point, {camera.zoom * position.x, camera.zoom * position.y,
-                                                     camera.zoom * dimensions.width, camera.zoom * dimensions.height}))
+            if (CheckCollisionPointRec(mouse_point, {menu_camera.zoom * position.x, menu_camera.zoom * position.y,
+                                                     menu_camera.zoom * dimensions.width, menu_camera.zoom * dimensions.height}))
             {
                 selected_tile_index = index;
 
@@ -75,8 +85,22 @@ namespace
         }
     }
 
-    bool has_selected_tile() { return selected_tile_index != -1; }
-    Texture2D& get_selected_tile_texture() { assert(has_selected_tile()); return tiles[selected_tile_index]; }
+    void display_workspace_grid()
+    {
+        Rectangle dimensions{0, 0, tile_width, tile_height};
+        Vector2 position;
+
+        for (std::size_t x_index = 0; x_index < grid_width; x_index++)
+        {
+            for (std::size_t y_index = 0; y_index < grid_height; y_index++)
+            {
+                position = {x_index * tile_width, y_index * tile_height};
+
+                auto& tile = get_tile_texture(grid[x_index][y_index]);
+                DrawTextureRec(tile, dimensions, position, WHITE);
+            }
+        }
+    }
 }
 
 int main()
@@ -85,10 +109,15 @@ int main()
 
     load_tiles("/home/dbeef/Desktop/spelunky-psp/"); // FIXME: Maybe pass via cmdline args? With fallback via relative paths?
 
-    camera.target = {};
-    camera.offset = (Vector2){ 2, 2 };
-    camera.rotation = 0.0f;
-    camera.zoom = 1.6f;
+    menu_camera.target = {};
+    menu_camera.offset = (Vector2){ 2, 2 };
+    menu_camera.rotation = 0.0f;
+    menu_camera.zoom = 1.6f;
+
+    workspace_grid_camera.target = {};
+    workspace_grid_camera.offset = (Vector2){ screenWidth / 4, screenHeight / 4 };
+    workspace_grid_camera.rotation = 0.0f;
+    workspace_grid_camera.zoom = 3.0f;
 
     SetTargetFPS(60);
     while (!WindowShouldClose())
@@ -97,11 +126,15 @@ int main()
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        BeginMode2D(camera);
 
+        BeginMode2D(menu_camera);
         display_menu();
-
         EndMode2D();
+
+        BeginMode2D(workspace_grid_camera);
+        display_workspace_grid();
+        EndMode2D();
+
         EndDrawing();
     }
 
