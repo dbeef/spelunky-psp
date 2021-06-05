@@ -2,11 +2,13 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 #include "raylib.h"
 #include "MapTileType.hpp"
 #include "MapTileToString.hpp"
 #include "Serialize.hpp"
+#include "Deserialize.hpp"
 
 namespace
 {
@@ -19,7 +21,8 @@ namespace
     const std::size_t grid_width = 10;
     const std::size_t grid_height = 10;
 
-    MapTileType grid[grid_width][grid_height] = {MapTileType::NOTHING};
+    Room grid = {MapTileType::NOTHING};
+    //MapTileType grid[grid_width][grid_height] = {MapTileType::NOTHING};
     const float tile_width = 16;
     const float tile_height = 16;
     const int screenWidth = 1280;
@@ -147,8 +150,21 @@ namespace
     }
 }
 
-int main()
+int main(int argc, const char** args)
 {
+    std::string headerFilePath;
+
+    if (argc != 2)
+    {
+        std::cout << "Usage: " << args[0] << " <path to header file with 3D array of rooms>" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    headerFilePath = args[1];
+    std::cout << "Using " << headerFilePath << " as input/output header file" << std::endl;
+
+    const auto fileBytes = load_file(headerFilePath);
+
     InitWindow(screenWidth, screenHeight, "SpelunkyPSP room editor");
 
     load_tiles("/home/dbeef/Desktop/spelunky-psp/"); // FIXME: Maybe pass via cmdline args? With fallback via relative paths?
@@ -183,8 +199,14 @@ int main()
         EndDrawing();
     }
 
+    HeaderFile header;
+    header.filePath = headerFilePath;
+    header.fileNamespace = get_namespace_out_of_filename(headerFilePath);
+    header.rooms.push_back(grid);
+
     std::ofstream out("out.hpp", std::ofstream::out);
-    serialize(out, grid);
+    serialize(out, header);
+    serialize(std::cout, header);
 
     CloseWindow();
     return EXIT_SUCCESS;
