@@ -46,9 +46,10 @@ int main()
 
     // Render loop:
 
+
     Camera2D camera = { 0 };
     camera.target = {};
-    camera.offset = (Vector2){ 0, 0 };
+    camera.offset = (Vector2){ 2, 2 };
     camera.rotation = 0.0f;
     camera.zoom = 1.6f;
 
@@ -72,16 +73,19 @@ int main()
         for (const auto& tile : tiles)
         {
             Rectangle dimensions{0, 0, tile_width, tile_height};
-            DrawTextureRec(tile, dimensions, position, WHITE);
 
             // Check button state
             if (CheckCollisionPointRec(mouse_point, {camera.zoom * position.x, camera.zoom * position.y,
                                                      camera.zoom * dimensions.width, camera.zoom * dimensions.height}))
             {
-                std::cout << "Hovering above tile: " << toString(static_cast<MapTileType>(index)) << std::endl;
+                DrawTextureRec(tile, {0, 0, dimensions.width * 1.1f, dimensions.height * 1.1f}, position, GREEN);
 
                 if (IsMouseButtonDown(MouseButton::MOUSE_LEFT_BUTTON)) {}
                 if (IsMouseButtonReleased(MouseButton::MOUSE_LEFT_BUTTON)) {}
+            }
+            else
+            {
+                DrawTextureRec(tile, dimensions, position, WHITE);
             }
 
             if (position.x == 0)
