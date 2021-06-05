@@ -8,12 +8,6 @@ include(cmake/CurrentPlatform.cmake)
 spelunky_psp_detect_platform()
 spelunky_psp_add_platform_dependencies()
 
-if (WITH_DEV_TOOLS)
-    set(OpenGL_GL_PREFERENCE GLVND)
-    add_subdirectory(vendor/raylib)
-    add_subdirectory(tools)
-endif()
-
 set(ASSETS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/assets)
 
 if (SPELUNKY_PSP_PLATFORM_ANDROID)
@@ -87,3 +81,9 @@ install(TARGETS Spelunky_PSP
 )
 
 spelunky_psp_post_build()
+
+if (WITH_DEV_TOOLS)
+    set(OpenGL_GL_PREFERENCE GLVND)
+    add_subdirectory(vendor/raylib)
+    add_subdirectory(tools)
+endif()
