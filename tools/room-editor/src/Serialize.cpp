@@ -47,10 +47,10 @@ void serialize(std::ostream &out, const HeaderFile &header)
     for (const auto& room : rooms)
     {
         out << "{\n";
-        for (std::size_t x_index = 0; x_index < 10; x_index++)
+        for (std::size_t y_index = 0; y_index < 10; y_index++)
         {
             out << "{";
-            for (std::size_t y_index = 0; y_index < 10; y_index++)
+            for (std::size_t x_index = 0; x_index < 10; x_index++)
             {
                 out << static_cast<std::size_t>(room[x_index][y_index]) << ", ";
             }

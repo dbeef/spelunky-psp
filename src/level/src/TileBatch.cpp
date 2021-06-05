@@ -22,6 +22,7 @@
 #include "LeftRightDownRooms.hpp"
 #include "LeftRightUpRooms.hpp"
 #include "SplashScreenRooms.hpp"
+#include "out.hpp"
 #include "AltarRoom.hpp"
 #include "RoomType.hpp"
 #include "ShopRooms.hpp"
@@ -367,7 +368,7 @@ void TileBatch::initialise_tiles_from_room_layout()
                 case RoomType::SHOP_RIGHT: memcpy(temp, shops[1], sizeof(shops[1])); break;
                 case RoomType::SHOP_LEFT_MUGSHOT: memcpy(temp, shops_mugshots[0], sizeof(shops_mugshots[0])); break;
                 case RoomType::SHOP_RIGHT_MUGSHOT: memcpy(temp, shops_mugshots[1], sizeof(shops_mugshots[1])); break;
-                case RoomType::ALTAR: memcpy(temp, altar_room[0], sizeof(altar_room[1])); break;
+                case RoomType::ALTAR: memcpy(temp, out_hpp::rooms[0], sizeof(out_hpp::rooms[0])); break;
                 default: assert(false); break;
             }
 

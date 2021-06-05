@@ -165,7 +165,8 @@ int main(int argc, const char** args)
     headerFilePath = args[1];
     std::cout << "Using " << headerFilePath << " as input/output header file" << std::endl;
 
-    const auto fileBytes = load_file(headerFilePath);
+    const auto file = load_file(headerFilePath);
+    grid = file.get_rooms().at(0); // TODO: Error checking
 
     InitWindow(screenWidth, screenHeight, "SpelunkyPSP room editor");
 
@@ -204,7 +205,7 @@ int main(int argc, const char** args)
     HeaderFile header(headerFilePath);
     header.add_room(grid);
 
-    std::ofstream out("out.hpp", std::ofstream::out);
+    std::ofstream out(headerFilePath, std::ofstream::out);
     serialize(out, header);
     serialize(std::cout, header);
 

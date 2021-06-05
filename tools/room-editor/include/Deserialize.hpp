@@ -3,4 +3,6 @@
 #include <string>
 #include <vector>
 
-std::vector<char> load_file(const std::string& filePath);
+#include "HeaderFile.hpp"
+
+HeaderFile load_file(const std::string& file_path);
