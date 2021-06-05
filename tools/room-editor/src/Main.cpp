@@ -91,6 +91,7 @@ namespace
     // TODO: Tabs (however implemented) for each room in the file
     // TODO: light-gray rectangles on both left/right sides to make side-menus more distinct
     // TODO: Name of edited file on top
+    // TODO: Checking collision with side-menu buttons - for some reason still checks for collision after button pressed - maybe not checking for release?
     void display_right_menu()
     {
         auto& camera = menu_camera;
