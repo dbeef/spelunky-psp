@@ -15,6 +15,7 @@ which is placed under `/tools/atlasc`, and is a development tool - a texture pac
 | [atlasc](https://github.com/septag/atlasc)   | 3.1                        | BSD 2-Clause      |
 | [cjson](https://github.com/DaveGamble/cJSON) | 1.7.12                     | MIT               |
 | [entt](https://github.com/skypjack/entt)     | 3.5.2                      | MIT               | 
+| [raylib](https://github.com/raysan5/raylib)  | 3.7.0                      | zlib              | 
 
 In some cases, custom changes were applied to either CMake files or other sources to make them compile and link under
 PSP's standard C library which utilizes newlib as a libc implementation. In consequence of using non-GNU libc, 

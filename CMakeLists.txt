@@ -9,6 +9,8 @@ spelunky_psp_detect_platform()
 spelunky_psp_add_platform_dependencies()
 
 if (WITH_DEV_TOOLS)
+    set(OpenGL_GL_PREFERENCE GLVND)
+    add_subdirectory(vendor/raylib)
     add_subdirectory(tools)
 endif()
 
