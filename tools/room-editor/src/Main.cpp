@@ -43,7 +43,7 @@ namespace
         }
     }
 
-    void display_menu()
+    void display_left_menu()
     {
         Vector2 position {0, 0}; // By convention, it's a left-upper corner of the rectangle
 
@@ -84,6 +84,22 @@ namespace
 
             index++;
         }
+    }
+
+    // TODO: A wrapper for buttons with text
+    // TODO: Take param from commandline for input/output/file
+    // TODO: Tabs (however implemented) for each room in the file
+    // TODO: light-gray rectangles on both left/right sides to make side-menus more distinct
+    // TODO: Name of edited file on top
+    void display_right_menu()
+    {
+        auto& camera = menu_camera;
+
+        Rectangle dimensions{0, 0, tile_width * 6, tile_height * 2};
+        Vector2 position{screenWidth / 2, screenHeight / 8};
+
+        DrawRectangle(position.x, position.y, dimensions.width, dimensions.height, Color{222, 222, 222, 255});
+        DrawText("Save", position.x + (dimensions.width / 4), position.y + (dimensions.height / 4), 20, DARKGRAY);
     }
 
     void display_workspace_grid()
@@ -155,7 +171,8 @@ int main()
         ClearBackground(RAYWHITE);
 
         BeginMode2D(menu_camera);
-        display_menu();
+        display_left_menu();
+        display_right_menu();
         EndMode2D();
 
         BeginMode2D(workspace_grid_camera);
