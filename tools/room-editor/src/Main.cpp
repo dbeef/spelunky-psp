@@ -5,10 +5,12 @@
 #include <vector>
 
 #include "raylib.h"
+
 #include "MapTileType.hpp"
 #include "MapTileToString.hpp"
 #include "Serialize.hpp"
 #include "Deserialize.hpp"
+#include "HeaderFile.hpp"
 
 namespace
 {
@@ -199,10 +201,8 @@ int main(int argc, const char** args)
         EndDrawing();
     }
 
-    HeaderFile header;
-    header.filePath = headerFilePath;
-    header.fileNamespace = get_namespace_out_of_filename(headerFilePath);
-    header.rooms.push_back(grid);
+    HeaderFile header(headerFilePath);
+    header.add_room(grid);
 
     std::ofstream out("out.hpp", std::ofstream::out);
     serialize(out, header);
