@@ -45,11 +45,18 @@ int main()
 
     // Render loop:
 
+    Camera2D camera = { 0 };
+    camera.target = {};
+    camera.offset = (Vector2){ 0, 0 };
+    camera.rotation = 0.0f;
+    camera.zoom = 1.65f;
+
     SetTargetFPS(60);
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(RAYWHITE);
+        BeginMode2D(camera);
 
         const float tile_width = 16;
         const float tile_height = 16;
@@ -62,15 +69,16 @@ int main()
 
             if (position.x == 0)
             {
-                position.x += (tile_width + 1);
+                position.x += (tile_width + 2);
             }
             else
             {
-                position.y += (tile_height + 1);
+                position.y += (tile_height + 2);
                 position.x = 0;
             }
         }
 
+        EndMode2D();
         EndDrawing();
     }
 
