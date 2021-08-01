@@ -1,4 +1,28 @@
-project(Audio)
+project(Audio CXX ASM)
+
+# TODO: Make a function for marking each file in passed directory
+set_property(SOURCE include/generated/arrowtrap.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/kiss.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/title.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/explosion.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/pickup.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/throw.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/jetpack.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/whip.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/hurt.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/coin.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/chestopen.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/doit.py.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/die.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/shotgun.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/gem.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/cave.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/jump.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/entering_door.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/climb2.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/hit.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/bat.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
+set_property(SOURCE include/generated/climb1.wav.asm APPEND PROPERTY COMPILE_OPTIONS "-x"  "assembler-with-cpp")
 
 add_library(Audio STATIC
         include/AudioBank.hpp
@@ -14,6 +38,28 @@ add_library(Audio STATIC
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,src/Audio_SDL_mixer.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Audio_SDL_mixer.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,src/Audio_Dummy.cpp,>
+        include/generated/arrowtrap.wav.asm
+        include/generated/kiss.wav.asm
+        include/generated/title.wav.asm
+        include/generated/explosion.wav.asm
+        include/generated/pickup.wav.asm
+        include/generated/throw.wav.asm
+        include/generated/jetpack.wav.asm
+        include/generated/whip.wav.asm
+        include/generated/hurt.wav.asm
+        include/generated/coin.wav.asm
+        include/generated/chestopen.wav.asm
+        include/generated/doit.py.asm
+        include/generated/die.wav.asm
+        include/generated/shotgun.wav.asm
+        include/generated/gem.wav.asm
+        include/generated/cave.wav.asm
+        include/generated/jump.wav.asm
+        include/generated/entering_door.wav.asm
+        include/generated/climb2.wav.asm
+        include/generated/hit.wav.asm
+        include/generated/bat.wav.asm
+        include/generated/climb1.wav.asm
 )
 
 if (NOT SPELUNKY_PSP_PLATFORM_WINDOWS)
