@@ -19,6 +19,8 @@ public:
 
     Timestamp delay() const;
 
+    Timediff get_delta_time_ms() const { return _end - _start; }
+
 private:
 
     Timestamp _start = 0;

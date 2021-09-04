@@ -6,6 +6,7 @@
 
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
+#include "video/Video.hpp"
 
 #include "game-loop/GameLoopBaseState.hpp"
 #include "game-loop/GameLoopLevelSummaryState.hpp"
@@ -13,9 +14,11 @@
 #include "game-loop/GameLoopPlayingState.hpp"
 #include "game-loop/GameLoopStartedState.hpp"
 #include "game-loop/GameLoopScoresState.hpp"
+#include "game-loop/GameLoopBenchmarkingState.hpp"
 
 #include <entt/entt.hpp>
 
+struct FrameStats;
 class MainDudeComponent;
 class LevelSummaryTracker;
 class Viewport;
@@ -35,7 +38,7 @@ class GameLoop
 {
 public:
     GameLoop(const std::shared_ptr<Viewport>&);
-    std::function<bool(uint32_t delta_time_ms)>& get();
+    std::function<bool(const FrameStats&)>& get();
 private:
 
     friend class GameLoopBaseState;
@@ -44,6 +47,7 @@ private:
     friend class GameLoopStartedState;
     friend class GameLoopLevelSummaryState;
     friend class GameLoopScoresState;
+    friend class GameLoopBenchmarkingState;
 
     struct
     {
@@ -52,11 +56,13 @@ private:
         GameLoopStartedState started;
         GameLoopLevelSummaryState level_summary;
         GameLoopScoresState scores;
+        GameLoopBenchmarkingState benchmarking;
         GameLoopBaseState* current;
     } _states;
 
     bool _exit = false;
     std::uint32_t _time_elapsed_ms = 0;
+    FrameStats _last_frame{};
 
     std::shared_ptr<PhysicsSystem> _physics_system;
     std::shared_ptr<AnimationSystem> _animation_system;
@@ -71,5 +77,5 @@ private:
     std::shared_ptr<ShoppingSystem> _shopping_system;
     std::shared_ptr<Viewport> _viewport;
     std::shared_ptr<LevelSummaryTracker> _level_summary_tracker;
-    std::function<bool(uint32_t delta_time_ms)> _loop;
+    std::function<bool(const FrameStats&)> _loop;
 };

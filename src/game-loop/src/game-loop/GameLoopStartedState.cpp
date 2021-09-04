@@ -9,7 +9,7 @@
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
 
-GameLoopBaseState *GameLoopStartedState::update(GameLoop& game_loop, uint32_t delta_time_ms)
+GameLoopBaseState *GameLoopStartedState::update(GameLoop& game_loop)
 {
     if (!_game_initialized)
     {
@@ -17,7 +17,11 @@ GameLoopBaseState *GameLoopStartedState::update(GameLoop& game_loop, uint32_t de
     }
     else
     {
+#ifdef SPELUNKY_PSP_BENCHMARK_MODE
+        return &game_loop._states.benchmarking;
+#else
         return &game_loop._states.main_menu;
+#endif
     }
 }
 

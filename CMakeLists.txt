@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(Spelunky_PSP)
 
 option(WITH_DEV_TOOLS "Tools meant to be run only on host (development) system." FALSE)
+option(SPELUNKY_PSP_BENCHMARK_MODE "Saves .csv with measurements for a set of predefined scenes" FALSE)
 
 include(cmake/CurrentPlatform.cmake)
 

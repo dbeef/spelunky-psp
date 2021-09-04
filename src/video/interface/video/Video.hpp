@@ -13,8 +13,13 @@
 
 struct PlatformSpecific;
 
-class Video {
+struct FrameStats
+{
+    uint32_t total_delta_time_ms;
+    uint32_t game_loop_update_time_ms;
+};
 
+class Video {
 public:
 
     Video();
@@ -23,7 +28,7 @@ public:
     bool setup_gl();
     inline uint32_t get_delta_time() const { return _last_delta_time; }
     void tear_down_gl();
-    void run_loop(const std::function<bool(uint32_t delta_time_ms)> &loop_callback);
+    void run_loop(const std::function<bool(const FrameStats&)> &loop_callback);
     std::shared_ptr<Viewport> get_viewport() const { assert(_viewport); return _viewport; }
     void swap_buffers() const;
 
