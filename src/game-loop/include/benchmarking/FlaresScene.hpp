@@ -43,7 +43,7 @@ public:
         }
     }
 
-    void spawn_entities() const override
+    void spawn_entities() override
     {
         auto& registry = EntityRegistry::instance().get_registry();
         auto& tile_batch = Level::instance().get_tile_batch();

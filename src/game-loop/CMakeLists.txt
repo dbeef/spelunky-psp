@@ -335,7 +335,12 @@ add_library(GameLoop STATIC
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
-        include/benchmarking/Scene.hpp include/benchmarking/FlaresScene.hpp)
+
+        include/benchmarking/Scene.hpp
+        include/benchmarking/FlaresScene.hpp
+        include/benchmarking/PropsScene.hpp
+        include/benchmarking/RockMassacreScene.hpp
+)
 
 target_compile_definitions(
         GameLoop PRIVATE $<IF:$<BOOL:${SPELUNKY_PSP_BENCHMARK_MODE}>,SPELUNKY_PSP_BENCHMARK_MODE,>

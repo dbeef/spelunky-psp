@@ -1,15 +1,19 @@
 #include "game-loop/GameLoopBenchmarkingState.hpp"
 #include "game-loop/GameLoop.hpp"
 #include "benchmarking/FlaresScene.hpp"
+#include "benchmarking/RockMassacreScene.hpp"
+#include "benchmarking/PropsScene.hpp"
 #include "logger/log.h"
 #include "EntityRegistry.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "system/RenderingSystem.hpp"
+#include "system/DamageSystem.hpp"
 #include "system/ScriptingSystem.hpp"
 #include "system/ParticleSystem.hpp"
 #include "system/PhysicsSystem.hpp"
 #include "system/AnimationSystem.hpp"
 #include "system/DisposingSystem.hpp"
+#include "system/ItemSystem.hpp"
 
 #include <fstream>
 #include <vector>
@@ -17,7 +21,7 @@
 namespace
 {
     const char* filename = "benchmark_measurements.csv";
-    const std::size_t time_per_scene_ms = 10000;
+    const std::size_t time_per_scene_ms = 10 * 1000;
 }
 
 struct GameLoopBenchmarkingState::Context
@@ -31,6 +35,8 @@ struct GameLoopBenchmarkingState::Context
 GameLoopBenchmarkingState::GameLoopBenchmarkingState() : _ctx(std::make_unique<GameLoopBenchmarkingState::Context>())
 {
     _ctx->scenes.push_back(std::make_unique<FlaresScene>());
+    _ctx->scenes.push_back(std::make_unique<RockMassacreScene>());
+    _ctx->scenes.push_back(std::make_unique<PropsScene>());
 }
 
 GameLoopBenchmarkingState::~GameLoopBenchmarkingState()
@@ -88,11 +94,13 @@ GameLoopBaseState* GameLoopBenchmarkingState::update(GameLoop& game_loop)
         get_current_scene().update(last_frame, model_view_camera, screen_space_camera);
 
         game_loop._rendering_system->update(last_frame.total_delta_time_ms);
+        game_loop._damage_system->update(last_frame.total_delta_time_ms);
         game_loop._scripting_system->update(last_frame.total_delta_time_ms);
         game_loop._particle_system->update(last_frame.total_delta_time_ms);
         game_loop._disposing_system->update(last_frame.total_delta_time_ms);
         game_loop._physics_system->update(last_frame.total_delta_time_ms);
         game_loop._animation_system->update(last_frame.total_delta_time_ms);
+        game_loop._item_system->update(last_frame.total_delta_time_ms);
     }
 
     return this;
