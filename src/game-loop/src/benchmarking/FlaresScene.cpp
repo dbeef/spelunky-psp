@@ -52,5 +52,5 @@ void FlaresScene::spawn_entities()
 
 const char* FlaresScene::scene_title() const
 {
-    return "Flares (benchmarking)";
+    return "Flares";
 }

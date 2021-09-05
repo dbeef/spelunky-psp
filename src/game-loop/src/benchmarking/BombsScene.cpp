@@ -63,5 +63,5 @@ void BombsScene::spawn_entities()
 
 const char* BombsScene::scene_title() const
 {
-    return "Bombs (benchmarking)";
+    return "Bombs";
 }

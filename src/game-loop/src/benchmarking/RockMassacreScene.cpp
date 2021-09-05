@@ -15,7 +15,7 @@ namespace
 
 const char *RockMassacreScene::scene_title() const
 {
-    return "RockMassacre (benchmarking)";
+    return "RockMassacre";
 }
 
 void RockMassacreScene::spawn_entities()

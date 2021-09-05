@@ -47,8 +47,12 @@ GameLoopBenchmarkingState::~GameLoopBenchmarkingState()
 
 void GameLoopBenchmarkingState::save_frame(const FrameStats& last_frame)
 {
+    auto& current_scene = get_current_scene();
+
     auto& measurements_out = _ctx->measurements_out;
-    measurements_out << last_frame.total_delta_time_ms  << ',' << last_frame.game_loop_update_time_ms << '\n';
+    measurements_out << last_frame.total_delta_time_ms  << ','
+                     << last_frame.game_loop_update_time_ms << ','
+                     << current_scene.scene_title() << '\n';
 }
 
 void GameLoopBenchmarkingState::open_file()
@@ -61,7 +65,7 @@ void GameLoopBenchmarkingState::open_file()
         throw std::runtime_error("Benchmark failed to open file for writing");
     }
 
-    measurements_out << "total_delta_time_ms,game_loop_update_time_ms\n";
+    measurements_out << "total_delta_time_ms,game_loop_update_time_ms,scene_title\n";
 }
 
 GameLoopBaseState* GameLoopBenchmarkingState::update(GameLoop& game_loop)

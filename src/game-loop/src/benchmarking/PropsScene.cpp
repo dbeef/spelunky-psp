@@ -12,7 +12,7 @@ void PropsScene::update(const FrameStats &frame_stats,
 
 const char *PropsScene::scene_title() const
 {
-    return "Props (benchmarking)";
+    return "Props";
 }
 
 void PropsScene::spawn_entities()
