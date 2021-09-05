@@ -5,7 +5,7 @@
 
 #include <cstdint>
 
-class FrameStats;
+struct FrameStats;
 
 // TODO: Think of using this Scene abstraction out of benchmarking context
 class Scene
