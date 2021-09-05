@@ -17,12 +17,12 @@ ModelViewCamera::ModelViewCamera(std::shared_ptr<Viewport> viewport)
 
 float ModelViewCamera::get_x_screen_center() const
 {
-    return _x + _viewport->get_width_world_units() / 2.f;
+    return _x + (_projection_coefficient * _viewport->get_aspect());
 }
 
 float ModelViewCamera::get_y_screen_center() const
 {
-    return _y + _viewport->get_height_world_units() / 2.f;
+    return _y + (_projection_coefficient);
 }
 
 void ModelViewCamera::update_gl_modelview_matrix() const

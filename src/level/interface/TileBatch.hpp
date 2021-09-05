@@ -48,6 +48,8 @@ public:
 
     ~TileBatch();
 
+    void clear();
+
     void generate_new_level_layout(const LevelGeneratorParams& params);
 
     void generate_cave_background();

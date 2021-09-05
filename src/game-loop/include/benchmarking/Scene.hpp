@@ -5,7 +5,9 @@
 
 #include <cstdint>
 
-// TODO: Maybe I could make use of this Scene abstraction out of benchmarking context?
+class FrameStats;
+
+// TODO: Think of using this Scene abstraction out of benchmarking context
 class Scene
 {
 public:

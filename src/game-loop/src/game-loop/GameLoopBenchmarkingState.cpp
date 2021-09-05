@@ -2,6 +2,7 @@
 #include "game-loop/GameLoop.hpp"
 #include "benchmarking/FlaresScene.hpp"
 #include "benchmarking/RockMassacreScene.hpp"
+#include "benchmarking/BombsScene.hpp"
 #include "benchmarking/PropsScene.hpp"
 #include "logger/log.h"
 #include "EntityRegistry.hpp"
@@ -34,8 +35,9 @@ struct GameLoopBenchmarkingState::Context
 
 GameLoopBenchmarkingState::GameLoopBenchmarkingState() : _ctx(std::make_unique<GameLoopBenchmarkingState::Context>())
 {
-    _ctx->scenes.push_back(std::make_unique<FlaresScene>());
+    _ctx->scenes.push_back(std::make_unique<BombsScene>());
     _ctx->scenes.push_back(std::make_unique<RockMassacreScene>());
+    _ctx->scenes.push_back(std::make_unique<FlaresScene>());
     _ctx->scenes.push_back(std::make_unique<PropsScene>());
 }
 
@@ -126,6 +128,8 @@ void GameLoopBenchmarkingState::enter(GameLoop& game_loop)
 {
     log_info("Entered GameLoopBenchmarkingState");
     open_file();
+    // To keep it deterministic use constant seed:
+    std::srand(0);
     enter_scene(get_current_scene());
 }
 

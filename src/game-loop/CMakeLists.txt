@@ -340,7 +340,7 @@ add_library(GameLoop STATIC
         include/benchmarking/FlaresScene.hpp
         include/benchmarking/PropsScene.hpp
         include/benchmarking/RockMassacreScene.hpp
-)
+        src/benchmarking/RockMassacreScene.cpp src/benchmarking/PropsScene.cpp src/benchmarking/FlaresScene.cpp include/benchmarking/BombsScene.hpp src/benchmarking/BombsScene.cpp)
 
 target_compile_definitions(
         GameLoop PRIVATE $<IF:$<BOOL:${SPELUNKY_PSP_BENCHMARK_MODE}>,SPELUNKY_PSP_BENCHMARK_MODE,>
