@@ -11,7 +11,6 @@ Timestamp Timestep::delay() const
         SDL_Delay(sleep_time_ms);
         return _min_delay_ms;
     }
-
     return delta_ms;
 }
 
