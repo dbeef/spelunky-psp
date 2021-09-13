@@ -36,7 +36,6 @@
 #include "prefabs/traps/Spikes.hpp"
 #include "prefabs/traps/ArrowTrap.hpp"
 #include "prefabs/npc/Snake.hpp"
-#include "prefabs/npc/BlueFrog.hpp"
 #include "prefabs/npc/Spider.hpp"
 #include "prefabs/npc/Bat.hpp"
 #include "prefabs/npc/FakeSkeleton.hpp"
@@ -148,7 +147,7 @@ void Populator::generate_npc(bool& damsel_rescued, bool shopkeeper_robbed)
                     if (snake_spawner.can_spawn())
                     {
                         snake_spawner.spawned();
-                        auto entity = prefabs::BlueFrog::create(pos_x, pos_y);
+                        auto entity = prefabs::Snake::create(pos_x, pos_y);
                         _npcs.push_back(entity);
                     }
                     else if (bat_spawner.can_spawn())
@@ -166,12 +165,12 @@ void Populator::generate_npc(bool& damsel_rescued, bool shopkeeper_robbed)
                     else if (fake_skeleton_spawner.can_spawn())
                     {
                         fake_skeleton_spawner.spawned();
-                        prefabs::BlueFrog::create(pos_x, pos_y);
+                        prefabs::FakeSkeleton::create(pos_x, pos_y);
                     }
                     else if (skeleton_spawner.can_spawn())
                     {
                         skeleton_spawner.spawned();
-                        auto entity = prefabs::BlueFrog::create(pos_x, pos_y);
+                        auto entity = prefabs::Skeleton::create(pos_x, pos_y);
                         _npcs.push_back(entity);
                     }
                     else if (spikes_spawner.can_spawn())
