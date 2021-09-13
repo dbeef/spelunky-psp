@@ -34,13 +34,6 @@
 class MainDudeBaseState;
 class Input;
 class MapTile;
-struct Vector2D;
-
-using WhenDudeIsCloseCallback_t = std::function<void(const PositionComponent& dude_pos, const Vector2D& distance)>;
-void check_main_dude_proximity(const WhenDudeIsCloseCallback_t& callback,
-                               const Vector2D& activation_distance,
-                               const PositionComponent& position
-);
 
 class MainDudeComponent : public Subject<MainDudeEvent>
 {

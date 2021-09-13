@@ -20,6 +20,7 @@ add_library(GameLoop STATIC
 
         # Main dude:
 
+        src/main-dude/MainDudeHelpers.cpp
         src/main-dude/MainDudeObservers.cpp
         src/main-dude/MainDudeComponent.cpp
         src/main-dude/states/MainDudeStandingState.cpp
@@ -57,6 +58,7 @@ add_library(GameLoop STATIC
         include/main-dude/states/MainDudeStunnedState.hpp
         include/main-dude/MainDudeEvent.hpp
         include/main-dude/MainDudeObservers.hpp
+        include/main-dude/MainDudeHelpers.hpp
 
         # Components:
 

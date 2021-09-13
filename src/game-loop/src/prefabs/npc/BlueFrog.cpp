@@ -2,7 +2,6 @@
 #include "other/ParticleGenerator.hpp"
 
 #include "components/generic/AnimationComponent.hpp"
-#include "components/specialized/MainDudeComponent.hpp"
 #include "components/generic/NpcTypeComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
 #include "components/generic/PositionComponent.hpp"
@@ -17,6 +16,7 @@
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
 #include "components/damage/TakeExplosionDamageComponent.hpp"
 #include "components/damage/TakeSpikesDamageComponent.hpp"
+#include "main-dude/MainDudeHelpers.hpp"
 
 #include "Vector2D.hpp"
 #include "EntityRegistry.hpp"
@@ -28,9 +28,6 @@
 
 namespace
 {
-    constexpr uint16_t max_waiting_time_ms = 3000;
-    constexpr uint16_t max_walking_time_ms = 5000;
-
     class BlueFrogDeathObserver final : public Observer<DeathEvent>
     {
     public:
@@ -96,7 +93,7 @@ namespace
                 };
 
                 auto& frog_position = registry.get<PositionComponent>(owner);
-                check_main_dude_proximity(when_dude_is_close_callback, {6, 4}, frog_position);
+                main_dude_helpers::check_main_dude_proximity(when_dude_is_close_callback, {6, 4}, frog_position);
 
                 _look_for_main_dude_timer_ms = 0;
             }
