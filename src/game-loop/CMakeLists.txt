@@ -20,6 +20,7 @@ add_library(GameLoop STATIC
 
         # Main dude:
 
+        src/main-dude/MainDudeHelpers.cpp
         src/main-dude/MainDudeObservers.cpp
         src/main-dude/MainDudeComponent.cpp
         src/main-dude/states/MainDudeStandingState.cpp
@@ -57,6 +58,7 @@ add_library(GameLoop STATIC
         include/main-dude/states/MainDudeStunnedState.hpp
         include/main-dude/MainDudeEvent.hpp
         include/main-dude/MainDudeObservers.hpp
+        include/main-dude/MainDudeHelpers.hpp
 
         # Components:
 
@@ -118,6 +120,7 @@ add_library(GameLoop STATIC
 
         # Prefabs:
 
+        include/prefabs/npc/BlueFrog.hpp
         include/prefabs/npc/Bat.hpp
         include/prefabs/npc/Caveman.hpp
         include/prefabs/npc/Skeleton.hpp
@@ -280,6 +283,7 @@ add_library(GameLoop STATIC
         src/prefabs/npc/Shopkeeper.cpp
         src/prefabs/npc/ShopkeeperStates.cpp
         src/prefabs/npc/Bat.cpp
+        src/prefabs/npc/BlueFrog.cpp
         src/prefabs/npc/CavemanScript.cpp
         src/prefabs/npc/CavemanStates.cpp
         src/prefabs/npc/Caveman.cpp

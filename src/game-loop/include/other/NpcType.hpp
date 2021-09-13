@@ -10,4 +10,5 @@ enum class NpcType
     SKELETON,
     SHOPKEEPER,
     DAMSEL,
+    BLUE_FROG
 };

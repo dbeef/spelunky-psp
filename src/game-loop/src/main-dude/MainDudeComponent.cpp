@@ -11,6 +11,9 @@
 #include "other/Inventory.hpp"
 #include "main-dude/states/MainDudeRunningState.hpp"
 #include "EntityRegistry.hpp"
+#include "Vector2D.hpp"
+
+#include <cmath>
 
 namespace
 {
