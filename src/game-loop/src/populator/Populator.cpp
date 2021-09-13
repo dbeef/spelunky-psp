@@ -38,6 +38,7 @@
 #include "prefabs/npc/Snake.hpp"
 #include "prefabs/npc/Spider.hpp"
 #include "prefabs/npc/Bat.hpp"
+#include "prefabs/npc/RedFrog.hpp"
 #include "prefabs/npc/FakeSkeleton.hpp"
 #include "prefabs/npc/Skeleton.hpp"
 #include "prefabs/npc/Caveman.hpp"
@@ -147,7 +148,7 @@ void Populator::generate_npc(bool& damsel_rescued, bool shopkeeper_robbed)
                     if (snake_spawner.can_spawn())
                     {
                         snake_spawner.spawned();
-                        auto entity = prefabs::Snake::create(pos_x, pos_y);
+                        auto entity = prefabs::RedFrog::create(pos_x, pos_y);
                         _npcs.push_back(entity);
                     }
                     else if (bat_spawner.can_spawn())
@@ -159,18 +160,18 @@ void Populator::generate_npc(bool& damsel_rescued, bool shopkeeper_robbed)
                     else if (caveman_spawner.can_spawn())
                     {
                         caveman_spawner.spawned();
-                        auto entity = prefabs::Caveman::create(pos_x, pos_y);
+                        auto entity = prefabs::RedFrog::create(pos_x, pos_y);
                         _npcs.push_back(entity);
                     }
                     else if (fake_skeleton_spawner.can_spawn())
                     {
                         fake_skeleton_spawner.spawned();
-                        prefabs::FakeSkeleton::create(pos_x, pos_y);
+                        prefabs::RedFrog::create(pos_x, pos_y);
                     }
                     else if (skeleton_spawner.can_spawn())
                     {
                         skeleton_spawner.spawned();
-                        auto entity = prefabs::Skeleton::create(pos_x, pos_y);
+                        auto entity = prefabs::RedFrog::create(pos_x, pos_y);
                         _npcs.push_back(entity);
                     }
                     else if (spikes_spawner.can_spawn())
