@@ -333,7 +333,7 @@ add_library(GameLoop STATIC
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
-)
+        include/prefabs/npc/BlueFrog.hpp src/prefabs/npc/BlueFrog.cpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface

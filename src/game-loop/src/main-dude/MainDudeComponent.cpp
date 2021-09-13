@@ -11,6 +11,9 @@
 #include "other/Inventory.hpp"
 #include "main-dude/states/MainDudeRunningState.hpp"
 #include "EntityRegistry.hpp"
+#include "Vector2D.hpp"
+
+#include <cmath>
 
 namespace
 {
@@ -25,6 +28,27 @@ namespace
 
     const float MAIN_DUDE_QUAD_WIDTH = 1.0f;
     const float MAIN_DUDE_QUAD_HEIGHT = 1.0f;
+}
+
+void check_main_dude_proximity(const WhenDudeIsCloseCallback_t& callback,
+                               const Vector2D& activation_distance,
+                               const PositionComponent& position)
+{
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    Vector2D distance;
+
+    const auto main_dudes = registry.view<MainDudeComponent, PositionComponent>();
+    main_dudes.each([&](MainDudeComponent&, PositionComponent& dude_position)
+    {
+        distance.x = dude_position.x_center - position.x_center;
+        distance.y = dude_position.y_center - position.y_center;
+
+        if (distance.x < activation_distance.x && distance.y < activation_distance.y)
+        {
+            callback(dude_position, distance);
+        }
+    });
 }
 
 MainDudeComponent::MainDudeComponent(entt::entity owner) : _owner(owner)

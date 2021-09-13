@@ -9,7 +9,7 @@ add_library(RenderingTypes STATIC
         interface/Quad.hpp
         interface/Vertex.hpp
         interface/IndexType.hpp
-        interface/CameraType.hpp)
+        interface/CameraType.hpp interface/Vector2D.hpp)
 
 target_include_directories(RenderingTypes
         PRIVATE include interface

@@ -17,6 +17,7 @@
 #include "components/damage/GiveNpcTouchDamageComponent.hpp"
 #include "components/damage/TakeExplosionDamageComponent.hpp"
 
+#include "Vector2D.hpp"
 #include "audio/Audio.hpp"
 #include "EntityRegistry.hpp"
 #include "TextureType.hpp"
@@ -27,8 +28,6 @@
 namespace
 {
     constexpr uint32_t update_delta_ms = 20;
-    constexpr float activation_distance_x = 7;
-    constexpr float activation_distance_y = 6;
     constexpr float x_speed = 0.02f;
     constexpr float y_speed = 0.02f;
 
@@ -79,34 +78,33 @@ namespace
 
             const bool triggered_before = _triggered;
             _triggered = false;
-            const auto main_dudes = registry.view<MainDudeComponent, PositionComponent>();
-            main_dudes.each([&](MainDudeComponent&, PositionComponent& dude_position)
+
+            const auto when_dude_is_close_callback = [this, bat_position, triggered_before](const PositionComponent& dude_pos, const Vector2D& distance)
             {
                 if (_triggered)
                 {
                     return;
                 }
 
-                if (dude_position.y_center < bat_position.y_center && !triggered_before)
+                if (dude_pos.y_center < bat_position.y_center && !triggered_before)
                 {
                     return;
                 }
 
-                _distance_x = std::fabs(dude_position.x_center - bat_position.x_center);
-                _distance_y = std::fabs(dude_position.y_center - bat_position.y_center);
-
-                if (_distance_x < activation_distance_x && _distance_y < activation_distance_y)
+                if (!_flying)
                 {
-                    if (!_flying)
-                    {
-                        Audio::instance().play(SFXType::BAT);
-                    }
-
-                    _flying = true;
-                    _triggered = true;
-                    _dude_position = {dude_position.x_center, dude_position.y_center};
+                    Audio::instance().play(SFXType::BAT);
                 }
-            });
+
+                _distance_x = std::fabs(distance.x);
+                _distance_y = std::fabs(distance.y);
+
+                _flying = true;
+                _triggered = true;
+                _dude_position = {dude_pos.x_center, dude_pos.y_center};
+            };
+
+            check_main_dude_proximity(when_dude_is_close_callback, _activation_distance, bat_position);
 
             if (_triggered)
             {
@@ -186,6 +184,7 @@ namespace
         float _distance_x = 0.0f;
         float _distance_y = 0.0f;
         Point2D _dude_position;
+        const Vector2D _activation_distance = {7, 6};
     };
 }
 
