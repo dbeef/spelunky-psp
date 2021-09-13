@@ -120,6 +120,7 @@ add_library(GameLoop STATIC
 
         # Prefabs:
 
+        include/prefabs/npc/RedFrog.hpp
         include/prefabs/npc/BlueFrog.hpp
         include/prefabs/npc/Bat.hpp
         include/prefabs/npc/Caveman.hpp
@@ -284,6 +285,7 @@ add_library(GameLoop STATIC
         src/prefabs/npc/ShopkeeperStates.cpp
         src/prefabs/npc/Bat.cpp
         src/prefabs/npc/BlueFrog.cpp
+        src/prefabs/npc/RedFrog.cpp
         src/prefabs/npc/CavemanScript.cpp
         src/prefabs/npc/CavemanStates.cpp
         src/prefabs/npc/Caveman.cpp
