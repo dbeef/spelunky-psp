@@ -93,17 +93,16 @@ namespace
                     quad_component.frame_changed(NPCSpritesheetFrames::BLUE_FROG_JUMPING);
 
                     auto& physics_component = registry.get<PhysicsComponent>(owner);
-                    physics_component.add_velocity(std::copysign(0.1f, distance.x), -std::copysign(0.25f, distance.y));
+                    physics_component.add_velocity(std::copysign(0.1f, distance.x), -0.16f);
                 };
 
                 auto& frog_position = registry.get<PositionComponent>(owner);
-                check_main_dude_proximity(when_dude_is_close_callback, {6, 6}, frog_position);
+                check_main_dude_proximity(when_dude_is_close_callback, {6, 4}, frog_position);
 
                 _look_for_main_dude_timer_ms = 0;
             }
             else if (physics_component.is_bottom_collision())
             {
-                //physics_component.set_x_velocity(0.0f);
                 quad_component.frame_changed(NPCSpritesheetFrames::BLUE_FROG_IDLE_0_START);
             }
         }
@@ -157,7 +156,8 @@ entt::entity prefabs::BlueFrog::create(float pos_x_center, float pos_y_center)
 
     auto& physics_component = registry.get<PhysicsComponent>(entity);
     physics_component.set_gravity_modifier(0.35f);
-    physics_component.set_bounciness(0.1f);
+    physics_component.set_bounciness(0.25f);
+    physics_component.set_friction(PhysicsComponent::get_default_friction() * 2.0f);
 
     return entity;
 }
