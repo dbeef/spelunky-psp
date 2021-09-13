@@ -1,7 +1,7 @@
 #include "prefabs/npc/Bat.hpp"
 #include "other/ParticleGenerator.hpp"
 
-#include "components/specialized/MainDudeComponent.hpp"
+#include "main-dude/MainDudeHelpers.hpp"
 #include "components/generic/AnimationComponent.hpp"
 #include "components/generic/NpcTypeComponent.hpp"
 #include "components/generic/PhysicsComponent.hpp"
@@ -104,7 +104,7 @@ namespace
                 _dude_position = {dude_pos.x_center, dude_pos.y_center};
             };
 
-            check_main_dude_proximity(when_dude_is_close_callback, _activation_distance, bat_position);
+            main_dude_helpers::check_main_dude_proximity(when_dude_is_close_callback, _activation_distance, bat_position);
 
             if (_triggered)
             {
