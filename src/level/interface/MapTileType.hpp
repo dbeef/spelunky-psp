@@ -6,6 +6,7 @@
 
 #include <cstdint>
 
+// TODO: Should be moved where other spritesheet-frames are
 enum class MapTileType : std::uint32_t {
     NOTHING = 0,                    // 0 NON_COLLIDABLE
     CAVE_ROCK,                      // 1
@@ -54,5 +55,7 @@ enum class MapTileType : std::uint32_t {
     CAVE_BG_2,                      // 44
     CAVE_BG_3,                      // 45
     CAVE_BG_4,                      // 46
-    _SIZE                           // 47 Total elements
+    SPEAR_TRAP_UP,                  // 47
+    SPEAR_TRAP_DOWN,                // 48
+    _SIZE                           // 49 Total elements
 };

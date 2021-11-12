@@ -339,7 +339,7 @@ add_library(GameLoop STATIC
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
-)
+        include/prefabs/traps/Spears.hpp src/prefabs/traps/Spears.cpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface

@@ -35,6 +35,7 @@
 #include "prefabs/items/GoldenIdol.hpp"
 #include "prefabs/traps/Spikes.hpp"
 #include "prefabs/traps/ArrowTrap.hpp"
+#include "prefabs/traps/Spears.hpp"
 #include "prefabs/npc/Snake.hpp"
 #include "prefabs/npc/Spider.hpp"
 #include "prefabs/npc/Bat.hpp"
@@ -96,6 +97,7 @@ void Populator::generate_npc(bool& damsel_rescued, bool shopkeeper_robbed)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
+    Spawner spears_trap_spawner(25, 8);
     Spawner snake_spawner(3, 4);
     Spawner bat_spawner(3, 4);
     Spawner caveman_spawner(3, 4);
@@ -105,7 +107,7 @@ void Populator::generate_npc(bool& damsel_rescued, bool shopkeeper_robbed)
     Spawner spider_spawner(3, 3);
     Spawner damsel_spawner(1, 1);
 
-    const auto& tile_batch = Level::instance().get_tile_batch();
+    auto& tile_batch = Level::instance().get_tile_batch();
 
     for (int tile_x = 0; tile_x < Consts::LEVEL_WIDTH_TILES; tile_x++)
     {
@@ -144,7 +146,30 @@ void Populator::generate_npc(bool& damsel_rescued, bool shopkeeper_robbed)
                 }
                 case NPCType::ANY:
                 {
-                    if (snake_spawner.can_spawn())
+                    // FIXME: There should be a separate value for spears-trap in map layout,
+                    //        address once level editor is merged to master.
+                    //        Arrow/Spear traps could be deduced from level layout instead.
+
+                    if (spears_trap_spawner.can_spawn())
+                    {
+                        spears_trap_spawner.spawned();
+                        prefabs::Spears::create(pos_x - 1, pos_y, HorizontalOrientation::LEFT);
+                        prefabs::Spears::create(pos_x - 1, pos_y - 1, HorizontalOrientation::LEFT);
+                        prefabs::Spears::create(pos_x + 1, pos_y, HorizontalOrientation::RIGHT);
+                        prefabs::Spears::create(pos_x + 1, pos_y - 1, HorizontalOrientation::RIGHT);
+
+                        // FIXME: Should each module of spear trap act separately? SpearTrap should be an aggregate
+                        //        creating Spears instances.
+                        auto* down = tile_batch.map_tiles[static_cast<int>(pos_x)][static_cast<int>(pos_y)];
+                        auto* up = tile_batch.map_tiles[static_cast<int>(pos_x)][static_cast<int>(pos_y - 1)];
+
+                        down->match_tile(MapTileType::SPEAR_TRAP_DOWN);
+                        up->match_tile(MapTileType::SPEAR_TRAP_UP);
+
+                        tile_batch.generate_cave_background();
+                        tile_batch.batch_vertices();
+                    }
+                    else if (snake_spawner.can_spawn())
                     {
                         snake_spawner.spawned();
                         auto entity = prefabs::Snake::create(pos_x, pos_y);

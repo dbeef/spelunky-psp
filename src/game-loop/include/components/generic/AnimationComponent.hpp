@@ -18,6 +18,7 @@ public:
     void stop() { _running = false; }
     bool is_finished() const { return _finished; }
     void set_time_per_frame_ms(float value_ms) { _time_per_frame_ms = value_ms; };
+    std::size_t get_absolute_current_frame_index() const { return _current_frame_index - _start_frame_index; }
 
 private:
 
