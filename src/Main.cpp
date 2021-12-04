@@ -63,8 +63,8 @@ int start()
 }
 
 #if defined(SPELUNKY_PSP_PLATFORM_PSP) || \
-    defined(SPELUNKY_PSP_PLATFORM_ANDROID)
-
+    defined(SPELUNKY_PSP_PLATFORM_ANDROID) || \
+    defined(SPELUNKY_PSP_PLATFORM_DARWIN)
 // Not mangling symbols so SDL could find SDL_main.
 extern "C"
 {
@@ -75,7 +75,6 @@ int SDL_main(int argc, char *argv[]) {
 #endif
 
 #if defined(SPELUNKY_PSP_PLATFORM_LINUX) || \
-    defined(SPELUNKY_PSP_PLATFORM_DARWIN) || \
     defined(SPELUNKY_PSP_PLATFORM_WINDOWS)
 
 int main()
