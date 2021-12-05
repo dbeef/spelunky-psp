@@ -13,6 +13,7 @@ add_library(Audio STATIC
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,src/Audio_SDL_mixer.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,src/Audio_SDL_mixer.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Audio_SDL_mixer.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>,src/Audio_Dummy.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,src/Audio_Dummy.cpp,>
 )
 
@@ -43,5 +44,6 @@ target_link_libraries(Audio
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,SDL_1_XX,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,SDL_1_XX,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,SDL_1_XX,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>,SDL_2_XX,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,SDL_2_XX,>
 )

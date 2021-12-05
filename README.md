@@ -24,6 +24,7 @@ Currently supported platforms are:
 * Android
 * Linux
 * Windows
+* macOS
 
 With successful attempts to run it on such devices as Raspberry PI 3, Orange PI One, Samsung Note III.
 
