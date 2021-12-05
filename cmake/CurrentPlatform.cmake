@@ -1,3 +1,5 @@
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
+
 include(cmake/DependenciesLinux.cmake)
 include(cmake/DependenciesDarwin.cmake)
 include(cmake/DependenciesPSP.cmake)
