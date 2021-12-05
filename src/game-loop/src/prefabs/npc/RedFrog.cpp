@@ -98,7 +98,7 @@ namespace
                     quad_component.frame_changed(NPCSpritesheetFrames::RED_FROG_JUMPING);
 
                     auto& physics_component = registry.get<PhysicsComponent>(owner);
-                    physics_component.add_velocity(std::copysign(0.1f, distance.x), -0.16f);
+                    physics_component.add_velocity(copysign(0.1f, distance.x), -0.16f);
                 };
 
                 auto& frog_position = registry.get<PositionComponent>(owner);
