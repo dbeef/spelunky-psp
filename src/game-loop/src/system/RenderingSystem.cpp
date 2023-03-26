@@ -1,12 +1,13 @@
 #include "system/RenderingSystem.hpp"
 #include "EntityRegistry.hpp"
 #include "Vertex.hpp"
-#include "glad/glad.h"
+#include "SDL_opengl.h"
 #include "graphics_utils/DebugGlCall.hpp"
 #include "components/generic/TextComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/BlinkingComponent.hpp"
+#include "logger/log.h"
 
 void RenderingSystem::update(std::uint32_t delta_time_ms)
 {
@@ -23,6 +24,8 @@ void RenderingSystem::update(std::uint32_t delta_time_ms)
     auto meshes = registry.view<MeshComponent>();
     meshes.each([this](MeshComponent &mesh)
     {
+        static int i = 0;
+        i++;
         use_camera(mesh.camera_type);
 
         // Interleaving vertex attributes instead of separate buffers for small performance boost from data locality:
@@ -40,6 +43,11 @@ void RenderingSystem::update(std::uint32_t delta_time_ms)
         DebugGlCall(glTexCoordPointer(2, GL_FLOAT, stride, uvs));
 
         DebugGlCall(glDrawElements(GL_TRIANGLES, mesh.indices_count, GL_UNSIGNED_SHORT, mesh.indices));
+
+        // if (i > 25)
+        // {
+        // assert(false);
+        // }
     });
 }
 

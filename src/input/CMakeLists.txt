@@ -10,6 +10,7 @@ add_library(Input STATIC
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Input_Desktop.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>,src/Input_Darwin.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,src/Input_Android.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>,src/Input_Emscripten.cpp,>
 )
 
 target_include_directories(Input
@@ -27,6 +28,7 @@ target_link_libraries(Input
         Patterns
     PRIVATE
         $<$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>:SDL_2_XX>
+        $<$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>:SDL_2_XX>
         $<$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>:SDL_2_XX>
         $<$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>:SDL_1_XX>
         $<$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>:SDL_1_XX>

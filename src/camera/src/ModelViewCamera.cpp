@@ -1,6 +1,6 @@
 #include "graphics_utils/DebugGlCall.hpp"
 #include "viewport/Viewport.hpp"
-#include "glad/glad.h"
+#include "SDL_opengl.h"
 #include "graphics_utils/LookAt.hpp"
 #include "ModelViewCamera.hpp"
 

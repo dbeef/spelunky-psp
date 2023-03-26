@@ -3,7 +3,7 @@
 //
 #include "video/Video.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
-#include "glad/glad.h"
+#include "SDL_opengl.h"
 #include "logger/log.h"
 
 #include <SDL/SDL.h>

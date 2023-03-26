@@ -5,7 +5,7 @@
 #include "graphics_utils/DebugGlCall.hpp"
 #include "time/Timestep.hpp"
 #include "logger/log.h"
-#include "glad/glad.h"
+#include "SDL_opengl.h"
 
 #include <SDL.h>
 #include <SDL_video.h>

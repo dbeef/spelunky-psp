@@ -21,16 +21,17 @@ public:
     ~Video();
 
     bool setup_gl();
-    inline uint32_t get_delta_time() const { return _last_delta_time; }
+    inline uint32_t get_delta_time() const { return _last_delta_ms; }
     void tear_down_gl();
     void run_loop(const std::function<bool(uint32_t delta_time_ms)> &loop_callback);
     std::shared_ptr<Viewport> get_viewport() const { assert(_viewport); return _viewport; }
     void swap_buffers() const;
-
+    void make_current() const;
+    void loop_tick();
 private:
     Timestep _timestep;
-
+    std::function<bool(uint32_t delta_time_ms)> _loop_callback;
     std::unique_ptr<PlatformSpecific> _platform_specific;
     std::shared_ptr<Viewport> _viewport {nullptr};
-    uint32_t _last_delta_time = 0;
+    uint32_t _last_delta_ms = 0;
 };

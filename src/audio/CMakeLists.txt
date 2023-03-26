@@ -16,6 +16,7 @@ add_library(Audio STATIC
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Audio_SDL_mixer.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>,src/Audio_SDL_mixer.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,src/Audio_Dummy.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>,src/Audio_Dummy.cpp,>
 )
 
 if (NOT SPELUNKY_PSP_PLATFORM_WINDOWS)

@@ -11,7 +11,7 @@
 namespace
 {
     const char* TOP_DEFILERS_MSG = "TOP DEFILERS";
-    const char* STATISTICS_MSG = "STATISTICS";
+    const char* STATISTICS_MSG = "PRZEMO JEST THE BEST";
     const char* MONEY_MSG = "MONEY:";
     const char* KILLS_MSG = "KILLS:";
     const char* SAVES_MSG = "SAVES:";

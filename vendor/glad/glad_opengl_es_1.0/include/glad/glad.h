@@ -561,6 +561,12 @@ GLAPI PFNGLORTHOFPROC glad_glOrthof;
     #define glOrtho glad_glOrtho
 #endif
 
+#ifdef SPELUNKY_PSP_PLATFORM_EMSCRIPTEN // Added manually:
+    typedef void (APIENTRYP PFNGLORTHOPROC)(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
+    GLAPI PFNGLORTHOPROC glad_glOrtho;
+    #define glOrtho glad_glOrtho
+#endif
+
 typedef void (APIENTRYP PFNGLPOINTPARAMETERFPROC)(GLenum pname, GLfloat param);
 GLAPI PFNGLPOINTPARAMETERFPROC glad_glPointParameterf;
 #define glPointParameterf glad_glPointParameterf

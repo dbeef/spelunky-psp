@@ -1,3 +1,4 @@
+#include <emscripten.h>
 #include "video/Video.hpp"
 #include "audio/Audio.hpp"
 #include "logger/log.h"
@@ -30,6 +31,16 @@ void dispose_singletons()
     Level::dispose();
 }
 
+void run_loop(void* cb_data)
+{
+    auto* video = reinterpret_cast<Video*>(cb_data);
+    // while (true)
+    {
+        // log_info("Tick");
+        video->loop_tick();
+    }
+}
+
 int start()
 {
     log_info("Started.");
@@ -50,8 +61,11 @@ int start()
     }
 
     {
+        log_info("Creating GameLoop instance");
         GameLoop loop(video.get_viewport());
+        log_info("Running the loop");
         video.run_loop(loop.get());
+        emscripten_set_main_loop_arg(run_loop, (void*)&video, 60, true);
     }
 
     video.tear_down_gl();
@@ -63,7 +77,8 @@ int start()
 }
 
 #if defined(SPELUNKY_PSP_PLATFORM_PSP) || \
-    defined(SPELUNKY_PSP_PLATFORM_ANDROID)
+    defined(SPELUNKY_PSP_PLATFORM_ANDROID) || \
+    defined(SPELUNKY_PSP_PLATFORM_EMSCRIPTEN)
 // Not mangling symbols so SDL could find SDL_main.
 extern "C"
 {
@@ -75,10 +90,12 @@ int SDL_main(int argc, char *argv[]) {
 
 #if defined(SPELUNKY_PSP_PLATFORM_LINUX) || \
     defined(SPELUNKY_PSP_PLATFORM_WINDOWS) || \
+    defined(SPELUNKY_PSP_PLATFORM_EMSCRIPTEN) || \
     defined(SPELUNKY_PSP_PLATFORM_DARWIN)
 
 int main()
 {
+    // EM_ASM({ Module.wasmTable = wasmTable; });
     return start();
 }
 

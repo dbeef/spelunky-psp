@@ -1,5 +1,5 @@
 #include <cassert>
-#include <glad/glad.h>
+#include <SDL_opengl.h>
 
 #include "ScreenSpaceCamera.hpp"
 #include "viewport/Viewport.hpp"

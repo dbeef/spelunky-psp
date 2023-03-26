@@ -13,6 +13,7 @@
 #include "system/ItemSystem.hpp"
 #include "system/DamageSystem.hpp"
 #include "system/ShoppingSystem.hpp"
+#include "logger/log.h"
 
 #include <algorithm>
 #include <cassert>
@@ -37,6 +38,8 @@ GameLoop::GameLoop(const std::shared_ptr<Viewport>& viewport)
     , _damage_system(std::make_shared<DamageSystem>())
     , _shopping_system(std::make_shared<ShoppingSystem>())
 {
+    log_info("Entered GameLoop::GameLoop");
+
     _states.current = &_states.started;
     _states.current->enter(*this);
 

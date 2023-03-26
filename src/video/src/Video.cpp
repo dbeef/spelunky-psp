@@ -4,25 +4,21 @@
 
 #include "video/Video.hpp"
 #include "Input.hpp"
-#include "glad/glad.h"
+#include "SDL_opengl.h"
 #include "graphics_utils/DebugGlCall.hpp"
 
-void Video::run_loop(const std::function<bool(uint32_t delta_time_ms)> &loop_callback)
+void Video::loop_tick()
 {
-    auto& input = Input::instance();
-
-    uint32_t last_delta_ms = 0;
-    bool exit = false;
-
-    while (!exit)
-    {
+        auto& input = Input::instance();
 
         _timestep.mark_start();
+        make_current();
 
 #ifndef NDEBUG
         DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
 #endif
-         exit = loop_callback(last_delta_ms);
+         //exit = _loop_callback(_last_delta_ms);
+        _loop_callback(_last_delta_ms);
         // Force GPU to render commands queued in the callback:
         DebugGlCall(glFlush());
         // Now CPU-consuming calls for the rest of the frame:
@@ -32,11 +28,10 @@ void Video::run_loop(const std::function<bool(uint32_t delta_time_ms)> &loop_cal
         swap_buffers();
 
         _timestep.mark_end();
-        last_delta_ms = _timestep.delay();
+        _last_delta_ms = _timestep.delay();
+}
 
-        if (exit)
-        {
-            break;
-        }
-    }
+void Video::run_loop(const std::function<bool(uint32_t delta_time_ms)> &loop_callback)
+{
+    _loop_callback = loop_callback;
 }
