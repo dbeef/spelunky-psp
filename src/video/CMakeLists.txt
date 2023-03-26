@@ -16,17 +16,8 @@ target_include_directories(Video
         INTERFACE interface
 )
 
-target_compile_definitions(Video PUBLIC 
-    # -DDISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=0
-    -DUSE_WEBGL2=0
-)
-
-target_link_options(Video PUBLIC
-    -sLEGACY_GL_EMULATION
-    # -sFULL_ES2=1
-    # -sGL_FFP_ONLY
-    # -sGL_UNSAFE_OPTS
-)
+target_compile_definitions(Video PUBLIC -DUSE_WEBGL2=0)
+target_link_options(Video PUBLIC -sLEGACY_GL_EMULATION)
 
 set_target_properties(Video PROPERTIES
         CXX_STANDARD

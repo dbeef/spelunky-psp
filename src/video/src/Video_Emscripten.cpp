@@ -1,11 +1,7 @@
-//
-// Created by dbeef on 7/7/19.
-//
 #include "video/Video.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
 #include "time/Timestep.hpp"
 #include "logger/log.h"
-// #include "SDL_opengl.h"
 
 #include <SDL.h>
 #include <SDL_video.h>
@@ -54,10 +50,6 @@ bool Video::setup_gl()
 
     log_info("Setting SDL_GL attributes");
 
-    // SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 1);
-    // SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0);
-    // SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-
     SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
     SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 6 );
     SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
@@ -65,7 +57,6 @@ bool Video::setup_gl()
     SDL_GL_SetAttribute( SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1);
 
-    // SDL_GL_LoadLibrary(nullptr);
     SDL_ClearError();
 
     //  Create a window
@@ -76,8 +67,7 @@ bool Video::setup_gl()
                               SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED,
                               1600 / 2, 900 / 2,
-                              SDL_WINDOW_OPENGL);    
-                              // SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP);    
+                              SDL_WINDOW_OPENGL);
 
     if (!_platform_specific->window)
     {
@@ -101,50 +91,21 @@ bool Video::setup_gl()
         SDL_ClearError();
         return false;
     }
-    
+
     log_info("Setting GL context as current");
 
     make_current();
     SDL_ClearError();
-    
-    log_info("Initialising GLAD");
 
-    // if(!gladLoadGLES1Loader((GLADloadproc) SDL_GL_GetProcAddress)) {
-        // log_error("Error while loading ptrs to OpenGL functions");
-        // return false;
-    // }
-    
     log_info("Setting OpenGL properties");
 
     DebugGlCall(glEnable(GL_TEXTURE_2D));
-
     DebugGlCall(glShadeModel(GL_SMOOTH));
     DebugGlCall(glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE));
-
     DebugGlCall(glEnable(GL_BLEND));
     DebugGlCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-
     DebugGlCall(glEnableClientState(GL_VERTEX_ARRAY)); // For glVertexPointer
     DebugGlCall(glEnableClientState(GL_TEXTURE_COORD_ARRAY)); // For glTexCoordPointer
-
-    // Disable, as it is not used and may affect performance:
-    // DebugGlCall(glDisableClientState(GL_COLOR_ARRAY));
-    // DebugGlCall(glDisableClientState(GL_NORMAL_ARRAY));
-
-    // DebugGlCall(glDisable(GL_FOG));
-    // DebugGlCall(glDisable(GL_LIGHTING));
-    // DebugGlCall(glDisable(GL_CULL_FACE));
-    // DebugGlCall(glDisable(GL_ALPHA_TEST));
-    // DebugGlCall(glDisable(GL_COLOR_LOGIC_OP));
-    // DebugGlCall(glDisable(GL_DITHER));
-    // DebugGlCall(glDisable(GL_STENCIL_TEST));
-    // DebugGlCall(glDisable(GL_DEPTH_TEST));
-    // DebugGlCall(glDisable(GL_POINT_SMOOTH));
-    // DebugGlCall(glDisable(GL_LINE_SMOOTH));
-    // DebugGlCall(glDisable(GL_SCISSOR_TEST));
-    // DebugGlCall(glDisable(GL_COLOR_MATERIAL));
-    // DebugGlCall(glDisable(GL_NORMALIZE));
-    // DebugGlCall(glDisable(GL_RESCALE_NORMAL));
 
     log_info("Exiting Video::setup_gl, success.");
     return true;

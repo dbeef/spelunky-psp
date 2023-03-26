@@ -34,11 +34,7 @@ void dispose_singletons()
 void run_loop(void* cb_data)
 {
     auto* video = reinterpret_cast<Video*>(cb_data);
-    // while (true)
-    {
-        // log_info("Tick");
-        video->loop_tick();
-    }
+    video->loop_tick();
 }
 
 int start()
@@ -61,9 +57,7 @@ int start()
     }
 
     {
-        log_info("Creating GameLoop instance");
         GameLoop loop(video.get_viewport());
-        log_info("Running the loop");
         video.run_loop(loop.get());
         emscripten_set_main_loop_arg(run_loop, (void*)&video, 60, true);
     }
@@ -95,7 +89,6 @@ int SDL_main(int argc, char *argv[]) {
 
 int main()
 {
-    // EM_ASM({ Module.wasmTable = wasmTable; });
     return start();
 }
 
