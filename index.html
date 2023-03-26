@@ -1,2 +1,78 @@
-<h1>Hello!</h1>
-<h2>Expect a web build of SpelunkyPSP here soon!</h2>
+<!doctypehtml>
+<html lang=en-us>
+<head>
+    <meta charset=utf-8>
+    <meta content="text/html; charset=utf-8" http-equiv=Content-Type>
+    <title>Spelunky-PSP</title>
+    <style>
+        body {
+            padding: 0;
+            margin: auto;
+            display: block;
+            width: 1600px;
+            height: 900px;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: black;
+        }
+
+        @-webkit-keyframes rotation {
+            from {
+                -webkit-transform: rotate(0)
+            }
+            to {
+                -webkit-transform: rotate(360deg)
+            }
+        }
+
+        @-moz-keyframes rotation {
+            from {
+                -moz-transform: rotate(0)
+            }
+            to {
+                -moz-transform: rotate(360deg)
+            }
+        }
+
+        @-o-keyframes rotation {
+            from {
+                -o-transform: rotate(0)
+            }
+            to {
+                -o-transform: rotate(360deg)
+            }
+        }
+
+        @keyframes rotation {
+            from {
+                transform: rotate(0)
+            }
+            to {
+                transform: rotate(360deg)
+            }
+        }
+    </style>
+</head>
+<body>
+<div>
+    <canvas id=canvas oncontextmenu=event.preventDefault()></canvas>
+</div>
+<script>
+    Module = {
+        canvas: function () {
+            const canvas = document.getElementById("canvas");
+            const onContextLost = function (canvas) {
+                alert("WebGL context lost. You will need to reload the page.");
+                canvas.preventDefault();
+            };
+            canvas.addEventListener("webglcontextlost", onContextLost, !1);
+            return canvas;
+        }(),
+    };
+</script>
+<script async src=artifacts/Spelunky_PSP.js></script>
+</body>
+</html>
