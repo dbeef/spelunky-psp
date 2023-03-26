@@ -2,7 +2,7 @@
 # This script is meant to be run from the root of the project.
 
 INSTALL_PATH=`pwd`/tmp/install-emscripten
-EMSCRIPTEN_ROOT=/Users/dbeef/dev/emsdk/upstream/emscripten
+EMSCRIPTEN_ROOT=$EMSDK/upstream/emscripten
 
 rm -rf tmp/build-emscripten
 mkdir -p tmp/build-emscripten
