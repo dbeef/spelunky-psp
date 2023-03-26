@@ -66,7 +66,7 @@ bool Video::setup_gl()
     _platform_specific->window = SDL_CreateWindow("Spelunky",
                               SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED,
-                              1600 / 2, 900 / 2,
+                              1600,900, // FIXME: Query the web browser for canvas dimensions
                               SDL_WINDOW_OPENGL);
 
     if (!_platform_specific->window)
