@@ -45,7 +45,8 @@ namespace
         // Some less-precise sampling frequency (i.e 22050 Hz) would be a better trade-off
         // between binary size and quality, but PSP refuses to open an audio device with
         // any sampling rate other than 44100 Hz due to hardware constraints.
-        constexpr static int SAMPLING_FREQUENCY = 44100;
+        // FIXME: For some reason the only audio device SDL2_mixer emscripten build detects; branch this file per-platform?
+        constexpr static int SAMPLING_FREQUENCY = 48000;
         // Same as in case of sampling frequency - PSP won't allow any other encoding.
         constexpr static uint16_t DATA_FORMAT = AUDIO_S16LSB;
         constexpr static int CHANNELS = 1;

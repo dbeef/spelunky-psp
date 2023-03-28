@@ -1,8 +1,7 @@
 macro(add_emscripten_dependencies)
 
+    # No find_package on SDL2_mixer is required, see the link flags below
     find_package(SDL2 CONFIG REQUIRED)
-    # FIXME: Audio target
-    # find_package(SDL2_mixer REQUIRED)
 
     add_library(SDL_2_XX INTERFACE)
     target_link_libraries(SDL_2_XX INTERFACE
@@ -18,7 +17,7 @@ macro(add_emscripten_dependencies)
     )
 
     add_library(Dependencies INTERFACE)
-    target_link_libraries(Dependencies INTERFACE SDL_2_XX)
+    target_link_libraries(Dependencies INTERFACE SDL_2_XX -sUSE_SDL_MIXER=2)
     target_compile_definitions(Dependencies INTERFACE
             SPELUNKY_PSP_PLATFORM_EMSCRIPTEN
             SPELUNKY_PSP_PLATFORM_DESKTOP
