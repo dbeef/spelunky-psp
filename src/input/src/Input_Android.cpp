@@ -113,7 +113,7 @@ void Input::poll()
                 _toggles.out_rope.feed(v);
             }
         }
-
-        fill_input_events();
     }
+
+    fill_input_events();
 }
