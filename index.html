@@ -7,17 +7,17 @@
     <title>Spelunky</title>
     <style>
         body {
-            padding: 0;
-            margin: auto;
-            display: block;
-            width: 1600px;
-            height: 900px;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
             background: black;
+        }
+
+        #canvas {
+            width: height * 1.777; /* 16:9 */
+            height: 100%;
+            overflow: hidden;
+            display: block;
+            position: absolute;
+            top: 0; bottom: 0; left: 0; right: 0;
+            margin: auto;
         }
 
         @-webkit-keyframes rotation {
@@ -58,9 +58,12 @@
     </style>
 </head>
 <body>
+
 <div>
     <canvas id=canvas oncontextmenu=event.preventDefault()></canvas>
-</div>
+</div
+
+</body>
 <script>
     // Ask for confirmation user wants to leave the page:
     window.onbeforeunload = function () {
