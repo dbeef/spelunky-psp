@@ -46,7 +46,7 @@ namespace
         // between binary size and quality, but PSP refuses to open an audio device with
         // any sampling rate other than 44100 Hz due to hardware constraints.
         constexpr static int SAMPLING_FREQUENCY = 44100;
-        // Not what we want, but better than nothing:
+        // Will play audio faster than desired, but better than nothing:
         constexpr static int BACKUP_SAMPLING_FREQUENCY = 48000;
         // Same as in case of sampling frequency - PSP won't allow any other encoding.
         constexpr static uint16_t DATA_FORMAT = AUDIO_S16LSB;
