@@ -78,7 +78,6 @@ void Input::poll()
             {
                 _toggles.jumping.feed(v);
             }
-
             else if (key == SDLK_p)
             {
                 _toggles.purchase.feed(v);
@@ -116,7 +115,6 @@ void Input::poll()
                 _toggles.out_rope.feed(v);
             }
         }
-
-        fill_input_events();
     }
+    fill_input_events();
 }
