@@ -47,7 +47,7 @@ namespace
         // any sampling rate other than 44100 Hz due to hardware constraints.
         constexpr static int SAMPLING_FREQUENCY = 44100;
         // Will play audio faster than desired, but better than nothing:
-        constexpr static int BACKUP_SAMPLING_FREQUENCY = 48000;
+        constexpr static int FALLBACK_SAMPLING_FREQUENCY = 48000;
         // Same as in case of sampling frequency - PSP won't allow any other encoding.
         constexpr static uint16_t DATA_FORMAT = AUDIO_S16LSB;
         constexpr static int CHANNELS = 1;
@@ -101,7 +101,7 @@ namespace
         uint16_t format;
         Mix_QuerySpec(&freq, &format, &channel);
         log_info("Opened audio device: %i Hz, %s, %i channel(s).", freq, map_format(format), channel);
-        return (freq == SpelunkyPSP_AudioFormat::SAMPLING_FREQUENCY || freq == SpelunkyPSP_AudioFormat::BACKUP_SAMPLING_FREQUENCY) &&
+        return (freq == SpelunkyPSP_AudioFormat::SAMPLING_FREQUENCY || freq == SpelunkyPSP_AudioFormat::FALLBACK_SAMPLING_FREQUENCY) &&
                channel == SpelunkyPSP_AudioFormat::CHANNELS &&
                format == SpelunkyPSP_AudioFormat::DATA_FORMAT;
     }
