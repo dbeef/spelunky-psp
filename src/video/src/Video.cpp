@@ -12,7 +12,6 @@ void Video::loop_tick()
         auto& input = Input::instance();
 
         _timestep.mark_start();
-        make_current();
 
 #ifndef NDEBUG
         DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));

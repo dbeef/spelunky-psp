@@ -31,11 +31,6 @@ void Video::swap_buffers() const
     SDL_GL_SwapWindow(_platform_specific->window);
 }
 
-void Video::make_current() const
-{
-    SDL_GL_MakeCurrent(_platform_specific->window, _platform_specific->gl_context);
-}
-
 bool Video::setup_gl()
 {
     log_info("Entered Video::setup_gl.");
@@ -91,11 +86,6 @@ bool Video::setup_gl()
         SDL_ClearError();
         return false;
     }
-
-    log_info("Setting GL context as current");
-
-    make_current();
-    SDL_ClearError();
 
     log_info("Setting OpenGL properties");
 

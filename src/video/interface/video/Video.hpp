@@ -26,7 +26,6 @@ public:
     void run_loop(const std::function<bool(uint32_t delta_time_ms)> &loop_callback);
     std::shared_ptr<Viewport> get_viewport() const { assert(_viewport); return _viewport; }
     void swap_buffers() const;
-    void make_current() const;
     void loop_tick();
 private:
     Timestep _timestep;
