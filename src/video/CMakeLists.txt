@@ -32,6 +32,7 @@ target_link_libraries(Video
     PUBLIC
         Time
         Viewport
+        Patterns
     PRIVATE
         Logger
         glad

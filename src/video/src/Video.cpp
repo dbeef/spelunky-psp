@@ -7,7 +7,9 @@
 #include "glad/glad.h"
 #include "graphics_utils/DebugGlCall.hpp"
 
-void Video::loop_tick()
+REGISTER_SINGLETON_INSTANCE(Video)
+
+bool Video::tick(const TickCallback& tick_callback)
 {
         auto& input = Input::instance();
 
@@ -16,8 +18,7 @@ void Video::loop_tick()
 #ifndef NDEBUG
         DebugGlCall(glClear(GL_COLOR_BUFFER_BIT));
 #endif
-         //exit = _loop_callback(_last_delta_ms);
-        _loop_callback(_last_delta_ms);
+        auto result = tick_callback(_last_delta_ms);
         // Force GPU to render commands queued in the callback:
         DebugGlCall(glFlush());
         // Now CPU-consuming calls for the rest of the frame:
@@ -28,9 +29,6 @@ void Video::loop_tick()
 
         _timestep.mark_end();
         _last_delta_ms = _timestep.delay();
-}
 
-void Video::run_loop(const std::function<bool(uint32_t delta_time_ms)> &loop_callback)
-{
-    _loop_callback = loop_callback;
+        return result;
 }
