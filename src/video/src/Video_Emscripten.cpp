@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include "video/Video.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
 #include "time/Timestep.hpp"
@@ -5,7 +6,6 @@
 
 #include <SDL.h>
 #include <SDL_video.h>
-#include <SDL_opengl.h>
 
 struct PlatformSpecific
 {
@@ -85,6 +85,12 @@ bool Video::setup_gl()
         log_error("SDL_GL_CreateContext Error: %s", SDL_GetError());
         SDL_ClearError();
         return false;
+    }
+
+    if (!gladLoadGLES1Loader((GLADloadproc) SDL_GL_GetProcAddress))
+    {
+      log_error("Error while loading ptrs to OpenGL functions");
+      return false;
     }
 
     log_info("Setting OpenGL properties");

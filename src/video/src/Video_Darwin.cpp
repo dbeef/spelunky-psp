@@ -2,7 +2,7 @@
 #include "graphics_utils/DebugGlCall.hpp"
 #include "time/Timestep.hpp"
 #include "logger/log.h"
-#include "SDL_opengl.h"
+#include "glad/glad.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_video.h>
