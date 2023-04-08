@@ -26,7 +26,6 @@ public:
     FRIEND_SINGLETON(Video)
 
     bool setup_gl();
-    inline uint32_t get_delta_time() const { return _last_delta_ms; }
     void tear_down_gl();
     std::shared_ptr<Viewport> get_viewport() const { assert(_viewport); return _viewport; }
     void swap_buffers() const;

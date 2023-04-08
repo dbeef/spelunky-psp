@@ -7,7 +7,6 @@ Timestamp Timestep::delay() const
 
   if (delta_ms < _min_delay_ms)
   {
-    const auto sleep_time_ms = _min_delay_ms - delta_ms;
     // Note - No real sleep done here - emscripten already handles
     //        running game loop in 60fps.
     return _min_delay_ms;
