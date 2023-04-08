@@ -16,8 +16,12 @@ target_include_directories(Video
         INTERFACE interface
 )
 
-target_compile_definitions(Video PUBLIC -DUSE_WEBGL2=0)
-target_link_options(Video PUBLIC -sLEGACY_GL_EMULATION)
+target_compile_definitions(Video PUBLIC
+    $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>,USE_WEBGL2=0,>
+)
+target_link_options(Video PUBLIC
+    $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>,-sLEGACY_GL_EMULATION,>
+)
 
 set_target_properties(Video PROPERTIES
         CXX_STANDARD

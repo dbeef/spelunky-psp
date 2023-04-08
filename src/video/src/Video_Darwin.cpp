@@ -1,12 +1,11 @@
+#include "glad/glad.h"
 #include "video/Video.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
 #include "time/Timestep.hpp"
 #include "logger/log.h"
-#include "glad/glad.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_video.h>
-#include <SDL2/SDL_opengl.h>
 
 struct PlatformSpecific
 {

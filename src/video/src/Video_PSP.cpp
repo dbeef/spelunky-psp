@@ -2,7 +2,7 @@
 // Created by dbeef on 7/7/19.
 //
 #include "video/Video.hpp"
-#include "SDL_opengl.h"
+#include "glad/glad.h"
 #include "graphics_utils/DebugGlCall.hpp"
 #include "logger/log.h"
 

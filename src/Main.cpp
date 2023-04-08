@@ -1,4 +1,6 @@
+#if defined(SPELUNKY_PSP_PLATFORM_EMSCRIPTEN)
 #include <emscripten.h>
+#endif
 #include "video/Video.hpp"
 #include "audio/Audio.hpp"
 #include "logger/log.h"
@@ -59,7 +61,11 @@ int start()
     {
         GameLoop loop(video.get_viewport());
         video.run_loop(loop.get());
+        #if defined(SPELUNKY_PSP_PLATFORM_EMSCRIPTEN)
         emscripten_set_main_loop_arg(run_loop, (void*)&video, 60, true);
+        #else
+        while (true) { video.loop_tick(); }
+        #endif
     }
 
     video.tear_down_gl();

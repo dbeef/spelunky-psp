@@ -9,7 +9,6 @@
 
 #include <SDL.h>
 #include <SDL_video.h>
-#include <SDL_opengl.h>
 
 struct PlatformSpecific
 {
@@ -67,7 +66,7 @@ bool Video::setup_gl()
                               SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED,
                               0, 0,
-                              SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP);    
+                              SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP);
     if (!_platform_specific->window)
     {
         log_error("SDL_CreateWindow Error: %s", SDL_GetError());
@@ -86,15 +85,15 @@ bool Video::setup_gl()
         SDL_ClearError();
         return false;
     }
-    
+
     SDL_GL_MakeCurrent(_platform_specific->window, _platform_specific->gl_context);
     SDL_ClearError();
-    
+
     if(!gladLoadGLES1Loader((GLADloadproc) SDL_GL_GetProcAddress)) {
         log_error("Error while loading ptrs to OpenGL functions");
         return false;
     }
-    
+
     DebugGlCall(glEnable(GL_TEXTURE_2D));
 
     DebugGlCall(glShadeModel(GL_SMOOTH));

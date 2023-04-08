@@ -4,7 +4,7 @@
 
 #include "video/Video.hpp"
 #include "Input.hpp"
-#include "SDL_opengl.h"
+#include "glad/glad.h"
 #include "graphics_utils/DebugGlCall.hpp"
 
 void Video::loop_tick()

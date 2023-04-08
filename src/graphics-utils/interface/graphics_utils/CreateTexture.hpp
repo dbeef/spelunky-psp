@@ -6,7 +6,7 @@
 #define RESOURCE_COMPILER_CREATETEXTURE_HPP
 
 #include <cstdlib>
-#include "SDL_opengl.h"
+#include "glad/glad.h"
 
 namespace graphics_utils
 {

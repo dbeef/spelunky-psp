@@ -8,7 +8,7 @@
 #include <cassert>
 
 #include "logger/log.h"
-#include "SDL_opengl.h"
+#include "glad/glad.h"
 
 namespace graphics_utils
 {

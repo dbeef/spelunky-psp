@@ -1,4 +1,4 @@
-#include <glad/glad.h>
+#include "glad/glad.h"
 #include "video/Video.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
 #include "time/Timestep.hpp"

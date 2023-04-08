@@ -9,7 +9,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#include "SDL_opengl.h"
+#include "glad/glad.h"
 
 void graphics_utils::look_at(float x, float y)
 {

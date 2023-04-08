@@ -1,7 +1,7 @@
 #include "system/RenderingSystem.hpp"
 #include "EntityRegistry.hpp"
 #include "Vertex.hpp"
-#include "SDL_opengl.h"
+#include "glad/glad.h"
 #include "graphics_utils/DebugGlCall.hpp"
 #include "components/generic/TextComponent.hpp"
 #include "components/generic/QuadComponent.hpp"
