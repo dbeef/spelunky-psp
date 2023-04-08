@@ -7,7 +7,7 @@ add_library(Time STATIC
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Timestep_SDL1.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>,src/Timestep_SDL2.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,src/Timestep_SDL2.cpp,>
-        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>,src/Timestep_SDL2.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>,src/Timestep_SDL2_Emscripten.cpp,>
 )
 
 target_include_directories(Time

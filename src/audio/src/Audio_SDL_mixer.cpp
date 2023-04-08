@@ -35,7 +35,8 @@ struct Audio::Handles
     Mix_Chunk* _throw = nullptr;
 };
 
-Audio::Audio() : _handles(std::make_unique<Audio::Handles>()) {}
+Audio::Audio() : _handles(std::make_unique<Audio::Handles>())
+{}
 Audio::~Audio() = default; // For pimpl
 
 namespace
