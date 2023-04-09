@@ -126,13 +126,13 @@ jobs:
       # with:
         # name: Spelunky_Windows
         # path: tmp/install-windows/Release/bin
-  publish:
-    name: Publish
-    runs-on: ubuntu-latest
-    needs: [build-web]
+  # publish:
+    # name: Publish
+    # runs-on: ubuntu-latest
+    # needs: [build-web]
     # needs: [build-android, build-linux, build-psp, build-windows, build-web]
     # if: contains(github.ref, 'refs/tags/')
-    steps:
+    # steps:
       # - name: Download Artifacts
         # id: download
         # uses: actions/download-artifact@v2
