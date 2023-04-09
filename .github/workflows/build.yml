@@ -88,7 +88,10 @@ jobs:
         image: emscripten/emsdk
         shell: bash
         run: |
+          set -e
           ls -all
+          git config --global --add safe.directory /spelunky
+
           git status
 
           git config --global user.name "Daniel 'dbeef' Zalega - Github Workflows"
