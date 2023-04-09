@@ -97,7 +97,9 @@ jobs:
           git config --global user.name "Daniel 'dbeef' Zalega - Github Workflows"
           git config --global user.email "daniel.zalega@gmail.com"
 
+          git fetch
           git checkout github-pages
+
           cp tmp/build-emscripten/Spelunky_PSP.* artifacts/
 
           touch artifacts/test
