@@ -90,6 +90,21 @@ jobs:
         run: |
           ls -all
           git status
+
+          git config --global user.name "Daniel 'dbeef' Zalega - Github Workflows"
+          git config --global user.email "daniel.zalega@gmail.com"
+
+          git checkout github-pages
+          cp tmp/build-emscripten/Spelunky_PSP.* artifacts/
+
+          touch artifacts/test
+
+          git add artifacts
+          git commit -m "Updated the web build artifact"
+
+          git push --set-upstream origin github-pages
+
+
           ./scripts/config-emscripten.sh && ./scripts/build-emscripten.sh
   # build-windows:
     # name: Build Windows
@@ -158,14 +173,14 @@ jobs:
           # file: Spelunky_Android/Spelunky_PSP.apk
           # asset_name: Spelunky_PSP_Android.apk
           # overwrite: true
-      - name: Upload the web artifact
-        run: |
-          git config --global user.name "Daniel 'dbeef' Zalega - Github Workflows"
-          git config --global user.email "daniel.zalega@gmail.com"
+      # - name: Upload the web artifact
+        # run: |
+          # git config --global user.name "Daniel 'dbeef' Zalega - Github Workflows"
+          # git config --global user.email "daniel.zalega@gmail.com"
 
-          git checkout github-pages
-          cp tmp/build-emscripten/Spelunky_PSP.* artifacts/
-          git commit -m "Updated the web build artifact"
+          # git checkout github-pages
+          # cp tmp/build-emscripten/Spelunky_PSP.* artifacts/
+          # git commit -m "Updated the web build artifact"
 
-          git push --set-upstream origin github-pages
+          # git push --set-upstream origin github-pages
 
