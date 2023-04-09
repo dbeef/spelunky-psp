@@ -10,8 +10,10 @@ add_library(Audio STATIC
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,src/AudioBank.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/AudioBank.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>,src/AudioBank.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>,src/AudioBank.cpp,>
         # Compile audio backend (dummy when audio is not supported):
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,src/Audio_SDL_mixer.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>,src/Audio_SDL_mixer.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,src/Audio_SDL_mixer.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Audio_SDL_mixer.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>,src/Audio_SDL_mixer.cpp,>
@@ -47,4 +49,5 @@ target_link_libraries(Audio
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,SDL_1_XX,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>,SDL_2_XX,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,SDL_2_XX,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>,SDL_2_XX,>
 )

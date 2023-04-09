@@ -8,11 +8,19 @@ add_library(Video STATIC
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Video_Desktop.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>,src/Video_Darwin.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,src/Video_Android.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>,src/Video_Emscripten.cpp,>
 )
 
 target_include_directories(Video
         PRIVATE include interface
         INTERFACE interface
+)
+
+target_compile_definitions(Video PUBLIC
+    $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>,USE_WEBGL2=0,>
+)
+target_link_options(Video PUBLIC
+    $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>,-sLEGACY_GL_EMULATION,>
 )
 
 set_target_properties(Video PROPERTIES
@@ -24,6 +32,7 @@ target_link_libraries(Video
     PUBLIC
         Time
         Viewport
+        Patterns
     PRIVATE
         Logger
         glad
@@ -34,4 +43,5 @@ target_link_libraries(Video
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,SDL_1_XX,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>,SDL_2_XX,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,SDL_2_XX,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_EMSCRIPTEN}>,SDL_2_XX,>
 )

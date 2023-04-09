@@ -7,3 +7,4 @@ install/
 .vscode
 .idea
 platforms/android/build/
+.DS_Store

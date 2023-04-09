@@ -307,6 +307,10 @@ static void load_GL_VERSION_ES_CM_1_0(GLADloadproc load) {
         glad_glOrtho = (PFNGLORTHOPROC)load("glOrthof");
     #endif
 
+    #ifdef SPELUNKY_PSP_PLATFORM_EMSCRIPTEN // Added manually
+        glad_glOrtho = (PFNGLORTHOPROC)load("glOrthof");
+    #endif
+
 	glad_glPointParameterf = (PFNGLPOINTPARAMETERFPROC)load("glPointParameterf");
 	glad_glPointParameterfv = (PFNGLPOINTPARAMETERFVPROC)load("glPointParameterfv");
 	glad_glPointSize = (PFNGLPOINTSIZEPROC)load("glPointSize");

@@ -25,6 +25,7 @@ Currently supported platforms are:
 * Linux
 * Windows
 * macOS
+* [Web (Emscripten)](https://dbeef.github.io/spelunky-psp/)
 
 With successful attempts to run it on such devices as Raspberry PI 3, Orange PI One, Samsung Note III.
 

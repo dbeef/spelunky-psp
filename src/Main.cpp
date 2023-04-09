@@ -10,30 +10,45 @@
 
 #include <cstdlib>
 
-void init_singletons()
+class Singletons final
 {
+public:
+  Singletons()
+  {
     Level::init();
     TextureBank::init();
     Input::init();
     Audio::init();
+    Video::init();
     Inventory::init();
     EntityRegistry::init();
-}
-
-void dispose_singletons()
-{
+  }
+  ~Singletons()
+  {
     EntityRegistry::dispose();
     Inventory::dispose();
+    Video::dispose();
     Audio::dispose();
     Input::dispose();
     TextureBank::dispose();
     Level::dispose();
+  }
+};
+
+#if defined(SPELUNKY_PSP_PLATFORM_EMSCRIPTEN)
+#include <emscripten.h>
+void run_loop(void* cb_data)
+{
+  auto& video = Video::instance();
+  auto* game_loop = reinterpret_cast<GameLoop*>(cb_data);
+  video.tick(game_loop->get());
 }
+#endif
 
 int start()
 {
     log_info("Started.");
-    init_singletons();
+    Singletons raii_singletons;
 
     if (!Audio::instance().setup_audio())
     {
@@ -41,29 +56,33 @@ int start()
         return EXIT_FAILURE;
     }
 
-    Video video;
-
-    if (!video.setup_gl())
+    if (!Video::instance().setup_gl())
     {
         log_error("Failed to setup OpenGL.");
         return EXIT_FAILURE;
     }
 
     {
+        auto& video = Video::instance();
         GameLoop loop(video.get_viewport());
-        video.run_loop(loop.get());
+
+        #if defined(SPELUNKY_PSP_PLATFORM_EMSCRIPTEN)
+        emscripten_set_main_loop_arg(run_loop, (void*)&video, 60, true);
+        #else
+        while (!video.tick(loop.get())) { }
+        #endif
     }
 
-    video.tear_down_gl();
+    Video::instance().tear_down_gl();
     Audio::instance().tear_down_audio();
 
-    dispose_singletons();
     log_info("Exiting peacefully.");
     return EXIT_SUCCESS;
 }
 
 #if defined(SPELUNKY_PSP_PLATFORM_PSP) || \
-    defined(SPELUNKY_PSP_PLATFORM_ANDROID)
+    defined(SPELUNKY_PSP_PLATFORM_ANDROID) || \
+    defined(SPELUNKY_PSP_PLATFORM_EMSCRIPTEN)
 // Not mangling symbols so SDL could find SDL_main.
 extern "C"
 {
@@ -75,6 +94,7 @@ int SDL_main(int argc, char *argv[]) {
 
 #if defined(SPELUNKY_PSP_PLATFORM_LINUX) || \
     defined(SPELUNKY_PSP_PLATFORM_WINDOWS) || \
+    defined(SPELUNKY_PSP_PLATFORM_EMSCRIPTEN) || \
     defined(SPELUNKY_PSP_PLATFORM_DARWIN)
 
 int main()
