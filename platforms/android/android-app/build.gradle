@@ -14,7 +14,7 @@ android {
 
         externalNativeBuild {
             cmake {
-            	version "3.10.2+"
+		version "3.22.1+"
                 // Add any cmake options here.
 
                 def ANDROID_DEPS_ARMEABI_V7A=System.getenv('ANDROID_DEPS_ARMEABI_V7A')
@@ -64,7 +64,7 @@ android {
     }
     externalNativeBuild {
         cmake {
-        	version "3.10.2+"
+		version "3.22.1+"
             path "../../../CMakeLists.txt"
 
             // Using one top level build dir for all build related files to reduce clutter.
