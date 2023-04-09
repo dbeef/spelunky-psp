@@ -140,7 +140,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     prefabs::TutorialSign::create(1.0, 8.5);
     prefabs::QuitSign::create(16.0, 1.5);
     prefabs::MainLogo::create(9.75, 5.5);
-    prefabs::CopyrightsSign::create(10.0, 10.75);
+    prefabs::CopyrightsSign::create(9.95, 10.75);
     prefabs::GithubLink::create(9.0, 1.0);
     prefabs::Flare::create(16.5, 9.5);
 
