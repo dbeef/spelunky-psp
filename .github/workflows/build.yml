@@ -73,7 +73,15 @@ jobs:
         name: Spelunky_PSP
         path: tmp/build-psp/EBOOT.PBP
   build-web:
-    - name: Build the web artifact
+    name: Build the web artifact
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+        submodules: 'recursive'
+    - name: Build in Docker container
       uses: addnab/docker-run-action@v2
       with:
         options: --volume ${{ github.workspace }}:/spelunky --workdir /spelunky
