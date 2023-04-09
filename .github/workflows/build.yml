@@ -100,9 +100,8 @@ jobs:
           git fetch
           git checkout github-pages
 
+          ./scripts/config-emscripten.sh && ./scripts/build-emscripten.sh
           cp tmp/build-emscripten/Spelunky_PSP.* artifacts/
-
-          touch artifacts/test
 
           git add artifacts
           git commit -m "Updated the web build artifact"
@@ -110,7 +109,6 @@ jobs:
           git push --set-upstream origin github-pages
 
 
-          ./scripts/config-emscripten.sh && ./scripts/build-emscripten.sh
   # build-windows:
     # name: Build Windows
     # runs-on: windows-latest
