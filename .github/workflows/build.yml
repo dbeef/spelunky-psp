@@ -97,10 +97,12 @@ jobs:
           git config --global user.name "Daniel 'dbeef' Zalega - Github Workflows"
           git config --global user.email "daniel.zalega@gmail.com"
 
+
+          ./scripts/config-emscripten.sh && ./scripts/build-emscripten.sh
+
           git fetch
           git checkout github-pages
 
-          ./scripts/config-emscripten.sh && ./scripts/build-emscripten.sh
           cp tmp/build-emscripten/Spelunky_PSP.* artifacts/
 
           git add artifacts
