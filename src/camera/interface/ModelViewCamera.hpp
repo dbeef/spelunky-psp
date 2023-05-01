@@ -23,6 +23,9 @@ public:
     inline float get_x() const { return _x; }
     inline float get_y() const { return _y; }
 
+    float get_x_screen_center() const;
+    float get_y_screen_center() const;
+
     inline void set_x(float x) { _x = x; round_position_x(); }
     inline void set_y(float y) { _y = y; round_position_y(); }
 

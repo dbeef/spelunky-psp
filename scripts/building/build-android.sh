@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # This script is meant to be run from the root of the project.
 
-source scripts/variables-android.sh
+source scripts/building/variables-android.sh
 
 # Following variables must be present in the environment:
 # ANDROID_NDK_HOME - Root of directory with unpacked Android NDK, i.e - /opt/android/android-ndk-r15c

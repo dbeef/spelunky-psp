@@ -22,7 +22,7 @@ jobs:
         options: --volume ${{ github.workspace }}:/spelunky --workdir /spelunky
         image: dbeef/spelunky-psp
         shell: bash
-        run: ./scripts/build-android.sh
+        run: ./scripts/building/build-android.sh
     - name: Upload artifact
       uses: actions/upload-artifact@v1
       with:
@@ -43,7 +43,7 @@ jobs:
         options: --volume ${{ github.workspace }}:/spelunky --workdir /spelunky
         image: dbeef/spelunky-psp
         shell: bash
-        run: ./scripts/config-linux.sh && ./scripts/build-linux.sh
+        run: ./scripts/building/config-linux.sh && ./scripts/building/build-linux.sh
     - name: Upload artifact
       uses: actions/upload-artifact@v1
       with:
@@ -64,7 +64,7 @@ jobs:
         options: --volume ${{ github.workspace }}:/spelunky --workdir /spelunky
         image: dbeef/spelunky-psp
         shell: bash
-        run: ./scripts/config-psp.sh && ./scripts/build-psp.sh
+        run: ./scripts/building/config-psp.sh && ./scripts/building/build-psp.sh
     - name: Upload artifact
       uses: actions/upload-artifact@v1
       with:
@@ -80,10 +80,10 @@ jobs:
         fetch-depth: 1
         submodules: 'recursive'
     - name: Install dependencies
-      run: ./scripts/dependencies-install.ps1
+      run: ./scripts/building/dependencies-install.ps1
       shell: pwsh
     - name: Build
-      run: ./scripts/config-windows.ps1 ; ./scripts/build-windows.ps1
+      run: ./scripts/building/config-windows.ps1 ; ./scripts/building/build-windows.ps1
       shell: pwsh
     - name: Upload artifact
       uses: actions/upload-artifact@v1

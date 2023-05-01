@@ -45,8 +45,9 @@ namespace
     const float EXIT_LEVEL_Y = 1.0f;
 }
 
-GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t delta_time_ms)
+GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop)
 {
+    auto& delta_time_ms = game_loop._last_frame.total_delta_time_ms;
     auto& registry = EntityRegistry::instance().get_registry();
 
     auto& rendering_system = game_loop._rendering_system;

@@ -9,9 +9,11 @@ add_library(GameLoop STATIC
         src/game-loop/GameLoopStartedState.cpp
         src/game-loop/GameLoopLevelSummaryState.cpp
         src/game-loop/GameLoopScoresState.cpp
+        src/game-loop/GameLoopBenchmarkingState.cpp
 
         interface/game-loop/GameLoop.hpp
         interface/game-loop/GameLoopBaseState.hpp
+        interface/game-loop/GameLoopBenchmarkingState.hpp
         interface/game-loop/GameLoopMainMenuState.hpp
         interface/game-loop/GameLoopPlayingState.hpp
         interface/game-loop/GameLoopStartedState.hpp
@@ -339,6 +341,15 @@ add_library(GameLoop STATIC
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
+
+        include/benchmarking/Scene.hpp
+        include/benchmarking/FlaresScene.hpp
+        include/benchmarking/PropsScene.hpp
+        include/benchmarking/RockMassacreScene.hpp
+        src/benchmarking/RockMassacreScene.cpp src/benchmarking/PropsScene.cpp src/benchmarking/FlaresScene.cpp include/benchmarking/BombsScene.hpp src/benchmarking/BombsScene.cpp)
+
+target_compile_definitions(
+        GameLoop PRIVATE $<IF:$<BOOL:${SPELUNKY_PSP_BENCHMARK_MODE}>,SPELUNKY_PSP_BENCHMARK_MODE,>
 )
 
 target_include_directories(GameLoop
@@ -356,6 +367,7 @@ target_link_libraries(GameLoop
         Camera
         Viewport
         EntityRegistry
+        Video
     PRIVATE
         Logger
         Input

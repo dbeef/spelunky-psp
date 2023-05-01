@@ -15,6 +15,16 @@ ModelViewCamera::ModelViewCamera(std::shared_ptr<Viewport> viewport)
     , _bounding_y_half(_bounding_y / 2)
 { }
 
+float ModelViewCamera::get_x_screen_center() const
+{
+    return _x + (_projection_coefficient * _viewport->get_aspect());
+}
+
+float ModelViewCamera::get_y_screen_center() const
+{
+    return _y + (_projection_coefficient);
+}
+
 void ModelViewCamera::update_gl_modelview_matrix() const
 {
     graphics_utils::look_at(_x, _y);

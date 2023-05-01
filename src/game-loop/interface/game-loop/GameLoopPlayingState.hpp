@@ -14,7 +14,7 @@ enum class MainDudeEvent;
 class GameLoopPlayingState : public GameLoopBaseState, public Observer<MainDudeEvent>
 {
 public:
-    GameLoopBaseState* update(GameLoop&, uint32_t delta_time_ms) override;
+    GameLoopBaseState* update(GameLoop&) override;
     void enter(GameLoop&) override;
     void exit(GameLoop&) override;
     void on_notify(const MainDudeEvent*) override;
