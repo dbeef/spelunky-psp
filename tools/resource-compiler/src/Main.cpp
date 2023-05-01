@@ -13,13 +13,14 @@ namespace
     std::vector<char> load_file(const char* filename);
     void save_file(const char* filename, const std::string& contents);
     std::string parse_input(const std::vector<char>& binary_input, const char* input_path);
+    std::string remove_not_allowed_chars(const char*);
 }
 
 int main(int arg_counter, char** args)
 {
     if (arg_counter != 3)
     {
-        std::cout << "Resource compiler saves C header file defining char array for given input file contents."
+        std::cout << "Resource compiler saves .asm file defining byte array for given input file contents.\n"
                   << "Usage: <path to input file> <path to output file>" << std::endl;
         return EXIT_FAILURE;
     }
@@ -70,30 +71,52 @@ namespace
         return output;
     }
 
+    std::string remove_not_allowed_chars(const char* input)
+    {
+        std::string out(input);
+
+        for (auto& c : out)
+        {
+            if (c == '.')
+            {
+                c = '_';
+            }
+        }
+
+        return out;
+    }
+
     std::string parse_input(const std::vector<char>& binary_input, const char* input_path)
     {
         std::stringstream out;
 
-        const auto now = std::chrono::system_clock::now();
-        const auto current_time = std::chrono::system_clock::to_time_t(now);
+        const auto symbol_name = remove_not_allowed_chars(input_path);
 
-        out << "#pragma once\n"
-            << "// Generated from: " << input_path << ", at: " << std::ctime(&current_time) << "\n"
-            << "char data[] = \n{\n    ";
+        out << "    .section .rodata\n"
+            << "    .align 1\n"
+            << "    .global " << symbol_name << '\n'
+            << "    .hidden " << symbol_name << '\n'
+            << symbol_name << ':' << '\n'
+            << "    .byte ";
 
-        std::size_t newline_counter = 0;
-        for (const char &byte : binary_input)
+        for (std::size_t index = 0; index < binary_input.size(); index++)
         {
-            out << std::to_string(static_cast<signed>(byte)) << ",";
-            newline_counter++;
-            if (newline_counter > 16)
+            const auto& byte = binary_input.at(index);
+            out << std::to_string(static_cast<signed>(byte));
+            if (index != binary_input.size() - 1)
             {
-                out << "\n    ";
-                newline_counter = 0;
+                out << ',';
             }
         }
 
-        out << "\n};\n";
+        out << '\n'
+            << "    .align 4\n"
+            << "    .global " << symbol_name << "_length" << '\n'
+            << "    .hidden " << symbol_name << "_length" << '\n'
+            << symbol_name << "_length" << ':' << '\n'
+            << "    .4byte "
+            << static_cast<std::int32_t>(binary_input.size());
+
         return out.str();
     }
 
