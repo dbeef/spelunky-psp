@@ -73,8 +73,8 @@ bool Video::setup_gl()
 
     log_info("Querying for window size");
 
-	int w, h;
-	SDL_GetWindowSize(_platform_specific->window, &w, &h);
+    int w, h;
+    SDL_GetWindowSize(_platform_specific->window, &w, &h);
     _viewport = std::make_shared<Viewport>(w, h);
 
     log_info("Creating GL context");
