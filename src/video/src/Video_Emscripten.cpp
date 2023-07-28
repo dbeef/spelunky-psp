@@ -1,4 +1,4 @@
-#include "glad/glad.h"
+#include "SDL/SDL_opengl.h"
 #include "video/Video.hpp"
 #include "graphics_utils/DebugGlCall.hpp"
 #include "time/Timestep.hpp"
@@ -87,11 +87,10 @@ bool Video::setup_gl()
         return false;
     }
 
-    if (!gladLoadGLES1Loader((GLADloadproc) SDL_GL_GetProcAddress))
-    {
-      log_error("Error while loading ptrs to OpenGL functions");
-      return false;
-    }
+    SDL_GL_MakeCurrent(_platform_specific->window, _platform_specific->gl_context);
+
+    // Under emscripten no glad involved due to a very cryptic error.
+    // Instead, using GL headers from SDL/SLD_opengl.h
 
     log_info("Setting OpenGL properties");
 
