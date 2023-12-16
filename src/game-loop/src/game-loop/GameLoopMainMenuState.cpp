@@ -34,6 +34,7 @@
 #include "prefabs/items/Flare.hpp"
 #include "prefabs/main-dude/MainDude.hpp"
 #include "prefabs/ui/PauseOverlay.hpp"
+#include "prefabs/ui/CheatConsole.hpp"
 
 #include <cmath>
 
@@ -155,6 +156,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
 
     _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::MAIN_MENU);
     _main_dude = prefabs::MainDude::create(17.5, 9.5);
+    prefabs::CheatConsole::create(game_loop._viewport);
 
     game_loop._level_summary_tracker->reset();
 

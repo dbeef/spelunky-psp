@@ -7,40 +7,14 @@
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/BlinkingComponent.hpp"
+#include "imgui_impl_opengl2.h"
+#include "imgui_impl_sdl2.h"
+#include "components/generic/ImguiComponent.hpp"
 
 void RenderingSystem::update(std::uint32_t delta_time_ms)
 {
-    auto& registry = EntityRegistry::instance().get_registry();
-
-    registry.view<QuadComponent>().each([](entt::entity e, QuadComponent &quad) { quad.update(e); });
-    registry.view<TextComponent>().each([](entt::entity e, TextComponent &text) { text.update(e); });
-
-    update_blinking(delta_time_ms);
-    sort(); // FIXME: Sorting components every frame!
-
-    // FIXME: Pointers to meshes may become invalidated after entity pool resize. Same as BombSpawner.cpp:31.
-    //        Temporary workaround at GameLoopStartedState.cpp:35 - reserving quads/meshes up-front.
-    auto meshes = registry.view<MeshComponent>();
-    meshes.each([this](MeshComponent &mesh)
-    {
-        use_camera(mesh.camera_type);
-
-        // Interleaving vertex attributes instead of separate buffers for small performance boost from data locality:
-        const auto *vertices = reinterpret_cast<const char *>(mesh.vertices);
-        const auto *uvs = vertices + 2 * sizeof(float);
-
-        assert(vertices);
-
-        // Tightly packed Vertex type:
-        const size_t stride = sizeof(Vertex);
-
-        DebugGlCall(glBindTexture(GL_TEXTURE_2D, mesh.texture_id));
-
-        DebugGlCall(glVertexPointer(2, GL_FLOAT, stride, vertices));
-        DebugGlCall(glTexCoordPointer(2, GL_FLOAT, stride, uvs));
-
-        DebugGlCall(glDrawElements(GL_TRIANGLES, mesh.indices_count, GL_UNSIGNED_SHORT, mesh.indices));
-    });
+    update_opengl(delta_time_ms);
+    update_imgui();
 }
 
 void RenderingSystem::sort()
@@ -133,3 +107,57 @@ void RenderingSystem::update_blinking(std::uint32_t delta_time_ms) const
    });
 }
 
+void RenderingSystem::update_opengl(std::uint32_t delta_time_ms) {
+    auto& registry = EntityRegistry::instance().get_registry();
+
+    registry.view<QuadComponent>().each([](entt::entity e, QuadComponent &quad) { quad.update(e); });
+    registry.view<TextComponent>().each([](entt::entity e, TextComponent &text) { text.update(e); });
+
+    update_blinking(delta_time_ms);
+    sort(); // FIXME: Sorting components every frame!
+
+    // FIXME: Pointers to meshes may become invalidated after entity pool resize. Same as BombSpawner.cpp:31.
+    //        Temporary workaround at GameLoopStartedState.cpp:35 - reserving quads/meshes up-front.
+    auto meshes = registry.view<MeshComponent>();
+    meshes.each([this](MeshComponent &mesh)
+    {
+        use_camera(mesh.camera_type);
+
+        // Interleaving vertex attributes instead of separate buffers for small performance boost from data locality:
+        const auto *vertices = reinterpret_cast<const char *>(mesh.vertices);
+        const auto *uvs = vertices + 2 * sizeof(float);
+
+        assert(vertices);
+
+        // Tightly packed Vertex type:
+        const size_t stride = sizeof(Vertex);
+
+        DebugGlCall(glBindTexture(GL_TEXTURE_2D, mesh.texture_id));
+
+        DebugGlCall(glVertexPointer(2, GL_FLOAT, stride, vertices));
+        DebugGlCall(glTexCoordPointer(2, GL_FLOAT, stride, uvs));
+
+        DebugGlCall(glDrawElements(GL_TRIANGLES, mesh.indices_count, GL_UNSIGNED_SHORT, mesh.indices));
+    });
+}
+
+void RenderingSystem::update_imgui() {
+
+    ImGui_ImplOpenGL2_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+
+    auto& registry = EntityRegistry::instance().get_registry();
+    auto imguis = registry.view<ImguiComponent>();
+    imguis.each([](ImguiComponent& imgui_component)
+    {
+        imgui_component.render_callback();
+    });
+
+    ImGui::Render();
+
+    auto* draw_data = ImGui::GetDrawData();
+    if (draw_data) {
+        ImGui_ImplOpenGL2_RenderDrawData(draw_data);
+    }
+}

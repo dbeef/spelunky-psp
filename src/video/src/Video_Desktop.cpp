@@ -6,12 +6,40 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_video.h>
-#include <SDL2/SDL_opengl.h>
+#include <stdexcept>
+
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_opengl2.h"
+
+class Imgui {
+public:
+    Imgui(SDL_Window* window, void* gl_context) {
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO(); (void)io;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+        // Setup Dear ImGui style
+        ImGui::StyleColorsDark();
+        // Setup Platform/Renderer backends
+        if (!ImGui_ImplSDL2_InitForOpenGL(window, gl_context) ||
+            !ImGui_ImplOpenGL2_Init()) {
+            throw std::runtime_error("Failed to initialize imgui with SDL2 + OpenGL");
+        }
+    }
+    ~Imgui(){
+        ImGui_ImplOpenGL2_Shutdown();
+        ImGui_ImplSDL2_Shutdown();
+        ImGui::DestroyContext();
+    }
+};
 
 struct PlatformSpecific
 {
     SDL_Window* window;
     void* gl_context;
+    std::unique_ptr<Imgui> imgui;
 };
 
 Video::~Video() = default; // For pimpl idiom.
@@ -21,10 +49,10 @@ void Video::tear_down_gl()
 {
     SDL_GL_DeleteContext(_platform_specific->gl_context);
     SDL_DestroyWindow(_platform_specific->window);
-    SDL_QuitSubSystem(SDL_INIT_VIDEO);
-
+    SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER);
     _platform_specific->window = nullptr;
     _platform_specific->gl_context = nullptr;
+    _platform_specific->imgui = nullptr;
 }
 
 void Video::swap_buffers() const
@@ -38,7 +66,7 @@ bool Video::setup_gl()
 
     _platform_specific = std::make_unique<PlatformSpecific>();
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) < 0) {
         log_error("SDL_Init Error: %s", SDL_GetError());
         SDL_ClearError();
         return false;
@@ -47,9 +75,12 @@ bool Video::setup_gl()
     SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
     SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 6 );
     SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
-
     SDL_GL_SetAttribute( SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 
     SDL_GL_LoadLibrary(nullptr);
     SDL_ClearError();
@@ -120,6 +151,9 @@ bool Video::setup_gl()
     DebugGlCall(glDisable(GL_COLOR_MATERIAL));
     DebugGlCall(glDisable(GL_NORMALIZE));
     DebugGlCall(glDisable(GL_RESCALE_NORMAL));
+
+    log_info("Initializing imgui");
+    _platform_specific->imgui = std::make_unique<Imgui>(_platform_specific->window, _platform_specific->gl_context);
 
     log_info("Exiting Video::setup_gl, success.");
     return true;

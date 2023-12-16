@@ -1,6 +1,7 @@
 #include "Input.hpp"
 
 #include <SDL2/SDL_events.h>
+#include "imgui_impl_sdl2.h"
 
 const char* Input::get_pause_binding_msg()
 {
@@ -45,16 +46,17 @@ void Input::poll()
     _toggles.out_bomb.reset_changed();
     _toggles.out_rope.reset_changed();
     _toggles.purchase.reset_changed();
+    _toggles.cheat_console.reset_changed();
 
     SDL_Event event{};
 
     while (SDL_PollEvent(&event))
     {
+        ImGui_ImplSDL2_ProcessEvent(&event);
         if (event.type == SDL_EventType::SDL_KEYDOWN || event.type == SDL_EventType::SDL_KEYUP)
         {
             const auto& key = event.key.keysym.sym;
             const bool v = event.type == SDL_EventType::SDL_KEYDOWN;
-
             if (key == SDLK_LEFT)
             {
                 _toggles.left.feed(v);
@@ -110,6 +112,10 @@ void Input::poll()
             else if (key == SDLK_F10)
             {
                 _toggles.quit_requested.feed(v);
+            }
+            else if (key == SDLK_TAB)
+            {
+                _toggles.cheat_console.feed(v);
             }
         }
     }

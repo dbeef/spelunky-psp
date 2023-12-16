@@ -339,6 +339,9 @@ add_library(GameLoop STATIC
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
+        include/components/generic/ImguiComponent.hpp
+        include/prefabs/ui/CheatConsole.hpp
+        src/prefabs/ui/CheatConsole.cpp
 )
 
 target_include_directories(GameLoop
@@ -366,4 +369,5 @@ target_link_libraries(GameLoop
         Audio
         glad
         GraphicsUtils
+        imgui
 )
