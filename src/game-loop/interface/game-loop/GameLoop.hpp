@@ -34,6 +34,16 @@ class ShoppingSystem;
 class GameLoop
 {
 public:
+    enum class State
+    {
+        MAIN_MENU = 0,
+        PLAYING,
+        STARTED,
+        LEVEL_SUMMARY,
+        SCORES,
+        CURRENT
+    };
+
     GameLoop(const std::shared_ptr<Viewport>&);
     std::function<bool(uint32_t delta_time_ms)>& get();
 private:

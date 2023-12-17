@@ -90,7 +90,7 @@ bool Video::setup_gl()
     _platform_specific->window = SDL_CreateWindow("SpelunkyPSP",
                               SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED,
-                              480 * 2, 272 * 2,
+                              480 * 4, 272 * 4,
                               SDL_WINDOW_OPENGL |
                               SDL_WINDOW_ALLOW_HIGHDPI);
     if (!_platform_specific->window)

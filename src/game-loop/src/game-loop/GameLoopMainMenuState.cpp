@@ -105,6 +105,28 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
         }
     }
 
+
+    auto& cheat_console = registry.get<prefabs::CheatConsoleComponent>(_cheat_console);
+    switch (cheat_console.state)
+    {
+        case GameLoop::State::SCORES:
+        {
+            cheat_console.state = GameLoop::State::CURRENT;
+            return &game_loop._states.scores;
+        }
+        case GameLoop::State::MAIN_MENU:
+        {
+            cheat_console.state = GameLoop::State::CURRENT;
+            return &game_loop._states.main_menu;
+        }
+        case GameLoop::State::PLAYING:
+        {
+            cheat_console.state = GameLoop::State::CURRENT;
+            return &game_loop._states.playing;
+        }
+        default: {}
+    }
+
     if (position.y_center <= EXIT_LEVEL_Y)
     {
         log_info("Quitting using rope.");
@@ -156,7 +178,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
 
     _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::MAIN_MENU);
     _main_dude = prefabs::MainDude::create(17.5, 9.5);
-    prefabs::CheatConsole::create(game_loop._viewport);
+    _cheat_console = prefabs::CheatConsole::create(game_loop._viewport);
 
     game_loop._level_summary_tracker->reset();
 

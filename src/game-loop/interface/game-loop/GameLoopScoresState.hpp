@@ -18,4 +18,5 @@ private:
     entt::entity _main_dude = entt::null;
     entt::entity _pause_overlay = entt::null;
     entt::entity _death_overlay = entt::null;
+    entt::entity _cheat_console = entt::null;
 };
