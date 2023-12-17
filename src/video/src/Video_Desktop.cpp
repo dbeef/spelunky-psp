@@ -12,28 +12,41 @@
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_opengl2.h"
 
-class Imgui {
-public:
-    Imgui(SDL_Window* window, void* gl_context) {
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-        // Setup Dear ImGui style
-        ImGui::StyleColorsDark();
-        // Setup Platform/Renderer backends
-        if (!ImGui_ImplSDL2_InitForOpenGL(window, gl_context) ||
-            !ImGui_ImplOpenGL2_Init()) {
-            throw std::runtime_error("Failed to initialize imgui with SDL2 + OpenGL");
+namespace {
+    class Imgui {
+    public:
+        Imgui(SDL_Window *window, void *gl_context) {
+            IMGUI_CHECKVERSION();
+            ImGui::CreateContext();
+            ImGuiIO &io = ImGui::GetIO();
+            (void) io;
+            io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+            io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+            // Setup Dear ImGui style
+            ImGui::StyleColorsDark();
+            // Setup Platform/Renderer backends
+            if (!ImGui_ImplSDL2_InitForOpenGL(window, gl_context) ||
+                !ImGui_ImplOpenGL2_Init()) {
+                throw std::runtime_error("Failed to initialize imgui with SDL2 + OpenGL");
+            }
         }
+
+        ~Imgui() {
+            ImGui_ImplOpenGL2_Shutdown();
+            ImGui_ImplSDL2_Shutdown();
+            ImGui::DestroyContext();
+        }
+    };
+
+    std::pair<int, int> query_screen_dimensions() {
+        SDL_DisplayMode dm;
+        if (SDL_GetDesktopDisplayMode(0, &dm) != 0)
+        {
+            throw std::runtime_error(std::string("SDL_GetDesktopDisplayMode failed: ") + SDL_GetError());
+        }
+        return {dm.w, dm.h};
     }
-    ~Imgui(){
-        ImGui_ImplOpenGL2_Shutdown();
-        ImGui_ImplSDL2_Shutdown();
-        ImGui::DestroyContext();
-    }
-};
+}
 
 struct PlatformSpecific
 {
@@ -86,11 +99,14 @@ bool Video::setup_gl()
     SDL_ClearError();
 
     //  Create a window
+    const auto screen_dimensions = query_screen_dimensions();
+    const auto& screen_h = screen_dimensions.second;
+    const auto scale_coeff = 0.8f;
 
     _platform_specific->window = SDL_CreateWindow("SpelunkyPSP",
                               SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED,
-                              480 * 4, 272 * 4,
+                              screen_h * scale_coeff * (16.0f / 9), screen_h * scale_coeff,
                               SDL_WINDOW_OPENGL |
                               SDL_WINDOW_ALLOW_HIGHDPI);
     if (!_platform_specific->window)
@@ -100,9 +116,9 @@ bool Video::setup_gl()
         return false;
     }
 
-    int w, h;
-    SDL_GL_GetDrawableSize(_platform_specific->window, &w, &h);
-    _viewport = std::make_shared<Viewport>(w, h);
+    int window_w, window_h;
+    SDL_GL_GetDrawableSize(_platform_specific->window, &window_w, &window_h);
+    _viewport = std::make_shared<Viewport>(window_w, window_h);
 
     _platform_specific->gl_context = SDL_GL_CreateContext(_platform_specific->window);
     if (!_platform_specific->gl_context)
