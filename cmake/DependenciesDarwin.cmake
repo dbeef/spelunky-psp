@@ -21,7 +21,9 @@ macro(add_darwin_dependencies)
     target_compile_definitions(Dependencies INTERFACE
             SPELUNKY_PSP_PLATFORM_DARWIN
             SPELUNKY_PSP_PLATFORM_DESKTOP
+            SPELUNKY_PSP_WITH_IMGUI
     )
+    set(SPELUNKY_PSP_WITH_IMGUI TRUE)
 endmacro()
 
 macro(spelunky_psp_post_build_darwin)

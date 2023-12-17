@@ -1,7 +1,14 @@
 #include "Input.hpp"
 
 #include <SDL2/SDL_events.h>
-#include "imgui_impl_sdl2.h"
+
+#if defined(SPELUNKY_PSP_WITH_IMGUI)
+    #include "imgui_impl_sdl2.h"
+    void imgui_event_processing(const SDL_Event* event) { ImGui_ImplSDL2_ProcessEvent(event); }
+#else
+    void imgui_event_processing(const SDL_Event* event) {}
+#endif
+
 
 const char* Input::get_pause_binding_msg()
 {
@@ -52,7 +59,7 @@ void Input::poll()
 
     while (SDL_PollEvent(&event))
     {
-        ImGui_ImplSDL2_ProcessEvent(&event);
+        imgui_event_processing(&event);
         if (event.type == SDL_EventType::SDL_KEYDOWN || event.type == SDL_EventType::SDL_KEYUP)
         {
             const auto& key = event.key.keysym.sym;

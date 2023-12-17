@@ -8,6 +8,7 @@
 #include <SDL2/SDL_video.h>
 #include <stdexcept>
 
+#if defined(SPELUNKY_PSP_WITH_IMGUI)
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_opengl2.h"
@@ -37,7 +38,13 @@ namespace {
             ImGui::DestroyContext();
         }
     };
+}
+#else
+struct Imgui { Imgui(SDL_Window *window, void *gl_context) {}};
+#endif
 
+namespace
+{
     std::pair<int, int> query_screen_dimensions() {
         SDL_DisplayMode dm;
         if (SDL_GetDesktopDisplayMode(0, &dm) != 0)

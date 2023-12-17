@@ -34,5 +34,6 @@ target_link_libraries(Video
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,SDL_2_XX,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>,SDL_2_XX,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,SDL_2_XX,>
-        $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DESKTOP}>,imgui,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_WITH_IMGUI}>,imgui,>
+        Dependencies
 )

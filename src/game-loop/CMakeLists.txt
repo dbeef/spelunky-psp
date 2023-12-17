@@ -371,5 +371,6 @@ target_link_libraries(GameLoop
         Audio
         glad
         GraphicsUtils
-        imgui
+        $<$<BOOL:${SPELUNKY_PSP_WITH_IMGUI}>:imgui>
+        Dependencies
 )

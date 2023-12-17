@@ -7,8 +7,6 @@
 #include "components/generic/QuadComponent.hpp"
 #include "components/generic/MeshComponent.hpp"
 #include "components/generic/BlinkingComponent.hpp"
-#include "imgui_impl_opengl2.h"
-#include "imgui_impl_sdl2.h"
 #include "components/generic/ImguiComponent.hpp"
 
 void RenderingSystem::update(std::uint32_t delta_time_ms)
@@ -141,6 +139,10 @@ void RenderingSystem::update_opengl(std::uint32_t delta_time_ms) {
     });
 }
 
+#if defined(SPELUNKY_PSP_WITH_IMGUI)
+#include "imgui_impl_opengl2.h"
+#include "imgui_impl_sdl2.h"
+
 void RenderingSystem::update_imgui() {
 
     ImGui_ImplOpenGL2_NewFrame();
@@ -161,3 +163,6 @@ void RenderingSystem::update_imgui() {
         ImGui_ImplOpenGL2_RenderDrawData(draw_data);
     }
 }
+#else
+void RenderingSystem::update_imgui() {}
+#endif

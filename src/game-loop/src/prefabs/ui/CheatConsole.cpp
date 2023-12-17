@@ -3,12 +3,15 @@
 #include "components/generic/ScriptingComponent.hpp"
 #include "components/generic/ImguiComponent.hpp"
 #include "logger/log.h"
-#include "imgui_impl_opengl2.h"
-#include "imgui_impl_sdl2.h"
 #include "Input.hpp"
 #include "prefabs/npc/RedFrog.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
 #include "game-loop/GameLoop.hpp"
+
+// TODO: Better way to handle this than if-defing as there will be more imgui-components
+#if defined(SPELUNKY_PSP_WITH_IMGUI)
+#include "imgui_impl_opengl2.h"
+#include "imgui_impl_sdl2.h"
 
 namespace {
     // Based on ImGui's example console:
@@ -309,6 +312,13 @@ namespace {
         const std::function<void()> dont_render_callback = [](){};
     };
 }
+#else
+class CheatConsoleScript final : public ScriptBase {
+    public:
+        explicit CheatConsoleScript(entt::entity self) { }
+        void update(entt::entity owner, uint32_t delta_time_ms) override { }
+};
+#endif
 
 namespace prefabs {
 
