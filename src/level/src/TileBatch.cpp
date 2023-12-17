@@ -672,3 +672,14 @@ RoomType TileBatch::get_room_type_at(int x_room, int y_room) const
     y_room = std::abs(y_room - (ROOMS_COUNT_HEIGHT - 1));
     return _layout[x_room][y_room];
 }
+
+void TileBatch::clean() {
+    for (int x = 0; x < LEVEL_WIDTH_TILES; x++) {
+        for (int y = 0; y < LEVEL_HEIGHT_TILES; y++) {
+            map_tiles[x][y]->match_tile(MapTileType::NOTHING);
+            map_tiles[x][y]->destroyable = false;
+            map_tiles[x][y]->x = x;
+            map_tiles[x][y]->y = y;
+        }
+    }
+}

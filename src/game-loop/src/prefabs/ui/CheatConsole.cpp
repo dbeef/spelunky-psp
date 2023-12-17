@@ -244,6 +244,11 @@ namespace {
                     auto& cheat_console_component = registry.get<prefabs::CheatConsoleComponent>(_self);
                     cheat_console_component.state = GameLoop::State::MAIN_MENU;
                     return std::make_pair(true, "entering main_menu");
+                } else if (upper_cased == "ENTER SANDBOX") {
+                    auto& registry = EntityRegistry::instance().get_registry();
+                    auto& cheat_console_component = registry.get<prefabs::CheatConsoleComponent>(_self);
+                    cheat_console_component.state = GameLoop::State::SANDBOX;
+                    return std::make_pair(true, "entering sanbox");
                 } else if (upper_cased == "ENTER PLAYING") {
                     auto& registry = EntityRegistry::instance().get_registry();
                     auto& cheat_console_component = registry.get<prefabs::CheatConsoleComponent>(_self);

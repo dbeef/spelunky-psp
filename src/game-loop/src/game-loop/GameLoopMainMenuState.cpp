@@ -124,6 +124,11 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
             cheat_console.state = GameLoop::State::CURRENT;
             return &game_loop._states.playing;
         }
+        case GameLoop::State::SANDBOX:
+        {
+            cheat_console.state = GameLoop::State::CURRENT;
+            return &game_loop._states.sandbox;
+        }
         default: {}
     }
 
@@ -157,6 +162,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     auto& model_view_camera = rendering_system->get_model_view_camera();
     model_view_camera.set_x_not_rounded(game_loop._viewport->get_width_world_units() / 4.0f);
     model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
+    model_view_camera.update_gl_modelview_matrix();
 
     prefabs::StartSign::create(5.55, 9.0);
     prefabs::ScoresSign::create(9.55, 9.0);

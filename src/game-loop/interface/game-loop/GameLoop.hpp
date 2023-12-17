@@ -13,6 +13,7 @@
 #include "game-loop/GameLoopPlayingState.hpp"
 #include "game-loop/GameLoopStartedState.hpp"
 #include "game-loop/GameLoopScoresState.hpp"
+#include "game-loop/GameLoopSandboxState.hpp"
 
 #include <entt/entt.hpp>
 
@@ -41,6 +42,7 @@ public:
         STARTED,
         LEVEL_SUMMARY,
         SCORES,
+        SANDBOX,
         CURRENT
     };
 
@@ -54,6 +56,7 @@ private:
     friend class GameLoopStartedState;
     friend class GameLoopLevelSummaryState;
     friend class GameLoopScoresState;
+    friend class GameLoopSandboxState;
 
     struct
     {
@@ -62,6 +65,7 @@ private:
         GameLoopStartedState started;
         GameLoopLevelSummaryState level_summary;
         GameLoopScoresState scores;
+        GameLoopSandboxState sandbox;
         GameLoopBaseState* current;
     } _states;
 

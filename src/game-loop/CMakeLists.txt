@@ -9,6 +9,7 @@ add_library(GameLoop STATIC
         src/game-loop/GameLoopStartedState.cpp
         src/game-loop/GameLoopLevelSummaryState.cpp
         src/game-loop/GameLoopScoresState.cpp
+        src/game-loop/GameLoopSandboxState.cpp
 
         interface/game-loop/GameLoop.hpp
         interface/game-loop/GameLoopBaseState.hpp
@@ -17,6 +18,7 @@ add_library(GameLoop STATIC
         interface/game-loop/GameLoopStartedState.hpp
         interface/game-loop/GameLoopLevelSummaryState.hpp
         interface/game-loop/GameLoopScoresState.hpp
+        interface/game-loop/GameLoopSandboxState.hpp
 
         # Main dude:
 
