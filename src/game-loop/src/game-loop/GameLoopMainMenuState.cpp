@@ -105,37 +105,15 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
         }
     }
 
-
-    auto& cheat_console = registry.get<prefabs::CheatConsoleComponent>(_cheat_console);
-    switch (cheat_console.state)
-    {
-        case GameLoop::State::SCORES:
-        {
-            cheat_console.state = GameLoop::State::CURRENT;
-            return &game_loop._states.scores;
-        }
-        case GameLoop::State::MAIN_MENU:
-        {
-            cheat_console.state = GameLoop::State::CURRENT;
-            return &game_loop._states.main_menu;
-        }
-        case GameLoop::State::PLAYING:
-        {
-            cheat_console.state = GameLoop::State::CURRENT;
-            return &game_loop._states.playing;
-        }
-        case GameLoop::State::SANDBOX:
-        {
-            cheat_console.state = GameLoop::State::CURRENT;
-            return &game_loop._states.sandbox;
-        }
-        default: {}
-    }
-
     if (position.y_center <= EXIT_LEVEL_Y)
     {
         log_info("Quitting using rope.");
         game_loop._exit = true;
+    }
+
+    auto& cheat_console = registry.get<prefabs::CheatConsoleComponent>(_cheat_console);
+    if (cheat_console.is_state_change_requested()) {
+        return game_loop.get_game_loop_state_ptr(cheat_console.get_requested_state());
     }
 
     return this;

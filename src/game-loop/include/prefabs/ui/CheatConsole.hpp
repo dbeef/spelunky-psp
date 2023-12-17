@@ -6,9 +6,15 @@
 
 namespace prefabs
 {
-    struct CheatConsoleComponent
+    class CheatConsoleComponent
     {
-        GameLoop::State state{GameLoop::State::CURRENT};
+    public:
+        bool is_state_change_requested() const { return _state_change_requested; }
+        void request_state_change(GameLoop::State requested_state) { _requested_state = requested_state; _state_change_requested = true; }
+        GameLoop::State get_requested_state() const { return _requested_state;}
+    private:
+        bool _state_change_requested = false;
+        GameLoop::State _requested_state{GameLoop::State::CURRENT};
     };
 
     struct CheatConsole

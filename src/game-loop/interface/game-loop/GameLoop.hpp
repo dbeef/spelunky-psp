@@ -48,6 +48,8 @@ public:
 
     GameLoop(const std::shared_ptr<Viewport>&);
     std::function<bool(uint32_t delta_time_ms)>& get();
+    GameLoopBaseState* get_game_loop_state_ptr(State);
+
 private:
 
     friend class GameLoopBaseState;

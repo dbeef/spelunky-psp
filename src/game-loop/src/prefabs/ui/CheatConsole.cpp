@@ -237,22 +237,22 @@ namespace {
                 if (upper_cased == "ENTER SCORES") {
                     auto& registry = EntityRegistry::instance().get_registry();
                     auto& cheat_console_component = registry.get<prefabs::CheatConsoleComponent>(_self);
-                    cheat_console_component.state = GameLoop::State::SCORES;
+                    cheat_console_component.request_state_change(GameLoop::State::SCORES);
                     return std::make_pair(true, "entering scores");
                 } else if (upper_cased == "ENTER MAIN_MENU") {
                     auto& registry = EntityRegistry::instance().get_registry();
                     auto& cheat_console_component = registry.get<prefabs::CheatConsoleComponent>(_self);
-                    cheat_console_component.state = GameLoop::State::MAIN_MENU;
+                    cheat_console_component.request_state_change(GameLoop::State::MAIN_MENU);
                     return std::make_pair(true, "entering main_menu");
                 } else if (upper_cased == "ENTER SANDBOX") {
                     auto& registry = EntityRegistry::instance().get_registry();
                     auto& cheat_console_component = registry.get<prefabs::CheatConsoleComponent>(_self);
-                    cheat_console_component.state = GameLoop::State::SANDBOX;
+                    cheat_console_component.request_state_change(GameLoop::State::SANDBOX);
                     return std::make_pair(true, "entering sanbox");
                 } else if (upper_cased == "ENTER PLAYING") {
                     auto& registry = EntityRegistry::instance().get_registry();
                     auto& cheat_console_component = registry.get<prefabs::CheatConsoleComponent>(_self);
-                    cheat_console_component.state = GameLoop::State::PLAYING;
+                    cheat_console_component.request_state_change(GameLoop::State::PLAYING);
                     return std::make_pair(true, "entering playing");
                 } else {
                     return std::make_pair(false, "");
