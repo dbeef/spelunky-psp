@@ -13,7 +13,8 @@ add_library(TextureBank STATIC
         interface/spritesheet-frames/MainDudeSpritesheetFrames.hpp
         interface/spritesheet-frames/FontSpritesheetFrames.hpp
         interface/spritesheet-frames/NPCSpritesheetFrames.hpp
-        interface/spritesheet-frames/CaveLevelSpritesheetFrames.hpp)
+        interface/spritesheet-frames/CaveLevelSpritesheetFrames.hpp
+        )
 
 target_include_directories(TextureBank
         PRIVATE include interface

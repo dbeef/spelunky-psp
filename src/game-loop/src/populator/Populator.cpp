@@ -59,8 +59,6 @@ void Populator::generate_inventory_items(entt::entity main_dude)
     {
         entt::entity item = entt::null;
 
-        // TODO: ItemFactory, NpcFactory, LootFactory that takes an enum  
-
         switch (item_type)
         {
             case ItemType::ARROW: item = prefabs::Arrow::create(); break;

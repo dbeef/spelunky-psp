@@ -4,6 +4,7 @@ add_library(Level STATIC
         src/Level.cpp
         src/MapTile.cpp
         src/TileBatch.cpp
+        src/LootType.cpp
         interface/Level.hpp
         interface/MapTile.hpp
         interface/MapTileType.hpp
@@ -21,7 +22,7 @@ add_library(Level STATIC
         include/ShopRooms.hpp
         include/SplashScreenRooms.hpp
         interface/NPCType.hpp
-        src/LootType.cpp)
+        )
 
 target_include_directories(Level
         PRIVATE include interface

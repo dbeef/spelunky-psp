@@ -326,6 +326,10 @@ add_library(GameLoop STATIC
 
         # Other:
 
+        src/other/CheatConsoleInterpreter.cpp
+        src/other/NpcType.cpp
+        src/other/ItemType.cpp
+        src/game-loop/GameLoopState.cpp
         src/populator/Populator.cpp
         src/populator/Shop.cpp
         include/populator/Populator.hpp
@@ -339,6 +343,7 @@ add_library(GameLoop STATIC
         src/populator/LootFactory.cpp
         src/populator/NpcFactory.cpp
         interface/other/PhysicsComponentType.hpp
+        interface/game-loop/GameLoopState.hpp
         interface/other/Inventory.hpp
         interface/other/InventoryEvent.hpp
         interface/other/ItemType.hpp
@@ -350,7 +355,8 @@ add_library(GameLoop STATIC
         include/populator/ItemFactory.hpp
         include/populator/NpcFactory.hpp
         include/populator/LootFactory.hpp
-        src/other/NpcType.cpp src/other/ItemType.cpp include/other/CheatConsoleInterpreter.h src/other/CheatConsoleInterpreter.cpp interface/game-loop/GameLoopState.hpp src/game-loop/GameLoopState.cpp)
+        include/other/CheatConsoleInterpreter.h
+)
 
 target_include_directories(GameLoop
         PRIVATE include interface
