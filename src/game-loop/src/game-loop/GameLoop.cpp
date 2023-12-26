@@ -57,3 +57,23 @@ GameLoop::GameLoop(const std::shared_ptr<Viewport>& viewport)
         return _exit;
     };
 }
+
+GameLoopBaseState *GameLoop::get_game_loop_state_ptr(GameLoopState state) {
+    switch (state) {
+        case GameLoopState::MAIN_MENU:
+            return &_states.main_menu;
+        case GameLoopState::PLAYING:
+            return &_states.playing;
+        case GameLoopState::STARTED:
+            return &_states.started;
+        case GameLoopState::LEVEL_SUMMARY:
+            return &_states.level_summary;
+        case GameLoopState::SCORES:
+            return &_states.scores;
+        case GameLoopState::SANDBOX:
+            return &_states.sandbox;
+        case GameLoopState::CURRENT:
+            return _states.current;
+        default: assert(false);
+    }
+}

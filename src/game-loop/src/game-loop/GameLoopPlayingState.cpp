@@ -36,6 +36,7 @@
 #include "Level.hpp"
 #include "audio/Audio.hpp"
 #include "populator/Populator.hpp"
+#include "prefabs/ui/CheatConsole.hpp"
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -112,6 +113,11 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
 
     game_loop._level_summary_tracker->update(delta_time_ms);
 
+    auto& cheat_console = registry.get<prefabs::CheatConsoleComponent>(_cheat_console);
+    if (cheat_console.is_state_change_requested()) {
+        return game_loop.get_game_loop_state_ptr(cheat_console.get_requested_state());
+    }
+
     return this;
 }
 
@@ -147,6 +153,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::PLAYING);
     _death_overlay = prefabs::DeathOverlay::create(game_loop._viewport);
     _hud = prefabs::HudOverlay::create(game_loop._viewport);
+    _cheat_console = prefabs::CheatConsole::create(game_loop._viewport);
 
     game_loop._rendering_system->sort();
 

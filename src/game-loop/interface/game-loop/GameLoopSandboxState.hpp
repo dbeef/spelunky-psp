@@ -8,7 +8,7 @@ class GameLoop;
 class PauseOverlayComponent;
 class ScoresOverlayComponent;
 
-class GameLoopScoresState : public GameLoopBaseState
+class GameLoopSandboxState : public GameLoopBaseState
 {
 public:
     GameLoopBaseState* update(GameLoop&, uint32_t delta_time_ms) override;

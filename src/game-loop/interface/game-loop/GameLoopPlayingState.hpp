@@ -32,4 +32,5 @@ private:
     entt::entity _hud = entt::null;
     entt::entity _pause_overlay = entt::null;
     entt::entity _death_overlay = entt::null;
+    entt::entity _cheat_console = entt::null;
 };

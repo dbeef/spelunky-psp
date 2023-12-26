@@ -1,4 +1,4 @@
-#include "game-loop/GameLoopScoresState.hpp"
+#include "game-loop/GameLoopSandboxState.hpp"
 #include "game-loop/GameLoop.hpp"
 
 #include "EntityRegistry.hpp"
@@ -30,7 +30,7 @@
 #include "other/Inventory.hpp"
 #include "prefabs/ui/CheatConsole.hpp"
 
-GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t delta_time_ms)
+GameLoopBaseState *GameLoopSandboxState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
@@ -42,6 +42,14 @@ GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t del
     auto& disposing_system = game_loop._disposing_system;
     auto& particle_system = game_loop._particle_system;
     auto& item_system = game_loop._item_system;
+
+    // Adjust camera to follow main dude:
+    auto& position = registry.get<PositionComponent>(_main_dude);
+    auto& model_view_camera = game_loop._rendering_system->get_model_view_camera();
+
+    model_view_camera.adjust_to_bounding_box(position.x_center, position.y_center);
+    model_view_camera.adjust_to_level_boundaries(Consts ::LEVEL_WIDTH_TILES, Consts::LEVEL_HEIGHT_TILES);
+    model_view_camera.update_gl_modelview_matrix();
 
     rendering_system->update(delta_time_ms);
     input_system->update(delta_time_ms);
@@ -83,46 +91,33 @@ GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t del
     return this;
 }
 
-void GameLoopScoresState::enter(GameLoop& game_loop)
+void GameLoopSandboxState::enter(GameLoop& game_loop)
 {
-    log_info("Entered GameLoopScoresState");
+    log_info("Entered GameLoopSandboxState");
 
     auto& registry = EntityRegistry::instance().get_registry();
 
     auto& rendering_system = game_loop._rendering_system;
 
+    Level::instance().get_tile_batch().clean();
     Level::instance().get_tile_batch().generate_frame();
-    Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::SCORES);
     Level::instance().get_tile_batch().generate_cave_background();
     Level::instance().get_tile_batch().batch_vertices();
     Level::instance().get_tile_batch().add_render_entity(registry);
-
-    // Splash screens are copied into the [0, 0] position (left-upper corner), center on them:
-    auto &model_view_camera = rendering_system->get_model_view_camera();
-    model_view_camera.set_x_not_rounded(game_loop._viewport->get_width_world_units() / 4.0f);
-    model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
-    model_view_camera.update_gl_modelview_matrix();
 
     auto& inventory = Inventory::instance();
     inventory.clear_items();
     game_loop._shopping_system = std::make_shared<ShoppingSystem>();
 
-    MapTile* entrance = nullptr;
-    Level::instance().get_tile_batch().get_first_tile_of_given_type(MapTileType::EXIT, entrance);
-    assert(entrance);
-
-    float pos_x = entrance->x + (MapTile::PHYSICAL_WIDTH / 2.0f);
-    float pos_y = entrance->y + (MapTile::PHYSICAL_HEIGHT / 2.0f);
+    float pos_x = Consts::LEVEL_WIDTH_TILES / 2;
+    float pos_y = Consts::LEVEL_HEIGHT_TILES / 2;
 
     _main_dude = prefabs::MainDude::create(pos_x, pos_y);
     _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::SCORES);
     _cheat_console = prefabs::CheatConsole::create(game_loop._viewport);
-
-    prefabs::ScoresOverlay::create(game_loop._viewport);
-    prefabs::ResetSign::create(16.5f, 10.5f);
 }
 
-void GameLoopScoresState::exit(GameLoop& game_loop)
+void GameLoopSandboxState::exit(GameLoop& game_loop)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     registry.clear();

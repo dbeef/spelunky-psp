@@ -21,6 +21,8 @@ public:
 
 private:
 
+    void update_opengl(std::uint32_t delta_time_ms);
+    void update_imgui();
     void use_camera(CameraType camera_type);
     void use_model_view_camera();
     void use_screen_space_camera();

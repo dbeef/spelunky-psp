@@ -4,6 +4,7 @@
 
 class GameLoop;
 
+// TODO: Rename to IGameLoopState to not confuse with GameLoopState enum
 class GameLoopBaseState
 {
 public:

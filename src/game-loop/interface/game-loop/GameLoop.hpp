@@ -13,6 +13,8 @@
 #include "game-loop/GameLoopPlayingState.hpp"
 #include "game-loop/GameLoopStartedState.hpp"
 #include "game-loop/GameLoopScoresState.hpp"
+#include "game-loop/GameLoopSandboxState.hpp"
+#include "game-loop/GameLoopState.hpp"
 
 #include <entt/entt.hpp>
 
@@ -36,6 +38,8 @@ class GameLoop
 public:
     GameLoop(const std::shared_ptr<Viewport>&);
     std::function<bool(uint32_t delta_time_ms)>& get();
+    GameLoopBaseState* get_game_loop_state_ptr(GameLoopState);
+
 private:
 
     friend class GameLoopBaseState;
@@ -44,6 +48,7 @@ private:
     friend class GameLoopStartedState;
     friend class GameLoopLevelSummaryState;
     friend class GameLoopScoresState;
+    friend class GameLoopSandboxState;
 
     struct
     {
@@ -52,6 +57,7 @@ private:
         GameLoopStartedState started;
         GameLoopLevelSummaryState level_summary;
         GameLoopScoresState scores;
+        GameLoopSandboxState sandbox;
         GameLoopBaseState* current;
     } _states;
 

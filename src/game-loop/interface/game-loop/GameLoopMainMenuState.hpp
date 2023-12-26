@@ -14,6 +14,7 @@ public:
     void enter(GameLoop&) override;
     void exit(GameLoop&) override;
 private:
+    entt::entity _cheat_console = entt::null;
     entt::entity _main_dude = entt::null;
     entt::entity _pause_overlay = entt::null;
     entt::entity _death_overlay = entt::null;

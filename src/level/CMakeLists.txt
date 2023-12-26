@@ -4,6 +4,7 @@ add_library(Level STATIC
         src/Level.cpp
         src/MapTile.cpp
         src/TileBatch.cpp
+        src/LootType.cpp
         interface/Level.hpp
         interface/MapTile.hpp
         interface/MapTileType.hpp

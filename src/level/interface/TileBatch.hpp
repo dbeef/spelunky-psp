@@ -74,6 +74,8 @@ public:
 
     RoomType get_room_type_at(int x_room, int y_room) const;
 
+    void clean();
+
 private:
 
     // Any encountered closed room will be turned into an altar.

@@ -12,6 +12,6 @@ add_subdirectory(glad)
 add_subdirectory(cjson)
 add_subdirectory(entt)
 
-if (SPELUNKY_PSP_PLATFORM_DESKTOP)
+if (SPELUNKY_PSP_WITH_IMGUI)
     add_subdirectory(imgui)
 endif()

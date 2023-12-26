@@ -9,6 +9,7 @@ add_library(GameLoop STATIC
         src/game-loop/GameLoopStartedState.cpp
         src/game-loop/GameLoopLevelSummaryState.cpp
         src/game-loop/GameLoopScoresState.cpp
+        src/game-loop/GameLoopSandboxState.cpp
 
         interface/game-loop/GameLoop.hpp
         interface/game-loop/GameLoopBaseState.hpp
@@ -17,6 +18,7 @@ add_library(GameLoop STATIC
         interface/game-loop/GameLoopStartedState.hpp
         interface/game-loop/GameLoopLevelSummaryState.hpp
         interface/game-loop/GameLoopScoresState.hpp
+        interface/game-loop/GameLoopSandboxState.hpp
 
         # Main dude:
 
@@ -324,6 +326,10 @@ add_library(GameLoop STATIC
 
         # Other:
 
+        src/other/CheatConsoleInterpreter.cpp
+        src/other/NpcType.cpp
+        src/other/ItemType.cpp
+        src/game-loop/GameLoopState.cpp
         src/populator/Populator.cpp
         src/populator/Shop.cpp
         include/populator/Populator.hpp
@@ -332,13 +338,24 @@ add_library(GameLoop STATIC
 
         src/other/ParticleGenerator.cpp
         src/other/Inventory.cpp
+        src/prefabs/ui/CheatConsole.cpp
+        src/populator/ItemFactory.cpp
+        src/populator/LootFactory.cpp
+        src/populator/NpcFactory.cpp
         interface/other/PhysicsComponentType.hpp
+        interface/game-loop/GameLoopState.hpp
         interface/other/Inventory.hpp
         interface/other/InventoryEvent.hpp
         interface/other/ItemType.hpp
         include/other/LootCollectedEvent.hpp
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
+        include/components/generic/ImguiComponent.hpp
+        include/prefabs/ui/CheatConsole.hpp
+        include/populator/ItemFactory.hpp
+        include/populator/NpcFactory.hpp
+        include/populator/LootFactory.hpp
+        include/other/CheatConsoleInterpreter.h
 )
 
 target_include_directories(GameLoop
@@ -366,4 +383,6 @@ target_link_libraries(GameLoop
         Audio
         glad
         GraphicsUtils
+        $<$<BOOL:${SPELUNKY_PSP_WITH_IMGUI}>:imgui>
+        Dependencies
 )

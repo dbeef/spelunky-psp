@@ -36,6 +36,7 @@ public:
     inline const Toggle& out_bomb() const { return _toggles.out_bomb; }
     inline const Toggle& out_rope() const { return _toggles.out_rope; }
     inline const Toggle& purchase() const { return _toggles.purchase; }
+    inline const Toggle& cheat_console() const { return _toggles.cheat_console; }
 
     inline const std::vector<InputEvent>& get_input_events() const { return _input_events; }
 
@@ -60,6 +61,7 @@ private:
         Toggle out_bomb{false};
         Toggle out_rope{false};
         Toggle purchase{false};
+        Toggle cheat_console{false};
     } _toggles;
 
     std::vector<InputEvent> _input_events;

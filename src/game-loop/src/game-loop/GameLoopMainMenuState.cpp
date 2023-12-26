@@ -34,6 +34,7 @@
 #include "prefabs/items/Flare.hpp"
 #include "prefabs/main-dude/MainDude.hpp"
 #include "prefabs/ui/PauseOverlay.hpp"
+#include "prefabs/ui/CheatConsole.hpp"
 
 #include <cmath>
 
@@ -110,6 +111,11 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
         game_loop._exit = true;
     }
 
+    auto& cheat_console = registry.get<prefabs::CheatConsoleComponent>(_cheat_console);
+    if (cheat_console.is_state_change_requested()) {
+        return game_loop.get_game_loop_state_ptr(cheat_console.get_requested_state());
+    }
+
     return this;
 }
 
@@ -134,6 +140,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     auto& model_view_camera = rendering_system->get_model_view_camera();
     model_view_camera.set_x_not_rounded(game_loop._viewport->get_width_world_units() / 4.0f);
     model_view_camera.set_y_not_rounded(game_loop._viewport->get_height_world_units() / 4.0f);
+    model_view_camera.update_gl_modelview_matrix();
 
     prefabs::StartSign::create(5.55, 9.0);
     prefabs::ScoresSign::create(9.55, 9.0);
@@ -155,6 +162,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
 
     _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::MAIN_MENU);
     _main_dude = prefabs::MainDude::create(17.5, 9.5);
+    _cheat_console = prefabs::CheatConsole::create(game_loop._viewport);
 
     game_loop._level_summary_tracker->reset();
 
