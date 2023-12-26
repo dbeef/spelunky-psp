@@ -4,17 +4,20 @@
 #include "viewport/Viewport.hpp"
 #include "game-loop/GameLoop.hpp"
 
+#include <vector>
+#include <functional>
+
 namespace prefabs
 {
     class CheatConsoleComponent
     {
     public:
         bool is_state_change_requested() const { return _state_change_requested; }
-        void request_state_change(GameLoop::State requested_state) { _requested_state = requested_state; _state_change_requested = true; }
-        GameLoop::State get_requested_state() const { return _requested_state;}
+        void request_state_change(GameLoopState requested_state) { _requested_state = requested_state; _state_change_requested = true; }
+        GameLoopState get_requested_state() const { return _requested_state;}
     private:
         bool _state_change_requested = false;
-        GameLoop::State _requested_state{GameLoop::State::CURRENT};
+        GameLoopState _requested_state{GameLoopState::CURRENT};
     };
 
     struct CheatConsole

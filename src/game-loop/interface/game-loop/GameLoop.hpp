@@ -14,6 +14,7 @@
 #include "game-loop/GameLoopStartedState.hpp"
 #include "game-loop/GameLoopScoresState.hpp"
 #include "game-loop/GameLoopSandboxState.hpp"
+#include "game-loop/GameLoopState.hpp"
 
 #include <entt/entt.hpp>
 
@@ -35,20 +36,9 @@ class ShoppingSystem;
 class GameLoop
 {
 public:
-    enum class State
-    {
-        MAIN_MENU = 0,
-        PLAYING,
-        STARTED,
-        LEVEL_SUMMARY,
-        SCORES,
-        SANDBOX,
-        CURRENT
-    };
-
     GameLoop(const std::shared_ptr<Viewport>&);
     std::function<bool(uint32_t delta_time_ms)>& get();
-    GameLoopBaseState* get_game_loop_state_ptr(State);
+    GameLoopBaseState* get_game_loop_state_ptr(GameLoopState);
 
 private:
 

@@ -21,7 +21,7 @@ add_library(Level STATIC
         include/ShopRooms.hpp
         include/SplashScreenRooms.hpp
         interface/NPCType.hpp
-        )
+        src/LootType.cpp)
 
 target_include_directories(Level
         PRIVATE include interface

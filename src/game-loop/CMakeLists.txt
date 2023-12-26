@@ -334,6 +334,10 @@ add_library(GameLoop STATIC
 
         src/other/ParticleGenerator.cpp
         src/other/Inventory.cpp
+        src/prefabs/ui/CheatConsole.cpp
+        src/populator/ItemFactory.cpp
+        src/populator/LootFactory.cpp
+        src/populator/NpcFactory.cpp
         interface/other/PhysicsComponentType.hpp
         interface/other/Inventory.hpp
         interface/other/InventoryEvent.hpp
@@ -343,8 +347,10 @@ add_library(GameLoop STATIC
         include/other/ParticleGenerator.hpp
         include/components/generic/ImguiComponent.hpp
         include/prefabs/ui/CheatConsole.hpp
-        src/prefabs/ui/CheatConsole.cpp
-)
+        include/populator/ItemFactory.hpp
+        include/populator/NpcFactory.hpp
+        include/populator/LootFactory.hpp
+        src/other/NpcType.cpp src/other/ItemType.cpp include/other/CheatConsoleInterpreter.h src/other/CheatConsoleInterpreter.cpp interface/game-loop/GameLoopState.hpp src/game-loop/GameLoopState.cpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface

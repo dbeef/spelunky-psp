@@ -1,8 +1,12 @@
 #pragma once
 
-enum class ItemType
+#include <cassert>
+#include <cstdint>
+
+using ItemType_t = std::uint16_t;
+enum class ItemType : ItemType_t
 {
-    ARROW,
+    ARROW = 0,
     BOMB,
     CAPE,
     CHEST,
@@ -30,3 +34,5 @@ enum class ItemType
     FLARE,
     _SIZE
 };
+
+const char* to_string(ItemType item_type);

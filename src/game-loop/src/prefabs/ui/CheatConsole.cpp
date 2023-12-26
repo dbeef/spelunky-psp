@@ -4,17 +4,31 @@
 #include "components/generic/ImguiComponent.hpp"
 #include "logger/log.h"
 #include "Input.hpp"
-#include "prefabs/npc/RedFrog.hpp"
 #include "components/specialized/MainDudeComponent.hpp"
-#include "game-loop/GameLoop.hpp"
+#include "other/CheatConsoleInterpreter.h"
+#include <sstream>
 
 // TODO: Better way to handle this than if-defing as there will be more imgui-components
 #if defined(SPELUNKY_PSP_WITH_IMGUI)
 #include "imgui_impl_opengl2.h"
-#include "imgui_impl_sdl2.h"
+#include "spritesheet-frames/CaveLevelSpritesheetFrames.hpp"
 
 namespace {
-    // Based on ImGui's example console:
+    std::vector<std::string> split_by_space(const std::string& line)
+    {
+        std::stringstream ss_line(line);
+        std::vector<std::string> seglist;
+        std::string segment;
+
+        while(std::getline(ss_line, segment, ' '))
+        {
+            seglist.push_back(segment);
+        }
+
+        return seglist;
+    }
+
+    // Based on ImGui's example console
     static int Stricmp(const char *s1, const char *s2) {
         int d;
         while ((d = toupper(*s2) - toupper(*s1)) == 0 && *s1) {
@@ -38,22 +52,17 @@ namespace {
         *str_end = 0;
     }
 
-    using Command = std::string;
-    using CommandHandlerResult = std::pair<bool, std::string>;
-    using CommandHandler = std::function<CommandHandlerResult(const Command&)>;
-
     struct ImGuiConsole {
         char InputBuf[256];
         ImVector<char *> Items;
         ImVector<const char *> Commands;
         ImVector<char *> History;
-        ImGuiTextFilter Filter;
         bool AutoScroll;
         bool ScrollToBottom;
 
-        std::vector<CommandHandler> _command_handlers;
+        std::vector<CheatConsoleInterpreter::CommandHandler> _command_handlers;
         
-        void add_command_handler(const CommandHandler& command_handler) {
+        void add_command_handler(const CheatConsoleInterpreter::CommandHandler& command_handler) {
             _command_handlers.push_back(command_handler);    
         }
         
@@ -100,8 +109,7 @@ namespace {
             }
 
             if (ImGui::BeginPopupContextItem()) {
-                if (ImGui::MenuItem("Close Console"))
-                    *p_open = false;
+                if (ImGui::MenuItem("Close Console")) *p_open = false;
                 ImGui::EndPopup();
             }
 
@@ -118,9 +126,6 @@ namespace {
 
                 ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1)); // Tighten spacing
                 for (const char *item: Items) {
-                    if (!Filter.PassFilter(item))
-                        continue;
-
                     // Normally you would store more information in your item than just a string.
                     // (e.g. make Items[] an array of structure, store color/type etc.)
                     ImVec4 color;
@@ -144,7 +149,6 @@ namespace {
                 if (ScrollToBottom || (AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()))
                     ImGui::SetScrollHereY(1.0f);
                 ScrollToBottom = false;
-
                 ImGui::PopStyleVar();
             }
             ImGui::EndChild();
@@ -166,9 +170,47 @@ namespace {
 
             // Auto-focus on window apparition
             ImGui::SetItemDefaultFocus();
-            if (reclaim_focus)
+            if (reclaim_focus) {
                 ImGui::SetKeyboardFocusHere(-1); // Auto focus previous widget
+            }
 
+            ImGui::End();
+
+            // TODO: Move this section out to a separate window, added this just for testing
+
+            ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
+            ImGui::Begin("Tiles", p_open);
+
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.f, 0.f, 0.f, 0.f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.25f, 0.25f, 0.25f, 0.25f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.5f, 0.5f, 0.5f, 0.5f));
+
+            std::size_t tex_index = 0;
+            std::size_t last_tex_index = static_cast<int>(CaveLevelSpritesheetFrames::_SIZE);
+
+            while (tex_index < last_tex_index) {
+                TextureID tiles_texture = TextureBank::instance().get_texture(TextureType::CAVE_LEVEL_TILES);
+                auto door_texture = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, tex_index);
+                ImGui::SameLine();
+
+                ImGui::ImageButton(
+                        reinterpret_cast<void *>(tiles_texture),
+                        ImVec2((float) door_texture.width * 4, (float) door_texture.height * 4),
+                        ImVec2(door_texture.uv_normalized[0][0], door_texture.uv_normalized[0][1]),
+                        ImVec2(door_texture.uv_normalized[2][0], door_texture.uv_normalized[2][1]),
+                        1
+                );
+                tex_index++;
+
+                if (tex_index % 6) {
+                    ImGui::SameLine();
+                } else
+                {
+                    ImGui::NewLine();
+                }
+            }
+
+            ImGui::PopStyleColor(3);
             ImGui::End();
         }
 
@@ -186,22 +228,31 @@ namespace {
             }
             History.push_back(Strdup(command_line));
 
+            std::string command_str(command_line);
+            std::string command_str_upper;
+            std::transform(command_str.cbegin(), command_str.cend(), std::back_inserter(command_str_upper), [](char c){ return std::toupper(c);});
+            const CheatConsoleInterpreter::Command command = split_by_space(command_str_upper);
+
             // Process command
             bool handled = false;
+            bool any_logs = false;
             for (auto& handler : _command_handlers) {
-                const auto result = handler(command_line);
+                const auto result = handler(command);
+                if (!result.second.empty())
+                {
+                    AddLog(result.second.c_str());
+                    any_logs = true;
+                }
                 if (result.first)
                 {
                     handled = true;
-                    AddLog(result.second.c_str());
                     break;
                 }
             }
 
-            if (handled) {
-                // ...
-            }
-            else if (Stricmp(command_line, "CLEAR") == 0) {
+            if (handled || any_logs) {
+                // Do nothing
+            } else if (Stricmp(command_line, "CLEAR") == 0) {
                 ClearLog();
             } else if (Stricmp(command_line, "HELP") == 0) {
                 AddLog("Commands:");
@@ -224,63 +275,13 @@ namespace {
     class CheatConsoleScript final : public ScriptBase {
     public:
         explicit CheatConsoleScript(entt::entity self) : _self(self) {
-            // TODO: Helper for splitting into tokens
-            _imgui_console.add_command_handler([](const Command& command){
-                Command upper_cased;
-                std::transform(command.cbegin(), command.cend(), std::back_inserter(upper_cased), [](char c){ return std::toupper(c);});
-                if (upper_cased == "EXIT") {
-                    return std::make_pair(true, "exiting");
-                } else {
-                    return std::make_pair(false, "");
-                }
-            });
-            _imgui_console.add_command_handler([this](const Command& command){
-                Command upper_cased;
-                std::transform(command.cbegin(), command.cend(), std::back_inserter(upper_cased), [](char c){ return std::toupper(c);});
-                if (upper_cased == "ENTER SCORES") {
-                    auto& registry = EntityRegistry::instance().get_registry();
-                    auto& cheat_console_component = registry.get<prefabs::CheatConsoleComponent>(_self);
-                    cheat_console_component.request_state_change(GameLoop::State::SCORES);
-                    return std::make_pair(true, "entering scores");
-                } else if (upper_cased == "ENTER MAIN_MENU") {
-                    auto& registry = EntityRegistry::instance().get_registry();
-                    auto& cheat_console_component = registry.get<prefabs::CheatConsoleComponent>(_self);
-                    cheat_console_component.request_state_change(GameLoop::State::MAIN_MENU);
-                    return std::make_pair(true, "entering main_menu");
-                } else if (upper_cased == "ENTER SANDBOX") {
-                    auto& registry = EntityRegistry::instance().get_registry();
-                    auto& cheat_console_component = registry.get<prefabs::CheatConsoleComponent>(_self);
-                    cheat_console_component.request_state_change(GameLoop::State::SANDBOX);
-                    return std::make_pair(true, "entering sanbox");
-                } else if (upper_cased == "ENTER PLAYING") {
-                    auto& registry = EntityRegistry::instance().get_registry();
-                    auto& cheat_console_component = registry.get<prefabs::CheatConsoleComponent>(_self);
-                    cheat_console_component.request_state_change(GameLoop::State::PLAYING);
-                    return std::make_pair(true, "entering playing");
-                } else {
-                    return std::make_pair(false, "");
-                }
-            });
-            _imgui_console.add_command_handler([](const Command& command){
-                Command upper_cased;
-                std::transform(command.cbegin(), command.cend(), std::back_inserter(upper_cased), [](char c){ return std::toupper(c);});
-                if (upper_cased == "SPAWN REDFROG") {
-
-                    auto& registry = EntityRegistry::instance().get_registry();
-                    auto dudes = registry.view<MainDudeComponent>();
-                    assert(dudes.size() == 1);
-                    auto dude = dudes.front();
-                    auto &dude_position = registry.get<PositionComponent>(dude);
-
-                    const float pos_x = dude_position.x_center - 2;
-                    const float pos_y = dude_position.y_center - 2;
-                    prefabs::RedFrog::create(pos_x, pos_y);
-
-                    return std::make_pair(true, "spawning");
-                } else {
-                    return std::make_pair(false, "");
-                }
-            });
+            _imgui_console.add_command_handler(_cheat_console_interpreter.get_enter_command_handler());
+            _imgui_console.add_command_handler(_cheat_console_interpreter.get_spawn_command_handler());
+            _dont_render_callback = [](){};
+            _render_console_callback = [this](){
+                bool dummy = false;
+                _imgui_console.Draw("Cheat console", &dummy);
+            };
         }
 
         void update(entt::entity owner, uint32_t delta_time_ms) override {
@@ -290,26 +291,20 @@ namespace {
                 _visible = !_visible;
                 auto &imgui_component = registry.get<ImguiComponent>(_self);
                 if (_visible) {
-                    imgui_component.render_callback = render_console_callback;
+                    imgui_component.render_callback = _render_console_callback;
                 } else {
-                    imgui_component.render_callback = dont_render_callback;
+                    imgui_component.render_callback = _dont_render_callback;
                 }
             }
         }
 
     private:
-        // Returns commands, i.e <SPAWN, REDFROG>
-        //                   i.e <ENTER, SCORES>
-        // To be interpreted later
-
         entt::entity _self;
         ImGuiConsole _imgui_console;
         bool _visible = false;
-        const std::function<void()> render_console_callback = [this](){
-            bool dummy = false;
-            _imgui_console.Draw("Cheat console", &dummy);
-        };
-        const std::function<void()> dont_render_callback = [](){};
+        std::function<void()> _render_console_callback;
+        std::function<void()> _dont_render_callback;
+        CheatConsoleInterpreter _cheat_console_interpreter;
     };
 }
 #else
