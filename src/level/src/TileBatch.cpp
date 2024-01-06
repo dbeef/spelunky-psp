@@ -241,7 +241,7 @@ void TileBatch::place_a_shop(bool shopkeeper_robbed)
 void TileBatch::generate_frame()
 {
     // Upper row
-    for (int x = 0; x < LEVEL_WIDTH_TILES; x++)
+    for (int x = 0; x < _width_x_tiles; x++)
     {
         map_tiles[x][0]->match_tile(MapTileType::CAVE_REGULAR);
         map_tiles[x][0]->destroyable = false;
@@ -250,7 +250,7 @@ void TileBatch::generate_frame()
     }
 
     // Left row
-    for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
+    for (int y = 0; y < _height_y_tiles; y++)
     {
         map_tiles[0][y]->match_tile(MapTileType::CAVE_REGULAR);
         map_tiles[0][y]->destroyable = false;
@@ -259,21 +259,21 @@ void TileBatch::generate_frame()
     }
 
     // Bottom row
-    for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
+    for (int y = 0; y < _height_y_tiles; y++)
     {
-        map_tiles[LEVEL_WIDTH_TILES - 1][y]->match_tile(MapTileType::CAVE_REGULAR);
-        map_tiles[LEVEL_WIDTH_TILES - 1][y]->destroyable = false;
-        map_tiles[LEVEL_WIDTH_TILES - 1][y]->x = LEVEL_WIDTH_TILES - 1;
-        map_tiles[LEVEL_WIDTH_TILES - 1][y]->y = y;
+        map_tiles[_width_x_tiles - 1][y]->match_tile(MapTileType::CAVE_REGULAR);
+        map_tiles[_width_x_tiles - 1][y]->destroyable = false;
+        map_tiles[_width_x_tiles - 1][y]->x = _width_x_tiles - 1;
+        map_tiles[_width_x_tiles - 1][y]->y = y;
     }
 
     // Right row
-    for (int x = 0; x < LEVEL_WIDTH_TILES; x++)
+    for (int x = 0; x < _width_x_tiles; x++)
     {
-        map_tiles[x][LEVEL_HEIGHT_TILES - 1]->match_tile(MapTileType::CAVE_REGULAR);
-        map_tiles[x][LEVEL_HEIGHT_TILES - 1]->destroyable = false;
-        map_tiles[x][LEVEL_HEIGHT_TILES - 1]->x = x;
-        map_tiles[x][LEVEL_HEIGHT_TILES - 1]->y = LEVEL_HEIGHT_TILES - 1;
+        map_tiles[x][_height_y_tiles - 1]->match_tile(MapTileType::CAVE_REGULAR);
+        map_tiles[x][_height_y_tiles - 1]->destroyable = false;
+        map_tiles[x][_height_y_tiles - 1]->x = x;
+        map_tiles[x][_height_y_tiles - 1]->y = _height_y_tiles - 1;
     }
 }
 
@@ -390,9 +390,9 @@ void TileBatch::initialise_tiles_from_room_layout()
 
 void TileBatch::get_first_tile_of_given_type(MapTileType map_tile_type, MapTile *&out) const
 {
-    for (int x = 0; x < LEVEL_WIDTH_TILES; x++)
+    for (int x = 0; x < _width_x_tiles; x++)
     {
-        for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
+        for (int y = 0; y < _height_y_tiles; y++)
         {
             if (map_tiles[x][y]->map_tile_type == map_tile_type)
             {
@@ -403,11 +403,11 @@ void TileBatch::get_first_tile_of_given_type(MapTileType map_tile_type, MapTile 
     }
 }
 
-TileBatch::TileBatch()
+TileBatch::TileBatch(int width_x_tiles, int height_y_tiles) : _width_x_tiles(width_x_tiles), _height_y_tiles(height_y_tiles)
 {
-    for (int x = 0; x < LEVEL_WIDTH_TILES; x++)
+    for (int x = 0; x < width_x_tiles; x++)
     {
-        for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
+        for (int y = 0; y < height_y_tiles; y++)
         {
             map_tiles[x][y] = new MapTile();
             map_tiles[x][y]->x = x;
@@ -418,9 +418,9 @@ TileBatch::TileBatch()
 
 TileBatch::~TileBatch()
 {
-    for (int x = 0; x < LEVEL_WIDTH_TILES; x++)
+    for (int x = 0; x < _width_x_tiles; x++)
     {
-        for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
+        for (int y = 0; y < _height_y_tiles; y++)
         {
             delete map_tiles[x][y];
         }
@@ -434,9 +434,9 @@ void TileBatch::batch_vertices()
 
     std::size_t tile_counter = 0;
 
-    for (int x = 0; x < LEVEL_WIDTH_TILES; x++)
+    for (int x = 0; x < _width_x_tiles; x++)
     {
-        for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
+        for (int y = 0; y < _height_y_tiles; y++)
         {
             MapTile *t = map_tiles[x][y];
 
@@ -479,9 +479,9 @@ void TileBatch::generate_cave_background()
 {
     int random_offset = std::rand();
 
-    for (int x = 0; x < LEVEL_WIDTH_TILES; x++)
+    for (int x = 0; x < _width_x_tiles; x++)
     {
-        for (int y = 0; y < LEVEL_HEIGHT_TILES; y++)
+        for (int y = 0; y < _height_y_tiles; y++)
         {
             if (map_tiles[x][y]->map_tile_type == MapTileType::NOTHING)
             {
@@ -506,8 +506,8 @@ void TileBatch::get_neighbouring_tiles(float x, float y, MapTile *out_neighborin
     std::uint16_t x_tiles = std::floor(x);
     std::uint16_t y_tiles = std::floor(y);
 
-    assert(x_tiles < Consts::LEVEL_WIDTH_TILES);
-    assert(y_tiles < Consts::LEVEL_HEIGHT_TILES);
+    assert(x_tiles < _width_x_tiles);
+    assert(y_tiles < _height_y_tiles);
 
     MapTile *left_middle,
             *right_middle,
@@ -520,14 +520,14 @@ void TileBatch::get_neighbouring_tiles(float x, float y, MapTile *out_neighborin
             *right_down;
 
     left_middle = x_tiles - 1 >= 0 ? map_tiles[x_tiles - 1][y_tiles] : nullptr;
-    right_middle = x_tiles + 1 < Consts::LEVEL_WIDTH_TILES ? map_tiles[x_tiles + 1][y_tiles] : nullptr;
+    right_middle = x_tiles + 1 < _width_x_tiles ? map_tiles[x_tiles + 1][y_tiles] : nullptr;
     up_middle = y_tiles - 1 >= 0 ? map_tiles[x_tiles][y_tiles - 1] : nullptr;
-    down_middle = y_tiles + 1 < Consts::LEVEL_HEIGHT_TILES ? map_tiles[x_tiles][y_tiles + 1] : nullptr;
+    down_middle = y_tiles + 1 < _height_y_tiles ? map_tiles[x_tiles][y_tiles + 1] : nullptr;
     center = map_tiles[x_tiles][y_tiles];
     left_up = x_tiles - 1 >= 0 && y_tiles - 1 >= 0 ? map_tiles[x_tiles - 1][y_tiles - 1] : nullptr;
-    right_up = x_tiles + 1 < Consts::LEVEL_WIDTH_TILES && y_tiles - 1 >= 0 ? map_tiles[x_tiles + 1][y_tiles - 1] : nullptr;
-    left_down = x_tiles - 1 >= 0 && y_tiles + 1 < Consts::LEVEL_HEIGHT_TILES ? map_tiles[x_tiles - 1][y_tiles + 1] : nullptr;
-    right_down = x_tiles + 1 < Consts::LEVEL_WIDTH_TILES && y_tiles + 1 < Consts::LEVEL_HEIGHT_TILES ? map_tiles[x_tiles + 1][y_tiles + 1] : nullptr;
+    right_up = x_tiles + 1 < _width_x_tiles && y_tiles - 1 >= 0 ? map_tiles[x_tiles + 1][y_tiles - 1] : nullptr;
+    left_down = x_tiles - 1 >= 0 && y_tiles + 1 < _height_y_tiles ? map_tiles[x_tiles - 1][y_tiles + 1] : nullptr;
+    right_down = x_tiles + 1 < _width_x_tiles && y_tiles + 1 < _height_y_tiles ? map_tiles[x_tiles + 1][y_tiles + 1] : nullptr;
 
     out_neighboring_tiles[static_cast<std::uint16_t>(NeighbouringTiles::LEFT_MIDDLE)] = left_middle;
     out_neighboring_tiles[static_cast<std::uint16_t>(NeighbouringTiles::RIGHT_MIDDLE)] = right_middle;
@@ -542,7 +542,7 @@ void TileBatch::get_neighbouring_tiles(float x, float y, MapTile *out_neighborin
 
 LootType TileBatch::get_loot_type_spawned_at(int x_tiles, int y_tiles) const
 {
-    if (x_tiles == 0 || x_tiles == (Consts::LEVEL_WIDTH_TILES - 1) || y_tiles == 0 || y_tiles == (Consts::LEVEL_HEIGHT_TILES - 1))
+    if (x_tiles == 0 || x_tiles == (_width_x_tiles - 1) || y_tiles == 0 || y_tiles == (_height_y_tiles - 1))
     {
         return LootType::NOTHING;
     }
@@ -552,7 +552,7 @@ LootType TileBatch::get_loot_type_spawned_at(int x_tiles, int y_tiles) const
     y_tiles--;
 
     // Inverse Y axis, as layout is stored with different notation: FIXME
-    y_tiles = (Consts::LEVEL_HEIGHT_TILES - 2) - y_tiles;
+    y_tiles = (_height_y_tiles - 2) - y_tiles;
 
     if (x_tiles < 0 || y_tiles < 0)
     {
@@ -604,7 +604,7 @@ LootType TileBatch::get_loot_type_spawned_at(int x_tiles, int y_tiles) const
 // FIXME: Repeating tile coordinate calculation from function above.
 NPCType TileBatch::get_npc_type_spawned_at(int x_tiles, int y_tiles) const
 {
-    if (x_tiles == 0 || x_tiles == (Consts::LEVEL_WIDTH_TILES - 1) || y_tiles == 0 || y_tiles == (Consts::LEVEL_HEIGHT_TILES - 1))
+    if (x_tiles == 0 || x_tiles == (_width_x_tiles - 1) || y_tiles == 0 || y_tiles == (_height_y_tiles - 1))
     {
         return NPCType::NOTHING;
     }
@@ -614,7 +614,7 @@ NPCType TileBatch::get_npc_type_spawned_at(int x_tiles, int y_tiles) const
     y_tiles--;
 
     // Inverse Y axis, as layout is stored with different notation: FIXME
-    y_tiles = (Consts::LEVEL_HEIGHT_TILES - 2) - y_tiles;
+    y_tiles = (_height_y_tiles - 2) - y_tiles;
 
     if (x_tiles < 0 || y_tiles < 0)
     {
@@ -674,8 +674,8 @@ RoomType TileBatch::get_room_type_at(int x_room, int y_room) const
 }
 
 void TileBatch::clean() {
-    for (int x = 0; x < LEVEL_WIDTH_TILES; x++) {
-        for (int y = 0; y < LEVEL_HEIGHT_TILES; y++) {
+    for (int x = 0; x < _width_x_tiles; x++) {
+        for (int y = 0; y < _height_y_tiles; y++) {
             map_tiles[x][y]->match_tile(MapTileType::NOTHING);
             map_tiles[x][y]->destroyable = false;
             map_tiles[x][y]->x = x;

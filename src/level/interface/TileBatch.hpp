@@ -44,7 +44,7 @@ public:
         bool shopkeeper_robbed = false;
     };
 
-    TileBatch();
+    TileBatch(int width_x_tiles = Consts::LEVEL_WIDTH_TILES, int width_y_tiles = Consts::LEVEL_HEIGHT_TILES);
 
     ~TileBatch();
 
@@ -77,6 +77,9 @@ public:
     void clean();
 
 private:
+
+    int _width_x_tiles = 0;
+    int _height_y_tiles = 0;
 
     // Any encountered closed room will be turned into an altar.
     void place_an_altar();

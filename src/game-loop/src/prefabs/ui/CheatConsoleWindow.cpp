@@ -1,4 +1,4 @@
-#include "prefabs/ui/CheatConsole.hpp"
+#include "prefabs/ui/CheatConsoleWindow.hpp"
 #include "EntityRegistry.hpp"
 #include "components/generic/ScriptingComponent.hpp"
 #include "components/generic/ImguiComponent.hpp"
@@ -102,7 +102,7 @@ namespace {
         }
 
         void Draw(const char *title, bool *p_open) {
-            ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
+            ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_Always);
             if (!ImGui::Begin(title, p_open)) {
                 ImGui::End();
                 return;
@@ -173,44 +173,6 @@ namespace {
             if (reclaim_focus) {
                 ImGui::SetKeyboardFocusHere(-1); // Auto focus previous widget
             }
-
-            ImGui::End();
-
-            // TODO: Move this section out to a separate window, added this just for testing
-
-            ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-            ImGui::Begin("Tiles", p_open);
-
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.f, 0.f, 0.f, 0.f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.25f, 0.25f, 0.25f, 0.25f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.5f, 0.5f, 0.5f, 0.5f));
-
-            std::size_t tex_index = 0;
-            std::size_t last_tex_index = static_cast<int>(CaveLevelSpritesheetFrames::_SIZE);
-
-            while (tex_index < last_tex_index) {
-                TextureID tiles_texture = TextureBank::instance().get_texture(TextureType::CAVE_LEVEL_TILES);
-                auto door_texture = TextureBank::instance().get_region(TextureType::CAVE_LEVEL_TILES, tex_index);
-                ImGui::SameLine();
-
-                ImGui::ImageButton(
-                        reinterpret_cast<void *>(tiles_texture),
-                        ImVec2((float) door_texture.width * 4, (float) door_texture.height * 4),
-                        ImVec2(door_texture.uv_normalized[0][0], door_texture.uv_normalized[0][1]),
-                        ImVec2(door_texture.uv_normalized[2][0], door_texture.uv_normalized[2][1]),
-                        1
-                );
-                tex_index++;
-
-                if (tex_index % 6) {
-                    ImGui::SameLine();
-                } else
-                {
-                    ImGui::NewLine();
-                }
-            }
-
-            ImGui::PopStyleColor(3);
             ImGui::End();
         }
 
@@ -317,19 +279,19 @@ class CheatConsoleScript final : public ScriptBase {
 
 namespace prefabs {
 
-    entt::entity CheatConsole::create(const std::shared_ptr<Viewport> &viewport) {
+    entt::entity CheatConsoleWindow::create(const std::shared_ptr<Viewport> &viewport) {
         auto &registry = EntityRegistry::instance().get_registry();
 
         const auto entity = registry.create();
         auto cheat_console_script = std::make_shared<CheatConsoleScript>(entity);
-        CheatConsoleComponent cheat_console_component{};
+        CheatConsoleWindowComponent cheat_console_component{};
         ScriptingComponent scripting_component(cheat_console_script);
         registry.emplace<ScriptingComponent>(entity, scripting_component);
 
         ImguiComponent imgui_component;
         imgui_component.render_callback = [](){};
         registry.emplace<ImguiComponent>(entity, imgui_component);
-        registry.emplace<CheatConsoleComponent>(entity, cheat_console_component);
+        registry.emplace<CheatConsoleWindowComponent>(entity, cheat_console_component);
         return entity;
     }
 }

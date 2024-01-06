@@ -1,4 +1,5 @@
-#include "game-loop/GameLoopSandboxState.hpp"
+#include <cmath>
+#include "game-loop/GameLoopEditorState.hpp"
 #include "game-loop/GameLoop.hpp"
 
 #include "EntityRegistry.hpp"
@@ -29,8 +30,9 @@
 #include "Level.hpp"
 #include "other/Inventory.hpp"
 #include "prefabs/ui/CheatConsoleWindow.hpp"
+#include "prefabs/ui/TileBrowserWindow.hpp"
 
-GameLoopBaseState *GameLoopSandboxState::update(GameLoop& game_loop, uint32_t delta_time_ms)
+GameLoopBaseState *GameLoopEditorState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
     auto& registry = EntityRegistry::instance().get_registry();
 
@@ -44,11 +46,64 @@ GameLoopBaseState *GameLoopSandboxState::update(GameLoop& game_loop, uint32_t de
     auto& item_system = game_loop._item_system;
 
     // Adjust camera to follow main dude:
-    auto& position = registry.get<PositionComponent>(_main_dude);
     auto& model_view_camera = game_loop._rendering_system->get_model_view_camera();
 
-    model_view_camera.adjust_to_bounding_box(position.x_center, position.y_center);
-    model_view_camera.adjust_to_level_boundaries(Consts ::LEVEL_WIDTH_TILES, Consts::LEVEL_HEIGHT_TILES);
+    auto& input = Input::instance();
+
+    auto& viewport = game_loop._viewport;
+
+    static float timer = 0;
+    timer += delta_time_ms;
+    if (timer > 10) {
+        if (input.left().value()) {
+            model_view_camera.set_x(model_view_camera.get_x() - 0.1f);
+        }
+        if (input.right().value()) {
+            model_view_camera.set_x(model_view_camera.get_x() + 0.1f);
+        }
+        if (input.up().value()) {
+            model_view_camera.set_y(model_view_camera.get_y() - 0.1f);
+        }
+        if (input.down().value()) {
+            model_view_camera.set_y(model_view_camera.get_y() + 0.1f);
+        }
+//        float change = ((float)input.get_mouse_delta_x() / 10.0f);
+//        if (change) {
+//            log_info("%f", change);
+//            model_view_camera.set_x(model_view_camera.get_x() + change);
+//        }
+
+        if (input.is_mouse_clicked())
+        {
+            log_info("click: %f %f", (float)input.get_mouse_x() / viewport->get_width_pixels(), (float)input.get_mouse_y() / viewport->get_height_pixels());
+            log_info("camera: %f %f", model_view_camera.get_x(), model_view_camera.get_y());
+
+            float target_pos_x = (model_view_camera.get_x() * 2) - ((float)viewport->get_width_world_units() / 2.0f);
+            float click_x_normalized = (float)input.get_mouse_x() / viewport->get_width_pixels();
+            target_pos_x += click_x_normalized * viewport->get_width_world_units();
+            target_pos_x = std::floor(target_pos_x);
+
+            float target_pos_y = (model_view_camera.get_y() * 2) - ((float)viewport->get_height_world_units() / 2.0f);
+            float click_y_normalized = (float)input.get_mouse_y() / viewport->get_height_pixels();
+            target_pos_y += click_y_normalized * viewport->get_height_world_units();
+            target_pos_y = std::floor(target_pos_y);
+
+            log_info("Clicked: %f %f",target_pos_x, target_pos_y);
+
+            auto view = registry.view<prefabs::TileBrowserWindowComponent>();
+            auto tiles = registry.get<prefabs::TileBrowserWindowComponent>(view.front());
+
+            if (target_pos_x >= 0 && target_pos_y >= 0 && target_pos_x < Consts::ROOM_WIDTH_TILES && target_pos_y < Consts::ROOM_HEIGHT_TILES) {
+                Level::instance().get_tile_batch().map_tiles[(int) target_pos_x][(int) target_pos_y]->map_tile_type = tiles.get_selected_tile_type();
+                Level::instance().get_tile_batch().batch_vertices();
+                Level::instance().get_tile_batch().add_render_entity(registry);
+            }
+        }
+
+        timer = 0;
+    }
+
+//    model_view_camera.adjust_to_level_boundaries(Consts::LEVEL_WIDTH_TILES, Consts::LEVEL_HEIGHT_TILES);
     model_view_camera.update_gl_modelview_matrix();
 
     rendering_system->update(delta_time_ms);
@@ -76,13 +131,6 @@ GameLoopBaseState *GameLoopSandboxState::update(GameLoop& game_loop, uint32_t de
         item_system->update(delta_time_ms);
     }
 
-    auto& dude = registry.get<MainDudeComponent>(_main_dude);
-
-    if (dude.entered_door())
-    {
-        return &game_loop._states.main_menu;
-    }
-
     auto& cheat_console = registry.get<prefabs::CheatConsoleWindowComponent>(_cheat_console);
     if (cheat_console.is_state_change_requested()) {
         return game_loop.get_game_loop_state_ptr(cheat_console.get_requested_state());
@@ -91,14 +139,14 @@ GameLoopBaseState *GameLoopSandboxState::update(GameLoop& game_loop, uint32_t de
     return this;
 }
 
-void GameLoopSandboxState::enter(GameLoop& game_loop)
+void GameLoopEditorState::enter(GameLoop& game_loop)
 {
-    log_info("Entered GameLoopSandboxState");
+    log_info("Entered GameLoopEditorState");
 
     auto& registry = EntityRegistry::instance().get_registry();
-
     auto& rendering_system = game_loop._rendering_system;
 
+    Level::instance().recreate_tile_batch(Consts::ROOM_WIDTH_TILES, Consts::ROOM_HEIGHT_TILES);
     Level::instance().get_tile_batch().clean();
     Level::instance().get_tile_batch().generate_frame();
     Level::instance().get_tile_batch().generate_cave_background();
@@ -112,12 +160,12 @@ void GameLoopSandboxState::enter(GameLoop& game_loop)
     float pos_x = Consts::LEVEL_WIDTH_TILES / 2;
     float pos_y = Consts::LEVEL_HEIGHT_TILES / 2;
 
-    _main_dude = prefabs::MainDude::create(pos_x, pos_y);
     _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::SCORES);
     _cheat_console = prefabs::CheatConsoleWindow::create(game_loop._viewport);
+    _tile_browser = prefabs::TileBrowserWindow::create(game_loop._viewport);
 }
 
-void GameLoopSandboxState::exit(GameLoop& game_loop)
+void GameLoopEditorState::exit(GameLoop& game_loop)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     registry.clear();

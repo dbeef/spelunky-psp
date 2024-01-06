@@ -40,6 +40,11 @@ public:
 
     inline const std::vector<InputEvent>& get_input_events() const { return _input_events; }
 
+    inline const int get_mouse_delta_x() const { return _mouse.delta_x; }
+    inline const int get_mouse_delta_y() const { return _mouse.delta_y; }
+    inline const int get_mouse_x() const { return _mouse.x; }
+    inline const int get_mouse_y() const { return _mouse.y; }
+    inline const bool is_mouse_clicked() const { return _mouse.clicked; }
 private:
 
     Input() = default;
@@ -63,6 +68,15 @@ private:
         Toggle purchase{false};
         Toggle cheat_console{false};
     } _toggles;
+
+    struct
+    {
+        int delta_x{};
+        int delta_y{};
+        int x{};
+        int y{};
+        bool clicked{};
+    } _mouse;
 
     std::vector<InputEvent> _input_events;
 };

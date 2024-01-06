@@ -28,7 +28,7 @@
 #include "CameraType.hpp"
 #include "Level.hpp"
 #include "other/Inventory.hpp"
-#include "prefabs/ui/CheatConsole.hpp"
+#include "prefabs/ui/CheatConsoleWindow.hpp"
 
 GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -75,7 +75,7 @@ GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t del
         return &game_loop._states.main_menu;
     }
 
-    auto& cheat_console = registry.get<prefabs::CheatConsoleComponent>(_cheat_console);
+    auto& cheat_console = registry.get<prefabs::CheatConsoleWindowComponent>(_cheat_console);
     if (cheat_console.is_state_change_requested()) {
         return game_loop.get_game_loop_state_ptr(cheat_console.get_requested_state());
     }
@@ -116,7 +116,7 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
 
     _main_dude = prefabs::MainDude::create(pos_x, pos_y);
     _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::SCORES);
-    _cheat_console = prefabs::CheatConsole::create(game_loop._viewport);
+    _cheat_console = prefabs::CheatConsoleWindow::create(game_loop._viewport);
 
     prefabs::ScoresOverlay::create(game_loop._viewport);
     prefabs::ResetSign::create(16.5f, 10.5f);

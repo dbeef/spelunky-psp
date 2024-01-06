@@ -1,6 +1,6 @@
 #include "other/CheatConsoleInterpreter.h"
 #include "game-loop/GameLoop.hpp"
-#include "prefabs/ui/CheatConsole.hpp"
+#include "prefabs/ui/CheatConsoleWindow.hpp"
 #include "patterns/Singleton.hpp"
 #include "components/generic/PositionComponent.hpp"
 #include "populator/NpcFactory.hpp"
@@ -86,10 +86,10 @@ CheatConsoleInterpreter::CheatConsoleInterpreter()
         }
 
         auto& registry = EntityRegistry::instance().get_registry();
-        auto cheat_consoles = registry.view<prefabs::CheatConsoleComponent>();
+        auto cheat_consoles = registry.view<prefabs::CheatConsoleWindowComponent>();
         assert(cheat_consoles.size() == 1);
         auto cheat_console = cheat_consoles.front();
-        auto& cheat_console_component = registry.get<prefabs::CheatConsoleComponent>(cheat_console);
+        auto& cheat_console_component = registry.get<prefabs::CheatConsoleWindowComponent>(cheat_console);
 
         const auto& requested_game_loop_state = command.at(1);
         const auto game_loop_state_match = _string_to_game_loop_state_map.find(requested_game_loop_state);

@@ -46,8 +46,8 @@ void ModelViewCamera::calculate_coefficients()
 
 // rounding the values to 1 decimal point
 // to avoid vertical screen-tearing like artifacts
-void ModelViewCamera::round_position_x() { _x = ((10.f * _x + 0.5f) / 10); }
-void ModelViewCamera::round_position_y() { _y = ((10.f * _y + 0.5f) / 10); }
+void ModelViewCamera::round_position_x() { _x = ((10.f * _x) / 10); }
+void ModelViewCamera::round_position_y() { _y = ((10.f * _y) / 10); }
 
 // FIXME: These methods should not be in competence of the camera implementation - move them out.
 

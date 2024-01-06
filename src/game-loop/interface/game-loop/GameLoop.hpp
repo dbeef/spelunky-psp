@@ -14,6 +14,7 @@
 #include "game-loop/GameLoopStartedState.hpp"
 #include "game-loop/GameLoopScoresState.hpp"
 #include "game-loop/GameLoopSandboxState.hpp"
+#include "game-loop/GameLoopEditorState.hpp"
 #include "game-loop/GameLoopState.hpp"
 
 #include <entt/entt.hpp>
@@ -49,6 +50,7 @@ private:
     friend class GameLoopLevelSummaryState;
     friend class GameLoopScoresState;
     friend class GameLoopSandboxState;
+    friend class GameLoopEditorState;
 
     struct
     {
@@ -58,6 +60,7 @@ private:
         GameLoopLevelSummaryState level_summary;
         GameLoopScoresState scores;
         GameLoopSandboxState sandbox;
+        GameLoopEditorState editor;
         GameLoopBaseState* current;
     } _states;
 

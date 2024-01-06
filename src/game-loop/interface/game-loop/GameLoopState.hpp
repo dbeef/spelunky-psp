@@ -11,6 +11,7 @@ enum class GameLoopState : GameLoopState_t
     LEVEL_SUMMARY,
     SCORES,
     SANDBOX,
+    EDITOR,
     CURRENT,
     _SIZE
 };

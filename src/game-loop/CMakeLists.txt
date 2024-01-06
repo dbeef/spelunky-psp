@@ -338,7 +338,7 @@ add_library(GameLoop STATIC
 
         src/other/ParticleGenerator.cpp
         src/other/Inventory.cpp
-        src/prefabs/ui/CheatConsole.cpp
+        src/prefabs/ui/CheatConsoleWindow.cpp
         src/populator/ItemFactory.cpp
         src/populator/LootFactory.cpp
         src/populator/NpcFactory.cpp
@@ -351,12 +351,12 @@ add_library(GameLoop STATIC
         include/other/NpcType.hpp
         include/other/ParticleGenerator.hpp
         include/components/generic/ImguiComponent.hpp
-        include/prefabs/ui/CheatConsole.hpp
+        include/prefabs/ui/CheatConsoleWindow.hpp
         include/populator/ItemFactory.hpp
         include/populator/NpcFactory.hpp
         include/populator/LootFactory.hpp
         include/other/CheatConsoleInterpreter.h
-)
+        interface/game-loop/GameLoopEditorState.hpp src/game-loop/GameLoopEditorState.cpp include/prefabs/ui/TileBrowserWindow.hpp src/prefabs/ui/TileBrowserWindow.cpp)
 
 target_include_directories(GameLoop
         PRIVATE include interface
@@ -385,4 +385,5 @@ target_link_libraries(GameLoop
         GraphicsUtils
         $<$<BOOL:${SPELUNKY_PSP_WITH_IMGUI}>:imgui>
         Dependencies
+        cjson
 )

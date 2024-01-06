@@ -9,7 +9,7 @@
 
 namespace prefabs
 {
-    class CheatConsoleComponent
+    class CheatConsoleWindowComponent
     {
     public:
         bool is_state_change_requested() const { return _state_change_requested; }
@@ -20,7 +20,7 @@ namespace prefabs
         GameLoopState _requested_state{GameLoopState::CURRENT};
     };
 
-    struct CheatConsole
+    struct CheatConsoleWindow
     {
         static entt::entity create(const std::shared_ptr<Viewport>& viewport);
     };
