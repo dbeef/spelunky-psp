@@ -9,7 +9,7 @@ which is placed under `/tools/atlasc`, and is a development tool - a texture pac
 | Name                                         | Version                    | License           |
 |----------------------------------------------|----------------------------|-------------------|
 | [glad](https://github.com/Dav1dde/glad)      | OpenGL 1.3 / OpenGL ES 1.0 | MIT               |
-| [glm](https://github.com/g-truc/glm)         | 0.9.9                      | Happy Bunny / MIT |
+| [glm](https://github.com/g-truc/glm)         | 1.0.1                      | Happy Bunny / MIT |
 | [log.c](https://github.com/rxi/log.c)        | Unversioned                | MIT               |
 | [stbimage](https://github.com/nothings/stb)  | 2.19                       | MIT               |
 | [atlasc](https://github.com/septag/atlasc)   | 3.1                        | BSD 2-Clause      |
