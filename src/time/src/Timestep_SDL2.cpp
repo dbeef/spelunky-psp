@@ -1,5 +1,7 @@
 #include "time/Timestep.hpp"
-#include <SDL_timer.h>
+
+// FIXME: Forcing SDL2; move all platforms to SDL2 (Windows left)
+#include <SDL2/SDL_timer.h>
 
 Timestamp Timestep::delay() const
 {
