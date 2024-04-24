@@ -30,7 +30,7 @@ target_link_libraries(Input
         $<$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>:SDL_2_XX>
         $<$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>:SDL_2_XX>
         $<$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>:SDL_1_XX>
-        $<$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>:SDL_1_XX>
+        $<$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>:SDL_2_XX>
         $<$<BOOL:${SPELUNKY_PSP_WITH_IMGUI}>:imgui>
         Dependencies
 )

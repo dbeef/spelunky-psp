@@ -2,8 +2,9 @@
 #include "AudioBank.hpp"
 #include "logger/log.h"
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
+// FIXME: Forcing SDL2; move all platforms to SDL2 (Windows left)
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 #include <type_traits>
 #include <cassert>
