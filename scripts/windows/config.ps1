@@ -1,8 +1,3 @@
-# This script is meant to be run from the root of the project.
-
-# Builds SpelunkyPSP natively on Windows, using following dependencies:
-# * SDL as a vendor of creating window, retrieving OpenGL context, controls and sounds.
-
 [CmdletBinding()]
 param (
     [Parameter()][String]
@@ -11,7 +6,7 @@ param (
 
 $ErrorActionPreference = "Stop"
 
-$ROOT = $(Get-Location)
+$ROOT = $(Get-Location)/../../
 $INSTALL_PATH = "$ROOT/tmp/install-windows"
 $DEPS_PATH = "$ROOT/$DepsDirectory/SDL"
 

@@ -1,0 +1,1 @@
+Rework these scripts to be structured in the same way as for other platforms.
