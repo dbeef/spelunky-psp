@@ -7,7 +7,7 @@ param (
     $SDLMixerVersion="1.2.12",
     
     [Parameter()][String]
-    $DepsDirectory="deps"
+    $DepsDirectory="../../tmp/deps-windows"
 )
 
 $ErrorActionPreference = "Stop"
