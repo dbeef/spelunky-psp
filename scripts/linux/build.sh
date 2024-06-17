@@ -3,7 +3,7 @@
 source variables.sh
 
 cmake \
-    --build $BUILD_PATH \
+    --build $SPELUNKY_PSP_BUILD_PATH \
     --target install \
     --config Release \
     -j $NUM_THREADS
