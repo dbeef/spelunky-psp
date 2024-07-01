@@ -1,5 +1,6 @@
 #include "video/Video.hpp"
 #include "audio/Audio.hpp"
+#include "assets/Assets.hpp"
 #include "logger/log.h"
 #include "Level.hpp"
 #include "Input.hpp"
@@ -12,6 +13,7 @@
 
 void init_singletons()
 {
+    Assets::init();
     Level::init();
     TextureBank::init();
     Input::init();
@@ -28,12 +30,19 @@ void dispose_singletons()
     Input::dispose();
     TextureBank::dispose();
     Level::dispose();
+    Assets::dispose();
 }
 
 int start()
 {
     log_info("Started.");
     init_singletons();
+
+    if (!Assets::instance().load())
+    {
+        log_error("Failed to load assets.");
+        return EXIT_FAILURE;
+     }
 
     if (!Audio::instance().setup_audio())
     {

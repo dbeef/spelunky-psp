@@ -17,6 +17,7 @@ else()
 endif ()
 
 add_subdirectory(vendor)
+add_subdirectory(src/assets)
 add_subdirectory(src/entity-registry)
 add_subdirectory(src/viewport)
 add_subdirectory(src/video)
@@ -33,6 +34,7 @@ add_subdirectory(src/collisions)
 add_subdirectory(src/patterns)
 
 target_link_libraries(Spelunky_PSP PRIVATE
+        Assets
         Logger
         Video
         Audio
