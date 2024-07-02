@@ -1,6 +1,23 @@
 #include "assets/Paths.hpp"
 
 namespace Paths {
+    namespace Spritesheets {
+        const char *LEVEL_TILES_JSON = "tilesheets/level-tiles.json";
+        const char *LEVEL_TILES_PNG = "tilesheets/level-tiles.png";
+        const char *NPC_JSON = "tilesheets/npc.json";
+        const char *NPC_PNG = "tilesheets/npc.png";
+        const char *FONT_JSON = "tilesheets/font.json";
+        const char *FONT_PNG = "tilesheets/font.png";
+        const char *MAIN_MENU_JSON = "tilesheets/main-menu.json";
+        const char *MAIN_MENU_PNG = "tilesheets/main-menu.png";
+        const char *HUD_JSON = "tilesheets/hud.json";
+        const char *HUD_PNG = "tilesheets/hud.png";
+        const char *COLLECTIBLES_JSON = "tilesheets/collectibles.json";
+        const char *COLLECTIBLES_PNG = "tilesheets/collectibles.png";
+        const char *MAIN_DUDE_JSON = "tilesheets/main-dude.json";
+        const char *MAIN_DUDE_PNG = "tilesheets/main-dude.png";
+    }
+
     namespace Audio {
         const char *TITLE_THEME = "audio/title.wav";
         const char *CAVE_THEME = "audio/cave.wav";

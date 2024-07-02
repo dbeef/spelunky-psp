@@ -1,6 +1,23 @@
 #pragma once
 
 namespace Paths {
+    namespace Spritesheets {
+        extern const char *LEVEL_TILES_JSON;
+        extern const char *LEVEL_TILES_PNG;
+        extern const char *NPC_JSON;
+        extern const char *NPC_PNG;
+        extern const char *FONT_JSON;
+        extern const char *FONT_PNG;
+        extern const char *MAIN_MENU_JSON;
+        extern const char *MAIN_MENU_PNG;
+        extern const char *HUD_JSON;
+        extern const char *HUD_PNG;
+        extern const char *COLLECTIBLES_JSON;
+        extern const char *COLLECTIBLES_PNG;
+        extern const char *MAIN_DUDE_JSON;
+        extern const char *MAIN_DUDE_PNG;
+    }
+
     namespace Audio {
         extern const char *TITLE_THEME;
         extern const char *CAVE_THEME;

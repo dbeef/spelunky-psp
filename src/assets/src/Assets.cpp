@@ -12,9 +12,9 @@
 namespace
 {
     const std::filesystem::path SEARCH_PATHS[] =
-        {
-        "../assets/",
-        "./assets/"
+    {
+        "../assets/filesystem/",
+        "./assets/filesystem/"
     };
 
     std::optional<std::filesystem::path> detect_assets_path()
@@ -85,6 +85,7 @@ namespace
                 assert(it != no_prefix.size());
                 no_prefix.erase(it, assets_path.string().size());
 
+                log_info("Inserting: %s with size %llu", no_prefix.c_str(), contents->size());
                 out_db.insert_or_assign(no_prefix, *contents);
             }
         };
