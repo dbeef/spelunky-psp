@@ -7,6 +7,7 @@ set -u
 
 NUM_THREADS=$(nproc)
 ROOT_PATH=$(realpath ../../)
+ASSETS_PATH=$ROOT_PATH/assets
 TMP_PATH=$ROOT_PATH/tmp
 
 SPELUNKY_PSP_INSTALL_PATH=$TMP_PATH/install-linux-spelunky-psp
