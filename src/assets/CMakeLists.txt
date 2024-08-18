@@ -1,14 +1,17 @@
 project(Assets)
 
 add_library(Assets STATIC
-        interface/assets/Assets.hpp
-        src/Assets.cpp
-        interface/assets/Paths.hpp
+        $<IF:$<BOOL:${SPELUNKY_PSP_USE_VIRTUAL_FILESYSTEM}>,src/AssetsVirtualFilesystem.cpp,src/AssetsRealFilesystem.cpp>
+        $<IF:$<BOOL:${SPELUNKY_PSP_USE_VIRTUAL_FILESYSTEM}>,generated/VirtualFileIndex.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_USE_VIRTUAL_FILESYSTEM}>,generated/VirtualFileIndex.hpp,>
         src/Paths.cpp
+        src/Assets.cpp
+        interface/assets/Assets.hpp
+        interface/assets/Paths.hpp
 )
 
 target_include_directories(Assets
-        PRIVATE include interface
+        PRIVATE generated interface
         INTERFACE interface
 )
 

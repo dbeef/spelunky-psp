@@ -3,12 +3,13 @@
 source variables.sh
 
 RESOURCE_COMPILER_PATH=${TOOLS_BUILD_PATH}/resource-compiler/resource-compiler
-OUT_DIR_PATH="${ASSETS_PATH}/filesystem-virtual/include"
+OUT_DIR_PATH="${ROOT_PATH}/src/assets/generated"
 OUT_HEADER_DIR_PATH="${OUT_DIR_PATH}/files/"
-INDEX_FILE_PATH="${OUT_DIR_PATH}/Index.hpp"
+INDEX_FILE_PATH="${OUT_DIR_PATH}/VirtualFileIndex.cpp"
 
 cleanup() {
-    rm -rf "${OUT_DIR_PATH}"
+    rm -rf "${OUT_HEADER_DIR_PATH}"
+    rm -rf "${INDEX_FILE_PATH}"
     mkdir -p ${OUT_HEADER_DIR_PATH}
 }
 
@@ -36,6 +37,7 @@ generate_virtual_file_index() {
     touch ${INDEX_FILE_PATH}
     
     echo "// auto-generated at $(date +'%d.%m.%Y %H:%M')" >> ${INDEX_FILE_PATH}
+    echo '#include "VirtualFileIndex.hpp"' >> ${INDEX_FILE_PATH}
     echo 'std::vector<VirtualFile> get_resource_compiled_files() {' >> ${INDEX_FILE_PATH}
     echo 'std::vector<VirtualFile> out;' >> ${INDEX_FILE_PATH}
     

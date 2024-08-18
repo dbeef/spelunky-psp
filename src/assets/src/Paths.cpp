@@ -1,5 +1,6 @@
 #include "assets/Paths.hpp"
 
+// TODO: Map this for faster access?
 namespace Paths {
     namespace Spritesheets {
         const char *LEVEL_TILES_JSON = "tilesheets/level-tiles.json";
