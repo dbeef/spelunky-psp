@@ -3,10 +3,12 @@ project(Spelunky_PSP)
 
 include(cmake/CurrentPlatform.cmake)
 
+option(SPELUNKY_PSP_USE_VIRTUAL_FILESYSTEM "Whether to resource-compile assets within the executable" ON)
+
 spelunky_psp_detect_platform()
 spelunky_psp_add_platform_dependencies()
 
-set(ASSETS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/assets)
+set(SPELUNKY_PSP_ASSETS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/assets)
 
 if (SPELUNKY_PSP_PLATFORM_ANDROID)
     # On Android, libSpelunky_PSP.so is copied into the final .APK file and SDL2's Java activity
