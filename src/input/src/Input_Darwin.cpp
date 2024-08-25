@@ -48,6 +48,7 @@ void Input::poll()
     _toggles.out_bomb.reset_changed();
     _toggles.out_rope.reset_changed();
     _toggles.purchase.reset_changed();
+    _toggles.cheat_console.reset_changed();
 
     SDL_Event event{};
 
@@ -113,6 +114,10 @@ void Input::poll()
             else if (key == SDLK_x)
             {
                 _toggles.out_rope.feed(v);
+            }
+            else if (key == SDLK_TAB)
+            {
+                _toggles.cheat_console.feed(v);
             }
         }
     }

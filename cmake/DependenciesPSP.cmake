@@ -42,7 +42,7 @@ endmacro()
 
 macro(spelunky_psp_post_build_psp)
     create_pbp_file(TARGET Spelunky_PSP
-            ICON_PATH ${ASSETS_PATH}/metadata/icon.png
-            BACKGROUND_PATH ${ASSETS_PATH}/metadata/background.png
+            ICON_PATH ${SPELUNKY_PSP_ASSETS_PATH}/development/metadata/icon.png
+            BACKGROUND_PATH ${SPELUNKY_PSP_ASSETS_PATH}/development/metadata/background.png
     )
 endmacro()

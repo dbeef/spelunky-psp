@@ -3,11 +3,13 @@ project(Video)
 add_library(Video STATIC
         interface/video/Video.hpp
         src/Video.cpp
+        interface/video/ScopedImguiContext.hpp
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_PSP}>,src/Video_PSP.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_WINDOWS}>,src/Video_Desktop.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_LINUX}>,src/Video_Desktop.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_DARWIN}>,src/Video_Darwin.cpp,>
         $<IF:$<BOOL:${SPELUNKY_PSP_PLATFORM_ANDROID}>,src/Video_Android.cpp,>
+        $<IF:$<BOOL:${SPELUNKY_PSP_WITH_IMGUI}>,src/ScopedImguiContext.cpp,src/ScopedImguiContext_Dummy.cpp>
 )
 
 target_include_directories(Video

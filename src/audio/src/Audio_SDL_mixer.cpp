@@ -1,5 +1,6 @@
 #include "audio/Audio.hpp"
-#include "AudioBank.hpp"
+#include "assets/Assets.hpp"
+#include "assets/Paths.hpp"
 #include "logger/log.h"
 
 // FIXME: Forcing SDL2; move all platforms to SDL2 (Windows left)
@@ -33,7 +34,7 @@ struct Audio::Handles
     Mix_Chunk* pickup = nullptr;
     Mix_Chunk* shotgun = nullptr;
     Mix_Chunk* kiss = nullptr;
-    Mix_Chunk* _throw = nullptr;
+    Mix_Chunk* item_throw = nullptr;
 };
 
 Audio::Audio() : _handles(std::make_unique<Audio::Handles>()) {}
@@ -183,7 +184,7 @@ void Audio::play(SFXType sfx)
         case SFXType::PICKUP: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->pickup, 0); break;
         case SFXType::SHOTGUN: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->shotgun, 0); break;
         case SFXType::KISS: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->kiss, 0); break;
-        case SFXType::THROW: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->_throw, 0); break;
+        case SFXType::THROW: Mix_PlayChannel(FIRST_FREE_CHANNEL, _handles->item_throw, 0); break;
         default: assert(false); break;
     }
 }
@@ -207,48 +208,30 @@ void Audio::load()
 {
     log_info("Loading music and sound effects.");
 
-    _handles->title_music = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_title_theme_wav())));
-    assert(_handles->title_music);
-    _handles->cave_music = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_cave_theme_wav())));
-    assert(_handles->cave_music);
-    _handles->jump = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_jump_wav())));
-    assert(_handles->jump);
-    _handles->whip = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_whip_wav())));
-    assert(_handles->whip);
-    _handles->entering_door = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_entering_door_wav())));
-    assert(_handles->entering_door);
-    _handles->die = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_die_wav())));
-    assert(_handles->die);
-    _handles->hurt = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_hurt_wav())));
-    assert(_handles->hurt);
-    _handles->coin = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_coin_wav())));
-    assert(_handles->coin);
-    _handles->climb_1 = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_climb_1_wav())));
-    assert(_handles->climb_1);
-    _handles->climb_2 = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_climb_2_wav())));
-    assert(_handles->climb_2);
-    _handles->arrow_trap = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_arrow_trap_wav())));
-    assert(_handles->arrow_trap);
-    _handles->bat = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_bat_wav())));
-    assert(_handles->bat);
-    _handles->chest_open = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_chest_open_wav())));
-    assert(_handles->chest_open);
-    _handles->explosion = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_explosion_wav())));
-    assert(_handles->explosion);
-    _handles->gem = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_gem_wav())));
-    assert(_handles->gem);
-    _handles->hit = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_hit_wav())));
-    assert(_handles->hit);
-    _handles->jetpack = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_jetpack_wav())));
-    assert(_handles->jetpack);
-    _handles->pickup = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_pickup_wav())));
-    assert(_handles->pickup);
-    _handles->shotgun = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_shotgun_wav())));
-    assert(_handles->shotgun);
-    _handles->kiss = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_kiss_wav())));
-    assert(_handles->kiss);
-    _handles->_throw = Mix_QuickLoad_WAV(reinterpret_cast<Uint8*>(const_cast<char*>(audio_bank::get_throw_wav())));
-    assert(_handles->_throw);
+    // TODO: Internal map of handles to SFXType/Path to easily iterate over all handles and assert/release/play
+    #define LOAD(HANDLE, PATH) HANDLE = Mix_QuickLoad_WAV(Assets::instance().get_ptr<Uint8*>(PATH)); assert(HANDLE);
+    LOAD(_handles->title_music, Paths::Audio::TITLE_THEME);
+    LOAD(_handles->cave_music, Paths::Audio::CAVE_THEME);
+    LOAD(_handles->jump, Paths::Audio::JUMP);
+    LOAD(_handles->whip, Paths::Audio::WHIP);
+    LOAD(_handles->entering_door, Paths::Audio::ENTERING_DOOR);
+    LOAD(_handles->die, Paths::Audio::DIE);
+    LOAD(_handles->hurt, Paths::Audio::HURT);
+    LOAD(_handles->coin, Paths::Audio::COIN);
+    LOAD(_handles->climb_1, Paths::Audio::CLIMB1);
+    LOAD(_handles->climb_2, Paths::Audio::CLIMB2);
+    LOAD(_handles->arrow_trap, Paths::Audio::ARROW_TRAP);
+    LOAD(_handles->bat, Paths::Audio::BAT);
+    LOAD(_handles->chest_open, Paths::Audio::CHEST_OPEN);
+    LOAD(_handles->explosion, Paths::Audio::EXPLOSION);
+    LOAD(_handles->gem, Paths::Audio::GEM);
+    LOAD(_handles->hit, Paths::Audio::HIT);
+    LOAD(_handles->jetpack, Paths::Audio::JETPACK);
+    LOAD(_handles->pickup, Paths::Audio::PICKUP);
+    LOAD(_handles->shotgun, Paths::Audio::SHOTGUN);
+    LOAD(_handles->kiss, Paths::Audio::KISS);
+    LOAD(_handles->item_throw, Paths::Audio::ITEM_THROW);
+    #undef LOAD
 }
 
 void Audio::unload()
@@ -275,5 +258,5 @@ void Audio::unload()
     Mix_FreeChunk(_handles->pickup); _handles->pickup = nullptr;
     Mix_FreeChunk(_handles->shotgun); _handles->shotgun = nullptr;
     Mix_FreeChunk(_handles->kiss); _handles->kiss = nullptr;
-    Mix_FreeChunk(_handles->_throw); _handles->_throw = nullptr;
+    Mix_FreeChunk(_handles->item_throw); _handles->item_throw = nullptr;
 }

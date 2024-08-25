@@ -35,11 +35,11 @@ int main(int arg_counter, char** args)
     }
     catch (const std::exception& e)
     {
-        std::cout << "Exception occured: " << e.what() << std::endl;
+        std::cout << "Failure: " << e.what() << ", for file: " << input_path << std::endl;
         return EXIT_FAILURE;
     }
 
-    std::cout << "Finished successfuly." << std::endl;
+    std::cout << "Success: " << input_path << std::endl;
     return EXIT_SUCCESS;
 }
 
@@ -50,7 +50,7 @@ namespace
         std::ifstream input(filename, std::ifstream::binary | std::ifstream::in);
         if (!input.is_open())
         {
-            throw std::runtime_error("Failed to open given file for reading.");
+            throw std::runtime_error("Failed to open given file for reading");
         }
 
         std::vector<char> output;
@@ -64,7 +64,7 @@ namespace
 
         if (!input.good() && input.eof())
         {
-            throw std::runtime_error("Failed reading file.");
+            throw std::runtime_error("Failed reading file");
         }
 
         return output;
@@ -77,9 +77,10 @@ namespace
         const auto now = std::chrono::system_clock::now();
         const auto current_time = std::chrono::system_clock::to_time_t(now);
 
-        out << "#pragma once\n"
-            << "// Generated from: " << input_path << ", at: " << std::ctime(&current_time) << "\n"
-            << "char data[] = \n{\n    ";
+        out << "// Generated from: " << input_path << ", at: " << std::ctime(&current_time) << "\n"
+            << "const std::size_t size = " << binary_input.size() << ";\n"
+            << "const char* path = \"" << input_path << "\";\n"
+            << "static const char data[] = \n{\n    ";
 
         std::size_t newline_counter = 0;
         for (const char &byte : binary_input)
@@ -102,7 +103,7 @@ namespace
         std::ofstream out(filename, std::ofstream::out);
         if (!out.is_open())
         {
-            throw std::runtime_error("Failed to open given file for writing.");
+            throw std::runtime_error("Failed to open given file for writing");
         }
 
         out << contents;

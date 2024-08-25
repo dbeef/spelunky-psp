@@ -43,6 +43,7 @@ target_link_libraries(TextureBank
         Logger
         GraphicsUtils
         cjson
+        Assets
         )
 
 if (SPELUNKY_PSP_PLATFORM_LINUX)

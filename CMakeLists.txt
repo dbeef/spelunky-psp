@@ -1,18 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 project(Spelunky_PSP)
 
-option(WITH_DEV_TOOLS "Tools meant to be run only on host (development) system." FALSE)
-
 include(cmake/CurrentPlatform.cmake)
+
+option(SPELUNKY_PSP_USE_VIRTUAL_FILESYSTEM "Whether to resource-compile assets within the executable" ON)
 
 spelunky_psp_detect_platform()
 spelunky_psp_add_platform_dependencies()
 
-if (WITH_DEV_TOOLS)
-    add_subdirectory(tools)
-endif()
-
-set(ASSETS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/assets)
+set(SPELUNKY_PSP_ASSETS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/assets)
 
 if (SPELUNKY_PSP_PLATFORM_ANDROID)
     # On Android, libSpelunky_PSP.so is copied into the final .APK file and SDL2's Java activity
@@ -23,6 +19,7 @@ else()
 endif ()
 
 add_subdirectory(vendor)
+add_subdirectory(src/assets)
 add_subdirectory(src/entity-registry)
 add_subdirectory(src/viewport)
 add_subdirectory(src/video)
@@ -39,6 +36,7 @@ add_subdirectory(src/collisions)
 add_subdirectory(src/patterns)
 
 target_link_libraries(Spelunky_PSP PRIVATE
+        Assets
         Logger
         Video
         Audio

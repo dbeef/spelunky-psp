@@ -2,6 +2,8 @@
 #include "graphics_utils/CreateTexture.hpp"
 #include "logger/log.h"
 #include "cJSON.h"
+#include "assets/Assets.hpp"
+#include "assets/Paths.hpp"
 
 #include <cstdint>
 #include <limits>
@@ -13,76 +15,6 @@ REGISTER_SINGLETON_INSTANCE(TextureBank)
 
 namespace
 {
-    namespace level_tiles_png
-    {
-        #include "generated/level_tiles.png.hpp"
-    }
-
-    namespace level_tiles_json
-    {
-        #include "generated/level_tiles.json.hpp"
-    }
-
-    namespace main_dude_png
-    {
-        #include "generated/main-dude-spritesheet.png.hpp"
-    }
-
-    namespace main_dude_json
-    {
-        #include "generated/main-dude-spritesheet.json.hpp"
-    }
-
-    namespace main_menu_png
-    {
-        #include "generated/main-menu-spritesheet.png.hpp"
-    }
-
-    namespace main_menu_json
-    {
-        #include "generated/main-menu-spritesheet.json.hpp"
-    }
-
-    namespace hud_png
-    {
-        #include "generated/hud.png.hpp"
-    }
-
-    namespace hud_json
-    {
-        #include "generated/hud.json.hpp"
-    }
-
-    namespace font_png
-    {
-        #include "generated/font.png.hpp"
-    }
-
-    namespace font_json
-    {
-        #include "generated/font.json.hpp"
-    }
-
-    namespace collectibles_png
-    {
-        #include "generated/collectibles.png.hpp"
-    }
-
-    namespace collectibles_json
-    {
-        #include "generated/collectibles.json.hpp"
-    }
-
-    namespace npc_png
-    {
-        #include "generated/npc.png.hpp"
-    }
-
-    namespace npc_json
-    {
-        #include "generated/npc.json.hpp"
-    }
-
     struct TextureInput
     {
         const char *data;
@@ -99,26 +31,47 @@ namespace
     std::vector<TextureInput> get_texture_input()
     {
         std::vector<TextureInput> out;
-        out.push_back({level_tiles_png::data, sizeof(level_tiles_png::data), TextureType::CAVE_LEVEL_TILES});
-        out.push_back({main_dude_png::data, sizeof(main_dude_png::data), TextureType::MAIN_DUDE});
-        out.push_back({main_menu_png::data, sizeof(main_menu_png::data), TextureType::MAIN_MENU});
-        out.push_back({hud_png::data, sizeof(hud_png::data), TextureType::HUD});
-        out.push_back({font_png::data, sizeof(font_png::data), TextureType::FONT});
-        out.push_back({collectibles_png::data, sizeof(collectibles_png::data), TextureType::COLLECTIBLES});
-        out.push_back({npc_png::data, sizeof(npc_png::data), TextureType::NPC});
+        {
+            const auto [data, size] = Assets::instance().get(Paths::Spritesheets::LEVEL_TILES_PNG);
+            out.push_back({ data, size, TextureType::CAVE_LEVEL_TILES} );
+        }
+        {
+            const auto [data, size] = Assets::instance().get(Paths::Spritesheets::MAIN_DUDE_PNG);
+            out.push_back({ data, size, TextureType::MAIN_DUDE} );
+        }
+        {
+            const auto [data, size] = Assets::instance().get(Paths::Spritesheets::MAIN_MENU_PNG);
+            out.push_back({ data, size, TextureType::MAIN_MENU} );
+        }
+        {
+            const auto [data, size] = Assets::instance().get(Paths::Spritesheets::HUD_PNG);
+            out.push_back({ data, size, TextureType::HUD} );
+        }
+        {
+            const auto [data, size] = Assets::instance().get(Paths::Spritesheets::FONT_PNG);
+            out.push_back({ data, size, TextureType::FONT} );
+        }
+        {
+            const auto [data, size] = Assets::instance().get(Paths::Spritesheets::COLLECTIBLES_PNG);
+            out.push_back({ data, size, TextureType::COLLECTIBLES} );
+        }
+        {
+            const auto [data, size] = Assets::instance().get(Paths::Spritesheets::NPC_PNG);
+            out.push_back({ data, size, TextureType::NPC} );
+        }
         return out;
     }
 
     std::vector<TextureRegionInput> get_texture_region_input()
     {
         std::vector<TextureRegionInput> out;
-        out.push_back({level_tiles_json::data, TextureType::CAVE_LEVEL_TILES});
-        out.push_back({main_dude_json::data, TextureType::MAIN_DUDE});
-        out.push_back({main_menu_json::data, TextureType::MAIN_MENU});
-        out.push_back({hud_json::data, TextureType::HUD});
-        out.push_back({font_json::data, TextureType::FONT});
-        out.push_back({collectibles_json::data, TextureType::COLLECTIBLES});
-        out.push_back({npc_json::data, TextureType::NPC});
+        out.push_back({Assets::instance().get_ptr(Paths::Spritesheets::LEVEL_TILES_JSON), TextureType::CAVE_LEVEL_TILES});
+        out.push_back({Assets::instance().get_ptr(Paths::Spritesheets::MAIN_DUDE_JSON), TextureType::MAIN_DUDE});
+        out.push_back({Assets::instance().get_ptr(Paths::Spritesheets::MAIN_MENU_JSON), TextureType::MAIN_MENU});
+        out.push_back({Assets::instance().get_ptr(Paths::Spritesheets::HUD_JSON), TextureType::HUD});
+        out.push_back({Assets::instance().get_ptr(Paths::Spritesheets::FONT_JSON), TextureType::FONT});
+        out.push_back({Assets::instance().get_ptr(Paths::Spritesheets::COLLECTIBLES_JSON), TextureType::COLLECTIBLES});
+        out.push_back({Assets::instance().get_ptr(Paths::Spritesheets::NPC_JSON), TextureType::NPC});
         return out;
     }
 }
