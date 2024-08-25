@@ -17,7 +17,7 @@ macro(add_darwin_dependencies)
     )
 
     add_library(Dependencies INTERFACE)
-    target_link_libraries(Dependencies INTERFACE SDL_2_XX)
+    target_link_libraries(Dependencies INTERFACE SDL_2_XX "-framework OpenGL")
     target_compile_definitions(Dependencies INTERFACE
             SPELUNKY_PSP_PLATFORM_DARWIN
             SPELUNKY_PSP_PLATFORM_DESKTOP
