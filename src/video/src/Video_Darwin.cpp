@@ -3,6 +3,7 @@
 #include "time/Timestep.hpp"
 #include "logger/log.h"
 #include "glad/glad.h"
+#include "video/ScopedImguiContext.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_video.h>
@@ -12,6 +13,7 @@ struct PlatformSpecific
 {
     SDL_Window* window;
     void* gl_context;
+    std::unique_ptr<ScopedImguiContext> imgui;
 };
 
 Video::~Video() = default; // For pimpl idiom.
@@ -25,6 +27,7 @@ void Video::tear_down_gl()
 
     _platform_specific->window = nullptr;
     _platform_specific->gl_context = nullptr;
+    _platform_specific->imgui = nullptr;
 }
 
 void Video::swap_buffers() const
@@ -118,6 +121,9 @@ bool Video::setup_gl()
     DebugGlCall(glDisable(GL_COLOR_MATERIAL));
     DebugGlCall(glDisable(GL_NORMALIZE));
     DebugGlCall(glDisable(GL_RESCALE_NORMAL));
+
+    log_info("Initializing imgui");
+    _platform_specific->imgui = std::make_unique<ScopedImguiContext>(_platform_specific->window, _platform_specific->gl_context);
 
     log_info("Exiting Video::setup_gl, success.");
     return true;

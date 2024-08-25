@@ -3,45 +3,11 @@
 #include "time/Timestep.hpp"
 #include "logger/log.h"
 #include "glad/glad.h"
+#include "video/ScopedImguiContext.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_video.h>
 #include <stdexcept>
-
-#if defined(SPELUNKY_PSP_WITH_IMGUI)
-#include "imgui.h"
-#include "imgui_impl_sdl2.h"
-#include "imgui_impl_opengl2.h"
-
-namespace {
-    class Imgui {
-    public:
-        Imgui(SDL_Window *window, void *gl_context) {
-            IMGUI_CHECKVERSION();
-            ImGui::CreateContext();
-            ImGuiIO &io = ImGui::GetIO();
-            (void) io;
-            io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-            io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-            // Setup Dear ImGui style
-            ImGui::StyleColorsDark();
-            // Setup Platform/Renderer backends
-            if (!ImGui_ImplSDL2_InitForOpenGL(window, gl_context) ||
-                !ImGui_ImplOpenGL2_Init()) {
-                throw std::runtime_error("Failed to initialize imgui with SDL2 + OpenGL");
-            }
-        }
-
-        ~Imgui() {
-            ImGui_ImplOpenGL2_Shutdown();
-            ImGui_ImplSDL2_Shutdown();
-            ImGui::DestroyContext();
-        }
-    };
-}
-#else
-struct Imgui { Imgui(SDL_Window *window, void *gl_context) {}};
-#endif
 
 namespace
 {
@@ -59,7 +25,7 @@ struct PlatformSpecific
 {
     SDL_Window* window;
     void* gl_context;
-    std::unique_ptr<Imgui> imgui;
+    std::unique_ptr<ScopedImguiContext> imgui;
 };
 
 Video::~Video() = default; // For pimpl idiom.
@@ -176,7 +142,7 @@ bool Video::setup_gl()
     DebugGlCall(glDisable(GL_RESCALE_NORMAL));
 
     log_info("Initializing imgui");
-    _platform_specific->imgui = std::make_unique<Imgui>(_platform_specific->window, _platform_specific->gl_context);
+    _platform_specific->imgui = std::make_unique<ScopedImguiContext>(_platform_specific->window, _platform_specific->gl_context);
 
     log_info("Exiting Video::setup_gl, success.");
     return true;
