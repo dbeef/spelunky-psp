@@ -74,8 +74,16 @@ void Input::poll()
 
         if (event.type == SDL_EventType::SDL_MOUSEBUTTONDOWN)
         {
+            // FIXME:
             _mouse.clicked = (event.button.button == SDL_BUTTON_RIGHT);
+            _mouse.pressed = (event.button.button == SDL_BUTTON_LEFT);
         }
+
+        if (event.type == SDL_EventType::SDL_MOUSEBUTTONUP)
+        {
+            _mouse.pressed = false;
+        }
+
 
         if (event.type == SDL_EventType::SDL_KEYDOWN || event.type == SDL_EventType::SDL_KEYUP)
         {
@@ -137,7 +145,7 @@ void Input::poll()
             {
                 _toggles.quit_requested.feed(v);
             }
-            else if (key == SDLK_TAB)
+            else if (key == SDL_SCANCODE_KP_8) // Backtick: `
             {
                 _toggles.cheat_console.feed(v);
             }

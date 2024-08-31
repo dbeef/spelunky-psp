@@ -45,6 +45,7 @@ public:
     inline const int get_mouse_x() const { return _mouse.x; }
     inline const int get_mouse_y() const { return _mouse.y; }
     inline const bool is_mouse_clicked() const { return _mouse.clicked; }
+    inline const bool is_mouse_pressed() const { return _mouse.pressed; }
 private:
 
     Input() = default;
@@ -76,6 +77,7 @@ private:
         int x{};
         int y{};
         bool clicked{};
+        bool pressed{};
     } _mouse;
 
     std::vector<InputEvent> _input_events;

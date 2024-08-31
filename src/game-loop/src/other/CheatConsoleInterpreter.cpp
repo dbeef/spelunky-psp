@@ -102,6 +102,21 @@ CheatConsoleInterpreter::CheatConsoleInterpreter()
         cheat_console_component.request_state_change(game_loop_state_match->second);
         return std::make_pair(true, "entering");
     });
+
+    _quit_command_handler = CommandHandler ([this](const Command& command) {
+        if (command.size() != 1 || (command.at(0) != "QUIT" && command.at(0) != "EXIT")) {
+            return std::make_pair(false, "");
+        }
+
+        auto& registry = EntityRegistry::instance().get_registry();
+        auto cheat_consoles = registry.view<prefabs::CheatConsoleWindowComponent>();
+        assert(cheat_consoles.size() == 1);
+        auto cheat_console = cheat_consoles.front();
+        auto& cheat_console_component = registry.get<prefabs::CheatConsoleWindowComponent>(cheat_console);
+        cheat_console_component.request_state_change(GameLoopState::QUITTING);
+
+        return std::make_pair(true, "quitting");
+    });
 }
 
 const CheatConsoleInterpreter::CommandHandler& CheatConsoleInterpreter::get_spawn_command_handler() const
@@ -112,4 +127,9 @@ const CheatConsoleInterpreter::CommandHandler& CheatConsoleInterpreter::get_spaw
 const CheatConsoleInterpreter::CommandHandler& CheatConsoleInterpreter::get_enter_command_handler() const
 {
     return _enter_command_handler;
+}
+
+const CheatConsoleInterpreter::CommandHandler& CheatConsoleInterpreter::get_quit_command_handler() const
+{
+    return _quit_command_handler;
 }

@@ -113,7 +113,14 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
 
     auto& cheat_console = registry.get<prefabs::CheatConsoleWindowComponent>(_cheat_console);
     if (cheat_console.is_state_change_requested()) {
-        return game_loop.get_game_loop_state_ptr(cheat_console.get_requested_state());
+        if (cheat_console.get_requested_state() == GameLoopState::QUITTING) // TODO: Introduce such state
+        {
+            game_loop._exit = true;
+        }
+        else
+        {
+            return game_loop.get_game_loop_state_ptr(cheat_console.get_requested_state());
+        }
     }
 
     return this;

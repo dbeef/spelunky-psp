@@ -4,5 +4,5 @@
 
 struct ImguiComponent
 {
-    std::function<void()> render_callback;
+    std::function<void(int delta_time_ms)> render_callback;
 };

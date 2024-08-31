@@ -42,4 +42,5 @@ target_link_libraries(Level
         PRIVATE
             glad
             TextureBank
+            cjson
         )

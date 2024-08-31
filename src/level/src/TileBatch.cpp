@@ -27,8 +27,110 @@
 #include "ShopRooms.hpp"
 // FIXME
 #include "../../game-loop/include/components/generic/MeshComponent.hpp"
+#include <fstream>
+#include <filesystem>
+#include "cJSON.h"
 
 using namespace Consts;
+
+    struct Room {
+        std::string name;
+        int width_tiles{};
+        int height_tiles{};
+        std::vector<MapTileType> tiles;
+
+        Room() = default;
+
+        explicit Room(const std::string &name, int width, int height) : width_tiles(width), height_tiles(height),
+                                                                        name(name) {
+            tiles.resize(width * height, MapTileType::NOTHING);
+        }
+
+        MapTileType &get_xy(int x, int y) {
+            return tiles[(y * width_tiles) + x];
+        }
+
+        void set_xy(int x, int y, MapTileType value) {
+            get_xy(x, y) = value;
+        }
+
+        void from_json(cJSON *in_json) {
+            auto *name_cjson = cJSON_GetObjectItem(in_json, "name");
+            auto *width_tiles_cjson = cJSON_GetObjectItem(in_json, "width_tiles");
+            auto *height_tiles_cjson = cJSON_GetObjectItem(in_json, "height_tiles");
+            auto *tiles_cjson = cJSON_GetObjectItem(in_json, "tiles");
+
+            assert(cJSON_IsString(name_cjson));
+            assert(cJSON_IsNumber(width_tiles_cjson));
+            assert(cJSON_IsNumber(height_tiles_cjson));
+
+            name = name_cjson->valuestring;
+            width_tiles = width_tiles_cjson->valueint;
+            height_tiles = height_tiles_cjson->valueint;
+
+            if (tiles_cjson) {
+                auto array_size = cJSON_GetArraySize(tiles_cjson);
+                tiles.resize(array_size);
+
+                for (int i = 0; i < array_size; i++) {
+                    auto *item = cJSON_GetArrayItem(tiles_cjson, i);
+                    tiles[i] = static_cast<MapTileType>(item->valueint);
+                }
+            }
+        }
+
+        cJSON *to_json() {
+            auto *room = cJSON_CreateObject();
+            cJSON_AddStringToObject(room, "name", name.c_str());
+            cJSON_AddNumberToObject(room, "width_tiles", width_tiles);
+            cJSON_AddNumberToObject(room, "height_tiles", height_tiles);
+
+//            tiles = {MapTileType::STONE_BLOCK, MapTileType::ALTAR_RIGHT};
+
+            auto *rooms_array = cJSON_CreateIntArray(reinterpret_cast<const int *>(tiles.data()), tiles.size());
+            cJSON_AddItemToObject(room, "tiles", rooms_array);
+
+            return room;
+        }
+    };
+
+    struct RoomGroup {
+        std::string name;
+        std::vector<Room> rooms;
+
+        void from_json(cJSON *in_json) {
+            auto *name_cjson = cJSON_GetObjectItem(in_json, "name");
+            assert(cJSON_IsString(name_cjson));
+            name = name_cjson->valuestring;
+
+            auto *rooms_cjson = cJSON_GetObjectItem(in_json, "rooms");
+            if (rooms_cjson) {
+                auto array_size = cJSON_GetArraySize(rooms_cjson);
+                rooms.resize(array_size);
+                for (int i = 0; i < array_size; i++) {
+                    auto *item = cJSON_GetArrayItem(rooms_cjson, i);
+                    rooms[i].from_json(item);
+                }
+            }
+        }
+
+        cJSON *to_json() {
+            auto *group = cJSON_CreateObject();
+            cJSON_AddStringToObject(group, "name", name.c_str());
+
+            auto *rooms_array = cJSON_CreateArray();
+
+            for (auto &r: rooms) {
+                auto *cjson_room = r.to_json();
+                cJSON_AddItemToArray(rooms_array, cjson_room);
+            }
+
+            cJSON_AddItemToObject(group, "rooms", rooms_array);
+
+            return group;
+        }
+    };
+
 
 namespace
 {
@@ -285,7 +387,43 @@ void TileBatch::initialise_tiles_from_splash_screen(SplashScreenType splash_type
     {
         case SplashScreenType::LEVEL_SUMMARY: memcpy(temp, level_summary, sizeof(level_summary)); break;
         case SplashScreenType::SCORES: memcpy(temp, scores, sizeof(scores)); break;
-        case SplashScreenType::MAIN_MENU: memcpy(temp, main_menu, sizeof(main_menu)); break;
+        case SplashScreenType::MAIN_MENU: {
+            //memcpy(temp, main_menu, sizeof(main_menu)); break;
+
+            // TODO: "Assets" module to access everything that is currently resource-compiled
+
+            std::filesystem::path assets = "/home/dbeef/dev/spelunky-psp-backup/assets/rooms/";
+            std::vector<RoomGroup> all_groups;
+
+            std::ifstream in(assets / "groups.json", std::ifstream::in | std::ifstream::ate);
+            if (in.good()) {
+                std::size_t size = in.tellg();
+                in.seekg(0);
+
+                std::vector<char> in_chars(size);
+                in.read(in_chars.data(), size);
+
+                auto *in_json = cJSON_Parse(in_chars.data());
+                // log_info(cJSON_PrintUnformatted(in_json));
+
+                auto *groups = cJSON_GetObjectItem(in_json, "groups");
+                assert(cJSON_IsArray(groups));
+                auto array_size = cJSON_GetArraySize(groups);
+
+                all_groups = {};
+                for (int i = 0; i < array_size; i++) {
+                    auto *item = cJSON_GetArrayItem(groups, i);
+                    RoomGroup in_rg;
+                    in_rg.from_json(item);
+                    //                    log_info("Room is: %i x %i", in_r.width_tiles, in_r.height_tiles);;
+                    all_groups.push_back(in_rg);
+                }
+
+                cJSON_Delete(in_json);
+            }
+
+            memcpy(temp, all_groups[2].rooms[0].tiles.data(), sizeof(MapTileType) * all_groups[2].rooms[0].tiles.size()); break;
+        }
         default: assert(false); break;
     }
 

@@ -20,6 +20,7 @@ public:
 
     const CommandHandler& get_spawn_command_handler() const;
     const CommandHandler& get_enter_command_handler() const;
+    const CommandHandler& get_quit_command_handler() const;
 private:
     std::map<std::string, ItemType> _string_to_item_type_map;
     std::map<std::string, NpcType> _string_to_npc_type_map;
@@ -28,4 +29,5 @@ private:
 
     CommandHandler _spawn_command_handler;
     CommandHandler _enter_command_handler;
+    CommandHandler _quit_command_handler;
 };

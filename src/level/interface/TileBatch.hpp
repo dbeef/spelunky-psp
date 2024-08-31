@@ -76,6 +76,10 @@ public:
 
     void clean();
 
+    int get_width_tiles() const { return _width_x_tiles; }
+
+    int get_height_tiles() const { return _height_y_tiles; }
+
 private:
 
     int _width_x_tiles = 0;

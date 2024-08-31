@@ -53,12 +53,15 @@ namespace {
     }
 
     struct ImGuiConsole {
+        explicit ImGuiConsole(const std::shared_ptr<Viewport> viewport) : viewport(viewport) {}
+
         char InputBuf[256];
         ImVector<char *> Items;
         ImVector<const char *> Commands;
         ImVector<char *> History;
         bool AutoScroll;
         bool ScrollToBottom;
+        std::shared_ptr<Viewport> viewport;
 
         std::vector<CheatConsoleInterpreter::CommandHandler> _command_handlers;
         
@@ -102,8 +105,10 @@ namespace {
         }
 
         void Draw(const char *title, bool *p_open) {
-            ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_Always);
-            if (!ImGui::Begin(title, p_open)) {
+            ImGui::SetNextWindowSize(ImVec2(viewport->get_width_pixels() * 1.0f, viewport->get_height_pixels() * 0.3f), ImGuiCond_Always);
+            ImGui::SetNextWindowPos(ImVec2(0, 0));
+//            ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_Always);
+            if (!ImGui::Begin(title, p_open, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse)) {
                 ImGui::End();
                 return;
             }
@@ -113,8 +118,7 @@ namespace {
                 ImGui::EndPopup();
             }
 
-            ImGui::Separator();
-            ImGui::SetWindowFontScale(2.0f);
+            ImGui::SetWindowFontScale(2.0f); // FIXME: Blurry
 
             // Reserve enough left-over height for 1 separator + 1 input text
             const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing();
@@ -156,10 +160,10 @@ namespace {
 
             // Command-line
             bool reclaim_focus = false;
-            ImGuiInputTextFlags input_text_flags =
-                    ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_EscapeClearsAll;
+            ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_EscapeClearsAll;
             ImGui::SetKeyboardFocusHere(0); // Added
-            if (ImGui::InputText("Input", InputBuf, IM_ARRAYSIZE(InputBuf), input_text_flags, nullptr, (void *) this)) {
+            ImGui::PushItemWidth(viewport->get_width_pixels() * 0.73f);
+            if (ImGui::InputText("##", InputBuf, IM_ARRAYSIZE(InputBuf), input_text_flags, nullptr, (void *) this)) {
                 char *s = InputBuf;
                 Strtrim(s);
                 if (s[0])
@@ -236,11 +240,12 @@ namespace {
     };
     class CheatConsoleScript final : public ScriptBase {
     public:
-        explicit CheatConsoleScript(entt::entity self) : _self(self) {
+        explicit CheatConsoleScript(entt::entity self, const std::shared_ptr<Viewport>& viewport) : _self(self), _imgui_console(viewport) {
+            _imgui_console.add_command_handler(_cheat_console_interpreter.get_quit_command_handler());
             _imgui_console.add_command_handler(_cheat_console_interpreter.get_enter_command_handler());
             _imgui_console.add_command_handler(_cheat_console_interpreter.get_spawn_command_handler());
-            _dont_render_callback = [](){};
-            _render_console_callback = [this](){
+            _dont_render_callback = [](int delta_time_ms){};
+            _render_console_callback = [this](int delta_time_ms){
                 bool dummy = false;
                 _imgui_console.Draw("Cheat console", &dummy);
             };
@@ -264,8 +269,8 @@ namespace {
         entt::entity _self;
         ImGuiConsole _imgui_console;
         bool _visible = false;
-        std::function<void()> _render_console_callback;
-        std::function<void()> _dont_render_callback;
+        std::function<void(int delta_time_ms)> _render_console_callback;
+        std::function<void(int delta_time_ms)> _dont_render_callback;
         CheatConsoleInterpreter _cheat_console_interpreter;
     };
 }
@@ -283,13 +288,13 @@ namespace prefabs {
         auto &registry = EntityRegistry::instance().get_registry();
 
         const auto entity = registry.create();
-        auto cheat_console_script = std::make_shared<CheatConsoleScript>(entity);
+        auto cheat_console_script = std::make_shared<CheatConsoleScript>(entity, viewport);
         CheatConsoleWindowComponent cheat_console_component{};
         ScriptingComponent scripting_component(cheat_console_script);
         registry.emplace<ScriptingComponent>(entity, scripting_component);
 
         ImguiComponent imgui_component;
-        imgui_component.render_callback = [](){};
+        imgui_component.render_callback = [](int delta_time_ms){};
         registry.emplace<ImguiComponent>(entity, imgui_component);
         registry.emplace<CheatConsoleWindowComponent>(entity, cheat_console_component);
         return entity;

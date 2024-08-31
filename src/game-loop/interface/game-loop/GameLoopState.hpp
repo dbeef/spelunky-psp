@@ -12,6 +12,7 @@ enum class GameLoopState : GameLoopState_t
     SCORES,
     SANDBOX,
     EDITOR,
+    QUITTING,
     CURRENT,
     _SIZE
 };
