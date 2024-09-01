@@ -14,6 +14,8 @@ public:
 
     bool load();
 
+    void reload(const char* path);
+
     std::pair<const char *, std::size_t> get(const char *path) const;
 
     std::size_t get_size(const char *path) const;
