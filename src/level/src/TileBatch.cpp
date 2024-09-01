@@ -615,22 +615,14 @@ entt::entity TileBatch::add_render_entity(entt::registry &registry)
 
 void TileBatch::generate_cave_background()
 {
-    int random_offset = std::rand();
-
     for (int x = 0; x < _width_x_tiles; x++)
     {
         for (int y = 0; y < _height_y_tiles; y++)
         {
             if (map_tiles[x][y]->map_tile_type == MapTileType::NOTHING)
             {
-                if (x % 4)
-                {
-                    random_offset = std::rand();
-                }
-
-                int type_index = x + y + random_offset;
-                type_index = type_index % 4;
-
+                // Background consists of 4 tiles (CAVE_BG_1 to CAVE_BG_4) placed on a 2x2 grid:
+                const int type_index = (x % 2) + ((y % 2) * 2);
                 const auto type = static_cast<MapTileType >(type_index + static_cast<int>(MapTileType::CAVE_BG_1));
                 map_tiles[x][y]->map_tile_type = type;
                 map_tiles[x][y]->match_tile(type);
