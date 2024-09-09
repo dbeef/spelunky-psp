@@ -1,4 +1,4 @@
-FROM ubuntu:20.10
+FROM ubuntu:22.04
 
 # Docker image with toolchains/dependencies for the following platforms:
 #   * Linux
@@ -83,7 +83,7 @@ WORKDIR tools/bin
 RUN yes | ./sdkmanager "platforms;android-26"
 RUN yes | ./sdkmanager "platform-tools"
 RUN yes | ./sdkmanager "build-tools;29.0.2"
-RUN yes | ./sdkmanager "cmake;3.10.2.4988404"
+RUN yes | ./sdkmanager "cmake;3.22.1"
 
 RUN export ANDROID_HOME=/usr/local/android
 ENV ANDROID_HOME /usr/local/android
