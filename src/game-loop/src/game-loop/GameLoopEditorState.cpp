@@ -22,7 +22,7 @@
 #include "system/ParticleSystem.hpp"
 #include "system/ItemSystem.hpp"
 
-#include "populator/Populator.hpp"
+// #include "populator/Populator.hpp"
 #include "logger/log.h"
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
@@ -31,6 +31,9 @@
 #include "other/Inventory.hpp"
 #include "prefabs/ui/CheatConsoleWindow.hpp"
 #include "prefabs/ui/TileBrowserWindow.hpp"
+
+#include "assets/Assets.hpp"
+#include "assets/Paths.hpp"
 
 GameLoopBaseState *GameLoopEditorState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -109,7 +112,9 @@ GameLoopBaseState *GameLoopEditorState::update(GameLoop& game_loop, uint32_t del
             auto tiles = registry.get<prefabs::TileBrowserWindowComponent>(view.front());
 
             if (target_pos_x >= 0 && target_pos_y >= 0 && target_pos_x < tile_batch.get_width_tiles() && target_pos_y < tile_batch.get_height_tiles()) {
-                Level::instance().get_tile_batch().map_tiles[(int) target_pos_x][(int) target_pos_y]->map_tile_type = tiles.get_selected_tile_type();
+                Level::instance().get_tile_batch().at(
+                    (int) target_pos_x,
+                    (int) target_pos_y)->map_tile_type = tiles.get_selected_tile_type();
                 Level::instance().get_tile_batch().batch_vertices();
                 // TODO: Move to tile browser
                 // FIXME: This is creating render entities that are overlapping existing entities from TileBrowserWindow
@@ -177,5 +182,6 @@ void GameLoopEditorState::exit(GameLoop& game_loop)
 {
     auto& registry = EntityRegistry::instance().get_registry();
     registry.clear();
-    Level::instance().recreate_tile_batch(Consts::LEVEL_WIDTH_TILES, Consts::LEVEL_HEIGHT_TILES);
+    Level::instance().recreate_tile_batch(0, 0);
+    Assets::instance().reload(Paths::Rooms::GROUPS);
 }

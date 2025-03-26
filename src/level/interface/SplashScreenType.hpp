@@ -16,6 +16,7 @@ enum class SplashScreenType
     LEVEL_SUMMARY,
     SCORES,
     MAIN_MENU,
+    SANDBOX,
 };
 
 #endif //SPELUNKYDS_SPLASHSCREENTYPE_H

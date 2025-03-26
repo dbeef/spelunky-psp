@@ -12,17 +12,31 @@ add_library(Level STATIC
         interface/SplashScreenType.hpp
         interface/NeighbouringTiles.hpp
         interface/TileBatch.hpp
-        include/AltarRoom.hpp
-        include/ClosedRooms.hpp
-        include/EntranceRooms.hpp
-        include/ExitRooms.hpp
-        include/LeftRightDownRooms.hpp
-        include/LeftRightRooms.hpp
-        include/LeftRightUpRooms.hpp
-        include/ShopRooms.hpp
-        include/SplashScreenRooms.hpp
         interface/NPCType.hpp
-        )
+        interface/LevelType.hpp
+        include/generator/Stage.hpp
+        include/generator/Pipeline.hpp
+        src/generator/Pipeline.cpp
+        src/generator/Stage.cpp
+        include/generator/Pipeline.hpp
+        src/generator/Pipeline.cpp
+
+        src/populator/Populator.cpp
+        src/populator/Shop.cpp
+        include/populator/Populator.hpp
+        include/populator/Spawner.hpp
+        include/populator/Shop.hpp
+        src/populator/ItemFactory.cpp
+        src/populator/LootFactory.cpp
+        src/populator/NpcFactory.cpp
+        include/populator/ItemFactory.hpp
+        include/populator/NpcFactory.hpp
+        include/populator/LootFactory.hpp
+        interface/RoomLayoutGenerator.hpp
+        src/RoomLayoutGenerator.cpp
+        src/generator/Spawners.cpp
+        include/generator/Spawners.hpp
+)
 
 target_include_directories(Level
         PRIVATE include interface
@@ -39,8 +53,12 @@ target_link_libraries(Level
             entt
             RenderingTypes
             Patterns
+            Prefabs
         PRIVATE
             glad
             TextureBank
             cjson
+            Assets
+            EntityRegistry
+                Components
         )

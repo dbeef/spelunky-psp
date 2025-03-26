@@ -1,9 +1,4 @@
-//
-// Created by xdbeef on 02.05.18.
-//
-
-#ifndef SPELUNKYDS_ROOMTYPE_H
-#define SPELUNKYDS_ROOMTYPE_H
+#pragma once
 
 #include <cstdint>
 
@@ -21,5 +16,3 @@ enum class RoomType : std::uint16_t
     SHOP_RIGHT_MUGSHOT,
     ALTAR,
 };
-
-#endif //SPELUNKYDS_ROOMTYPE_H

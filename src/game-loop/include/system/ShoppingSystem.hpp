@@ -2,16 +2,9 @@
 
 #include "patterns/Subject.hpp"
 #include "System.hpp"
+#include "events/ShopkeeperAssaultEvent.hpp"
+#include "events/ThieveryEvent.hpp"
 
-struct ThieveryEvent
-{
-    entt::entity thief = entt::null;
-};
-
-struct ShopkeeperAssaultEvent
-{
-    entt::entity attacker = entt::null;
-};
 
 class ShoppingSystem final : public System, public Subject<ThieveryEvent>, public Observer<ShopkeeperAssaultEvent>
 {

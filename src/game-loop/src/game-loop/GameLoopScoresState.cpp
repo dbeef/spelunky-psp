@@ -21,7 +21,7 @@
 #include "system/ParticleSystem.hpp"
 #include "system/ItemSystem.hpp"
 
-#include "populator/Populator.hpp"
+// #include "populator/Populator.hpp"
 #include "logger/log.h"
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
@@ -91,11 +91,10 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
 
     auto& rendering_system = game_loop._rendering_system;
 
-    Level::instance().get_tile_batch().generate_frame();
-    Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::SCORES);
-    Level::instance().get_tile_batch().generate_cave_background();
-    Level::instance().get_tile_batch().batch_vertices();
-    Level::instance().get_tile_batch().add_render_entity(registry);
+    auto& level = Level::instance();
+    level.generate(LevelType::SCORES);
+    Level::instance().get_tile_batch().add_render_entity(registry); // TODO: Make tile-batch an entity itself!
+
 
     // Splash screens are copied into the [0, 0] position (left-upper corner), center on them:
     auto &model_view_camera = rendering_system->get_model_view_camera();

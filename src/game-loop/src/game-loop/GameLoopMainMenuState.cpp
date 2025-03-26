@@ -135,12 +135,9 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     auto& registry = EntityRegistry::instance().get_registry();
     auto& rendering_system = game_loop._rendering_system;
     
-    Audio::instance().play(MusicType::TITLE);
+    // Audio::instance().play(MusicType::TITLE);
 
-    Level::instance().get_tile_batch().generate_frame();
-    Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU);
-    Level::instance().get_tile_batch().generate_cave_background();
-    Level::instance().get_tile_batch().batch_vertices();
+    Level::instance().generate(LevelType::MAIN_MENU);
     Level::instance().get_tile_batch().add_render_entity(registry);
 
     // Splash screens are copied into the [0, 0] position (left-upper corner), center on them:
@@ -164,7 +161,7 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
         const float y = 0.5f * index;
         prefabs::RopeChainElement::create(x, y);
         auto& tile_batch = Level::instance().get_tile_batch();
-        tile_batch.map_tiles[static_cast<int>(x)][static_cast<int>(y)]->climbable = true;
+        tile_batch.at(static_cast<int>(x), static_cast<int>(y))->climbable = true;
     }
 
     _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::MAIN_MENU);

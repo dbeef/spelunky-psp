@@ -44,6 +44,7 @@ void ModelViewCamera::calculate_coefficients()
     _screen_height_tiles = _viewport->get_height_world_units();
 }
 
+
 // rounding the values to 1 decimal point
 // to avoid vertical screen-tearing like artifacts
 void ModelViewCamera::round_position_x() { _x = ((10.f * _x) / 10); }

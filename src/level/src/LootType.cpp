@@ -8,6 +8,12 @@ const char *to_string(LootType loot_type) {
         TO_STRING(ANY);
         TO_STRING(SHOP_ITEM);
         TO_STRING(GOLDEN_IDOL);
+        TO_STRING(SINGLE_GOLD_BAR);
+        TO_STRING(BIG_GEM);
+        TO_STRING(CHEST);
+        TO_STRING(JAR);
+        TO_STRING(ROCK);
+        TO_STRING(CRATE);
         TO_STRING(_SIZE);
     }
     assert(false);
