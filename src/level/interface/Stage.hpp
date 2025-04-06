@@ -11,6 +11,7 @@ namespace Stage {
         GENERATE_BACKGROUND,
         GENERATE_LOOT,
         GENERATE_NPC,
+        POST_PROCESS_TILES,
         _SIZE
     };
 
@@ -28,4 +29,7 @@ namespace Stage {
 
     template<>
     void run<Type::GENERATE_NPC>(TileBatch &output_batch, EntityRegistry&, LevelType);
+
+    template<>
+    void run<Type::POST_PROCESS_TILES>(TileBatch &output_batch, EntityRegistry&, LevelType);
 }

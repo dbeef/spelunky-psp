@@ -14,7 +14,7 @@ add_library(Level STATIC
         interface/TileBatch.hpp
         interface/NPCType.hpp
         interface/LevelType.hpp
-        include/generator/Stage.hpp
+        interface/Stage.hpp
         include/generator/Pipeline.hpp
         src/generator/Pipeline.cpp
         src/generator/Stage.cpp

@@ -201,6 +201,7 @@ target_link_libraries(Prefabs
         Logger
         Audio
         cjson
+        Level
         $<IF:$<BOOL:${SPELUNKY_PSP_WITH_IMGUI}>,imgui,> # FIXME
 )
 

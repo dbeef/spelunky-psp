@@ -1,4 +1,4 @@
-#include "generator/Stage.hpp"
+#include "Stage.hpp"
 
 #include <random>
 
@@ -33,6 +33,38 @@ namespace Stage {
     }
 
     template<>
+    void run<Type::POST_PROCESS_TILES>(TileBatch &output_batch, EntityRegistry &output_registry, LevelType level_type) {
+        for (int tile_x = 0; tile_x < output_batch.get_width_tiles(); tile_x++) {
+            for (int tile_y = 0; tile_y < output_batch.get_height_tiles(); tile_y++) {
+                auto *current = output_batch.at(tile_x, tile_y);
+                auto* above = output_batch.above(current);
+                auto* below = output_batch.below(current);
+
+                switch (current->map_tile_type) {
+                    case MapTileType::CAVE_REGULAR:
+                    case MapTileType::CAVE_UP_ORIENTED:
+                    case MapTileType::CAVE_DOWN_ORIENTED:
+                    case MapTileType::CAVE_UP_DOWN_ORIENTED: {
+                        if (above && above->collidable && below && !below->collidable) {
+                            current->map_tile_type = MapTileType::CAVE_DOWN_ORIENTED;
+                        } else if (above && !above->collidable && below && below->collidable) {
+                            current->map_tile_type = MapTileType::CAVE_UP_ORIENTED;
+                        } else if (above && above->collidable && below && below->collidable) {
+                            current->map_tile_type = MapTileType::CAVE_REGULAR;
+                        } else if (above && !above->collidable && below && !below->collidable) {
+                            current->map_tile_type = MapTileType::CAVE_UP_DOWN_ORIENTED;
+                        } else if (above && !above->collidable && !below) {
+                            current->map_tile_type = MapTileType::CAVE_UP_ORIENTED;
+                        }
+                        break;
+                    }
+                    default: ;
+                }
+            }
+        }
+    }
+
+    template<>
     void run<Type::GENERATE_NPC>(TileBatch &output_batch, EntityRegistry &output_registry, LevelType level_type) {
         std::random_device random_device;
         std::default_random_engine engine(random_device());
@@ -47,16 +79,23 @@ namespace Stage {
             for (int tile_y = 0; tile_y < tile_batch.get_height_tiles(); tile_y++) {
                 auto *map_tile = tile_batch.at(tile_x, tile_y);
 
-                // FIXME: Rooms are stored in reverse Y order for no particular reason; rework this.
-                const auto room_type = room_layout.get_room_type_at_tile(tile_x, tile_batch.get_height_tiles() - tile_y);
+                const auto room_type = room_layout.get_room_type_at_tile(tile_x, tile_y);
 
-                if (room_type == RoomType::ENTRANCE) {
-                    log_info("Entrance at: %i %i", tile_x, tile_y);
+                if (room_type == RoomType::ENTRANCE ||
+                    room_type == RoomType::ALTAR ||
+                    room_type == RoomType::SHOP_RIGHT ||
+                    room_type == RoomType::SHOP_LEFT ||
+                    room_type == RoomType::SHOP_LEFT_MUGSHOT ||
+                    room_type == RoomType::SHOP_RIGHT_MUGSHOT ) {
+                    log_info("Ignoring room at: %i %i, type: %i", tile_x, tile_y, static_cast<int>(room_type));
+                    // FIXME: Detection fails for some reason!
                     continue;
                 }
 
                 for (auto &spawner: spawners) {
-                    if (map_tile->collidable) {
+                    if (map_tile->collidable &&
+                        map_tile->map_tile_type != MapTileType::ARROW_TRAP_LEFT &&
+                        map_tile->map_tile_type != MapTileType::ARROW_TRAP_RIGHT ) {
                         continue; // As there is no type of NPC spawning directly on a collidable tile
                     }
                     if (spawner.try_spawn(engine, tile_batch, map_tile)) {

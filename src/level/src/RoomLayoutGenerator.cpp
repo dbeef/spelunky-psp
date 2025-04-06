@@ -117,8 +117,12 @@ RoomType RoomLayoutGenerator::get_room_type_at_room(int x_room, int y_room) cons
 }
 
 RoomType RoomLayoutGenerator::get_room_type_at_tile(int x_tile, int y_tile) const {
-    int room_x = std::floor(static_cast<float>(x_tile) / _room_width_tiles);
-    int room_y = std::floor(static_cast<float>(y_tile) / _room_height_tiles);
+
+    // FIXME: Rooms are stored in reverse Y order for no particular reason; rework this.
+    y_tile = get_height_tiles() - y_tile - 1;
+
+    int room_x = std::floor(static_cast<float>(x_tile) / static_cast<float>(_room_width_tiles));
+    int room_y = std::floor(static_cast<float>(y_tile) / static_cast<float>(_room_height_tiles));
 
     return _layout[room_x][room_y];
 }

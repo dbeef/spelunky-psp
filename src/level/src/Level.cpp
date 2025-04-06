@@ -2,7 +2,7 @@
 
 #include "EntityRegistry.hpp"
 #include "generator/Pipeline.hpp"
-#include "generator/Stage.hpp"
+#include "Stage.hpp"
 
 REGISTER_SINGLETON_INSTANCE(Level)
 

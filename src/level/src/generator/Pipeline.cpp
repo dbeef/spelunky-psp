@@ -1,7 +1,7 @@
 #include "generator/Pipeline.hpp"
 
 #include "SplashScreenType.hpp"
-#include "generator/Stage.hpp"
+#include "Stage.hpp"
 #include "TileBatch.hpp"
 
 namespace Pipeline {
@@ -19,6 +19,7 @@ namespace Pipeline {
 
         Stage::run<Stage::Type::GENERATE_BACKGROUND>(output_batch, entity_registry, LevelType::CAVE);
         Stage::run<Stage::Type::GENERATE_INDESTRUCTIBLE_FRAME>(output_batch, entity_registry, LevelType::CAVE);
+        Stage::run<Stage::Type::POST_PROCESS_TILES>(output_batch, entity_registry, LevelType::CAVE);
         Stage::run<Stage::Type::GENERATE_LOOT>(output_batch, entity_registry, LevelType::CAVE);
         Stage::run<Stage::Type::GENERATE_NPC>(output_batch, entity_registry, LevelType::CAVE);
 
@@ -50,7 +51,6 @@ namespace Pipeline {
         output_batch.initialise_tiles_from_splash_screen(SplashScreenType::SCORES);
 
         Stage::run<Stage::Type::GENERATE_BACKGROUND>(output_batch, entity_registry, LevelType::CAVE);
-        Stage::run<Stage::Type::GENERATE_INDESTRUCTIBLE_FRAME>(output_batch, entity_registry, LevelType::CAVE);
 
         output_batch.batch_vertices();
     }

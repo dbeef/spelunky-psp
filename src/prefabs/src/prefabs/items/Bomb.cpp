@@ -21,6 +21,7 @@
 #include "EntityRegistry.hpp"
 #include "audio/Audio.hpp"
 #include "Level.hpp"
+#include "Stage.hpp"
 #include "TextureType.hpp"
 #include "spritesheet-frames/CollectiblesSpritesheetFrames.hpp"
 
@@ -139,8 +140,8 @@ namespace
                  }
              }
 
-             // Level::instance().
-             // tile_batch.generate_cave_background();
+             // TODO: Should be done by firing an event, so the bomb does not know anything about the background
+             Stage::run<Stage::Type::GENERATE_BACKGROUND>(tile_batch, EntityRegistry::instance(), LevelType::CAVE);
 
              tile_batch.batch_vertices();
          }

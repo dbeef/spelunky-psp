@@ -23,6 +23,7 @@
 #include <vector>
 
 #include "LevelType.hpp"
+#include "logger/log.h"
 #include "prefabs/collectibles/TripleGoldBar.hpp"
 
 namespace {
@@ -38,6 +39,8 @@ namespace {
     }
 
     namespace Predicates {
+        // TODO: Helper for joining predicates with && operator; make loot other than the golden idol not spawn on altar
+
         const auto has_tile_below = [ ](const TileBatch &tile_batch, const MapTile *current_tile) -> bool {
             const auto *below = tile_batch.below(current_tile);
             return below && below->collidable;
@@ -208,6 +211,7 @@ namespace {
                 100_percent, Spawner::UNLIMITED,
                 [](const MapTile *map_tile) {
                     const auto [x, y] = map_tile->center();
+                    log_info("Found an arrow trap at: %f %f", x, y);
                     return prefabs::ArrowTrap::create(x, y, HorizontalOrientation::LEFT);
                 },
                 Predicates::on_arrow_trap_left_tile
