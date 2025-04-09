@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../../other/interface/other/ParticleGenerator.hpp"
+#include "other/ParticleGenerator.hpp"
 #include "entt/entt.hpp"
 
 namespace prefabs

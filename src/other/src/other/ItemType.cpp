@@ -1,4 +1,4 @@
-#include "../../../components/interface/components/generic/ItemType.hpp"
+#include "components/generic/ItemType.hpp"
 
 const char *to_string(ItemType item_type) {
 #define TO_STRING(x) case ItemType::x: return #x;

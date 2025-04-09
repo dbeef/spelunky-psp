@@ -1,7 +1,7 @@
 #include "components/generic/PhysicsComponent.hpp"
 #include "prefabs/particles/BloodParticle.hpp"
 #include "prefabs/particles/FlameParticle.hpp"
-#include "../../interface/other/ParticleGenerator.hpp"
+#include "other/ParticleGenerator.hpp"
 #include "EntityRegistry.hpp"
 
 #include <cstdlib>

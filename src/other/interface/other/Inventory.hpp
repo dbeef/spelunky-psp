@@ -3,7 +3,7 @@
 #include "patterns/Singleton.hpp"
 #include "patterns/Subject.hpp"
 #include "other/InventoryEvent.hpp"
-#include "../../../components/interface/components/generic/ItemType.hpp"
+#include "components/generic/ItemType.hpp"
 
 #include <cstdint>
 #include <vector>

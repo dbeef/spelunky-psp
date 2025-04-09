@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../components/interface/components/generic/ParticleEmitterComponent.hpp"
+#include "components/generic/ParticleEmitterComponent.hpp"
 #include <cstdint>
 
 class ParticleGenerator

@@ -1,4 +1,4 @@
-#include "../../interface/other/NpcType.hpp"
+#include "other/NpcType.hpp"
 
 const char *to_string(NpcType npc_type) {
 #define TO_STRING(x) case NpcType::x: return #x;
