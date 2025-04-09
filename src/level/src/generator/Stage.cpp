@@ -8,7 +8,6 @@
 #include "TileBatch.hpp"
 #include "generator/Spawners.hpp"
 #include "logger/log.h"
-#include "populator/Shop.hpp"
 #include "populator/Spawner.hpp"
 
 

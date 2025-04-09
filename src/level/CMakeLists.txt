@@ -20,18 +20,6 @@ add_library(Level STATIC
         src/generator/Stage.cpp
         include/generator/Pipeline.hpp
         src/generator/Pipeline.cpp
-
-        src/populator/Populator.cpp
-        src/populator/Shop.cpp
-        include/populator/Populator.hpp
-        include/populator/Spawner.hpp
-        include/populator/Shop.hpp
-        src/populator/ItemFactory.cpp
-        src/populator/LootFactory.cpp
-        src/populator/NpcFactory.cpp
-        include/populator/ItemFactory.hpp
-        include/populator/NpcFactory.hpp
-        include/populator/LootFactory.hpp
         interface/RoomLayoutGenerator.hpp
         src/RoomLayoutGenerator.cpp
         src/generator/Spawners.cpp
