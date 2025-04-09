@@ -55,11 +55,36 @@ void Input::poll()
     _toggles.purchase.reset_changed();
     _toggles.cheat_console.reset_changed();
 
+    _mouse.clicked = {};
+    _mouse.delta_x = {};
+    _mouse.delta_y = {};
+
     SDL_Event event{};
 
     while (SDL_PollEvent(&event))
     {
         imgui_event_processing(&event);
+        if (event.type == SDL_EventType::SDL_MOUSEMOTION)
+        {
+            _mouse.delta_x = event.motion.xrel;
+            _mouse.delta_y = event.motion.yrel;
+            _mouse.x = event.motion.x;
+            _mouse.y = event.motion.y;
+        }
+
+        if (event.type == SDL_EventType::SDL_MOUSEBUTTONDOWN)
+        {
+            // FIXME:
+            _mouse.clicked = (event.button.button == SDL_BUTTON_RIGHT);
+            _mouse.pressed = (event.button.button == SDL_BUTTON_LEFT);
+        }
+
+        if (event.type == SDL_EventType::SDL_MOUSEBUTTONUP)
+        {
+            _mouse.pressed = false;
+        }
+
+
         if (event.type == SDL_EventType::SDL_KEYDOWN || event.type == SDL_EventType::SDL_KEYUP)
         {
             const auto& key = event.key.keysym.sym;
@@ -120,7 +145,7 @@ void Input::poll()
             {
                 _toggles.quit_requested.feed(v);
             }
-            else if (key == SDLK_TAB)
+            else if (key == SDL_SCANCODE_KP_8) // Backtick: `
             {
                 _toggles.cheat_console.feed(v);
             }

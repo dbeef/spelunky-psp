@@ -1,9 +1,6 @@
-//
-// Created by xdbeef on 10.03.18.
-//
+#pragma once
 
-#ifndef SPELUNKYDS_MAPTILE_H
-#define SPELUNKYDS_MAPTILE_H
+#include <tuple>
 
 #include "MapTileType.hpp"
 #include "Point2D.hpp"
@@ -22,6 +19,13 @@ struct MapTile
         , map_tile_type(MapTileType::NOTHING)
     {}
 
+    std::tuple<float, float> center() const {
+        return {
+            static_cast<float>(x) + PHYSICAL_WIDTH / 2.0f,
+            static_cast<float>(y) + PHYSICAL_HEIGHT / 2.0f
+        };
+    }
+
     int x; // in tiles
     int y; // in tiles
     bool collidable;
@@ -34,6 +38,3 @@ struct MapTile
     float get_center_x() { return (PHYSICAL_WIDTH / 2.0f) + x; }
     float get_center_y() { return (PHYSICAL_HEIGHT / 2.0f) + y; }
 };
-
-
-#endif //SPELUNKYDS_MAPTILE_H

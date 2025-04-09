@@ -18,6 +18,10 @@ namespace Paths {
         extern const char *MAIN_DUDE_PNG;
     }
 
+    namespace Rooms {
+        extern const char *GROUPS;
+    }
+
     namespace Audio {
         extern const char *TITLE_THEME;
         extern const char *CAVE_THEME;

@@ -21,14 +21,14 @@
 #include "system/ParticleSystem.hpp"
 #include "system/ItemSystem.hpp"
 
-#include "populator/Populator.hpp"
+// #include "populator/Populator.hpp"
 #include "logger/log.h"
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
 #include "CameraType.hpp"
 #include "Level.hpp"
 #include "other/Inventory.hpp"
-#include "prefabs/ui/CheatConsole.hpp"
+#include "prefabs/ui/CheatConsoleWindow.hpp"
 
 GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -75,7 +75,7 @@ GameLoopBaseState *GameLoopScoresState::update(GameLoop& game_loop, uint32_t del
         return &game_loop._states.main_menu;
     }
 
-    auto& cheat_console = registry.get<prefabs::CheatConsoleComponent>(_cheat_console);
+    auto& cheat_console = registry.get<prefabs::CheatConsoleWindowComponent>(_cheat_console);
     if (cheat_console.is_state_change_requested()) {
         return game_loop.get_game_loop_state_ptr(cheat_console.get_requested_state());
     }
@@ -91,11 +91,10 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
 
     auto& rendering_system = game_loop._rendering_system;
 
-    Level::instance().get_tile_batch().generate_frame();
-    Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::SCORES);
-    Level::instance().get_tile_batch().generate_cave_background();
-    Level::instance().get_tile_batch().batch_vertices();
-    Level::instance().get_tile_batch().add_render_entity(registry);
+    auto& level = Level::instance();
+    level.generate(LevelType::SCORES);
+    Level::instance().get_tile_batch().add_render_entity(registry); // TODO: Make tile-batch an entity itself!
+
 
     // Splash screens are copied into the [0, 0] position (left-upper corner), center on them:
     auto &model_view_camera = rendering_system->get_model_view_camera();
@@ -116,7 +115,7 @@ void GameLoopScoresState::enter(GameLoop& game_loop)
 
     _main_dude = prefabs::MainDude::create(pos_x, pos_y);
     _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::SCORES);
-    _cheat_console = prefabs::CheatConsole::create(game_loop._viewport);
+    _cheat_console = prefabs::CheatConsoleWindow::create(game_loop._viewport);
 
     prefabs::ScoresOverlay::create(game_loop._viewport);
     prefabs::ResetSign::create(16.5f, 10.5f);

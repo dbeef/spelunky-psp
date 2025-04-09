@@ -20,283 +20,6 @@ add_library(GameLoop STATIC
         interface/game-loop/GameLoopScoresState.hpp
         interface/game-loop/GameLoopSandboxState.hpp
 
-        # Main dude:
-
-        src/main-dude/MainDudeHelpers.cpp
-        src/main-dude/MainDudeObservers.cpp
-        src/main-dude/MainDudeComponent.cpp
-        src/main-dude/states/MainDudeStandingState.cpp
-        src/main-dude/states/MainDudeCliffHangingState.cpp
-        src/main-dude/states/MainDudeClimbingState.cpp
-        src/main-dude/states/MainDudeLevelSummaryState.cpp
-        src/main-dude/states/MainDudeExitingState.cpp
-        src/main-dude/states/MainDudeThrowingState.cpp
-        src/main-dude/states/MainDudeRunningState.cpp
-        src/main-dude/states/MainDudePushingState.cpp
-        src/main-dude/states/MainDudeCrawlingState.cpp
-        src/main-dude/states/MainDudeDuckingState.cpp
-        src/main-dude/states/MainDudeFallingState.cpp
-        src/main-dude/states/MainDudeJumpingState.cpp
-        src/main-dude/states/MainDudeLookingUpState.cpp
-        src/main-dude/states/MainDudeRunningLookingUpState.cpp
-        src/main-dude/states/MainDudeDeadState.cpp
-        src/main-dude/states/MainDudeStunnedState.cpp
-        include/main-dude/states/MainDudeBaseState.hpp
-        include/main-dude/states/MainDudeClimbingState.hpp
-        include/main-dude/states/MainDudeLevelSummaryState.hpp
-        include/main-dude/states/MainDudeRunningState.hpp
-        include/main-dude/states/MainDudeStandingState.hpp
-        include/main-dude/states/MainDudePushingState.hpp
-        include/main-dude/states/MainDudeCrawlingState.hpp
-        include/main-dude/states/MainDudeDuckingState.hpp
-        include/main-dude/states/MainDudeFallingState.hpp
-        include/main-dude/states/MainDudeJumpingState.hpp
-        include/main-dude/states/MainDudeThrowingState.hpp
-        include/main-dude/states/MainDudeExitingState.hpp
-        include/main-dude/states/MainDudeCliffHangingState.hpp
-        include/main-dude/states/MainDudeLookingUpState.hpp
-        include/main-dude/states/MainDudeRunningLookingUpState.hpp
-        include/main-dude/states/MainDudeDeadState.hpp
-        include/main-dude/states/MainDudeStunnedState.hpp
-        include/main-dude/MainDudeEvent.hpp
-        include/main-dude/MainDudeObservers.hpp
-        include/main-dude/MainDudeHelpers.hpp
-
-        # Components:
-
-        src/components/generic/ItemCarrierComponent.cpp
-        src/components/specialized/HudOverlayComponent.cpp
-        src/components/specialized/HudOverlayObservers.cpp
-        src/components/specialized/PauseOverlayComponent.cpp
-        src/components/specialized/DeathOverlayComponent.cpp
-        src/components/specialized/LevelSummaryOverlayComponent.cpp
-        src/components/specialized/LevelSummaryTracker.cpp
-        src/components/generic/QuadComponent.cpp
-        src/components/generic/TextComponent.cpp
-        src/components/generic/SaleableComponent.cpp
-        src/components/generic/AnimationComponent.cpp
-        src/components/generic/PhysicsComponent.cpp
-        src/components/generic/ItemComponent.cpp
-        include/components/generic/SaleableComponent.hpp
-        include/components/generic/OpenableComponent.hpp
-        include/components/generic/CollectibleComponent.hpp
-        include/components/generic/ScriptingComponent.hpp
-        include/components/generic/InputComponent.hpp
-        include/components/generic/TimeLimitComponent.hpp
-        include/components/generic/ParticleEmitterComponent.hpp
-        include/components/generic/ItemCarrierComponent.hpp
-        include/components/generic/ItemComponent.hpp
-        include/components/generic/HorizontalOrientationComponent.hpp
-        include/components/generic/PositionComponent.hpp
-        include/components/generic/QuadComponent.hpp
-        include/components/generic/PhysicsComponent.hpp
-        include/components/generic/AnimationComponent.hpp
-        include/components/generic/MeshComponent.hpp
-        include/components/generic/ActivableComponent.hpp
-        include/components/generic/ZoneComponent.hpp
-        include/components/generic/NpcTypeComponent.hpp
-        include/components/generic/ClimbingComponent.hpp
-        include/components/generic/BlinkingComponent.hpp
-        include/components/specialized/MainDudeComponent.hpp
-        include/components/specialized/LevelSummaryTracker.hpp
-        include/components/specialized/HudOverlayComponent.hpp
-        include/components/specialized/HudOverlayObservers.hpp
-        include/components/specialized/PauseOverlayComponent.hpp
-        include/components/specialized/DeathOverlayComponent.hpp
-        include/components/specialized/LevelSummaryOverlayComponent.hpp
-        include/components/damage/TakeNpcTouchDamageComponent.hpp
-        include/components/damage/GiveNpcTouchDamageComponent.hpp
-        include/components/damage/HitpointComponent.hpp
-        include/components/damage/GiveMeleeDamageComponent.hpp
-        include/components/damage/GiveProjectileDamageComponent.hpp
-        include/components/damage/GiveJumpOnTopDamage.hpp
-        include/components/damage/TakeFallDamageComponent.hpp
-        include/components/damage/TakeProjectileDamageComponent.hpp
-        include/components/damage/TakeMeleeDamageComponent.hpp
-        include/components/damage/TakeTileCollisionDamageComponent.hpp
-        include/components/damage/TakeJumpOnTopDamage.hpp
-        include/components/damage/GiveExplosionDamageComponent.hpp
-        include/components/damage/TakeExplosionDamageComponent.hpp
-        include/components/damage/GiveSpikesDamageComponent.hpp
-        include/components/damage/TakeSpikesDamageComponent.hpp
-
-        # Prefabs:
-
-        include/prefabs/npc/RedFrog.hpp
-        include/prefabs/npc/BlueFrog.hpp
-        include/prefabs/npc/Bat.hpp
-        include/prefabs/npc/Caveman.hpp
-        include/prefabs/npc/Skeleton.hpp
-        include/prefabs/npc/FakeSkeleton.hpp
-        include/prefabs/npc/Spider.hpp
-        include/prefabs/npc/Snake.hpp
-        include/prefabs/npc/Shopkeeper.hpp
-        include/prefabs/npc/ShopkeeperStates.hpp
-        include/prefabs/npc/ShopkeeperScript.hpp
-        include/prefabs/npc/Damsel.hpp
-        include/prefabs/npc/DamselScript.hpp
-        include/prefabs/npc/DamselStates.hpp
-        include/prefabs/npc/CavemanScript.hpp
-        include/prefabs/npc/CavemanStates.hpp
-        include/prefabs/props/StartSign.hpp
-        include/prefabs/props/ScoresSign.hpp
-        include/prefabs/props/ResetSign.hpp
-        include/prefabs/props/TutorialSign.hpp
-        include/prefabs/props/QuitSign.hpp
-        include/prefabs/props/MainLogo.hpp
-        include/prefabs/props/CopyrightsSign.hpp
-        include/prefabs/props/GithubLink.hpp
-        include/prefabs/main-dude/MainDude.hpp
-        include/prefabs/ui/PauseOverlay.hpp
-        include/prefabs/ui/ScoresOverlay.hpp
-        include/prefabs/ui/DeathOverlay.hpp
-        include/prefabs/ui/LevelSummaryOverlay.hpp
-        include/prefabs/ui/HudOverlay.hpp
-        include/prefabs/ui/Text.hpp
-        include/prefabs/collectibles/SingleGoldBar.hpp
-        include/prefabs/collectibles/TripleGoldBar.hpp
-        include/prefabs/collectibles/BigGem.hpp
-        include/prefabs/ui/HudIcon.hpp
-        include/prefabs/particles/FlareSparkParticle.hpp
-        include/prefabs/particles/SmoochingParticle.hpp
-        include/prefabs/particles/BigCollectParticle.hpp
-        include/prefabs/particles/RotatingDollarParticle.hpp
-        include/prefabs/particles/ItemCollectedParticle.hpp
-        include/prefabs/particles/BloodTrailParticle.hpp
-        include/prefabs/particles/SmokePuffParticle.hpp
-        include/prefabs/particles/RubbleSmallParticle.hpp
-        include/prefabs/particles/PoofParticle.hpp
-        include/prefabs/particles/FlameTrailParticle.hpp
-        include/prefabs/particles/FlameParticle.hpp
-        include/prefabs/particles/BonesParticle.hpp
-        include/prefabs/particles/RopeCollectedParticle.hpp
-        include/prefabs/particles/BombCollectedParticle.hpp
-        include/prefabs/particles/BloodParticle.hpp
-        include/prefabs/particles/HelpParticle.hpp
-        include/prefabs/collectibles/GoldNugget.hpp
-        include/prefabs/collectibles/GoldChunk.hpp
-        include/prefabs/collectibles/SmallGem.hpp
-        include/prefabs/items/Flare.hpp
-        include/prefabs/items/GoldenIdol.hpp
-        include/prefabs/items/RopePile.hpp
-        include/prefabs/items/BombBag.hpp
-        include/prefabs/items/Jetpack.hpp
-        include/prefabs/items/Rock.hpp
-        include/prefabs/items/Jar.hpp
-        include/prefabs/items/Chest.hpp
-        include/prefabs/items/BombSpawner.hpp
-        include/prefabs/items/Bomb.hpp
-        include/prefabs/items/Pistol.hpp
-        include/prefabs/items/Shotgun.hpp
-        include/prefabs/items/RopeSpawner.hpp
-        include/prefabs/items/Rope.hpp
-        include/prefabs/items/RopeChainElement.hpp
-        include/prefabs/items/Whip.hpp
-        include/prefabs/items/Crate.hpp
-        include/prefabs/items/Compass.hpp
-        include/prefabs/items/Cape.hpp
-        include/prefabs/items/Arrow.hpp
-        include/prefabs/items/Skull.hpp
-        include/prefabs/items/SpikeShoes.hpp
-        include/prefabs/items/SpringShoes.hpp
-        include/prefabs/items/SpringShoes.hpp
-        include/prefabs/items/Mitt.hpp
-        include/prefabs/items/Glove.hpp
-        include/prefabs/items/Wallet.hpp
-        include/prefabs/effects/Explosion.hpp
-        include/prefabs/effects/ShotgunBlast.hpp
-        include/prefabs/other/Bullet.hpp
-        include/prefabs/other/Bones.hpp
-        include/prefabs/traps/Spikes.hpp
-        include/prefabs/traps/ArrowTrap.hpp
-
-        src/prefabs/props/QuitSign.cpp
-        src/prefabs/props/ResetSign.cpp
-        src/prefabs/props/ScoresSign.cpp
-        src/prefabs/props/StartSign.cpp
-        src/prefabs/props/CopyrightsSign.cpp
-        src/prefabs/props/MainLogo.cpp
-        src/prefabs/props/TutorialSign.cpp
-        src/prefabs/props/GithubLink.cpp
-        src/prefabs/main-dude/MainDude.cpp
-        src/prefabs/ui/PauseOverlay.cpp
-        src/prefabs/ui/ScoresOverlay.cpp
-        src/prefabs/ui/DeathOverlay.cpp
-        src/prefabs/ui/LevelSummaryOverlay.cpp
-        src/prefabs/ui/HudOverlay.cpp
-        src/prefabs/ui/Text.cpp
-        src/prefabs/collectibles/SingleGoldBar.cpp
-        src/prefabs/collectibles/TripleGoldBar.cpp
-        src/prefabs/collectibles/BigGem.cpp
-        src/prefabs/ui/HudIcon.cpp
-        src/prefabs/particles/SmoochingParticle.cpp
-        src/prefabs/particles/ItemCollectedParticle.cpp
-        src/prefabs/particles/BloodTrailParticle.cpp
-        src/prefabs/particles/SmokePuffParticle.cpp
-        src/prefabs/particles/RubbleSmallParticle.cpp
-        src/prefabs/particles/FlameTrailParticle.cpp
-        src/prefabs/particles/PoofParticle.cpp
-        src/prefabs/particles/FlameParticle.cpp
-        src/prefabs/particles/RopeCollectedParticle.cpp
-        src/prefabs/particles/BombCollectedParticle.cpp
-        src/prefabs/particles/BonesParticle.cpp
-        src/prefabs/particles/BloodParticle.cpp
-        src/prefabs/particles/RotatingDollarParticle.cpp
-        src/prefabs/particles/HelpParticle.cpp
-        src/prefabs/particles/BigCollectParticle.cpp
-        src/prefabs/particles/FlareSparkParticle.cpp
-        src/prefabs/collectibles/GoldNugget.cpp
-        src/prefabs/collectibles/GoldChunk.cpp
-        src/prefabs/collectibles/SmallGem.cpp
-        src/prefabs/items/RopePile.cpp
-        src/prefabs/items/BombBag.cpp
-        src/prefabs/items/Rock.cpp
-        src/prefabs/items/Jar.cpp
-        src/prefabs/items/Chest.cpp
-        src/prefabs/items/Wallet.cpp
-        src/prefabs/items/SpikeShoes.cpp
-        src/prefabs/items/Compass.cpp
-        src/prefabs/items/SpringShoes.cpp
-        src/prefabs/items/Mitt.cpp
-        src/prefabs/items/Glove.cpp
-        src/prefabs/items/Jetpack.cpp
-        src/prefabs/items/BombSpawner.cpp
-        src/prefabs/items/Bomb.cpp
-        src/prefabs/items/Pistol.cpp
-        src/prefabs/items/Shotgun.cpp
-        src/prefabs/items/RopeSpawner.cpp
-        src/prefabs/items/Rope.cpp
-        src/prefabs/items/RopeChainElement.cpp
-        src/prefabs/items/Whip.cpp
-        src/prefabs/items/Crate.cpp
-        src/prefabs/items/Cape.cpp
-        src/prefabs/items/Arrow.cpp
-        src/prefabs/items/Skull.cpp
-        src/prefabs/items/GoldenIdol.cpp
-        src/prefabs/items/Flare.cpp
-        src/prefabs/effects/Explosion.cpp
-        src/prefabs/effects/ShotgunBlast.cpp
-        src/prefabs/other/Bullet.cpp
-        src/prefabs/other/Bones.cpp
-        src/prefabs/npc/Snake.cpp
-        src/prefabs/npc/Damsel.cpp
-        src/prefabs/npc/DamselScript.cpp
-        src/prefabs/npc/DamselStates.cpp
-        src/prefabs/npc/ShopkeeperScript.cpp
-        src/prefabs/npc/Shopkeeper.cpp
-        src/prefabs/npc/ShopkeeperStates.cpp
-        src/prefabs/npc/Bat.cpp
-        src/prefabs/npc/BlueFrog.cpp
-        src/prefabs/npc/RedFrog.cpp
-        src/prefabs/npc/CavemanScript.cpp
-        src/prefabs/npc/CavemanStates.cpp
-        src/prefabs/npc/Caveman.cpp
-        src/prefabs/npc/Spider.cpp
-        src/prefabs/npc/Skeleton.cpp
-        src/prefabs/npc/FakeSkeleton.cpp
-        src/prefabs/traps/Spikes.cpp
-        src/prefabs/traps/ArrowTrap.cpp
-
         # Systems:
 
         include/system/System.hpp
@@ -326,36 +49,10 @@ add_library(GameLoop STATIC
 
         # Other:
 
-        src/other/CheatConsoleInterpreter.cpp
-        src/other/NpcType.cpp
-        src/other/ItemType.cpp
         src/game-loop/GameLoopState.cpp
-        src/populator/Populator.cpp
-        src/populator/Shop.cpp
-        include/populator/Populator.hpp
-        include/populator/Spawner.hpp
-        include/populator/Shop.hpp
-
-        src/other/ParticleGenerator.cpp
-        src/other/Inventory.cpp
-        src/prefabs/ui/CheatConsole.cpp
-        src/populator/ItemFactory.cpp
-        src/populator/LootFactory.cpp
-        src/populator/NpcFactory.cpp
-        interface/other/PhysicsComponentType.hpp
         interface/game-loop/GameLoopState.hpp
-        interface/other/Inventory.hpp
-        interface/other/InventoryEvent.hpp
-        interface/other/ItemType.hpp
-        include/other/LootCollectedEvent.hpp
-        include/other/NpcType.hpp
-        include/other/ParticleGenerator.hpp
-        include/components/generic/ImguiComponent.hpp
-        include/prefabs/ui/CheatConsole.hpp
-        include/populator/ItemFactory.hpp
-        include/populator/NpcFactory.hpp
-        include/populator/LootFactory.hpp
-        include/other/CheatConsoleInterpreter.h
+        interface/game-loop/GameLoopEditorState.hpp
+        src/game-loop/GameLoopEditorState.cpp
 )
 
 target_include_directories(GameLoop
@@ -373,7 +70,11 @@ target_link_libraries(GameLoop
         Camera
         Viewport
         EntityRegistry
+        Events
     PRIVATE
+        Other
+        MainDude
+        Components
         Logger
         Input
         RenderingTypes
@@ -385,4 +86,6 @@ target_link_libraries(GameLoop
         GraphicsUtils
         $<$<BOOL:${SPELUNKY_PSP_WITH_IMGUI}>:imgui>
         Dependencies
+        cjson
+        Assets
 )

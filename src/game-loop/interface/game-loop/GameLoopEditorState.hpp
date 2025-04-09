@@ -1,0 +1,22 @@
+#pragma once
+
+#include <memory>
+#include <entt/entt.hpp>
+#include "game-loop/GameLoopBaseState.hpp"
+
+class GameLoop;
+class PauseOverlayComponent;
+class ScoresOverlayComponent;
+
+class GameLoopEditorState : public GameLoopBaseState
+{
+public:
+    GameLoopBaseState* update(GameLoop&, uint32_t delta_time_ms) override;
+    void enter(GameLoop&) override;
+    void exit(GameLoop&) override;
+private:
+    entt::entity _pause_overlay = entt::null;
+    entt::entity _death_overlay = entt::null;
+    entt::entity _cheat_console = entt::null;
+    entt::entity _tile_browser = entt::null;
+};

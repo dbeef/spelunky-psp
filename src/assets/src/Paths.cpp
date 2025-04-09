@@ -19,6 +19,10 @@ namespace Paths {
         const char *MAIN_DUDE_PNG = "tilesheets/main-dude.png";
     }
 
+    namespace Rooms {
+        const char *GROUPS = "rooms/groups.json";
+    }
+
     namespace Audio {
         const char *TITLE_THEME = "audio/title.wav";
         const char *CAVE_THEME = "audio/cave.wav";

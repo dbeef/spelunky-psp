@@ -21,14 +21,14 @@
 #include "system/ParticleSystem.hpp"
 #include "system/ItemSystem.hpp"
 
-#include "populator/Populator.hpp"
+// #include "populator/Populator.hpp"
 #include "logger/log.h"
 #include "ModelViewCamera.hpp"
 #include "ScreenSpaceCamera.hpp"
 #include "CameraType.hpp"
 #include "Level.hpp"
 #include "other/Inventory.hpp"
-#include "prefabs/ui/CheatConsole.hpp"
+#include "prefabs/ui/CheatConsoleWindow.hpp"
 
 GameLoopBaseState *GameLoopSandboxState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -47,8 +47,11 @@ GameLoopBaseState *GameLoopSandboxState::update(GameLoop& game_loop, uint32_t de
     auto& position = registry.get<PositionComponent>(_main_dude);
     auto& model_view_camera = game_loop._rendering_system->get_model_view_camera();
 
+    auto& tile_batch = Level::instance().get_tile_batch();
+
     model_view_camera.adjust_to_bounding_box(position.x_center, position.y_center);
-    model_view_camera.adjust_to_level_boundaries(Consts ::LEVEL_WIDTH_TILES, Consts::LEVEL_HEIGHT_TILES);
+    model_view_camera.adjust_to_level_boundaries(tile_batch.get_width_tiles(), tile_batch.get_height_tiles());
+
     model_view_camera.update_gl_modelview_matrix();
 
     rendering_system->update(delta_time_ms);
@@ -83,7 +86,7 @@ GameLoopBaseState *GameLoopSandboxState::update(GameLoop& game_loop, uint32_t de
         return &game_loop._states.main_menu;
     }
 
-    auto& cheat_console = registry.get<prefabs::CheatConsoleComponent>(_cheat_console);
+    auto& cheat_console = registry.get<prefabs::CheatConsoleWindowComponent>(_cheat_console);
     if (cheat_console.is_state_change_requested()) {
         return game_loop.get_game_loop_state_ptr(cheat_console.get_requested_state());
     }
@@ -99,22 +102,20 @@ void GameLoopSandboxState::enter(GameLoop& game_loop)
 
     auto& rendering_system = game_loop._rendering_system;
 
-    Level::instance().get_tile_batch().clean();
-    Level::instance().get_tile_batch().generate_frame();
-    Level::instance().get_tile_batch().generate_cave_background();
-    Level::instance().get_tile_batch().batch_vertices();
+    Level::instance().generate(LevelType::SANDBOX);
     Level::instance().get_tile_batch().add_render_entity(registry);
 
     auto& inventory = Inventory::instance();
     inventory.clear_items();
     game_loop._shopping_system = std::make_shared<ShoppingSystem>();
 
-    float pos_x = Consts::LEVEL_WIDTH_TILES / 2;
-    float pos_y = Consts::LEVEL_HEIGHT_TILES / 2;
+    auto& tile_batch = Level::instance().get_tile_batch();
+    float pos_x = tile_batch.get_width_tiles() / 2;
+    float pos_y = tile_batch.get_height_tiles() / 2;
 
     _main_dude = prefabs::MainDude::create(pos_x, pos_y);
     _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::SCORES);
-    _cheat_console = prefabs::CheatConsole::create(game_loop._viewport);
+    _cheat_console = prefabs::CheatConsoleWindow::create(game_loop._viewport);
 }
 
 void GameLoopSandboxState::exit(GameLoop& game_loop)

@@ -72,6 +72,10 @@ GameLoopBaseState *GameLoop::get_game_loop_state_ptr(GameLoopState state) {
             return &_states.scores;
         case GameLoopState::SANDBOX:
             return &_states.sandbox;
+        case GameLoopState::EDITOR:
+            return &_states.editor;
+        case GameLoopState::QUITTING:
+            return _states.current; // FIXME: Should quit
         case GameLoopState::CURRENT:
             return _states.current;
         default: assert(false);

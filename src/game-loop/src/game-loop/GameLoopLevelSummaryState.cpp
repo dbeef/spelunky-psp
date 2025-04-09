@@ -1,4 +1,4 @@
-#include "populator/Populator.hpp"
+// #include "populator/Populator.hpp"
 #include "prefabs/main-dude/MainDude.hpp"
 #include "prefabs/ui/LevelSummaryOverlay.hpp"
 #include "prefabs/npc/Damsel.hpp"
@@ -82,11 +82,10 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     auto& registry = EntityRegistry::instance().get_registry();
     auto& rendering_system = game_loop._rendering_system;
 
-    Level::instance().get_tile_batch().generate_frame();
-    Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::LEVEL_SUMMARY);
-    Level::instance().get_tile_batch().generate_cave_background();
-    Level::instance().get_tile_batch().batch_vertices();
-    Level::instance().get_tile_batch().add_render_entity(registry);
+    auto& level = Level::instance();
+
+    level.generate(LevelType::LEVEL_SUMMARY);
+    Level::instance().get_tile_batch().add_render_entity(registry); // TODO: Make level an entity itself!
 
     prefabs::LevelSummaryOverlay::create(game_loop._viewport, game_loop._level_summary_tracker);
 
@@ -109,7 +108,8 @@ void GameLoopLevelSummaryState::enter(GameLoop& game_loop)
     auto& dude = registry.get<MainDudeComponent>(_main_dude);
     dude.enter_level_summary_state();
 
-    Populator().generate_inventory_items(_main_dude);
+    // Populator().generate_inventory_items(_main_dude);
+    // FIXME: Here populator
 
     auto& damsel_rescued = game_loop._states.playing.is_damsel_rescued();
     if (damsel_rescued)

@@ -29,7 +29,7 @@ namespace
     {
         if (tile->y - 1 >= 0)
         {
-            auto* tile_above = Level::instance().get_tile_batch().map_tiles[tile->x][tile->y - 1];
+            auto* tile_above = Level::instance().get_tile_batch().at(tile->x, tile->y - 1);
             return !tile_above->climbable;
         }
         else
@@ -150,7 +150,10 @@ void InputSystem::update_controllable_bodies()
                     if (registry.has<ClimbingComponent>(entity))
                     {
                         auto& position = registry.get<PositionComponent>(entity);
-                        auto* overlapped_tile = Level::instance().get_tile_batch().map_tiles[static_cast<int>(position.x_center)][static_cast<int>(position.y_center)];
+                        auto* overlapped_tile = Level::instance().get_tile_batch().at(
+                            static_cast<int>(position.x_center),
+                            static_cast<int>(position.y_center)
+                        );
 
                         if (overlapped_tile->climbable)
                         {

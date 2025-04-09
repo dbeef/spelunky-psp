@@ -13,6 +13,7 @@ using PathToContentsMapping = std::map<std::filesystem::path, Contents>;
 
 struct Assets::ImplementationDefined {
     PathToContentsMapping files;
+    std::filesystem::path base_path;
 };
 
 namespace {
@@ -101,6 +102,8 @@ bool Assets::load() {
         return false;
     }
 
+    _impl->base_path = *assets_path;
+
     log_info("Assets found: %s", assets_path->c_str());
     _impl->files = generate_file_database(*assets_path);
 
@@ -111,6 +114,19 @@ bool Assets::load() {
 
     log_info("Exiting Assets::load, success.");
     return true;
+}
+
+void Assets::reload(const char *path) {
+    auto& files = _impl->files;
+
+    const auto kv = files.find(path);
+    if (kv != files.end()) {
+        auto& contents = kv->second;
+        auto reloaded = load_file(_impl->base_path / path);
+        if (reloaded.has_value()) {
+            contents = *reloaded;
+        }
+    }
 }
 
 std::pair<const char *, std::size_t> Assets::get(const char *path) const {

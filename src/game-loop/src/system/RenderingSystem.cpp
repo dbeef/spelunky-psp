@@ -12,7 +12,7 @@
 void RenderingSystem::update(std::uint32_t delta_time_ms)
 {
     update_opengl(delta_time_ms);
-    update_imgui();
+    update_imgui(delta_time_ms);
 }
 
 void RenderingSystem::sort()
@@ -143,7 +143,7 @@ void RenderingSystem::update_opengl(std::uint32_t delta_time_ms) {
 #include "imgui_impl_opengl2.h"
 #include "imgui_impl_sdl2.h"
 
-void RenderingSystem::update_imgui() {
+void RenderingSystem::update_imgui(std::uint32_t delta_time_ms) {
 
     ImGui_ImplOpenGL2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
@@ -151,9 +151,9 @@ void RenderingSystem::update_imgui() {
 
     auto& registry = EntityRegistry::instance().get_registry();
     auto imguis = registry.view<ImguiComponent>();
-    imguis.each([](ImguiComponent& imgui_component)
+    imguis.each([delta_time_ms](ImguiComponent& imgui_component)
     {
-        imgui_component.render_callback();
+        imgui_component.render_callback(delta_time_ms);
     });
 
     ImGui::Render();

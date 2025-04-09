@@ -35,8 +35,8 @@
 #include "CameraType.hpp"
 #include "Level.hpp"
 #include "audio/Audio.hpp"
-#include "populator/Populator.hpp"
-#include "prefabs/ui/CheatConsole.hpp"
+// #include "populator/Populator.hpp"
+#include "prefabs/ui/CheatConsoleWindow.hpp"
 
 GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t delta_time_ms)
 {
@@ -58,8 +58,9 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
     auto& position = registry.get<PositionComponent>(_main_dude);
     auto& model_view_camera = game_loop._rendering_system->get_model_view_camera();
 
+    auto& tile_batch = Level::instance().get_tile_batch();
     model_view_camera.adjust_to_bounding_box(position.x_center, position.y_center);
-    model_view_camera.adjust_to_level_boundaries(Consts::LEVEL_WIDTH_TILES, Consts::LEVEL_HEIGHT_TILES);
+    model_view_camera.adjust_to_level_boundaries(tile_batch.get_width_tiles(), tile_batch.get_height_tiles());
     model_view_camera.update_gl_modelview_matrix();
 
     rendering_system->update(delta_time_ms);
@@ -113,7 +114,7 @@ GameLoopBaseState *GameLoopPlayingState::update(GameLoop& game_loop, uint32_t de
 
     game_loop._level_summary_tracker->update(delta_time_ms);
 
-    auto& cheat_console = registry.get<prefabs::CheatConsoleComponent>(_cheat_console);
+    auto& cheat_console = registry.get<prefabs::CheatConsoleWindowComponent>(_cheat_console);
     if (cheat_console.is_state_change_requested()) {
         return game_loop.get_game_loop_state_ptr(cheat_console.get_requested_state());
     }
@@ -133,11 +134,9 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     TileBatch::LevelGeneratorParams generator_params;
     generator_params.shopkeeper_robbed = game_loop._shopping_system->is_robbed();
 
-    Level::instance().get_tile_batch().generate_new_level_layout(generator_params);
-    Level::instance().get_tile_batch().initialise_tiles_from_room_layout();
-    Level::instance().get_tile_batch().generate_frame();
-    Level::instance().get_tile_batch().generate_cave_background();
-    Level::instance().get_tile_batch().batch_vertices();
+    auto& level = Level::instance();
+
+    level.generate(LevelType::CAVE);
     Level::instance().get_tile_batch().add_render_entity(registry);
 
     // Update main dude:
@@ -153,7 +152,7 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::PLAYING);
     _death_overlay = prefabs::DeathOverlay::create(game_loop._viewport);
     _hud = prefabs::HudOverlay::create(game_loop._viewport);
-    _cheat_console = prefabs::CheatConsole::create(game_loop._viewport);
+    _cheat_console = prefabs::CheatConsoleWindow::create(game_loop._viewport);
 
     game_loop._rendering_system->sort();
 
@@ -168,37 +167,37 @@ void GameLoopPlayingState::enter(GameLoop& game_loop)
     auto& death = registry.get<DeathOverlayComponent>(_death_overlay);
     death.disable_input();
 
-    Populator populator;
-    populator.generate_loot(game_loop._shopping_system->is_robbed());
-    populator.generate_npc(is_damsel_rescued(), game_loop._shopping_system->is_robbed());
-    populator.generate_inventory_items(_main_dude);
+    // Populator populator;
+    // populator.generate_loot(game_loop._shopping_system->is_robbed());
+    // populator.generate_npc(is_damsel_rescued(), game_loop._shopping_system->is_robbed());
+    // populator.generate_inventory_items(_main_dude);
 
     // Wire subjects with observers:
 
-    for (const auto& collectible_entity : populator.get_collectibles())
-    {
-        auto& collectible = registry.get<CollectibleComponent>(collectible_entity);
-        collectible.add_observer(game_loop._level_summary_tracker.get());
-    }
+    // for (const auto& collectible_entity : populator.get_collectibles())
+    // {
+        // auto& collectible = registry.get<CollectibleComponent>(collectible_entity);
+        // collectible.add_observer(game_loop._level_summary_tracker.get());
+    // }
 
-    for (const auto& npc_entity : populator.get_npcs())
-    {
-        auto& hitpoints = registry.get<HitpointComponent>(npc_entity);
-        hitpoints.add_observer(game_loop._level_summary_tracker.get());
-    }
+    // for (const auto& npc_entity : populator.get_npcs())
+    // {
+        // auto& hitpoints = registry.get<HitpointComponent>(npc_entity);
+        // hitpoints.add_observer(game_loop._level_summary_tracker.get());
+    // }
 
-    for (const auto& shopkeeper : populator.get_shopkeepers())
-    {
-        auto &scripting_component = registry.get<ScriptingComponent>(shopkeeper);
-        auto *shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
-        game_loop._shopping_system->add_observer(shopkeeper_script->get_thievery_observer());
-        shopkeeper_script->add_observer(game_loop._shopping_system.get());
+    // for (const auto& shopkeeper : populator.get_shopkeepers())
+    // {
+        // auto &scripting_component = registry.get<ScriptingComponent>(shopkeeper);
+        // auto *shopkeeper_script = scripting_component.get<prefabs::ShopkeeperScript>();
+        // game_loop._shopping_system->add_observer(shopkeeper_script->get_thievery_observer());
+        // shopkeeper_script->add_observer(game_loop._shopping_system.get());
 
-        if (game_loop._shopping_system->is_robbed())
-        {
-            shopkeeper_script-> get_angry(shopkeeper);
-        }
-    }
+        // if (game_loop._shopping_system->is_robbed())
+        // {
+            // shopkeeper_script-> get_angry(shopkeeper);
+        // }
+    // }
 
     game_loop._level_summary_tracker->entered_new_level();
 

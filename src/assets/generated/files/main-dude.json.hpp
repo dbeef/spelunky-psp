@@ -1,4 +1,4 @@
-// Generated from: tilesheets/main-dude.json, at: Sun Aug 18 21:51:29 2024
+// Generated from: tilesheets/main-dude.json, at: Sat Aug 31 12:29:24 2024
 
 const std::size_t size = 19779;
 const char* path = "tilesheets/main-dude.json";

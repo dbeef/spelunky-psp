@@ -34,7 +34,7 @@
 #include "prefabs/items/Flare.hpp"
 #include "prefabs/main-dude/MainDude.hpp"
 #include "prefabs/ui/PauseOverlay.hpp"
-#include "prefabs/ui/CheatConsole.hpp"
+#include "prefabs/ui/CheatConsoleWindow.hpp"
 
 #include <cmath>
 
@@ -111,9 +111,16 @@ GameLoopBaseState *GameLoopMainMenuState::update(GameLoop& game_loop, uint32_t d
         game_loop._exit = true;
     }
 
-    auto& cheat_console = registry.get<prefabs::CheatConsoleComponent>(_cheat_console);
+    auto& cheat_console = registry.get<prefabs::CheatConsoleWindowComponent>(_cheat_console);
     if (cheat_console.is_state_change_requested()) {
-        return game_loop.get_game_loop_state_ptr(cheat_console.get_requested_state());
+        if (cheat_console.get_requested_state() == GameLoopState::QUITTING) // TODO: Introduce such state
+        {
+            game_loop._exit = true;
+        }
+        else
+        {
+            return game_loop.get_game_loop_state_ptr(cheat_console.get_requested_state());
+        }
     }
 
     return this;
@@ -128,12 +135,9 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
     auto& registry = EntityRegistry::instance().get_registry();
     auto& rendering_system = game_loop._rendering_system;
     
-    Audio::instance().play(MusicType::TITLE);
+    // Audio::instance().play(MusicType::TITLE);
 
-    Level::instance().get_tile_batch().generate_frame();
-    Level::instance().get_tile_batch().initialise_tiles_from_splash_screen(SplashScreenType::MAIN_MENU);
-    Level::instance().get_tile_batch().generate_cave_background();
-    Level::instance().get_tile_batch().batch_vertices();
+    Level::instance().generate(LevelType::MAIN_MENU);
     Level::instance().get_tile_batch().add_render_entity(registry);
 
     // Splash screens are copied into the [0, 0] position (left-upper corner), center on them:
@@ -157,12 +161,12 @@ void GameLoopMainMenuState::enter(GameLoop& game_loop)
         const float y = 0.5f * index;
         prefabs::RopeChainElement::create(x, y);
         auto& tile_batch = Level::instance().get_tile_batch();
-        tile_batch.map_tiles[static_cast<int>(x)][static_cast<int>(y)]->climbable = true;
+        tile_batch.at(static_cast<int>(x), static_cast<int>(y))->climbable = true;
     }
 
     _pause_overlay = prefabs::PauseOverlay::create(game_loop._viewport, PauseOverlayComponent::Type::MAIN_MENU);
     _main_dude = prefabs::MainDude::create(17.5, 9.5);
-    _cheat_console = prefabs::CheatConsole::create(game_loop._viewport);
+    _cheat_console = prefabs::CheatConsoleWindow::create(game_loop._viewport);
 
     game_loop._level_summary_tracker->reset();
 

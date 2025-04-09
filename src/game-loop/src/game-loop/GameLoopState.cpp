@@ -10,6 +10,8 @@ const char *to_string(GameLoopState game_loop_state) {
         TO_STRING(LEVEL_SUMMARY);
         TO_STRING(SCORES);
         TO_STRING(SANDBOX);
+        TO_STRING(EDITOR);
+        TO_STRING(QUITTING);
         TO_STRING(CURRENT);
         TO_STRING(_SIZE);
     }

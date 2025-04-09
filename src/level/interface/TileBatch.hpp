@@ -1,9 +1,4 @@
-//
-// Created by xdbeef on 04.03.18.
-//
-
-#ifndef SPELUNKYDS_LEVELGENERATOR_H
-#define SPELUNKYDS_LEVELGENERATOR_H
+#pragma once
 
 #include "Vertex.hpp"
 #include "IndexType.hpp"
@@ -17,24 +12,11 @@
 #include <vector>
 #include <entt/entt.hpp>
 
-namespace Consts
-{
-    const int ROOMS_COUNT_WIDTH = 3;
-    const int ROOMS_COUNT_HEIGHT = 3;
+#include "RoomLayoutGenerator.hpp"
 
-    static_assert(ROOMS_COUNT_WIDTH > 1, "Level generator will fail with current horizontal rooms count.");
-    static_assert(ROOMS_COUNT_HEIGHT > 1, "Level generator will fail with current vertical rooms count.");
 
-    const int SPLASH_SCREEN_WIDTH_TILES = 20;
-    const int SPLASH_SCREEN_HEIGHT_TILES = 12;
-
-    const int ROOM_WIDTH_TILES = 10;
-    const int ROOM_HEIGHT_TILES = 10;
-
-    const int LEVEL_HEIGHT_TILES = (ROOMS_COUNT_HEIGHT * ROOM_WIDTH_TILES) + 1 + 1; // 1 tile margin around the map
-    const int LEVEL_WIDTH_TILES = (ROOMS_COUNT_WIDTH * ROOM_HEIGHT_TILES) + 1 + 1; // 1 tile margin around the map
-}
-
+// TODO: Rework TileBatch so it only holds tiles and adds some convenience methods to access/modify them.
+//       Move level-generation functions (i.e place an anltar) to the relevant pipeline.
 class TileBatch {
 
 public:
@@ -44,39 +26,82 @@ public:
         bool shopkeeper_robbed = false;
     };
 
-    TileBatch();
+    explicit TileBatch(int width_x_tiles, int width_y_tiles);
+
+    void resize(int width_x_tiles, int width_y_tiles);
 
     ~TileBatch();
 
-    void generate_new_level_layout(const LevelGeneratorParams& params);
-
-    void generate_cave_background();
-
-    void generate_frame();
-
-    void initialise_tiles_from_room_layout();
+    void initialise_tiles_from_room_layout(const RoomLayoutGenerator& room_layout);
 
     void initialise_tiles_from_splash_screen(SplashScreenType splashScreenType);
 
-    void get_first_tile_of_given_type(MapTileType map_tile_type, MapTile *&out) const;
+    void get_first_tile_of_given_type(MapTileType map_tile_type, MapTile *&out);
 
     void batch_vertices();
 
+    const RoomLayoutGenerator& get_room_layout() const { return _room_layout; }
+
+    // TODO: Use optional
+    MapTile* above(const MapTile* tile) {
+        if (tile->y - 1 < 0) {
+            return nullptr;
+        }
+
+        return at(tile->x, tile->y - 1);
+    }
+
+    const MapTile* above(const MapTile* tile) const {
+        if (tile->y - 1 < 0) {
+            return nullptr;
+        }
+
+        return at(tile->x, tile->y - 1);
+    }
+
+    MapTile* at(int tile_x, int tile_y) {
+        const std::size_t index = (tile_y * _width_x_tiles) + tile_x;
+        return &_map_tiles.at(index);
+    }
+
+    const MapTile* at(int tile_x, int tile_y) const {
+        const std::size_t index = (tile_y * _width_x_tiles) + tile_x;
+        return &_map_tiles.at(index);
+    }
+
+    MapTile* below(const MapTile* tile) {
+        if (tile->y + 1 >= _height_y_tiles) {
+            return nullptr;
+        }
+
+        return at(tile->x, tile->y + 1);
+    }
+
+    const MapTile* below(const MapTile* tile) const {
+        if (tile->y + 1 >= _height_y_tiles) {
+            return nullptr;
+        }
+
+        return at(tile->x, tile->y + 1);
+    }
+
     entt::entity add_render_entity(entt::registry &registry);
 
-    void get_neighbouring_tiles(float x, float y, MapTile *out_neighboring_tiles[9]) const;
-
-    MapTile *map_tiles[Consts::LEVEL_WIDTH_TILES][Consts::LEVEL_HEIGHT_TILES]{};
-
-    LootType get_loot_type_spawned_at(int x_tiles, int y_tiles) const;
-
-    NPCType get_npc_type_spawned_at(int x_tiles, int y_tiles) const;
-
-    RoomType get_room_type_at(int x_room, int y_room) const;
+    void get_neighbouring_tiles(float x, float y, MapTile *out_neighboring_tiles[9]);
 
     void clean();
 
+    int get_width_tiles() const { return _width_x_tiles; }
+
+    int get_height_tiles() const { return _height_y_tiles; }
+
 private:
+
+    std::vector<MapTile> _map_tiles;
+    // MapTile *map_tiles[Consts::LEVEL_WIDTH_TILES][Consts::LEVEL_HEIGHT_TILES]{};
+
+    int _width_x_tiles = 0;
+    int _height_y_tiles = 0;
 
     // Any encountered closed room will be turned into an altar.
     void place_an_altar();
@@ -88,8 +113,6 @@ private:
     std::vector<Vertex> _mesh;
     std::vector<IndexType> _indices;
 
-    RoomType _layout[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
+    RoomLayoutGenerator _room_layout;
     int _layout_room_ids[Consts::ROOMS_COUNT_WIDTH][Consts::ROOMS_COUNT_HEIGHT]{};
 };
-
-#endif //SPELUNKYDS_LEVELGENERATOR_H
